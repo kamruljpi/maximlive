@@ -1,0 +1,16 @@
+project/node_modules
+project/public/hot
+project/public/storage
+project/storage/
+project/storage/*.key
+project/vendor
+project/.idea
+/.idea
+project/.vscode
+project/.vagrant
+project/Homestead.json
+project/Homestead.yaml
+project/npm-debug.log
+project/yarn-error.log
+project/.env
+project/.phpunit.result.cache

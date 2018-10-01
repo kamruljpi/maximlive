@@ -50,7 +50,7 @@
 
 							?>
 							<tr>
-								<td width="3%">
+								<td width="3.5%">
 									<input type="checkbox" name="job_id[]" value="{{$id[$key]}}" class="form-control" checked>
 								</td>
 								<td>{{ str_repeat('0',$idstrcount) }}{{ $id[$key] }}</td>

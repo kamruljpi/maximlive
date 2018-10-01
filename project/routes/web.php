@@ -823,7 +823,14 @@ Route::group(['middleware' => 'auth'], function () {
             'as'=>'get_product_details',
             'uses'=>'taskController\BookingController@orderInputDetails'
         ]);
-    Route::any('submited/get/product/details/vedorPrice',
+
+    // Route::any('submited/get/product/details/vedorPrice',
+    //     [
+    //         'as'=>'get_product_details',
+    //         'uses'=>'taskController\BookingController@getVendorPrice'
+    //     ]);
+
+    Route::any('/get/product/details/vedorPrice',
         [
             'as'=>'get_product_details',
             'uses'=>'taskController\BookingController@getVendorPrice'
@@ -1029,6 +1036,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 include('pi_route.php');
 include('ipo_route.php');
+include('ajax.php');
 
 
 //INSERT INTO `maxpronewerp`.`mxp_menu` (`name`, `route_name`, `description`, `parent_id`, `is_active`, `order_id`) VALUES ('Purchase Order', 'generate_purchase_order', 'purchase order list', '97', '1', '3');

@@ -9,10 +9,10 @@ class UserRoleDefine
 {
 	public function getRole(){
 		$roleId  = Auth::user()->user_role_id;
-		$roleTable = Mxp_role::where('id',$roleId)->get();
+		$roleTable = Mxp_role::where('id',$roleId)->first();
 
 		if(isset($roleTable) && !empty($roleTable)){
-		    $name = explode(' ',$roleTable[0]->name);
+		    $name = explode(' ',$roleTable->name);
 		    $nameValue = [];
 		    foreach ($name as $key => $value) {
 		    	$nameValue[$value[$key]] = $value;
@@ -26,6 +26,11 @@ class UserRoleDefine
 		        }
 		    }
 		}
-		return $checkvalue;
+		return strtolower($checkvalue);
+	}
+
+	public function getRoleName(){
+		$role = Mxp_role::where('id',Auth::user()->user_role_id)->first();
+		return $role->name;
 	}
 }

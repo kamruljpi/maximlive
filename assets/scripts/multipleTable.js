@@ -16,7 +16,7 @@ $(document).ready(function(){
         var itemoption = {
 
           url: function(phrase) {
-            return "/get/itemcode";
+            return baseURL+"/get/itemcode";
           },
 
           getValue: function(element) {
@@ -74,7 +74,7 @@ $(document).ready(function(){
       e.preventDefault();
         var copyitemoption = {
           url: function(phrase) {
-            return "/get/itemcode";
+            return baseURL+"/get/itemcode";
           },
           getValue: function(element) {
             return element.name;
@@ -111,11 +111,9 @@ $(document).ready(function(){
           $(".tr_clone_"+incre+" .booking_item_code").val('');
           $(".tr_clone_"+incre+" .item_sku").val('');
           $(".tr_clone_"+incre+" .item_qty").val('');
-          $(".tr_clone_"+incre+" .item_price").val('');
-          
+          $(".tr_clone_"+incre+" .item_price").val('');          
           // $(".tr_clone_"+incre+" .item_po_cat_no").val('');
           // $(".tr_clone_"+incre+" .item_oos_number").val('');
-
           // $(".tr_clone_"+incre+" .erpNo").find("option").remove();
           $(".tr_clone_"+incre+" .erpNo").val('');
           $(".tr_clone_"+incre+" .itemGmtsColor").find("option").remove();
@@ -137,6 +135,8 @@ $(document).ready(function(){
       var item_code = $.trim($(this).val());
       var item_parent_class = $(this).data('parent');
 
+      isNotItemUserAccess(item_code);
+
       $.ajax({
           type: "GET",
           url: baseURL+"/get/product/details/booking",
@@ -146,6 +146,7 @@ $(document).ready(function(){
           async: true,
           success: function(result) {
               var myObj = JSON.parse(result);
+              // console.log(myObj);
               if(myObj.length === 0)
               {
                 $('.'+item_parent_class+' .erpNo').attr("disabled","true");
@@ -185,14 +186,13 @@ $(document).ready(function(){
 
                 for(i in myObj){
                   if (myObj[i].size === null) {
-
                       $('.'+item_parent_class+' .itemSize').html($('<option>', {
                       value: "",
                       text : "empty Size"
                       }));
 
                   }else{
-
+                    $('.'+item_parent_class+' .itemSize').removeAttr("disabled","false");
                     $('.'+item_parent_class+' .itemSize').html($('<option>', {
                     value: "",
                     text : "Select Size"
@@ -241,7 +241,7 @@ $(document).ready(function(){
                   $('.'+item_parent_class+' .item_description').eq(increI).val(myObj[ij].product_description);
 
                   var company_id = $("input[name=companyIdForBookingOrder]").val();
-                  var priceDetails = ajaxFunc("get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
+                  var priceDetails = ajaxFunc("/get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
 
                   // console.log(myObj[ij]);
                   if(priceDetails.responseJSON != ''){
@@ -291,7 +291,7 @@ $(document).ready(function(){
   var itemoptions = {
 
     url: function(phrase) {
-      return "/get/itemcode";
+      return baseURL+"/get/itemcode";
     },
 
     getValue: function(element) {
@@ -321,7 +321,7 @@ $(document).ready(function(){
   var bookingoptions = {
 
     url: function(phrase) {
-      return "/get/ordercode";
+      return baseURL+"/get/ordercode";
     },
 
     getValue: function(element) {
@@ -333,9 +333,8 @@ $(document).ready(function(){
             enabled: true
         },
         onChooseEvent: function(t){
-
             var taskType = $('#taskType').val();
-            console.log(t.val());
+            // console.log(t.val());
 
             if (taskType == 'challan'){
               $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
@@ -374,3 +373,25 @@ $(document).ready(function(){
     })
 });
 
+function isNotItemUserAccess(itemCode){
+  $.ajax({
+      type: "GET",
+      url: baseURL+"/get/item/check/user/access",
+      data: "item="+itemCode,
+      datatype: 'json',
+      cache: true,
+      async: true,
+      success: function(result) {
+        var resultsss = JSON.parse(result);
+        if(resultsss == 'not_match'){
+          alert("You haven\'t permission to access this Item.");
+        }
+        if(resultsss == 'empty'){
+          alert("This Item code not entered in the Software.");
+        }
+      },
+      error:function(result){
+        alert("Something is wrong "+result+".");
+      }
+});
+}

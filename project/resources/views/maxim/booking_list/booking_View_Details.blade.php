@@ -5,6 +5,9 @@
     // print_r("<pre>");
     // print_r($bookingDetails->bookings);
     // print_r("</pre>");
+ 
+    $object = new App\Http\Controllers\Source\User\UserRoleDefine();
+    $roleCheck = $object->getRole();
 ?>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -25,54 +28,97 @@
                 <p >Oreder Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
                 <p >Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
             </div>
-            <table class="table table-bordered">
-                <tr>
-                    <thead>
-                        <th>Job No.</th>
-                        <th width="15%">ERP Code</th>
-                        <th width="20%">Item / Code No.</th>
-                        <th width="5%">Season Code</th>
-                        <th>OOS No.</th>
-                        <th>Style</th>
-                        <th>PO/Cat No.</th>
-                        <th>GMTS Color</th>
-                        <th width="15%">Size</th>
-                        <th>Sku</th>
-                        <th>Order Qty</th>
-                        <!-- <th>Price</th> -->
-                    </thead>
-                </tr>
-                @php
-                    $j=1;
-                @endphp
-                <tbody>
-                @foreach($bookingDetails->bookings as $bookedItem)
-                <?php $jobId = (8 - strlen($bookedItem->id)); ?>
-                <tr>
-                    <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>                
-                    <td>{{$bookedItem->erp_code}}</td>
-                    <td>{{$bookedItem->item_code}}</td>
-                    <td>{{$bookedItem->season_code}}</td>
-                    <td>{{$bookedItem->oos_number}}</td>
-                    <td>{{$bookedItem->style}}</td>
-                    <td>{{$bookedItem->poCatNo}}</td>
-                    <td>{{$bookedItem->gmts_color }}</td>
-                    <td>{{$bookedItem->item_size}}</td>
-                    <td>{{$bookedItem->sku}}</td>
-                    <td>{{$bookedItem->item_quantity}}</td>
-                    <!-- <td> {{ $bookedItem->item_price }} </td> -->
-                </tr>
-                @endforeach
-                </tbody>
-            </table>
+            <form action="#" method="post">     
+                <table class="table table-bordered">
+                    <tr>
+                        <thead>
+                            @if($roleCheck == 'p')
+                            <th>#</th>
+                            @endif
+                            <th>Job No.</th>
+                            <th width="15%">ERP Code</th>
+                            <th width="20%">Item / Code No.</th>
+                            <th width="5%">Season Code</th>
+                            <th>OOS No.</th>
+                            <th>Style</th>
+                            <th>PO/Cat No.</th>
+                            <th>GMTS Color</th>
+                            <th width="15%">Size</th>
+                            <th>Sku</th>
+                            <th>Order Qty</th>
+                            <!-- <th>Price</th> -->
+                        </thead>
+                    </tr>
+                    
+                    @if($roleCheck == 'empty')
+                        <tbody>
+                            @foreach($bookingDetails->bookings as $bookedItem)
+                            <?php $jobId = (8 - strlen($bookedItem->id)); ?>
+                            <tr>
+                                <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>                
+                                <td>{{$bookedItem->erp_code}}</td>
+                                <td>{{$bookedItem->item_code}}</td>
+                                <td>{{$bookedItem->season_code}}</td>
+                                <td>{{$bookedItem->oos_number}}</td>
+                                <td>{{$bookedItem->style}}</td>
+                                <td>{{$bookedItem->poCatNo}}</td>
+                                <td>{{$bookedItem->gmts_color }}</td>
+                                <td>{{$bookedItem->item_size}}</td>
+                                <td>{{$bookedItem->sku}}</td>
+                                <td>{{$bookedItem->item_quantity}}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    @elseif($roleCheck == 'p')                        
+                        <tbody>              
+                            @foreach($bookingDetails->bookings as $bookedItem)
+                            <?php $jobId = (8 - strlen($bookedItem->id)); ?>
+                            <tr>
+                                <td width="3.5%">
+                                    <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control">
+                                </td>
+                                <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>            
+                                <td>{{$bookedItem->erp_code}}</td>
+                                <td>{{$bookedItem->item_code}}</td>
+                                <td>{{$bookedItem->season_code}}</td>
+                                <td>{{$bookedItem->oos_number}}</td>
+                                <td>{{$bookedItem->style}}</td>
+                                <td>{{$bookedItem->poCatNo}}</td>
+                                <td>{{$bookedItem->gmts_color }}</td>
+                                <td>{{$bookedItem->item_size}}</td>
+                                <td>{{$bookedItem->sku}}</td>
+                                <td>{{$bookedItem->item_quantity}}</td>
+                            </tr>
+                            @endforeach                        
+                        </tbody>
+                    @endif               
+                </table>
+                @if($roleCheck == 'p')
+                <div class="row">
+                    <div class="col-md-2 ">
+                        <div class="form-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="ipo_or_mrf" value="ipo">IPO                               
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="ipo_or_mrf" value="mrf" >MRF
+                        </label>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-md-2 pull-right">
+                            <button type="submit" class="btn btn-primary" >
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>                    
+                @endif
+            </form>
         </div>
     </div>
-    <?php 
-        $object = new App\Http\Controllers\Source\User\UserRoleDefine();
-        $roleCheck = $object->getRole();
-    ?>
-    @if($roleCheck == 'empty')
-    @elseif(strtolower($roleCheck) == 'p')
+
+    @if($roleCheck == 'p')
     <div class="panel panel-default">
         <div class="panel-heading" style="font-size: 120%">Mrf Details</div>
         <div class="panel-body aaa">

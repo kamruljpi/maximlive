@@ -260,7 +260,6 @@ class BookingController extends Controller
 
     public function getItemDetails($item_size){
             $buyerList = $this->getUserByerList();
-
             if(isset($buyerList) && !empty($buyerList)){
               $value = DB::table('mxp_product as mp')
                 ->leftJoin('mxp_productsize as mps','mps.product_code', '=','mp.product_code')

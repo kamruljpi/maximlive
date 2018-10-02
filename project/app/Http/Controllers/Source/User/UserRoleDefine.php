@@ -17,10 +17,10 @@ class UserRoleDefine
 		    foreach ($name as $key => $value) {
 		    	$nameValue[$value[$key]] = $value;
 		    }
-		    $checkvalue = array_search('Planing', $nameValue);
+		    $checkvalue = array_search('Planning', $nameValue);
 
 		    if(empty($checkvalue)){
-		        $checkvalue = array_search('planing', $nameValue);
+		        $checkvalue = array_search('planning', $nameValue);
 		        if (empty($checkvalue)) {
 		        	$checkvalue = 'empty';
 		        }

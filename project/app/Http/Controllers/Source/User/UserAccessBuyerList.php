@@ -12,7 +12,7 @@ trait UserAccessBuyerList
 		$buyerList = [];
 		if(isset($userbuyer) && !empty($userbuyer)){
 			foreach ($userbuyer as $buyerusr) {
-				$buyerList[] = $buyerusr->id_buyer;
+				$buyerList[$buyerusr->id_buyer] = $buyerusr->id_buyer;
 			}
 		}
 		return $buyerList;

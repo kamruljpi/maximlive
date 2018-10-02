@@ -16,6 +16,7 @@ var trainingScheduleValidDate = (function(){
 
 				if(current_dates - requested_dates > 0){
 					alert("Please enter the requested date after the current.");
+					$('#datePickerDate').val(" ");
 					return false;
 				}
 			});

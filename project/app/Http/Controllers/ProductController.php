@@ -211,7 +211,7 @@ class ProductController extends Controller
     	$createProduct->weight_amt = $request->p_weight_amt;
         $createProduct->user_id = Auth::user()->user_id;
         $createProduct->status = $request->is_active;
-        $createProduct->id_buyer = $request->id_mxp_buyer;
+        $createProduct->id_buyer = $request->id_buyer;
         $createProduct->others_color = $request->others_color;
         $createProduct->item_size_width_height = $item_size_width_height;
     	$createProduct->action = self::CREATE_PRODUCT;

@@ -125,7 +125,6 @@ class PiController extends Controller
 
 
 	public static function getUserDetails($userId){
-
         $data = DB::table('mxp_users')
             ->where('user_id',$userId)
             ->get();

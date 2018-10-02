@@ -126,21 +126,19 @@
             </table>
             @if($roleCheck == 'p')
             <div class="row">
-                <div class="col-md-2 ">
-                    <div class="form-group">
-                    <label class="radio-inline">
-                        <input type="radio" name="ipo_or_mrf" value="ipo">IPO                               
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="ipo_or_mrf" value="mrf" >MRF
-                    </label>
-                    </div>
-                </div>
-                <div class="form-group ">
-                    <div class="col-md-2 pull-right">
-                        <button type="submit" class="btn btn-primary" >
-                            Submit
-                        </button>
+                <div class="col-md-8"></div>
+                    <div class="col-md-4 ">
+                        <div class="form-group pull-right">
+                            <label class="radio-inline">
+                                <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px">IPO
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" >MRF
+                            </label>
+                            <button type="submit" class="btn btn-primary" style="margin-left: 10px">
+                                Submit
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>                    

@@ -25,7 +25,6 @@ use App\Http\Controllers\Supplier\SupplierController;
 use App\userbuyer;
 use App\Http\Controllers\Source\User\UserAccessBuyerList;
 
-
 class ProductController extends Controller
 {
     use UserAccessBuyerList;
@@ -36,6 +35,11 @@ class ProductController extends Controller
 
     Public function productList(){
         $products = $this->allProducts();
+        if(isset($products) && !empty($products)){   
+            foreach ($products as &$productValue) {
+                $productValue->description = MxpItemDescription::where('id',$productValue->item_description_id)->first();
+            }
+        }
     	return view('product_management.product_list',compact('products'));
     }
 

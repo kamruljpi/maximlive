@@ -12,7 +12,8 @@
 
 						@foreach($item as $values)
 			            
-						<form class="form-horizontal" role="form" method="POST" action="{{ Route('update_description_action') }}/{{$values->id_mxp_buyer}}">
+						<form class="form-horizontal" role="form" method="POST" action="{{ Route('update_description_action') }}/{{$values->id}}">
+
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 							@if ($errors->any())

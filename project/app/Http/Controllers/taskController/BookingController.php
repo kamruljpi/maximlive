@@ -7,6 +7,7 @@ use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RoleManagement;
 use App\Model\BookingFile;
+use App\MxpProduct;
 use Illuminate\Http\Request;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\MxpBookingChallan;
@@ -142,9 +143,14 @@ class BookingController extends Controller
         $style = (isset($data['style'])) ? $data['style'] : '';
         $erp = (isset($data['erp'])) ? $data['erp'] : 0;
         $sku = $data['sku'];
-      
+
+
+
       for ($i=0; $i < count($item_code); $i++) {
         $insertBooking = new MxpBooking();
+
+        $item_details = MxpProduct::where('product_code',$item_code[$i])->get();
+
         $insertBooking->user_id           = Auth::user()->user_id;
         $insertBooking->booking_order_id  = $customid ;//'booking-abc-001';
         $insertBooking->erp_code          = $erp[$i];
@@ -166,6 +172,7 @@ class BookingController extends Controller
         $insertBooking->shipmentDate      = $request->shipmentDate;
         // $insertBooking->poCatNo           = $request->poCatNo;
         $insertBooking->season_code       = $request->season_code;
+        $insertBooking->item_size_width_height       = $item_details[0]->item_size_width_height;
         $insertBooking->is_type           = $request->is_type;
         $insertBooking->is_pi_type        = 'unstage';
         $insertBooking->save();
@@ -175,7 +182,8 @@ class BookingController extends Controller
 
       foreach ($bookingValues as $bookingValues) {
 
-        /** insert mxp_booking_challan table need to create multiple challan **/    
+        /** insert mxp_booking_challan table need to create multiple challan **/
+        $item_details = MxpProduct::where('product_code',$bookingValues->item_code)->get();
             
         $insertBookingChallan = new MxpBookingChallan();
         $insertBookingChallan->user_id           = Auth::user()->user_id;
@@ -193,7 +201,9 @@ class BookingController extends Controller
         $insertBookingChallan->orderDate         = $bookingValues->orderDate;
         $insertBookingChallan->orderNo           = $bookingValues->orderNo;
         $insertBookingChallan->shipmentDate      = $bookingValues->shipmentDate;
+        $insertBookingChallan->shipmentDate      = $bookingValues->shipmentDate;
         $insertBookingChallan->poCatNo           = $bookingValues->poCatNo;
+        $insertBookingChallan->item_size_width_height       = $item_details[0]->item_size_width_height;
         $insertBookingChallan->save();
         $bookingChallanId = $insertBookingChallan->id;
 
@@ -222,6 +232,8 @@ class BookingController extends Controller
       $is_type = $request->is_type;
       $footerData = DB::select("select * from mxp_reportfooter");
       $getBookingUserDetails =  $this->getUserDetails( $customid );
+
+
 
       return view('maxim.orderInput.reportFile',compact('bookingReport','companyInfo','footerData','is_type','getBookingUserDetails','bookingBuyer'));
     }

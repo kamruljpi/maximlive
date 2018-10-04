@@ -191,7 +191,7 @@
       <tbody class="idclone" >
         <tr class="tr_clone">
             <input type="hidden" name="others_color[]" class="others_color" id="others_color" value="">
-            
+
           <!-- PO/Cat No -->
           <td>
             <div class="form-group">

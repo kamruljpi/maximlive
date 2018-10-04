@@ -65,7 +65,7 @@ class itemDescriptionController extends Controller
 
 
     public function updateDescription(Request $request){
-
+        
         $validMessages = [
             'description_name.required' => 'Description Name field is required.'
         ];

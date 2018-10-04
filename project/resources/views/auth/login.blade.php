@@ -1,7 +1,9 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container-fluid">
+	@if(Session::has('message'))
+	        @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('message') ))
+	@endif
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default" style="margin-top: 80px;">

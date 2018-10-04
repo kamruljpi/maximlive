@@ -1036,7 +1036,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 include('pi_route.php');
 include('ipo_route.php');
-include('booking.php');
+include('BookingView.php');
 include('ajax.php');
 
 

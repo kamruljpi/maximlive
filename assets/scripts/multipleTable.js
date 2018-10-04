@@ -27,11 +27,11 @@ $(document).ready(function(){
               match: {
                   enabled: true
               },
-              onChooseEvent: function(t){
-                // console.log($("#page-wrapper .booking_item_code").val());
-                // console.log(t.val());
+              // onChooseEvent: function(t){
+              //   // console.log($("#page-wrapper .booking_item_code").val());
+              //   // console.log(t.val());
 
-              }
+              // }
           },
 
           ajaxSettings: {
@@ -134,8 +134,6 @@ $(document).ready(function(){
       // console.log(parentLii);
       var item_code = $.trim($(this).val());
       var item_parent_class = $(this).data('parent');
-
-      isNotItemUserAccess(item_code);
 
       $.ajax({
           type: "GET",
@@ -267,6 +265,9 @@ $(document).ready(function(){
 
       });
       // });
+  
+
+  isNotItemUserAccess(item_code);
   });
 });
 
@@ -295,15 +296,13 @@ $(document).ready(function(){
     },
 
     getValue: function(element) {
+      // console.log(element);
       return element.name;
     },
 
     list: {
         match: {
             enabled: true
-        },
-        onChooseEvent: function(t){
-          // console.log(t.val());
         }
     },
 
@@ -374,6 +373,7 @@ $(document).ready(function(){
 });
 
 function isNotItemUserAccess(itemCode){
+  console.log(itemCode);
   $.ajax({
       type: "GET",
       url: baseURL+"/get/item/check/user/access",

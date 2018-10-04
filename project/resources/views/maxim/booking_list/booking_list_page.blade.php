@@ -116,7 +116,18 @@
 						<td>{{$value->booking_order_id}}</td>
 						<td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
 						<td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
-						<td>{{$value->booking_status}}</td>
+						<td>
+							@if($value->booking_status != 'Booked')
+								<div style="width:90%; float:left;">
+									{{$value->booking_status}}
+								</div>
+								<div style="width:10%; float:left;">
+									<i class="fa fa-bell" id="checking_booking_status"></i>
+								</div>
+							@else
+							{{$value->booking_status}}
+							@endif
+						</td>
 						<td width="12%">
 							<div class="btn-group">
 
@@ -160,3 +171,6 @@
 		</div>
 	</div>
 @endsection
+@section('LoadScript')
+  <script type="text/javascript" src="{{ asset('assets/scripts/booking_status/show_all_action.js') }}"></script>
+@stop

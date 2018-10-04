@@ -8,6 +8,7 @@ use App\Http\Controllers\RoleManagement;
 use App\Model\MxpBookingBuyerDetails;
 use App\MxpIpo;
 use App\Supplier;
+use App\MxpProduct;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -24,16 +25,18 @@ class TaskController extends Controller {
 
 	public function getItemCode() {
 		$results = array();
-		$productDetails = DB::select("SELECT mp.product_code FROM mxp_product mp
-        LEFT JOIN mxp_productsize mps ON (mps.product_code = mp.product_code)
-        LEFT JOIN mxp_gmts_color mgs ON (mgs.item_code = mps.product_code) GROUP BY mps.product_code, mgs.item_code");
+		// $productDetails = DB::select("SELECT mp.product_code FROM mxp_product mp
+  //       LEFT JOIN mxp_productsize mps ON (mps.product_code = mp.product_code)
+  //       LEFT JOIN mxp_gmts_color mgs ON (mgs.item_code = mps.product_code) GROUP BY mps.product_code, mgs.item_code");
+
+		$productDetails = MxpProduct::select('product_code')->get();
 		if (isset($productDetails) && !empty($productDetails)) {
 			foreach ($productDetails as $itemKey => $itemValue) {
 
 				$results[]['name'] = $itemValue->product_code;
 			}
 		}
-		print json_encode($results);
+		return json_encode($results);
 	}
 	public function gettaskActionOrsubmited() {
 		return \Redirect()->Route('dashboard_view');

@@ -10,13 +10,18 @@
     $object = new App\Http\Controllers\Source\User\UserRoleDefine();
     $roleCheck = $object->getRole();
 ?>
+
+@if(Session::has('empty_message'))
+        @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_message') ))
+@endif
+        
 @if($roleCheck == 'p')
     @if($bookingDetails->booking_status == 'Booked')
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
                     z-index: 999;">
-                  <center><strong>Accepted!</strong> this Order and go to proccessing. <a href="{{route('accepted_booking')}}/{{$bookingDetails->booking_order_id}}" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accepted</a></center>
+                  <center><strong>Accept!</strong> this Order and go to proccessing. <a href="{{route('accepted_booking')}}/{{$bookingDetails->booking_order_id}}" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accept</a></center>
                 </div>
             </div>
         </div>

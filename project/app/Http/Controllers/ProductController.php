@@ -200,13 +200,14 @@ class ProductController extends Controller
 
 		$validationError = $validator->messages();
 
-
+        $description_name = MxpItemDescription::where('id',$request->p_description)->select('name')->first();
 
     	$createProduct = new MxpProduct();
     	$createProduct->product_code = $request->p_code;
     	$createProduct->product_name = $request->p_name;
         $createProduct->product_type = $request->product_type;
-    	$createProduct->product_description = $request->p_description;
+    	$createProduct->product_description = $description_name->name;
+        $createProduct->item_description_id = $request->p_description;
     	$createProduct->brand = htmlspecialchars($request->p_brand);
     	$createProduct->erp_code = $request->p_erp_code;
     	$createProduct->item_inc_percentage = $request->item_inc_percentage;
@@ -292,11 +293,12 @@ class ProductController extends Controller
 
 		$validationError = $validator->messages();
 
+        $description_name = MxpItemDescription::where('id',$request->p_description)->select('name')->first();
     	$updateProduct = MxpProduct::find($request->product_id);
     	$updateProduct->product_code = $request->p_code;
     	$updateProduct->product_name = $request->p_name;
         $updateProduct->product_type = $request->product_type;
-//    	$updateProduct->product_description = $request->p_description;
+   	    $updateProduct->product_description = $description_name->name;
     	$updateProduct->brand = $request->p_brand;
     	$updateProduct->erp_code = $request->p_erp_code;
         $updateProduct->item_inc_percentage = $request->item_inc_percentage;

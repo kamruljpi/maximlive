@@ -256,9 +256,11 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                          <li {{ (Request::is('*dashboard') ? 'class="active"' : '') }}>
-                            <a href="{{ Route ('dashboard_view') }}"><i class="fa fa-dashboard fa-fw"></i>{{ trans('others.task_label') }}</a>
-                            {{-- <a href="{{ Route ('dashboard_view') }}"><i class="fa fa-dashboard fa-fw"></i> {{trans('others.mxp_dashboard')}}</a> --}}
-                      </li>
+                            <a href="{{ Route ('task_dashboard_view') }}">
+                                <i class="fa fa-dashboard fa-fw"></i>
+                                {{ trans('others.task_label') }}
+                            </a>
+                        </li>
 
 
                         @if(!is_array(session()->get('UserMenus')) || is_object(session()->get('UserMenus')) )

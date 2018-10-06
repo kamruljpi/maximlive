@@ -386,9 +386,9 @@ function isNotItemUserAccess(itemCode){
         if(resultsss == 'not_match'){
           alert("You haven\'t permission to access this Item.");
         }
-        if(resultsss == 'empty'){
-          alert("This Item code not entered in the Software.");
-        }
+        // if(resultsss == 'empty'){
+        //   alert("This Item code not entered in the Software.");
+        // }
       },
       error:function(result){
         alert("Something is wrong "+result+".");

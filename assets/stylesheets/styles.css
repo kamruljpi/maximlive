@@ -9182,3 +9182,23 @@ span.challan_list_rmv:hover {
   cursor: pointer;
   color: #f00;
 }
+#welcome .panel{
+  border-radius: 1px;
+   box-shadow: 8px 8px #888888;
+}
+#welcome .header{
+  border-bottom: 2px solid #e0007c; 
+}
+#welcome .header h3{
+  margin-top: 0px;
+}
+#welcome .header b{
+  color: #e0007c;
+  text-transform: uppercase;
+}
+#welcome .body{
+  height: 150px;
+}
+#welcome .body h3{
+  margin-top: 150px;
+} 

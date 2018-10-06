@@ -109,7 +109,7 @@ class HomeController extends Controller {
 		// }else{
 		// 	$selectBuyer = [];
 		// }
-
-		return view('dashboard');
+		$user = Auth::user();
+		return view('dashboard',compact('user'));
 	}
 }

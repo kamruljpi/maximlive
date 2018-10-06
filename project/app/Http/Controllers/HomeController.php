@@ -29,27 +29,27 @@ class HomeController extends Controller {
 
 	public function dashboard() {
 
-		$taskRoleData = array();
-		$user_role_id = session()->get('user_role_id');
-		if(isset($user_role_id) && !empty($user_role_id)){
-			$selectedTaskRole = DB::select('SELECT * FROM `mxp_task_role` WHERE `role_id` = '.$user_role_id);
-			if(isset($selectedTaskRole) && !empty($selectedTaskRole)){
-			    foreach ($selectedTaskRole as $srk => $srvalue) {
-			        if(isset($srvalue->task) && !empty($srvalue->task)){
-			            $taskRoleData = explode(",", $srvalue->task);
-			        }
-			    }
-			}
-		}
-		$taskAccessList = array();
-		if(isset($taskRoleData) && !empty($taskRoleData)){
-			foreach ($taskRoleData as $taskKey => $taskValue) {
-				$selectedTaskRole = DB::select('SELECT `name` FROM `mxp_task` WHERE `id_mxp_task` = '.$taskValue);
-				if(isset($selectedTaskRole[0]->name) && !empty($selectedTaskRole[0]->name)){
-					$taskAccessList[] = $selectedTaskRole[0]->name;
-				}
-			}
-		}
+		// $taskRoleData = array();
+		// $user_role_id = session()->get('user_role_id');
+		// if(isset($user_role_id) && !empty($user_role_id)){
+		// 	$selectedTaskRole = DB::select('SELECT * FROM `mxp_task_role` WHERE `role_id` = '.$user_role_id);
+		// 	if(isset($selectedTaskRole) && !empty($selectedTaskRole)){
+		// 	    foreach ($selectedTaskRole as $srk => $srvalue) {
+		// 	        if(isset($srvalue->task) && !empty($srvalue->task)){
+		// 	            $taskRoleData = explode(",", $srvalue->task);
+		// 	        }
+		// 	    }
+		// 	}
+		// }
+		// $taskAccessList = array();
+		// if(isset($taskRoleData) && !empty($taskRoleData)){
+		// 	foreach ($taskRoleData as $taskKey => $taskValue) {
+		// 		$selectedTaskRole = DB::select('SELECT `name` FROM `mxp_task` WHERE `id_mxp_task` = '.$taskValue);
+		// 		if(isset($selectedTaskRole[0]->name) && !empty($selectedTaskRole[0]->name)){
+		// 			$taskAccessList[] = $selectedTaskRole[0]->name;
+		// 		}
+		// 	}
+		// }
 
 		$company_id = '';
 		if (session()->get('user_id') == 1 && session()->get('user_type') == "super_admin") {
@@ -94,22 +94,22 @@ class HomeController extends Controller {
 		}
 		session()->put('UserMenus', $menus_array);
 
-		$userbuyer = userbuyer::where("id_user",Auth::user()->user_id)->get();
-		$buyerList = [];
-		if(isset($userbuyer) && !empty($userbuyer)){
-			foreach ($userbuyer as $buyerusr) {
-				$buyerList[] = $buyerusr->id_buyer;
-			}
-		}
+		// $userbuyer = userbuyer::where("id_user",Auth::user()->user_id)->get();
+		// $buyerList = [];
+		// if(isset($userbuyer) && !empty($userbuyer)){
+		// 	foreach ($userbuyer as $buyerusr) {
+		// 		$buyerList[] = $buyerusr->id_buyer;
+		// 	}
+		// }
 
-		if(isset($buyerList) && !empty($buyerList)){
-			$selectBuyer = DB::table('mxp_party')->where('status',1)->whereIn('id_buyer',$buyerList)->get();
-		}else if(Auth::user()->type == 'super_admin'){
-			$selectBuyer = DB::table('mxp_party')->where('status',1)->get();
-		}else{
-			$selectBuyer = [];
-		}
+		// if(isset($buyerList) && !empty($buyerList)){
+		// 	$selectBuyer = DB::table('mxp_party')->where('status',1)->whereIn('id_buyer',$buyerList)->get();
+		// }else if(Auth::user()->type == 'super_admin'){
+		// 	$selectBuyer = DB::table('mxp_party')->where('status',1)->get();
+		// }else{
+		// 	$selectBuyer = [];
+		// }
 
-		return view('dashboard',compact('selectBuyer','taskAccessList'));
+		return view('dashboard');
 	}
 }

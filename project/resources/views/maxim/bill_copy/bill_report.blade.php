@@ -250,32 +250,33 @@
 <div class="row body-top">
 	<div class="col-md-12 col-xs-12 body-list">
 		<ul>
-			<li>2.Payment Terms : TT/FDD/CHAQUE/CASH BEFORENSHIPMENT</li>
-			<li>3.Shipment : By COURIER/ CARGO</li>
-			<li>4. Packing : MAXIM STANDARD PACKING</li>
-			<li>2.Payment Terms: BBLC/ CHAQUE/ CASH BEFORE SHIPMENT</li>
-			<li>3.Shipment: FOB</li>
-			<li>4.Packing: MAXIM STANDARD PACKING
-			<li>5.Delivery: ETD 2018-01-25
-			Beneficiary Bank: EASTERN BANK LTD. 
-			Beneficiary: MAXIM LABEL & PACKAGING (BD) PVT. LTD</li>
-			<li>Account Number:1041060234447</li>
-			<li>Tax no (TIN) : 549978367844</li>
-			<li>Vat No : 5011070061</li>
-			<li>HS CODE: 48114110</li>
-			<li>BIN NO :  000412786</li>
-			<li>Origin : BANGLADESH</li>
-			<li>Payment : 01.By Irrevocable Letter of Credit (L/C) to be opened in our favor to be Advised through "Eastern Bank Limited,Dhaka Main Office, Jibon Bima Bhabon, 10, Dilkusha C/A, Dhaka - 1000, Bangladesh and Original L/C must be received to Our Bank.</li>
+			<li>1.Payment Terms：BBLC/ CHAQUE/ CASH BEFORE SHIPMENT</li>
+			<li>2.Shipment: BY COURIER/ CARGO</li>		
+			<li>3.Packing: MAXIM STANDARD PACKING</li>									
+			<li>Beneficiary Bank: EBL Bangladesh</li>								
+			<li>Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh	</li>	 		
+			<li>Telephone : (880 2) 9553053-6(Direct), 7113711-2, 7113714-8 Ext: 149-162</li>							
+			<li>Beneficiary:MAXIM LABEL & PACKAGING (BD) PVT., LTD</li>						 
+			<li>Account Number: 1041060234447</li>								 
+			<li>SWIFT:   EBLDBDDH</li>					
+			<li>Origin : BANGLADESH</li>								
+			<li>VAT Registration: 17011037475</li>
+			<li>E-BIN NO: 000412786</li>					
+			<li>01. Payment : By Irrevocable Letter of Credit (L/C) to be opened in our favor to be</li>
+			<li>Advised through " Eastern bank Ltd, Bangladesh ,Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh  and Original L/C must be received to Our Bank. SWIFT CODE : EBLDBDDH </li>								
 			<li>02. Bill of Exchange will be Signed by the Applicant before Submitting to the Applicant's Bank.</li>
-			<li>03. Payment to be made in US Dollar within 60/30/90 days or Sight from the Date of Delivery.</li>
-			<li>04. Payment reimbursement proceeds through FDD/Cheque in Foreign Currency (US Dollar) Drawn on Bangladesh Bank.</li>
-			<li>05. Overdue interest to be paid for delayed period at 12% p@ from the date of Maturity .</li>
-			<li>06. All charge (Swift,Payment ,Reimbursement,Handling fee,etc) will bear by applicant</li>
-			<li>07. Maturity date will be calculated from the date of delivery.</li>
-			<li>08.No Discrepancy clause will be accepted for the local Back to Back LC.</li>
-			<li>09.Presentation Period is 15 days from the date of delivery.</li>
-			<li>10.Delivery Challan & Bill of Exchange must be Sign (by Buyer Authorized Person)  within 07 (Seven) Days from the date of Submisshion. </li>
-</li>
+			<li>03. Payment to be made in US Dollar within 90/60/45/30 days or Sight from the Date of Delivery not Acceptance .</li>
+			<li>04. Payment reimbursement proceeds through FDD/Cheque in Foreign Currency (US Dollar) Drawn on Bangladesh Bank.	</li>								
+			<li>05. Overdue interest to be paid for delayed period at 15% p@ from the date of Maturity .</li>		
+			<li>06. All charge (Swift,Payment ,Reimbursement,Handling fee,etc) will bear by applicant.</li>							
+			<li>07. Maturity date will be calculated from the date of delivery.</li>			
+			<li>08. No. discrepancy clause will be accepted into BBLC.</li>					
+			<li>09.L/C   value  should   be  minimum    US$  1500.00 otherwise  L/C   to  be  opened   at Sight & $75 will be  added  to  the  invoice   as collection  and  bank  charge.</li>
+			<li>10.The  Bill  of  exchange and  Delivery  Challan/Truck Receipt   are need  to be  Signed by Customer Signatory within 07-10 days from the date of Submission. </li>									
+												
+			<li>Information: Master Export L/C No & Date be clearly Mentioned in the Back to Back L/C.</li>							
+												
+			<li>Quality Complain: Any Claim of Quality & Quantity Should be informed within 15 days after Shipment.</li>
 		</ul>
 	</div>
 </div>

@@ -5,6 +5,7 @@
 		  rel="stylesheet">
 
 @include('product_management.product_modal')
+@include('product_management.cost_price_model')
 
 <?php 
 	// print_r("<pre>");
@@ -244,14 +245,23 @@
 												</small>
 												
 
-												<a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addSupplierPrice">
+												<!-- <a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addSupplierPrice">
 													<i class="material-icons">
 														add_circle_outline
 													</i>
 												</a>
 												<small style="float: left; padding-top: 4px;">
-													Cost Price
-												</small>
+													Supplier Price
+												</small> -->
+
+												<a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addCostPrice">
+                                                    <i class="material-icons">
+                                                        add_circle_outline
+                                                    </i>
+                                                </a>
+                                                <small style="float: left; padding-top: 4px;">
+                                                    Cost Price
+                                                </small>
 											</div>
 		                                </div>
 		                            </div>
@@ -369,10 +379,6 @@
 									</div>
 								</div>
 							</div>
-
-
-
-
 
 							<!-- Add Supplier Price-->
 							<div class="modal fade" id="addSupplierPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

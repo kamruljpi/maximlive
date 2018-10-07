@@ -5,7 +5,7 @@
 			<div class="panel panel-default">
 			  	<div class="panel-body">
 			  		<div class="header">
-			  			<h3>Welcome <b>{{ $user->first_name }}</b></h3>
+			  			<h3>Welcome <b>{{ Auth::user()->first_name }} {{Auth::user()->last_name}}</b></h3>
 			  		</div>
 			  		<div class="body">
 			  			<h3>Welcome to <b>Maxim Order Management System!</b></h3>

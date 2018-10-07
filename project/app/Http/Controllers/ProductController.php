@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Supplier\SupplierController;
 use App\userbuyer;
 use App\Http\Controllers\Source\User\UserAccessBuyerList;
+use App\Model\Product\ItemCostPrice;
 
 class ProductController extends Controller
 {
@@ -109,6 +110,8 @@ class ProductController extends Controller
     	//     $product = MxpProduct::where('product_id', $request->product_id)->get();
 
         $product = $this->allProducts($request->product_id);
+
+        // $this->print_me($product[0]->id_buyer);
         $colors = MxpGmtsColor::where('item_code', NULL)->get();
         $sizes = MxpProductSize::where('product_code', '')->get();
 
@@ -134,13 +137,13 @@ class ProductController extends Controller
 
         $vendorCompanyList = MaxParty::select('mxp_party.id', 'mxp_party.name', 'mxp_party.name_buyer')
                             ->leftJoin('mxp_vendor_prices', 'mxp_vendor_prices.party_table_id', '=', 'mxp_party.id')
-                            ->where('mxp_party.status', '=', 1)
+                            ->where([['mxp_party.status', '=', 1],['id_buyer',$product[0]->id_buyer]])
                             ->where('mxp_vendor_prices.party_table_id', null)
                             ->get();
 //        return count($vendorCompanyList);
 
         if(count($vendorCompanyListPrice)==0){
-            $vendorCompanyList = MaxParty::select('id', 'name', 'name_buyer')->get()->sortBy('name_buyer');
+            $vendorCompanyList = MaxParty::select('id', 'name', 'name_buyer')->where('id_buyer',$product[0]->id_buyer)->get()->sortBy('name_buyer');
         }
 
 //        return $vendorCompanyList;
@@ -160,14 +163,17 @@ class ProductController extends Controller
             $supplierList = Supplier::get()->sortBy('name');
         }
         $buyers = buyer::all();
-//        return $product;
+        foreach ($product as &$productValues) {
+            $productValues->cost_price = ItemCostPrice::where('id_product',$productValues->product_id)->first();
+        }
+       // $this->print_me($product->cost_price);
        return view('product_management.update_product', compact('product', 'vendorCompanyListPrice', 'supplierPrices', 'supplierList', 'vendorCompanyList',  'colors', 'sizes', 'colorsJs', 'sizesJs', 'buyers'))->with('brands',$brands)->with('itemList',$itemList);
     }
 
     Public function addProduct(Request $request){
 
         $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;
-        // $this->print_me($item_size_width_height);
+        $this->print_me($request->all());
     	$roleManage = new RoleManagement();
 
         $validMessages = [
@@ -258,12 +264,21 @@ class ProductController extends Controller
             $this->saveSize($sizeData[1], $request->p_code);
         }
 
+        ItemCostPrice::create([
+            'id_product'    => $lastProId,
+            'user_id'       => Auth::user()->user_id,
+            'price_1'       => $request->cost_price_1,
+            'price_2'       => $request->cost_price_2,
+            'last_action'   => self::CREATE_PRODUCT
+        ]);
+
 		StatusMessage::create('new_product_create', 'New product Created Successfully');
 
 		return \Redirect()->Route('product_list_view');    	
     }
-    public function updateProduct(Request $request){
 
+    public function updateProduct(Request $request){
+        
         $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;
 //        VendorPrice::where('product_id', $request->product_id)->delete();
         $this->addVendorPrice($request, $request->product_id);
@@ -315,7 +330,7 @@ class ProductController extends Controller
         $updateProduct->id_buyer = $request->id_buyer;
         $updateProduct->others_color = $request->others_color;
     	$updateProduct->item_size_width_height = $item_size_width_height;
-        $updateProduct->action = self::CREATE_PRODUCT;
+        $updateProduct->action = self::UPDATE_PRODUCT;
     	$updateProduct->save();
         $lastProductID = $updateProduct->product_id;
 
@@ -355,10 +370,24 @@ class ProductController extends Controller
                 $this->saveSize($size_name , $request->p_code);
             }
         }
+        $cost_table_value = DB::table('mxp_item_cost_price')->where('id_product',$request->product_id)->get();
 
-
-
-
+        if(empty($cost_table_value[0]->id_product)){
+            ItemCostPrice::create([
+                'id_product'    => $request->product_id,
+                'user_id'       => Auth::user()->user_id,
+                'price_1'       => $request->cost_price_1,
+                'price_2'       => $request->cost_price_2,
+                'last_action'   => self::CREATE_PRODUCT
+            ]);
+        }else{
+            ItemCostPrice::where('id_product',$request->product_id)->update([
+                'user_id'     => Auth::user()->user_id,
+                'price_1'     => $request->cost_price_1,
+                'price_2'     => $request->cost_price_2,
+                'last_action' => self::UPDATE_PRODUCT
+            ]);
+        }        
 
 		StatusMessage::create('update_product_create', $request->p_name .' update Successfully');
 

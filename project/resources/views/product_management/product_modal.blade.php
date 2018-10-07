@@ -119,11 +119,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
 <!-- Add Size Modal -->
 <div class="modal fade" id="addSizeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -303,10 +298,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 
 {{--<!-- Add Vendor Company Price-->--}}
 {{--<div class="modal fade" id="addVendorComPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">--}}

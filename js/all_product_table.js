@@ -381,4 +381,9 @@ $('.supplier-price-btn').click(function(e) {
     e.preventDefault();
     $('#addSupplierPrice').modal("hide");
 });
+$('.addCostPrice').click(function(e) {
+
+    e.preventDefault();
+    $('#addCostPrice').modal("hide");
+});
 

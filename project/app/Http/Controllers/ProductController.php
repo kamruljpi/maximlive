@@ -100,7 +100,9 @@ class ProductController extends Controller
                         ->where('is_delete', 0)
                         ->get();
         $itemList = MxpItemDescription::where('is_active', '1')->get();
-        $buyers = buyer::all();
+        // $buyers = buyer::all();
+        $buyers = DB::table('mxp_buyer')->select('id_mxp_buyer','buyer_name')->orderBy('buyer_name', ASC)->get();
+
        return view('product_management.add_product',compact('brands', 'colors', 'sizes', 'vendorCompanyList', 'supplierList','itemList','buyers'));
     }
 
@@ -159,7 +161,8 @@ class ProductController extends Controller
         if(count($supplierPrices) == 0){
             $supplierList = Supplier::get()->sortBy('name');
         }
-        $buyers = buyer::all();
+        // $buyers = buyer::all();
+        $buyers = DB::table('mxp_buyer')->select('id_mxp_buyer','buyer_name')->orderBy('buyer_name', ASC)->get(); 
 //        return $product;
        return view('product_management.update_product', compact('product', 'vendorCompanyListPrice', 'supplierPrices', 'supplierList', 'vendorCompanyList',  'colors', 'sizes', 'colorsJs', 'sizesJs', 'buyers'))->with('brands',$brands)->with('itemList',$itemList);
     }

@@ -41,14 +41,16 @@ class PartyController extends Controller
 
     public function create()
     {
-        $buyers = buyer::all();
+        // $buyers = buyer::all();
+        $buyers = DB::table('mxp_buyer')->select('id_mxp_buyer','buyer_name')->orderBy('buyer_name', ASC)->get();
         return view('party_management.party_create', compact('buyers'));
     } 
 
     public function updateView(Request $request)
     {
         $party_edits = MaxParty::Where('id',$request->id )->get();
-        $buyers = buyer::all();
+        // $buyers = buyer::all();
+        $buyers = DB::table('mxp_buyer')->select('id_mxp_buyer','buyer_name')->orderBy('buyer_name', ASC)->get();
         return view('party_management.party_edit', compact('party_edits','buyers'));
     }
 

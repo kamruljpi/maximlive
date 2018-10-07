@@ -87,9 +87,9 @@ class TaskViewController extends Controller implements TaskInterface
 		}
 
 		if(isset($buyerList) && !empty($buyerList)){
-			$selectBuyer = DB::table('mxp_party')->where('status',1)->whereIn('id_buyer',$buyerList)->get();
+			$selectBuyer = DB::table('mxp_party')->where('status',1)->whereIn('id_buyer',$buyerList)->orderBy('name_buyer', ASC)->get();
 		}else if(Auth::user()->type == 'super_admin'){
-			$selectBuyer = DB::table('mxp_party')->where('status',1)->get();
+			$selectBuyer = DB::table('mxp_party')->where('status',1)->orderBy('name_buyer', ASC)->get();
 		}else{
 			$selectBuyer = [];
 		}

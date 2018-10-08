@@ -54,8 +54,8 @@ trans('others.party_list_label'))
                         <th class="">Vendor ID</th>
                         <th class="">Company Name</th>
                         <th class="">Brand</th>
-                        <th class="">Address -1 (Invoice)</th>
-                        <th class="">Address -2 (Invoice)</th>
+                        <th class="">Address (Invoice)</th>
+                        <th class="">Address (Delivery)</th>
                         <th class="">Attention (Invoice)</th>
                         <th class="">Mobile (Invoice)</th>
                         <!-- <th class="">Fax(Invoice)</th>
@@ -74,7 +74,7 @@ trans('others.party_list_label'))
                     <td>{{$party->name}}</td>
                     <td>{{$party->name_buyer}}</td>
                     <td>{{$party->address_part1_invoice}}</td>
-                    <td>{{$party->address_part2_invoice}}</td>
+                    <td>{{$party->address_part1_delivery}}</td>
                     <td>{{$party->attention_invoice}}</td>
                     <td>{{$party->mobile_invoice}}</td>
 

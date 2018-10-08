@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 27, 2018 at 12:27 PM
+-- Generation Time: Oct 08, 2018 at 02:18 PM
 -- Server version: 10.1.34-MariaDB
 -- PHP Version: 7.1.19
 
@@ -26,60 +26,60 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE  PROCEDURE `getBookinAndBuyerDeatils` (IN `booking_order_id` VARCHAR(247))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBookinAndBuyerDeatils` (IN `booking_order_id` VARCHAR(247))  NO SQL
 SELECT mb.season_code,mb.oos_number,mb.style,mb.is_type,mb.id,mb.sku,mb.erp_code,mb.item_code,mb.item_price,mb.item_description, mb.orderDate,mb.orderNo,mb.shipmentDate,mb.poCatNo,mb.others_color ,GROUP_CONCAT(mb.item_size) as itemSize,GROUP_CONCAT(mb.gmts_color) as gmtsColor,GROUP_CONCAT(mb.item_quantity) as quantity,mbd.buyer_name,mbd.Company_name,mbd.C_sort_name,mbd.address_part1_invoice,mbd.address_part2_invoice,mbd.attention_invoice,mbd.mobile_invoice,mbd.telephone_invoice,mbd.fax_invoice,mbd.address_part1_delivery,mbd.address_part2_delivery,mbd.attention_delivery,mbd.mobile_delivery,mbd.telephone_delivery,mbd.fax_delivery,mbd.is_complete,mbd.booking_status,mbd.shipmentDate,mbd.booking_order_id from mxp_booking mb INNER JOIN mxp_bookingbuyer_details mbd on(mbd.booking_order_id = mb.booking_order_id) WHERE mb.booking_order_id = booking_order_id GROUP BY mb.item_code ORDER BY id ASC$$
 
-CREATE  PROCEDURE `getProductSizeQuantity` (IN `product_code` VARCHAR(247), IN `order_id` VARCHAR(247))  select mo.item_code,mo.oss,mo.style, mp.unit_price, mp.weight_qty, mp.erp_code, GROUP_CONCAT(mo.item_size) as item_size, GROUP_CONCAT(mo.quantity) as quantity, mo.order_id from mxp_order mo INNER JOIN mxp_product mp on(mo.item_code = mp.product_code) where mo.item_code = product_code AND mo.order_id = order_id GROUP by mo.item_code$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductSizeQuantity` (IN `product_code` VARCHAR(247), IN `order_id` VARCHAR(247))  select mo.item_code,mo.oss,mo.style, mp.unit_price, mp.weight_qty, mp.erp_code, GROUP_CONCAT(mo.item_size) as item_size, GROUP_CONCAT(mo.quantity) as quantity, mo.order_id from mxp_order mo INNER JOIN mxp_product mp on(mo.item_code = mp.product_code) where mo.item_code = product_code AND mo.order_id = order_id GROUP by mo.item_code$$
 
-CREATE  PROCEDURE `getProductSizeQuantitybyPrice` (IN `booking_order_id` VARCHAR(100))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductSizeQuantitybyPrice` (IN `booking_order_id` VARCHAR(100))  NO SQL
 SELECT mb.erp_code,mb.item_code,mb.item_price,mb.orderDate,mb.orderNo,mb.shipmentDate,mb.poCatNo,mb.others_color ,GROUP_CONCAT(mb.item_size) as itemSize,GROUP_CONCAT(mb.gmts_color) as gmtsColor,GROUP_CONCAT(mb.item_quantity) as quantity, mbd.* from mxp_booking mb INNER JOIN mxp_bookingBuyer_details mbd on(mbd.booking_order_id = mb.booking_order_id) INNER JOIN mxp_product mp on( mb.item_code = mp.product_code) WHERE mb.booking_order_id = booking_order_id GROUP BY mb.item_code$$
 
-CREATE  PROCEDURE `getProductSizeQuantityWithConcat` (IN `product_code` VARCHAR(247))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProductSizeQuantityWithConcat` (IN `product_code` VARCHAR(247))  NO SQL
 SELECT mp.erp_code,mp.product_id,mp.unit_price,mp.product_name,mp.others_color,mp.product_description ,GROUP_CONCAT(mps.product_size order by product_size) as size,GROUP_CONCAT(mgs.color_name) as color   FROM mxp_product mp 
 LEFT JOIN mxp_productsize mps ON (mps.product_code = mp.product_code)
 LEFT JOIN mxp_gmts_color mgs ON (mgs.item_code = mps.product_code)
 WHERE mp.product_code = product_code and mp.status = 1 GROUP BY mps.product_code, mgs.item_code$$
 
-CREATE  PROCEDURE `get_all_role_list_by_group_id` (IN `grp_id` INT(11))  SELECT GROUP_CONCAT(DISTINCT(c.name)) as c_name,r.* FROM mxp_role r join mxp_companies c on(c.id=r.company_id)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_role_list_by_group_id` (IN `grp_id` INT(11))  SELECT GROUP_CONCAT(DISTINCT(c.name)) as c_name,r.* FROM mxp_role r join mxp_companies c on(c.id=r.company_id)
 where c.group_id=grp_id GROUP BY r.cm_group_id$$
 
-CREATE  PROCEDURE `get_all_translation` ()  SELECT tr.*,tk.translation_key FROM mxp_translation_keys tk INNER JOIN mxp_translations tr ON(tr.translation_key_id=tk.translation_key_id)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_translation` ()  SELECT tr.*,tk.translation_key FROM mxp_translation_keys tk INNER JOIN mxp_translations tr ON(tr.translation_key_id=tk.translation_key_id)$$
 
-CREATE  PROCEDURE `get_all_translation_with_limit` (IN `startedAt` INT(11), IN `limits` INT(11))  SELECT tr.*,tk.translation_key, ml.lan_name FROM mxp_translation_keys tk INNER JOIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_translation_with_limit` (IN `startedAt` INT(11), IN `limits` INT(11))  SELECT tr.*,tk.translation_key, ml.lan_name FROM mxp_translation_keys tk INNER JOIN
  mxp_translations tr ON(tr.translation_key_id=tk.translation_key_id) 
  INNER JOIN mxp_languages ml ON(ml.lan_code=tr.lan_code)order by tk.translation_key_id desc limit startedAt,limits$$
 
-CREATE  PROCEDURE `get_child_menu_list` (IN `p_parent_menu_id` INT(11), IN `role_id` INT(11), IN `comp_id` INT(11))  if(comp_id !='') then
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_child_menu_list` (IN `p_parent_menu_id` INT(11), IN `role_id` INT(11), IN `comp_id` INT(11))  if(comp_id !='') then
 SELECT m.* FROM mxp_user_role_menu rm inner JOIN mxp_menu m ON(m.menu_id=rm.menu_id) WHERE rm.role_id=role_id AND rm.company_id=comp_id AND m.parent_id=p_parent_menu_id order by m.order_id ASC;
 else
 SELECT m.* FROM mxp_user_role_menu rm inner JOIN mxp_menu m ON(m.menu_id=rm.menu_id) WHERE rm.role_id=role_id AND m.parent_id=p_parent_menu_id order by m.order_id ASC;
 end if$$
 
-CREATE  PROCEDURE `get_companies_by_group_id` (IN `grp_id` INT(11))  select * from mxp_companies where group_id=grp_id and is_active = 1$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_companies_by_group_id` (IN `grp_id` INT(11))  select * from mxp_companies where group_id=grp_id and is_active = 1$$
 
-CREATE  PROCEDURE `get_permission` (IN `role_id` INT(11), IN `route` VARCHAR(120), IN `comp_id` INT(11))  if(comp_id !='')then
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_permission` (IN `role_id` INT(11), IN `route` VARCHAR(120), IN `comp_id` INT(11))  if(comp_id !='')then
 SELECT COUNT(*) as cnt FROM mxp_user_role_menu rm inner JOIN mxp_menu m ON(m.menu_id=rm.menu_id) WHERE m.route_name=route AND rm.role_id=role_id AND rm.company_id=comp_id;
 else
 SELECT COUNT(*) as cnt FROM mxp_user_role_menu rm inner JOIN mxp_menu m ON(m.menu_id=rm.menu_id) WHERE m.route_name=route AND rm.role_id=role_id ;
 end if$$
 
-CREATE  PROCEDURE `get_roles_by_company_id` (IN `cmpny_id` INT(11), IN `cm_grp_id` INT(11))  SELECT rl.name as roleName, cm.name as companyName, cm.id as company_id, rl.cm_group_id, rl.is_active FROM mxp_role rl INNER JOIN mxp_companies cm ON(rl.company_id=cm.id) where cm.group_id = `cmpny_id` and rl.cm_group_id = `cm_grp_id`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_roles_by_company_id` (IN `cmpny_id` INT(11), IN `cm_grp_id` INT(11))  SELECT rl.name as roleName, cm.name as companyName, cm.id as company_id, rl.cm_group_id, rl.is_active FROM mxp_role rl INNER JOIN mxp_companies cm ON(rl.company_id=cm.id) where cm.group_id = `cmpny_id` and rl.cm_group_id = `cm_grp_id`$$
 
-CREATE  PROCEDURE `get_searched_trans_key` (IN `_key` VARCHAR(255))  SELECT distinct(tk.translation_key),tk.translation_key_id, tk.is_active FROM mxp_translation_keys tk
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_searched_trans_key` (IN `_key` VARCHAR(255))  SELECT distinct(tk.translation_key),tk.translation_key_id, tk.is_active FROM mxp_translation_keys tk
  inner join mxp_translations tr on(tk.translation_key_id = tr.translation_key_id)
  WHERE tk.translation_key LIKE CONCAT('%', _key , '%')$$
 
-CREATE  PROCEDURE `get_translations_by_key_id` (IN `key_id` INT)  select translation_id, translation, lan_code from mxp_translations
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_translations_by_key_id` (IN `key_id` INT)  select translation_id, translation, lan_code from mxp_translations
  where translation_key_id= `key_id` and is_active = 1$$
 
-CREATE  PROCEDURE `get_translations_by_locale` (IN `locale_code` VARCHAR(255))  SELECT tr.translation,tk.translation_key FROM mxp_translation_keys tk INNER JOIN mxp_translations tr ON(tr.translation_key_id=tk.translation_key_id)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_translations_by_locale` (IN `locale_code` VARCHAR(255))  SELECT tr.translation,tk.translation_key FROM mxp_translation_keys tk INNER JOIN mxp_translations tr ON(tr.translation_key_id=tk.translation_key_id)
 WHERE tr.lan_code=locale_code$$
 
-CREATE  PROCEDURE `get_translation_by_key_id` (IN `tr_key_id` INT(11))  SELECT tr.translation,tk.translation_key,tk.translation_key_id,tk.is_active,ln.lan_name FROM mxp_translation_keys tk INNER JOIN mxp_translations tr ON(tr.translation_key_id=tk.translation_key_id)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_translation_by_key_id` (IN `tr_key_id` INT(11))  SELECT tr.translation,tk.translation_key,tk.translation_key_id,tk.is_active,ln.lan_name FROM mxp_translation_keys tk INNER JOIN mxp_translations tr ON(tr.translation_key_id=tk.translation_key_id)
 INNER JOIN mxp_languages ln ON(ln.lan_code=tr.lan_code)
 WHERE tr.translation_key_id=tr_key_id$$
 
-CREATE  PROCEDURE `get_user_menu_by_role` (IN `role_id` INT(11), IN `comp_id` INT(11))  if(comp_id !='') then
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_menu_by_role` (IN `role_id` INT(11), IN `comp_id` INT(11))  if(comp_id !='') then
 SELECT m.* FROM mxp_user_role_menu rm inner JOIN mxp_menu m ON(m.menu_id=rm.menu_id) WHERE rm.role_id=role_id AND rm.company_id=comp_id;
 else
 SELECT m.* FROM mxp_user_role_menu rm inner JOIN mxp_menu m ON(m.menu_id=rm.menu_id) WHERE rm.role_id=role_id;
@@ -211,7 +211,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (283, '2018_09_18_090400_insert_menu_value', 49),
 (284, '2018_09_18_090740_insert_menu_permission_table_value', 49),
 (285, '2018_15_09_064644_add_new_field_mxp_party_table', 49),
-(286, '2018_15_09_064644_add_new_field_mxp_product_table', 49);
+(286, '2018_15_09_064644_add_new_field_mxp_product_table', 49),
+(287, '2018_10_07_080134_create_cost_price_table', 50);
 
 -- --------------------------------------------------------
 
@@ -333,8 +334,25 @@ CREATE TABLE `mxp_booking` (
   `oos_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `style` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `is_type` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_pi_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `is_pi_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `item_size_width_height` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mxp_booking`
+--
+
+INSERT INTO `mxp_booking` (`id`, `user_id`, `booking_order_id`, `erp_code`, `item_code`, `item_size`, `item_description`, `item_quantity`, `item_price`, `matarial`, `gmts_color`, `others_color`, `orderDate`, `orderNo`, `shipmentDate`, `poCatNo`, `created_at`, `updated_at`, `sku`, `season_code`, `oos_number`, `style`, `is_type`, `is_pi_type`, `item_size_width_height`) VALUES
+(1, 49, 'BK-29092018-AB-0001', 'sada', 'sss', 'sds', '1', '123123', '0', NULL, 'sss', '0', '29-09-2018', NULL, '2018-09-30', 'asd', '2018-09-29 01:12:14', '2018-09-29 01:12:14', 'asd', NULL, 'asd', 'sad', 'general', 'unstage', NULL),
+(2, 82, 'BK-07102018-Sonia-0003', '01-GY8MHT2**-001', '8MHT2', '0', '0', '10000', '0', NULL, NULL, '0', '07-10-2018', NULL, '2018-10-12', '232', '2018-10-06 22:25:58', '2018-10-06 22:27:32', '10000', 'AW18', '3232', '4541000', 'general', 'non_fsc', '41.4-63.5'),
+(3, 49, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', 'Hang tag', '1000', '0.00045345', NULL, 'sss', '0', '08-10-2018', NULL, '2018-10-08', '12', '2018-10-08 01:20:22', '2018-10-08 01:20:22', 'sku', 'AW18', '121', 'style', 'general', 'unstage', '41.4-63.5'),
+(4, 49, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '2000', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', '12', '2018-10-08 01:20:22', '2018-10-08 01:20:22', 'sku', 'AW18', '121', 'style', 'general', 'unstage', '41.4-63.5'),
+(5, 49, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_3', 'Hang tag', '3000', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', '12', '2018-10-08 01:20:22', '2018-10-08 01:20:22', 'sku', 'AW18', '121', 'style', 'general', 'unstage', '41.4-63.5'),
+(6, 49, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', 'Hang tag', '3000', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', '12', '2018-10-08 01:20:23', '2018-10-08 01:20:23', 'sku', 'AW18', '121', 'style', 'general', 'unstage', '41.4-63.5'),
+(7, 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', 'Hang tag', '1000', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', '2018-10-08 01:35:19', '2018-10-08 01:37:54', 'sku', 'AW18', 'oos', 'style', 'general', 'fsc', '41.4-63.5'),
+(8, 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '2000', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', '2018-10-08 01:35:20', '2018-10-08 01:37:54', 'sku', 'AW18', 'oos', 'style', 'general', 'fsc', '41.4-63.5'),
+(9, 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_3', 'Hang tag', '3000', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', 'po', '2018-10-08 01:35:20', '2018-10-08 01:37:54', 'sku', 'AW18', 'oos', 'style', 'general', 'fsc', '41.4-63.5'),
+(10, 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', 'Hang tag', '4000', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', 'po', '2018-10-08 01:35:20', '2018-10-08 01:37:35', 'sku', 'AW18', 'oos', 'style', 'general', 'non_fsc', '41.4-63.5');
 
 -- --------------------------------------------------------
 
@@ -365,8 +383,20 @@ CREATE TABLE `mxp_bookingbuyer_details` (
   `booking_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `shipmentDate` date NOT NULL
+  `shipmentDate` date NOT NULL,
+  `status_changes_user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mxp_bookingbuyer_details`
+--
+
+INSERT INTO `mxp_bookingbuyer_details` (`id`, `user_id`, `booking_order_id`, `Company_name`, `C_sort_name`, `buyer_name`, `address_part1_invoice`, `address_part2_invoice`, `attention_invoice`, `mobile_invoice`, `telephone_invoice`, `fax_invoice`, `address_part1_delivery`, `address_part2_delivery`, `attention_delivery`, `mobile_delivery`, `telephone_delivery`, `fax_delivery`, `is_complete`, `booking_status`, `created_at`, `updated_at`, `shipmentDate`, `status_changes_user_id`) VALUES
+(1, 49, 'BK-29092018-AB-0001', 'AB MART FASHION WEAR LTD.', 'AB', 'DARE2B', '786, KAKIL SATAISH BORODAWRA, 13/l PURBOPARA MUDAFFA, TONGI, GAZIPUR', NULL, 'Mr. Shakhawat', '+8801671361818', NULL, NULL, '786, KAKIL SATAISH BORODAWRA, 13/3 PURBOPARA MUDAFFA,TONGI,', NULL, 'Mr. Mohsin', '+8801671361818', NULL, NULL, 0, 'Booked', '2018-09-29 01:12:14', '2018-10-06 22:16:43', '2018-09-30', 84),
+(2, 82, 'BK-07102018-Sonia-0002', 'Sonia & Sweaters Ltd.', 'Sonia', 'Gymboree', 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 0, 'Booked', '2018-10-06 22:24:53', '2018-10-06 22:24:53', '2018-10-12', NULL),
+(3, 82, 'BK-07102018-Sonia-0003', 'Sonia & Sweaters Ltd.', 'Sonia', 'Gymboree', 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 0, 'Booked', '2018-10-06 22:25:58', '2018-10-06 22:25:58', '2018-10-12', NULL),
+(4, 49, 'BK-08102018-Sonia-0004', 'Sonia & Sweaters Ltd.', 'Sonia', 'Gymboree', 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 0, 'Booked', '2018-10-08 01:20:22', '2018-10-08 01:20:22', '2018-10-08', NULL),
+(5, 49, 'BK-08102018-Sonia-0005', 'Sonia & Sweaters Ltd.', 'Sonia', 'Gymboree', 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 0, 'Booked', '2018-10-08 01:35:19', '2018-10-08 01:35:19', '2018-10-08', NULL);
 
 -- --------------------------------------------------------
 
@@ -377,6 +407,7 @@ CREATE TABLE `mxp_bookingbuyer_details` (
 CREATE TABLE `mxp_booking_challan` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(11) NOT NULL,
+  `job_id` int(11) NOT NULL,
   `booking_order_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `erp_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `item_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -396,37 +427,28 @@ CREATE TABLE `mxp_booking_challan` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `mrf_quantity` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ipo_quantity` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `ipo_quantity` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `item_size_width_height` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `season_code` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `oos_number` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `style` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `mxp_booking_multiplechallan`
+-- Dumping data for table `mxp_booking_challan`
 --
 
-CREATE TABLE `mxp_booking_multiplechallan` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `challan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `booking_order_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `erp_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `item_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `item_size` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `item_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `item_quantity` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `item_price` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `matarial` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `gmts_color` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `others_color` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `orderDate` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `orderNo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `shipmentDate` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `poCatNo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO `mxp_booking_challan` (`id`, `user_id`, `job_id`, `booking_order_id`, `erp_code`, `item_code`, `item_size`, `item_description`, `item_quantity`, `left_mrf_ipo_quantity`, `item_price`, `matarial`, `gmts_color`, `others_color`, `orderDate`, `orderNo`, `shipmentDate`, `poCatNo`, `sku`, `created_at`, `updated_at`, `mrf_quantity`, `ipo_quantity`, `item_size_width_height`, `season_code`, `oos_number`, `style`) VALUES
+(1, 49, 0, 'BK-29092018-AB-0001', 'sada', 'sss', 'sds', '1', '123123', '0', '0', NULL, 'sss', '0', '29-09-2018', NULL, '2018-09-30', 'asd', 'asd', '2018-09-29 01:12:14', '2018-10-08 00:48:44', '123123', '', NULL, NULL, NULL, NULL),
+(2, 82, 0, 'BK-07102018-Sonia-0003', '01-GY8MHT2**-001', '8MHT2', '0', '0', '10000', '10000', '0', NULL, NULL, '0', '07-10-2018', NULL, '2018-10-12', '232', '10000', '2018-10-06 22:25:58', '2018-10-06 22:25:58', NULL, '', '41.4-63.5', NULL, NULL, NULL),
+(3, 49, 0, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', 'Hang tag', '1000', '1000', '0.00045345', NULL, 'sss', '0', '08-10-2018', NULL, '2018-10-08', '12', 'sku', '2018-10-08 01:20:22', '2018-10-08 01:20:22', NULL, '', '41.4-63.5', 'AW18', '121', 'style'),
+(4, 49, 0, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '2000', '2000', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', '12', 'sku', '2018-10-08 01:20:22', '2018-10-08 01:20:22', NULL, '', '41.4-63.5', 'AW18', '121', 'style'),
+(5, 49, 0, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_3', 'Hang tag', '3000', '3000', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', '12', 'sku', '2018-10-08 01:20:22', '2018-10-08 01:20:22', NULL, '', '41.4-63.5', 'AW18', '121', 'style'),
+(6, 49, 0, 'BK-08102018-Sonia-0004', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', 'Hang tag', '3000', '3000', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', '12', 'sku', '2018-10-08 01:20:23', '2018-10-08 01:20:23', NULL, '', '41.4-63.5', 'AW18', '121', 'style'),
+(7, 49, 7, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', 'Hang tag', '1000', '159', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'sku', '2018-10-08 01:35:20', '2018-10-08 05:29:09', '1040', '801', '41.4-63.5', 'AW18', 'oos', 'style'),
+(8, 49, 8, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '2000', '980', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'sku', '2018-10-08 01:35:20', '2018-10-08 05:41:25', '2030', '990', '41.4-63.5', 'AW18', 'oos', 'style'),
+(9, 49, 9, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_3', 'Hang tag', '3000', '2860', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'sku', '2018-10-08 01:35:20', '2018-10-08 02:12:31', '3140', '', '41.4-63.5', 'AW18', 'oos', 'style'),
+(10, 49, 10, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', 'Hang tag', '4000', '2750', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'sku', '2018-10-08 01:35:20', '2018-10-08 05:02:26', '4150', '1100', '41.4-63.5', 'AW18', 'oos', 'style');
 
 -- --------------------------------------------------------
 
@@ -577,7 +599,16 @@ CREATE TABLE `mxp_gmts_color` (
 --
 
 INSERT INTO `mxp_gmts_color` (`id`, `user_id`, `item_code`, `color_name`, `status`, `created_at`, `updated_at`, `action`) VALUES
-(3, 49, 'sad', 'assa', '1', '2018-09-27 01:13:18', '2018-09-27 01:13:18', 0);
+(3, 49, 'sad', 'assa', '1', '2018-09-27 01:13:18', '2018-09-27 01:13:18', 0),
+(4, 49, NULL, 'sss', '1', '2018-09-27 05:41:07', '2018-09-27 05:41:07', 0),
+(8, 49, 'primark', 'sss', '1', '2018-09-29 01:33:54', '2018-09-29 01:33:54', 0),
+(10, 49, 'sss', 'sss', '1', '2018-09-29 04:48:40', '2018-09-29 04:48:40', 0),
+(11, 49, '234', 'sss', '1', '2018-10-06 11:40:43', '2018-10-06 11:40:43', 0),
+(12, 49, NULL, 'color_1', '1', '2018-10-08 01:17:46', '2018-10-08 01:17:46', 0),
+(13, 49, NULL, 'color_2', '1', '2018-10-08 01:17:52', '2018-10-08 01:17:52', 0),
+(17, 49, '8KMHT2', 'sss', '1', '2018-10-08 01:29:51', '2018-10-08 01:29:51', 0),
+(18, 49, '8KMHT2', 'color_1', '1', '2018-10-08 01:29:51', '2018-10-08 01:29:51', 0),
+(19, 49, '8KMHT2', 'color_2', '1', '2018-10-08 01:29:51', '2018-10-08 01:29:51', 0);
 
 -- --------------------------------------------------------
 
@@ -621,6 +652,7 @@ INSERT INTO `mxp_header` (`header_id`, `user_id`, `header_type`, `header_title`,
 
 CREATE TABLE `mxp_ipo` (
   `id` int(10) UNSIGNED NOT NULL,
+  `job_id` int(11) NOT NULL,
   `ipo_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` int(11) NOT NULL,
   `booking_order_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -645,6 +677,19 @@ CREATE TABLE `mxp_ipo` (
   `ipo_quantity` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `mxp_ipo`
+--
+
+INSERT INTO `mxp_ipo` (`id`, `job_id`, `ipo_id`, `user_id`, `booking_order_id`, `initial_increase`, `erp_code`, `item_code`, `item_size`, `item_description`, `item_quantity`, `item_price`, `matarial`, `gmts_color`, `others_color`, `orderDate`, `orderNo`, `shipmentDate`, `poCatNo`, `status`, `created_at`, `updated_at`, `sku`, `ipo_quantity`) VALUES
+(1, 0, 'IPO-08102018-0001', 84, 'BK-08102018-Sonia-0005', '34', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', 'Hang tag', '100', '0.00045345', NULL, 'color_2', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'create', '2018-10-08 05:02:26', '2018-10-08 05:02:26', 'sku', '100'),
+(2, 7, 'IPO-08102018-0002', 84, 'BK-08102018-Sonia-0005', '50', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', 'Hang tag', '200', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'create', '2018-10-08 05:07:34', '2018-10-08 05:07:34', 'sku', '200'),
+(3, 8, 'IPO-08102018-0002', 84, 'BK-08102018-Sonia-0005', '50', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '200', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'create', '2018-10-08 05:07:34', '2018-10-08 05:07:34', 'sku', '200'),
+(4, 7, 'IPO-08102018-0004', 84, 'BK-08102018-Sonia-0005', '0', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', 'Hang tag', '1', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'create', '2018-10-08 05:29:09', '2018-10-08 05:29:09', 'sku', '1'),
+(5, 8, 'IPO-08102018-0005', 84, 'BK-08102018-Sonia-0005', '33', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '122', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'create', '2018-10-08 05:37:24', '2018-10-08 05:37:24', 'sku', '122'),
+(6, 8, 'IPO-08102018-0006', 84, 'BK-08102018-Sonia-0005', '0', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '12', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'create', '2018-10-08 05:38:44', '2018-10-08 05:38:44', 'sku', '12'),
+(7, 8, 'IPO-08102018-0007', 84, 'BK-08102018-Sonia-0005', '0', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', 'Hang tag', '56', '0.00045345', NULL, 'color_1', '0', '08-10-2018', NULL, '2018-10-08', 'po', 'create', '2018-10-08 05:41:25', '2018-10-08 05:41:25', 'sku', '56');
+
 -- --------------------------------------------------------
 
 --
@@ -663,6 +708,46 @@ CREATE TABLE `mxp_items_details_by_booking_challan` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mxp_items_details_by_booking_challan`
+--
+
+INSERT INTO `mxp_items_details_by_booking_challan` (`items_details_id`, `booking_challan_id`, `booking_order_id`, `item_code`, `erp_code`, `item_size`, `item_quantity`, `gmts_color`, `created_at`, `updated_at`) VALUES
+(1, 1, 'BK-29092018-AB-0001', 'sss', 'sada', 'sds', '123123', 'sss', '2018-09-29 01:12:14', '2018-09-29 01:12:14'),
+(2, 2, 'BK-07102018-Sonia-0003', '8MHT2', '01-GY8MHT2**-001', '0', '10000', '', '2018-10-06 22:25:58', '2018-10-06 22:25:58'),
+(3, 3, 'BK-08102018-Sonia-0004', '8KMHT2', '01-GY8KMHT2**-001', 'size_1', '1000', 'sss', '2018-10-08 01:20:22', '2018-10-08 01:20:22'),
+(4, 4, 'BK-08102018-Sonia-0004', '8KMHT2', '01-GY8KMHT2**-001', 'size_2', '2000', 'color_1', '2018-10-08 01:20:22', '2018-10-08 01:20:22'),
+(5, 5, 'BK-08102018-Sonia-0004', '8KMHT2', '01-GY8KMHT2**-001', 'size_3', '3000', 'color_2', '2018-10-08 01:20:23', '2018-10-08 01:20:23'),
+(6, 6, 'BK-08102018-Sonia-0004', '8KMHT2', '01-GY8KMHT2**-001', 'size_4', '3000', 'color_2', '2018-10-08 01:20:23', '2018-10-08 01:20:23'),
+(7, 7, 'BK-08102018-Sonia-0005', '8KMHT2', '01-GY8KMHT2**-001', 'size_1', '1000', 'color_1', '2018-10-08 01:35:20', '2018-10-08 01:35:20'),
+(8, 8, 'BK-08102018-Sonia-0005', '8KMHT2', '01-GY8KMHT2**-001', 'size_2', '2000', 'color_1', '2018-10-08 01:35:20', '2018-10-08 01:35:20'),
+(9, 9, 'BK-08102018-Sonia-0005', '8KMHT2', '01-GY8KMHT2**-001', 'size_3', '3000', 'color_2', '2018-10-08 01:35:20', '2018-10-08 01:35:20'),
+(10, 10, 'BK-08102018-Sonia-0005', '8KMHT2', '01-GY8KMHT2**-001', 'size_4', '4000', 'color_2', '2018-10-08 01:35:20', '2018-10-08 01:35:20');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mxp_item_cost_price`
+--
+
+CREATE TABLE `mxp_item_cost_price` (
+  `cost_price_id` int(10) UNSIGNED NOT NULL,
+  `id_product` int(11) NOT NULL,
+  `price_1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price_2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_action` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mxp_item_cost_price`
+--
+
+INSERT INTO `mxp_item_cost_price` (`cost_price_id`, `id_product`, `price_1`, `price_2`, `last_action`, `created_at`, `updated_at`, `user_id`) VALUES
+(1, 4, '12', '111', 'update', '2018-10-07 02:37:59', '2018-10-08 01:29:52', '49');
 
 -- --------------------------------------------------------
 
@@ -684,11 +769,18 @@ CREATE TABLE `mxp_item_description` (
 
 INSERT INTO `mxp_item_description` (`id`, `name`, `is_active`, `created_at`, `updated_at`) VALUES
 (1, 'Woven', 1, NULL, NULL),
-(2, 'Hangtag', 1, NULL, NULL),
 (3, 'Sticker', 1, NULL, NULL),
-(4, 'Care Lavel', 0, NULL, NULL),
-(7, 'xxxx', 1, '2018-09-27 01:52:47', '2018-09-27 01:52:47'),
-(8, 'xxxx2134566', 1, '2018-09-27 01:54:35', '2018-09-27 01:54:35');
+(4, 'Care label', 1, NULL, '2018-10-03 00:08:29'),
+(9, 'Hang tag', 1, '2018-10-03 00:06:40', '2018-10-03 00:06:40'),
+(10, 'Print Label', 1, '2018-10-03 00:07:00', '2018-10-03 00:07:00'),
+(11, 'Heat Seal', 1, '2018-10-03 00:07:14', '2018-10-03 00:07:14'),
+(12, 'Adhesive', 1, '2018-10-03 00:07:33', '2018-10-03 00:07:58'),
+(13, 'Heat transfer label', 1, '2018-10-03 00:08:53', '2018-10-03 00:08:53'),
+(14, 'Cotton care label', 1, '2018-10-03 00:09:10', '2018-10-03 00:09:10'),
+(15, 'main label', 1, '2018-10-03 00:09:21', '2018-10-03 00:09:21'),
+(16, 'Size Label', 1, '2018-10-03 00:09:47', '2018-10-03 00:09:47'),
+(17, 'Special Feature Tag', 1, '2018-10-03 00:09:57', '2018-10-03 00:09:57'),
+(18, 'Feature tag', 1, '2018-10-03 00:10:09', '2018-10-03 00:10:09');
 
 -- --------------------------------------------------------
 
@@ -909,7 +1001,9 @@ INSERT INTO `mxp_menu` (`menu_id`, `name`, `route_name`, `description`, `parent_
 (179, 'Buyer Add Action', 'create_buyer_action', 'Buyer Add Action', 0, 1, 0, NULL, NULL),
 (180, 'Buyer Update View', 'update_buyer_view', 'Buyer Update View', 0, 1, 0, NULL, NULL),
 (181, 'Buyer Update Action', 'update_buyer_action', 'Buyer Update Action', 0, 1, 0, NULL, NULL),
-(182, 'Buyer Delete Action', 'delete_buyer_action', 'Buyer Delete Action', 0, 1, 0, NULL, NULL);
+(182, 'Buyer Delete Action', 'delete_buyer_action', 'Buyer Delete Action', 0, 1, 0, NULL, NULL),
+(183, 'IPO Genarate Action', 'task_ipo_action', 'IPO Genarate Action', 0, 1, 0, NULL, NULL),
+(184, 'Ipo List Report View', 'ipo_list_report_view', 'Ipo List Report View', 0, 1, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -919,6 +1013,7 @@ INSERT INTO `mxp_menu` (`menu_id`, `name`, `route_name`, `description`, `parent_
 
 CREATE TABLE `mxp_mrf_table` (
   `id` int(10) UNSIGNED NOT NULL,
+  `job_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `mrf_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `supplier_id` int(11) DEFAULT NULL,
@@ -944,6 +1039,25 @@ CREATE TABLE `mxp_mrf_table` (
   `mrf_person_name` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mrf_status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `mxp_mrf_table`
+--
+
+INSERT INTO `mxp_mrf_table` (`id`, `job_id`, `user_id`, `mrf_id`, `supplier_id`, `booking_order_id`, `erp_code`, `item_code`, `item_size`, `item_description`, `item_quantity`, `item_price`, `matarial`, `gmts_color`, `others_color`, `orderDate`, `orderNo`, `shipmentDate`, `poCatNo`, `status`, `action`, `created_at`, `updated_at`, `mrf_quantity`, `mrf_person_name`, `mrf_status`) VALUES
+(1, 0, 84, 'MRF-08102018-0001', NULL, 'BK-29092018-AB-0001', 'sada', 'sss', 'sds', NULL, '0', '0', NULL, 'sss', NULL, '29-09-2018', NULL, '2018-10-17', 'asd', NULL, 'create', '2018-10-08 00:48:44', '2018-10-08 00:48:44', '123123', NULL, 'Open'),
+(2, 0, 84, 'MRF-08102018-0002', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', NULL, '0', '0.00045345', NULL, 'color_1', NULL, '08-10-2018', NULL, '2018-10-17', 'po', NULL, 'create', '2018-10-08 01:53:29', '2018-10-08 01:53:29', '1000', NULL, 'Open'),
+(3, 0, 84, 'MRF-08102018-0002', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', NULL, '0', '0.00045345', NULL, 'color_1', NULL, '08-10-2018', NULL, '2018-10-17', 'po', NULL, 'create', '2018-10-08 01:53:29', '2018-10-08 01:53:29', '2000', NULL, 'Open'),
+(4, 0, 84, 'MRF-08102018-0002', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_3', NULL, '0', '0.00045345', NULL, 'color_2', NULL, '08-10-2018', NULL, '2018-10-17', 'po', NULL, 'create', '2018-10-08 01:53:29', '2018-10-08 01:53:29', '3000', NULL, 'Open'),
+(5, 0, 84, 'MRF-08102018-0002', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', NULL, '0', '0.00045345', NULL, 'color_2', NULL, '08-10-2018', NULL, '2018-10-17', 'po', NULL, 'create', '2018-10-08 01:53:29', '2018-10-08 01:53:29', '4000', NULL, 'Open'),
+(6, 0, 84, 'MRF-08102018-0006', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', NULL, '980', '0.00045345', NULL, 'color_1', NULL, '08-10-2018', NULL, '2018-10-31', 'po', NULL, 'create', '2018-10-08 02:00:07', '2018-10-08 02:00:07', '20', NULL, 'Open'),
+(7, 0, 84, 'MRF-08102018-0006', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_2', NULL, '1970', '0.00045345', NULL, 'color_1', NULL, '08-10-2018', NULL, '2018-10-31', 'po', NULL, 'create', '2018-10-08 02:00:07', '2018-10-08 02:00:07', '30', NULL, 'Open'),
+(8, 0, 84, 'MRF-08102018-0006', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_3', NULL, '2960', '0.00045345', NULL, 'color_2', NULL, '08-10-2018', NULL, '2018-10-31', 'po', NULL, 'create', '2018-10-08 02:00:07', '2018-10-08 02:00:07', '40', NULL, 'Open'),
+(9, 0, 84, 'MRF-08102018-0006', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', NULL, '3950', '0.00045345', NULL, 'color_2', NULL, '08-10-2018', NULL, '2018-10-31', 'po', NULL, 'create', '2018-10-08 02:00:07', '2018-10-08 02:00:07', '50', NULL, 'Open'),
+(10, 9, 84, 'MRF-08102018-0010', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_3', NULL, '2860', '0.00045345', NULL, 'color_2', NULL, '08-10-2018', NULL, '2018-10-17', 'po', NULL, 'create', '2018-10-08 02:12:32', '2018-10-08 02:12:32', '100', NULL, 'Open'),
+(11, 10, 84, 'MRF-08102018-0010', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_4', NULL, '3850', '0.00045345', NULL, 'color_2', NULL, '08-10-2018', NULL, '2018-10-17', 'po', NULL, 'create', '2018-10-08 02:12:32', '2018-10-08 02:12:32', '100', NULL, 'Open'),
+(12, 7, 84, 'MRF-08102018-0012', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', NULL, '170', '0.00045345', NULL, 'color_1', NULL, '08-10-2018', NULL, '2018-10-15', 'po', NULL, 'create', '2018-10-08 05:22:01', '2018-10-08 05:22:01', '10', NULL, 'Open'),
+(13, 7, 84, 'MRF-08102018-0013', NULL, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'size_1', NULL, '160', '0.00045345', NULL, 'color_1', NULL, '08-10-2018', NULL, '2018-10-15', 'po', NULL, 'create', '2018-10-08 05:24:03', '2018-10-08 05:24:03', '10', NULL, 'Open');
 
 -- --------------------------------------------------------
 
@@ -1194,7 +1308,6 @@ INSERT INTO `mxp_party` (`id`, `party_id`, `user_id`, `name`, `sort_name`, `name
 (120, '', '49', 'Esquire Knit Composite Limited.', 'Esquire', 'Primark', 'Esquire Knit Composite Limited., \r\n22/58,Kanchpur,Sonargaon.\r\nNarayangonj, Bangladesh.', NULL, 'Mr. Mizan, Manager (Store)', '01730009926', NULL, NULL, 'Esquire Knit Composite Limited., \r\n22/58,Kanchpur,Sonargaon.\r\nNarayangonj, Bangladesh.', NULL, 'Mr. Mizan, Manager (Store)', '01730009926', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 5),
 (121, 'N/A', '49', 'VIYELLATEX Limited', 'VIYELLATEX Limited', 'Aldi', 'VIYELLATEX Limited 297, Khairtul, Gazipura, Tongi, Gazipur-1712, Bangladesh', NULL, 'Md. Hedayet Ullah', '+88 01717094526', NULL, NULL, 'VIYELLATEX Limited 297, Khairtul, Gazipura, Tongi, Gazipur-1712, Bangladesh', NULL, 'Md. Hedayet Ullah', '+88 01717094526', NULL, NULL, NULL, NULL, NULL, '2018-09-20 02:45:33', '2018-09-20 02:45:33', '1', 38),
 (122, 'ET-RFA', '49', 'RISING  FASHION LTD.', 'RFL', 'Bershka', 'E`TIKET INTERNATIONAL GROUP                                                                                                                                                                                                               Holding # 482, Road #', NULL, 'Mr. Jakaria', '+88 07155509005', NULL, NULL, 'RISING  FASHION LTD. PLOT# I/10, BLOCK - K, RUPNAGAR I/A, SECTION - 2, MIRPUR, DHAKA - 1216', NULL, 'Mr. Sobur (Store  Manager)', NULL, NULL, NULL, NULL, NULL, NULL, '2018-09-20 02:52:40', '2018-09-20 02:52:40', '1', 35),
-(123, NULL, '49', 'Sonia & Sweaters Ltd.', 'Sonia & Sweaters Ltd.', 'Gymboree', 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, NULL, NULL, NULL, '2018-09-20 02:57:17', '2018-09-20 02:57:17', '1', 34),
 (125, '694', '49', 'TEXEUROP BD LTD', 'TBL', 'Sportsmaster', 'VOGRA,JOYDEBPUR,GAZIPUR', NULL, 'Mr. Tareq/ Jahanggir/ Ershad', '+8801978686876', NULL, NULL, 'VOGRA,JOYDEBPUR,GAZIPUR', NULL, 'Mr. Tareq/ Jahanggir/ Ershad', '+880 161 9003567', NULL, NULL, NULL, NULL, NULL, '2018-09-20 03:15:49', '2018-09-20 03:15:49', '1', 28),
 (126, NULL, '49', 'EVER SMART BANGLADESH LTD.', 'ESB', 'Puma', 'Begumpur, PO: Bhabanipur, Hotapara,Gazipur-1740.', NULL, 'Mr.  Afsarul Islam', '+8801847-285709', NULL, NULL, 'Begumpur, PO: Bhabanipur, Hotapara,Gazipur-1740.', NULL, NULL, '01847-285709', NULL, NULL, NULL, NULL, NULL, '2018-09-20 03:17:18', '2018-09-20 03:17:18', '1', 29),
 (127, '78450', '49', 'BIRDS A & Z LTD', 'A&Z', 'Voice', 'BIRDS A & Z LTD 113, Baipail, Ashulia, Savar, Dhaka 1349 Dhaka Contract Person: Kamrul Hasan Cell No: 01915-397699 E-mail: hasan-merch@birds-group.com', NULL, 'Kamrul Hasan  E-mail: hasan-merch@birds-group.com', '01915-397699', NULL, NULL, 'BIRDS A & Z LTD 113, Baipail, Ashulia, Savar, Dhaka 1349 Dhaka Contract Person: Kamrul Hasan Cell No: 01915-397699 E-mail: hasan-merch@birds-group.com', NULL, 'Kamrul Hasan  E-mail: hasan-merch@birds-group.com', '01915-397699', NULL, NULL, NULL, NULL, NULL, '2018-09-20 03:19:04', '2018-09-20 03:19:04', '1', 30),
@@ -1216,9 +1329,9 @@ INSERT INTO `mxp_party` (`id`, `party_id`, `user_id`, `name`, `sort_name`, `name
 (145, '', '49', 'Multi Sourcing Asia Ltd.', 'Multi', 'Bjorn Born', '', NULL, '', '', NULL, NULL, 'Multi Sourcing Asia Ltd.                                     Hosna Center(5th Floor),\r\n106 Gulshan Avenue, Dhaka 1212.Bangladesh.', NULL, 'Shakhawat Taluckder Samol', 'Tel: + 8801728745480, +880-1730303922', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 32),
 (146, '', '49', 'Comfit Composite Knit Ltd', 'Comfit', 'Eagle Bert', 'Youth Tower, 822/2 Rokeys Sharani,  Dhaka-1216, Bangladesh', NULL, 'Monjur Uddin Rasel', '+880 182 7777578', NULL, NULL, 'Youth Tower, 822/2 Rokeys Sharani,  Dhaka-1216, Bangladesh', NULL, 'Monjur Uddin Rasel', 'Tel No.: +880 182 7777578', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 33),
 (147, '', '49', 'Comfit Composite Knit Ltd', 'Comfit', 'Eagle Bert', 'Youth Tower, 822/2 Rokeys Sharani,  Dhaka-1216, Bangladesh', NULL, 'Monjur Uddin Rasel', '+880 182 7777578', NULL, NULL, 'Comfit Composite Knit Ltd. Unit-2, Bishmail Road, Aamtola, Kathgora, Jirabo, Ashulia, Savar, Dhaka', NULL, 'Mr Jillur (Store Incharge)', 'Tel No.: +880 1716586518', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 33),
-(148, '', '49', 'EVER SMART BANGLADESH LTD.', 'EVER', 'Puma', 'Begumpur, PO: Bhabanipur, Hotapara,Gazipur-1740.', NULL, 'Mr.  Afsarul Islam', 'Tel: +8801847-285709', NULL, NULL, 'Begumpur, PO: Bhabanipur, Hotapara,Gazipur-1740.', NULL, 'Mr.  Afsarul Islam', 'Tel: +01847-285709', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 29);
+(148, '', '49', 'EVER SMART BANGLADESH LTD.', 'EVER', 'Puma', 'Begumpur, PO: Bhabanipur, Hotapara,Gazipur-1740.', NULL, 'Mr.  Afsarul Islam', 'Tel: +8801847-285709', NULL, NULL, 'Begumpur, PO: Bhabanipur, Hotapara,Gazipur-1740.', NULL, 'Mr.  Afsarul Islam', 'Tel: +01847-285709', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 29),
+(149, '', '49', 'DBL Group/Jinnat Knitwears Limited', 'DBL', 'Puma', 'PUMA Way 1, Herzogenaurach, 91074 Germany', NULL, 'Edmond Chan', '', NULL, NULL, 'Sardaganj, Kashimpur, Gazipur, Bangladesh.', NULL, 'Reza selim', 'Tel: +88 01756-142404', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 29);
 INSERT INTO `mxp_party` (`id`, `party_id`, `user_id`, `name`, `sort_name`, `name_buyer`, `address_part1_invoice`, `address_part2_invoice`, `attention_invoice`, `mobile_invoice`, `telephone_invoice`, `fax_invoice`, `address_part1_delivery`, `address_part2_delivery`, `attention_delivery`, `mobile_delivery`, `telephone_delivery`, `fax_delivery`, `description_1`, `description_2`, `description_3`, `created_at`, `updated_at`, `status`, `id_buyer`) VALUES
-(149, '', '49', 'DBL Group/Jinnat Knitwears Limited', 'DBL', 'Puma', 'PUMA Way 1, Herzogenaurach, 91074 Germany', NULL, 'Edmond Chan', '', NULL, NULL, 'Sardaganj, Kashimpur, Gazipur, Bangladesh.', NULL, 'Reza selim', 'Tel: +88 01756-142404', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 29),
 (150, '', '49', 'Shanta Denims Limited', 'Shanta', 'Puma', 'Plot No 156 & 177; DEPZ Extension Area; Ganakbari, Savar; Dhaka-1349', NULL, 'Md. Zahid Hasan', 'Tel: +8801680-608450', NULL, NULL, 'Plot No 156 & 177; DEPZ Extension Area; Ganakbari, Savar; Dhaka-1349', NULL, 'Md. Zahid Hasan', 'Tel: +8801680-608450', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 29),
 (151, '', '49', 'URMI GROUP (Head Office)', 'URMI', 'Puma', 'Sam Tower, Road# 22, House# 04, Level# 5, Gulshan# 1', NULL, 'Mr. Nazmus Sakib', 'Tel: +88 01844190478', NULL, NULL, 'Sam Tower, Road# 22, House# 04, Level# 5, Gulshan# 1', NULL, 'Mr. Nazmus Sakib', 'Tel: +88 01844190478', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 29),
 (152, '', '49', 'VIYELLATEX Limited', 'VIYELLATEX', 'Puma', '297, Khortoil, Gazipura, Tongi, Gazipur-1712', NULL, 'Mr. Abusadat Mohammad Sayem', 'Tel: +8801716809734', NULL, NULL, '297, Khortoil, Gazipura, Tongi, Gazipur-1712', NULL, 'Mr. Abusadat Mohammad Sayem', 'Tel: +01716809734', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 29),
@@ -1287,7 +1400,19 @@ INSERT INTO `mxp_party` (`id`, `party_id`, `user_id`, `name`, `sort_name`, `name
 (220, '00489', '49', 'Toyo', '', 'OSTIN', '01, South Kamalapur, Motijheel C/A, Dhaka-1217, Bangladesh.', NULL, 'Kamuzzaman Taposh, Mahfuzul Haq', 'Tel: +88001992977025, +8801798373124', NULL, NULL, '01, South Kamalapur, Motijheel C/A, Dhaka-1217, Bangladesh.', NULL, 'Kamuzzaman Taposh, Mahfuzul Haq', 'Tel: +88001992977025, +8801798373124', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 27),
 (221, '00366', '49', 'Vision Garments Ltd.', 'Vision', 'OSTIN', 'B-47 Purbo Rajashan, P.S, Savar,Dhaka', NULL, 'Mr.Rokon Chowdhury, MR. MAHABUB', 'Tel: +8801973239751, 01973-239708', NULL, NULL, 'B-47 Purbo Rajashan, P.S, Savar,Dhaka', NULL, 'Mr.Rokon Chowdhury, MR. MAHABUB', 'Tel: +8801973239751, 01973-239708', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 27),
 (222, '00492', '49', 'voyager apparels ltd', 'voyager', 'OSTIN', '8, Malibagh Chowdhury para, dhaka-1219', NULL, 'Mr. Islam, Monjurul Karim', 'Tel: +8801914242069, 01914242065', NULL, NULL, '8, Malibagh Chowdhury para, dhaka-1219', NULL, 'Mr. Ruhul amin, Monjurul Karim', 'Tel: +8801914242041, 01914242065', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 27),
-(223, '00503', '49', 'Crosswear Industries Ltd', 'Crosswear', 'OSTIN', 'Kathgara, P.O.: Zirabo, P.S.: Ashulia, Dhaka-1341. Bangladesh.', NULL, 'ZAHIRUL ISLAM', 'Tel: +8801618780950', NULL, NULL, 'Kathgara, P.O.: Zirabo, P.S.: Ashulia, Dhaka-1341. Bangladesh.', NULL, 'ZAHIRUL ISLAM', 'Tel: +8801618780950', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 27);
+(223, '00503', '49', 'Crosswear Industries Ltd', 'Crosswear', 'OSTIN', 'Kathgara, P.O.: Zirabo, P.S.: Ashulia, Dhaka-1341. Bangladesh.', NULL, 'ZAHIRUL ISLAM', 'Tel: +8801618780950', NULL, NULL, 'Kathgara, P.O.: Zirabo, P.S.: Ashulia, Dhaka-1341. Bangladesh.', NULL, 'ZAHIRUL ISLAM', 'Tel: +8801618780950', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 27),
+(224, '', '49', 'Sonia & Sweaters Ltd.', 'Sonia', 'Gymboree', 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, 'Plot No. # 604( 10th Floor ), Kondolbagh, Taibpur,Ashulia Road, Savar, Dhaka', NULL, 'Mr. Mahfuzur Rahman', '+8801765446574', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(225, '', '49', 'Panwin Design Ltd', 'Panwin', 'Gymboree', 'Plot - 576, Vill - Baniarchala, P.o- Bhabanipur, Gazipur ,Bangladesh.', NULL, 'Mr. Iqbal', '+8801777788882', NULL, NULL, 'Plot - 576, Vill - Baniarchala, P.o- Bhabanipur, Gazipur ,Bangladesh.', NULL, 'Ms. Shemo', '+8801777788882', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(226, '', '49', 'Sirina garments & textile Ltd.', 'Sirina', 'Gymboree', '7/A, Sholoshahar Light Industrial Area,Nasirabad, Baizid Bostami Road, Chittagong. Bangladesh.', NULL, 'Mr. Alamgir', '+8801847187183', NULL, NULL, '171/181, Baizid Bostami Road, Nasirabd I/E, Chittagong.', NULL, 'Mr. Rashed', '+8801717959197', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(227, '', '49', 'Concept Knitting Ltd.', 'Concept', 'Gymboree', 'Tilargati, Sataish, , Tongi, Gazipur,Bangladesh', NULL, 'Mr. Vashani Habib', '+8801678 566 697', NULL, NULL, 'Tilargati, Sataish, , Tongi, Gazipur,Bangladesh', NULL, 'Mr. Kamrul', '+8801923 872 110', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(228, '', '49', 'JK Knit composite Ltd', 'JK', 'Gymboree', 'South Dariapur, Savar, Dhaka-1340, Bangladesh', NULL, 'Mr. Humayun Kabir', '+8801730060890', NULL, NULL, 'South Dariapur, Savar, Dhaka-1340, Bangladesh', NULL, 'Mr. Rackybul Islam', '+8801730060837', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(229, '', '49', 'Noman Fashion Fabrics Ltd.', 'Noman', 'Gymboree', 'Plot No. # 604 ( 10th Floor ), Kondolba, Pagar, Tongi, Gazipur-1710,', NULL, 'Moheuddin Khan', '+8801933 941 042', NULL, NULL, 'Plot No. # 604 ( 10th Floor ), Kondolba, Pagar, Tongi, Gazipur-1710,', NULL, 'Mr. Kibria', '+8801787681994', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(230, '', '49', 'Glory Idustries Ltd', 'Glory', 'Gymboree', '7/A, Sholoshahar Light Industrial Area,Nasirabad, Baizid Bostami Road, Chittagong. Bangladesh.', NULL, 'Mr. Rasel', '+8801678 566 733', NULL, NULL, '7/A, Sholoshahar Light Industrial Area,Nasirabad, Baizid Bostami Road, Chittagong. Bangladesh.', NULL, 'Mr. Sanjay Kumar Barua.', '+8801812653519', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(231, '', '49', 'Next Collection Ltd.', 'Next', 'Gymboree', '1323-1325 Beron, Ashulia, Savar, Dhaka-1341, Bangladesh.', NULL, 'Mr.Zaher', '+8801818365489', NULL, NULL, '1323-1325 Beron, Ashulia, Savar, Dhaka-1341, Bangladesh.', NULL, 'Mr.Zaher', '+8801818365489', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(232, '', '49', 'Tip Top Fashions Ltd', 'Tip', 'Gymboree', 'Industrial Plot-1, Block-E, Ave-1, Sec-11, 5th floor, Mirpur, Dhaka,  Bangladesh.', NULL, 'Mr.Jamal Ahmad', '+8801766665435', NULL, NULL, 'Saiful  Store, Plot No-647-652, Kalma-1, Ward No:-07, Post:-Dairy Farm, Savar, Dhaka-1341.', NULL, 'Mr. Jashimuddin', '+8801909605307', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(233, '', '49', 'Tip Top Fashions Ltd', 'Tip', 'Gymboree', 'Industrial Plot-1, Block-E, Ave-1, Sec-11, 5th floor, Mirpur, Dhaka,  Bangladesh.', NULL, 'Waliur Rahman', '+88 01730303529', NULL, NULL, '401/B,Tejgaon I/A, Dhaka-1208..', NULL, 'Mr. Jashimuddin', '+8801909605307', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(234, '', '49', 'Mawna Fashion Ltd', 'Mawna', 'Gymboree', 'Tapierbari, Shrepur, Gazipur.', NULL, 'Mr. Shahidur Rahman (Shemul)', '+8801915584349', NULL, NULL, 'Tapierbari, Shrepur, Gazipur.', NULL, 'Mr. Rustom', '+8801844149209', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34),
+(235, '', '49', 'Jinnat Knit Wears Ltd', 'Jinnat', 'Gymboree', 'Sardagonj, Kashimpur,Gazipur', NULL, 'Mr. Shahidur Rahman (Shemul)', '+8801915584349', NULL, NULL, 'Sardagonj, Kashimpur,Gazipur', NULL, 'Mr. Dulal', '+8801768589552', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', 34);
 
 -- --------------------------------------------------------
 
@@ -1322,28 +1447,17 @@ CREATE TABLE `mxp_pi` (
   `style` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `mxp_piformat_data_info`
+-- Dumping data for table `mxp_pi`
 --
 
-CREATE TABLE `mxp_piformat_data_info` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `buyer_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `mxp_piformat_data_info`
---
-
-INSERT INTO `mxp_piformat_data_info` (`id`, `code`, `buyer_name`, `created_at`, `updated_at`) VALUES
-(1, '1001', 'Craghoppers', '2018-06-20 18:00:00', '2018-06-20 18:00:00'),
-(2, '1002', 'regatta', '2018-06-21 18:00:00', '2018-06-21 18:00:00'),
-(3, '1003', 'DARE2B dare2b', NULL, NULL);
+INSERT INTO `mxp_pi` (`id`, `job_no`, `p_id`, `user_id`, `booking_order_id`, `erp_code`, `item_code`, `item_description`, `oos_number`, `item_quantity`, `item_size`, `item_price`, `matarial`, `gmts_color`, `others_color`, `orderDate`, `orderNo`, `shipmentDate`, `poCatNo`, `sku`, `is_type`, `created_at`, `updated_at`, `style`) VALUES
+(1, '2', '07102018-Sonia-0001', 82, 'BK-07102018-Sonia-0003', '01-GY8MHT2**-001', '8MHT2', '0', '3232', '10000', '0', '0', NULL, NULL, '0', '0000-00-00 00:00:00', NULL, '2018-10-12 00:00:00', '232', '10000', 'non_fsc', '2018-10-06 22:27:33', '2018-10-06 22:27:33', '4541000'),
+(2, '2', '07102018-Sonia-0002', 82, 'BK-07102018-Sonia-0003', '01-GY8MHT2**-001', '8MHT2', '0', '3232', '10000', '0', '0', NULL, NULL, '0', '0000-00-00 00:00:00', NULL, '2018-10-12 00:00:00', '232', '10000', 'non_fsc', '2018-10-06 22:37:10', '2018-10-06 22:37:10', '4541000'),
+(3, '10', '08102018-Sonia-0003', 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'Hang tag', 'oos', '4000', 'size_4', '0.00045345', NULL, 'color_2', '0', '0000-00-00 00:00:00', NULL, '2018-10-08 00:00:00', 'po', 'sku', 'non_fsc', '2018-10-08 01:37:36', '2018-10-08 01:37:36', 'style'),
+(4, '7', 'fsc-08102018-Sonia-0004', 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'Hang tag', 'oos', '1000', 'size_1', '0.00045345', NULL, 'color_1', '0', '0000-00-00 00:00:00', NULL, '2018-10-08 00:00:00', 'po', 'sku', 'fsc', '2018-10-08 01:37:54', '2018-10-08 01:37:54', 'style'),
+(5, '9', 'fsc-08102018-Sonia-0004', 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'Hang tag', 'oos', '3000', 'size_3', '0.00045345', NULL, 'color_2', '0', '0000-00-00 00:00:00', NULL, '2018-10-08 00:00:00', 'po', 'sku', 'fsc', '2018-10-08 01:37:54', '2018-10-08 01:37:54', 'style'),
+(6, '8', 'fsc-08102018-Sonia-0004', 49, 'BK-08102018-Sonia-0005', '01-GY8KMHT2**-001', '8KMHT2', 'Hang tag', 'oos', '2000', 'size_2', '0.00045345', NULL, 'color_1', '0', '0000-00-00 00:00:00', NULL, '2018-10-08 00:00:00', 'po', 'sku', 'fsc', '2018-10-08 01:37:54', '2018-10-08 01:37:54', 'style');
 
 -- --------------------------------------------------------
 
@@ -1378,6 +1492,65 @@ CREATE TABLE `mxp_product` (
   `id_buyer` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `mxp_product`
+--
+
+INSERT INTO `mxp_product` (`product_id`, `user_id`, `product_code`, `product_name`, `product_type`, `product_description`, `brand`, `erp_code`, `item_inc_percentage`, `item_size_width_height`, `item_description_id`, `unit_price`, `weight_qty`, `weight_amt`, `description_1`, `description_2`, `description_3`, `description_4`, `status`, `created_at`, `updated_at`, `action`, `others_color`, `id_buyer`) VALUES
+(4, 49, '8KMHT2', NULL, NULL, 'Hang tag', NULL, '01-GY8KMHT2**-001', NULL, '41.4-63.5', '9', '1.00', NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, '2018-10-08 01:18:41', 'update', NULL, 34),
+(5, 49, '8MHT2', NULL, NULL, NULL, NULL, '01-GY8MHT2**-001', NULL, '41.4-63.5', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(6, 49, '8SHPGDYE2', NULL, NULL, NULL, NULL, 'N/A', NULL, '57.15-20.32', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(7, 49, '8BRKRDNM3', NULL, NULL, NULL, NULL, 'N/A', NULL, '57.15-104.9', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(8, 49, '8CMBOLTRD3', NULL, NULL, NULL, NULL, '03-GY8CMBOLTRD3-001', NULL, '41-63.23 ', '10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(9, 49, '8LOOPLBTR', NULL, NULL, NULL, NULL, '03-GY8LOOPLBTR-001', NULL, '25.4-70.05', '10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(10, 49, '8NLLTR', NULL, NULL, NULL, NULL, '03-GYC88NLLTR/**-001', NULL, '38.11-70.05', '10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(11, 49, '8LOOPLBL', NULL, NULL, NULL, NULL, '03-GY8LOOPLBL-001', NULL, '25.4-66.04 ', '10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(12, 49, '8HEAT2', NULL, NULL, NULL, NULL, '23-GYC88HEAT2-002', NULL, '29.19-20.9', '11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(13, 49, '8HEATF2', NULL, NULL, NULL, NULL, '23-GYC88HEATF2-002', NULL, '36.11-27.42 ', '11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(14, 49, '8NLSL5', NULL, NULL, NULL, NULL, '03-GYC8NLSL5*-001', NULL, '25.4-74.7', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(15, 49, '8NLSL4', NULL, NULL, NULL, NULL, '03-GYC88NLSL4-001', NULL, '25-88.8 ', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(16, 49, 'FAUXFUR', NULL, NULL, NULL, NULL, '03-GYFAUXFUR-001', NULL, '19-16 ', '10', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(17, 49, '8LSSZSTK1', NULL, NULL, NULL, NULL, '22-GYM8LSSZSTK1*-01', NULL, '22.13-114.3 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(18, 49, '8SSSZSTK1', NULL, NULL, NULL, NULL, '22-GYM8LSSZSTK1*-01', NULL, '22.13-114.3 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(19, 49, '8STRKRSTK', NULL, NULL, NULL, NULL, '22-GY8STRKRSTK*-01', NULL, '24.1-97.2 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(20, 49, 'BMHT1', NULL, NULL, NULL, NULL, '01-GYRBBMHT1-001', NULL, '28.58-76.2 ', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(21, 49, 'MHTU4', NULL, NULL, NULL, NULL, '01-GYRBMHTU4-001', NULL, '28.58-76.2 ', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(22, 49, 'UACCGEN', NULL, NULL, NULL, NULL, '01-GYUACCGEN-01', NULL, '28.6-152.4 ', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(23, 49, 'BACCSZ1', NULL, NULL, NULL, NULL, '01-GYBACCSZ1-01', NULL, '28.6-152.4 ', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(24, 49, 'HEATSM3', NULL, NULL, NULL, NULL, '23-GYHEATSM3-002', NULL, '26.1-70.6 ', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(25, 49, 'HEATHZF1', NULL, NULL, NULL, NULL, '23-GYHEATHZF1-002', NULL, '27.4-23.4 ', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(26, 49, 'CMBOUL5', NULL, NULL, NULL, NULL, '03-GYMCMBOUL5X-01', NULL, '25-99.68 ', '14', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(27, 49, 'GDNMLBL1', NULL, NULL, NULL, NULL, '03-GYMGDNMLBL1-01', NULL, '25-109.65 ', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(28, 49, 'GSDLBF2', NULL, NULL, NULL, NULL, '03-GYGSDLBF2X-01', NULL, '25-82.235 ', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(29, 49, 'NEWMT', NULL, NULL, NULL, NULL, 'N/A', NULL, '100.83-39.66 ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(30, 49, 'BLBOUTR', NULL, NULL, NULL, NULL, '03-GYBLBOUTRX*-002', NULL, '16-60.14 ', '15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(31, 49, 'GBBTMLBL', NULL, NULL, NULL, NULL, '03-GYGBBTMLBL*-001', NULL, '44-67 ', '15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(32, 49, 'GKBTMLBL', NULL, NULL, NULL, NULL, '03-GYGKBTMLBLL*-001', NULL, '44-67 ', '15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(33, 49, '', NULL, NULL, NULL, NULL, '03-GYGOUTLBH*-002', NULL, '32-75', '15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(34, 49, 'USZCOO2', NULL, NULL, NULL, NULL, '03-GYUSZCOO2*-001', NULL, '13-44.61 ', '16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(35, 49, 'BLBL1', NULL, NULL, NULL, NULL, '03-GYBLBL1X*-002', NULL, '13-47.34 ', '15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(36, 49, 'GKLBL', NULL, NULL, NULL, NULL, '03-GYRGKLBL**-001', NULL, '13-47.34 ', '15', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(37, 49, 'GCLRTRNSF3', NULL, NULL, NULL, NULL, '03-GYGCLRTRNSF3*-001', NULL, '47.6-47.6 ', '17', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(38, 49, 'GONEKNDGD1', NULL, NULL, NULL, NULL, '01-GYGONEKNDGD1-001', NULL, '62.7-28.5 ', '18', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(39, 49, 'GONEKNDID1', NULL, NULL, NULL, NULL, '01-GYGONEKNDND1-001', NULL, '62.7-28.5 ', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(40, 49, 'GCRPSKST', NULL, NULL, NULL, NULL, '22-GYMGBSKDSTK**-01', NULL, '31.8-120.7 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(41, 49, 'GJEGSZSTK2', NULL, NULL, NULL, NULL, '22-GYMGBSKDSTK**-01', NULL, '31.8-120.7 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(42, 49, 'GSPSKDSTK2', NULL, NULL, NULL, NULL, '22-GYMGBSKDSTK**-01', NULL, '31.8-120.7 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(43, 49, 'GBSKDSTK', NULL, NULL, NULL, NULL, '22-GYMGBSKDSTK**-01', NULL, '31.8-120.7 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(44, 49, 'GBSLCHSZST', NULL, NULL, NULL, NULL, '22-GYMGBSKDSTK**-01', NULL, '31.8-120.7 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(45, 49, 'GBSTSTK', NULL, NULL, NULL, NULL, '22-GYMGBSKDSTK**-01', NULL, '31.8-120.7 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(46, 49, 'OMHT1', NULL, NULL, NULL, NULL, '21-GYOTOMHT1*-001', NULL, '38.1-95.3', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(47, 49, 'OCHKH1', NULL, NULL, NULL, NULL, '21-GYOTOCHKH1*-001', NULL, '38.1-76.2 ', '9', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(48, 49, 'OCMBOL3', NULL, NULL, NULL, NULL, '23-GYMOCMBOL3X-01', NULL, '25-91.7', '4', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(49, 49, 'OHEAT', NULL, NULL, NULL, NULL, '23-GYOTOHEAT-002', NULL, '27.7-16.4 ', '11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(50, 49, 'OHEATF', NULL, NULL, NULL, NULL, '23-GYOTOHEATF-002', NULL, '28.7-26.8 ', '11', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(51, 49, 'OSZSTK', NULL, NULL, NULL, NULL, '22-GYOTOSZSTK-001', NULL, '24.13-80.01', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(52, 49, 'OLSSZSTK', NULL, NULL, NULL, NULL, '02-GYOTSSZSTK-001', NULL, '24.13-90.17', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(53, 49, 'MPP', NULL, NULL, NULL, NULL, '22-GYOTST7660-109', NULL, '76-60', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(54, 49, 'SPP', NULL, NULL, NULL, NULL, '22-GYOTST7651-001', NULL, '76-51 ', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '', NULL, 34),
+(55, 49, '234', NULL, NULL, '3', '', '32432', NULL, '-', '3', '1', NULL, NULL, NULL, NULL, NULL, NULL, '1', '2018-10-06 11:40:43', '2018-10-06 11:40:43', 'create', NULL, 5),
+(56, 49, '324', NULL, NULL, 'Heat transfer label', '', '23432', NULL, '-', '13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '2018-10-06 11:46:09', '2018-10-06 11:46:09', 'create', NULL, 6);
+
 -- --------------------------------------------------------
 
 --
@@ -1400,7 +1573,20 @@ CREATE TABLE `mxp_productsize` (
 --
 
 INSERT INTO `mxp_productsize` (`proSize_id`, `user_id`, `product_code`, `product_size`, `status`, `action`, `created_at`, `updated_at`) VALUES
-(3, 49, 'sad', 'asas', '1', 'create', '2018-09-27 01:13:19', '2018-09-27 01:13:19');
+(3, 49, 'sad', 'asas', '1', 'create', '2018-09-27 01:13:19', '2018-09-27 01:13:19'),
+(4, 49, '', 'sds', '1', 'create', '2018-09-27 05:41:13', '2018-09-27 05:41:13'),
+(8, 49, 'primark', 'sds', '1', 'create', '2018-09-29 01:33:55', '2018-09-29 01:33:55'),
+(10, 49, 'sss', 'sds', '1', 'create', '2018-09-29 04:48:40', '2018-09-29 04:48:40'),
+(11, 49, '234', 'sds', '1', 'create', '2018-10-06 11:40:43', '2018-10-06 11:40:43'),
+(12, 49, '', 'size_1', '1', 'create', '2018-10-08 01:18:03', '2018-10-08 01:18:03'),
+(13, 49, '', 'size_2', '1', 'create', '2018-10-08 01:18:08', '2018-10-08 01:18:08'),
+(14, 49, '', 'size_3', '1', 'create', '2018-10-08 01:18:12', '2018-10-08 01:18:12'),
+(15, 49, '', 'size_4', '1', 'create', '2018-10-08 01:18:16', '2018-10-08 01:18:16'),
+(21, 49, '8KMHT2', 'sds', '1', 'create', '2018-10-08 01:29:52', '2018-10-08 01:29:52'),
+(22, 49, '8KMHT2', 'size_1', '1', 'create', '2018-10-08 01:29:52', '2018-10-08 01:29:52'),
+(23, 49, '8KMHT2', 'size_2', '1', 'create', '2018-10-08 01:29:52', '2018-10-08 01:29:52'),
+(24, 49, '8KMHT2', 'size_3', '1', 'create', '2018-10-08 01:29:52', '2018-10-08 01:29:52'),
+(25, 49, '8KMHT2', 'size_4', '1', 'create', '2018-10-08 01:29:52', '2018-10-08 01:29:52');
 
 -- --------------------------------------------------------
 
@@ -1422,7 +1608,13 @@ CREATE TABLE `mxp_products_colors` (
 --
 
 INSERT INTO `mxp_products_colors` (`id`, `product_id`, `color_id`, `status`, `created_at`, `updated_at`) VALUES
-(2, 1, 1, 1, '2018-09-27 01:13:18', '2018-09-27 01:13:18');
+(2, 1, 1, 1, '2018-09-27 01:13:18', '2018-09-27 01:13:18'),
+(6, 3, 4, 1, '2018-09-29 01:33:54', '2018-09-29 01:33:54'),
+(8, 2, 4, 1, '2018-09-29 04:48:40', '2018-09-29 04:48:40'),
+(9, 55, 4, 1, '2018-10-06 11:40:43', '2018-10-06 11:40:43'),
+(13, 4, 4, 1, '2018-10-08 01:29:51', '2018-10-08 01:29:51'),
+(14, 4, 12, 1, '2018-10-08 01:29:51', '2018-10-08 01:29:51'),
+(15, 4, 13, 1, '2018-10-08 01:29:51', '2018-10-08 01:29:51');
 
 -- --------------------------------------------------------
 
@@ -1444,7 +1636,15 @@ CREATE TABLE `mxp_products_sizes` (
 --
 
 INSERT INTO `mxp_products_sizes` (`id`, `product_id`, `size_id`, `status`, `created_at`, `updated_at`) VALUES
-(2, 1, 1, 1, '2018-09-27 01:13:19', '2018-09-27 01:13:19');
+(2, 1, 1, 1, '2018-09-27 01:13:19', '2018-09-27 01:13:19'),
+(6, 3, 4, 1, '2018-09-29 01:33:55', '2018-09-29 01:33:55'),
+(8, 2, 4, 1, '2018-09-29 04:48:40', '2018-09-29 04:48:40'),
+(9, 55, 4, 1, '2018-10-06 11:40:43', '2018-10-06 11:40:43'),
+(15, 4, 4, 1, '2018-10-08 01:29:51', '2018-10-08 01:29:51'),
+(16, 4, 12, 1, '2018-10-08 01:29:52', '2018-10-08 01:29:52'),
+(17, 4, 13, 1, '2018-10-08 01:29:52', '2018-10-08 01:29:52'),
+(18, 4, 14, 1, '2018-10-08 01:29:52', '2018-10-08 01:29:52'),
+(19, 4, 15, 1, '2018-10-08 01:29:52', '2018-10-08 01:29:52');
 
 -- --------------------------------------------------------
 
@@ -1528,7 +1728,7 @@ INSERT INTO `mxp_role` (`id`, `name`, `company_id`, `cm_group_id`, `is_active`, 
 (1, 'super_admin', 0, '', 1, '2018-01-14 20:58:10', '2018-01-25 04:51:10'),
 (36, 'super-admin-idlc', 19, '566', 1, '2018-09-06 04:14:26', '2018-09-06 04:14:26'),
 (37, 'Customer Service', 17, '942', 1, '2018-09-09 21:46:02', '2018-09-09 21:46:02'),
-(38, 'Planing Team', 17, '757', 1, '2018-09-23 23:07:17', '2018-09-23 23:07:17'),
+(38, 'Planning Team', 17, '757', 1, '2018-09-23 23:07:17', '2018-09-23 23:07:17'),
 (39, 'Customer Service ( All Management access)', 17, '169', 1, '2018-09-24 23:30:29', '2018-09-24 23:30:29');
 
 -- --------------------------------------------------------
@@ -1576,7 +1776,17 @@ INSERT INTO `mxp_supplier_prices` (`supplier_price_id`, `supplier_id`, `product_
 (23, 4, 17, NULL, '2018-09-17 03:34:01', '2018-09-17 03:34:01'),
 (24, 2, 18, NULL, '2018-09-19 00:11:18', '2018-09-19 00:11:18'),
 (25, 3, 18, NULL, '2018-09-19 00:11:18', '2018-09-19 00:11:18'),
-(26, 4, 18, NULL, '2018-09-19 00:11:18', '2018-09-19 00:11:18');
+(26, 4, 18, NULL, '2018-09-19 00:11:18', '2018-09-19 00:11:18'),
+(27, 1, 2, NULL, '2018-09-29 01:13:22', '2018-09-29 01:13:22'),
+(28, 3, 2, NULL, '2018-09-29 01:13:22', '2018-09-29 01:13:22'),
+(29, 4, 2, NULL, '2018-09-29 01:13:22', '2018-09-29 01:13:22'),
+(30, 2, 2, NULL, '2018-09-29 01:13:22', '2018-09-29 01:13:22'),
+(31, 1, 3, NULL, '2018-09-29 01:33:54', '2018-09-29 01:33:54'),
+(32, 3, 3, NULL, '2018-09-29 01:33:54', '2018-09-29 01:33:54'),
+(33, 4, 3, NULL, '2018-09-29 01:33:54', '2018-09-29 01:33:54'),
+(34, 2, 3, NULL, '2018-09-29 01:33:54', '2018-09-29 01:33:54'),
+(35, 5, 55, 1.00, '2018-10-06 11:40:43', '2018-10-06 11:40:43'),
+(36, 5, 56, NULL, '2018-10-06 11:46:09', '2018-10-06 11:46:09');
 
 -- --------------------------------------------------------
 
@@ -1626,7 +1836,7 @@ INSERT INTO `mxp_task_role` (`id_mxp_task_role`, `role_id`, `task`) VALUES
 (1, 1, '1,2,3,4,5,6,8'),
 (2, 36, ''),
 (3, 37, '1,2,5,6,8'),
-(4, 38, ''),
+(4, 38, '3,4'),
 (5, 39, '1,2,5,6,8');
 
 -- --------------------------------------------------------
@@ -2758,12 +2968,12 @@ INSERT INTO `mxp_users` (`user_id`, `first_name`, `middle_name`, `last_name`, `a
 (42, 'New Admin', 'Middle', 'Last', NULL, 'super_admin', 0, 0, 'newadmin@mail.com', '$2y$10$x1yzwN3LXrb8fkXSCg9Roeu.EBlSQpJf1U.ouqzdOi1F5z2robRd2', '1234567890', 'I500mFPOncDcawx0KwHnzx35J0rH1TUOIT6m4omT', 1, 1, 0, '0', '2018-02-09 01:58:04', '2018-02-09 01:58:04'),
 (43, 'New Client', NULL, NULL, NULL, 'client_com', 42, 16, 'newclient@mail.com', NULL, '1234567890', NULL, 1, NULL, 0, '0', '2018-02-09 02:09:35', '2018-02-09 02:09:35'),
 (48, 'test user', NULL, NULL, NULL, 'company_user', 1, 10, 'sajibg7+09@gmail.com', '$2y$10$NItNEFuZfxtXosv7iRoU0utNjKMIijcYPFTj5J/r26AY86hZg2w6W', '123456', NULL, 1, 29, 0, '0', '2018-04-09 01:58:28', '2018-04-09 01:58:28'),
-(49, 'shohidur', NULL, 'Rahman', NULL, 'super_admin', 0, 0, 'sohidurr49@gmail.com', '$2y$10$.JwEQcEC.OTXRG4aP/PsU.iomnby.5ndA35BeOVrh2Mb03x1LMlsS', '01792755683', 'O5VP72mRuWFfxE8vtzgqWskR9P2SNehZCjEN3EOeEj3BLrqrHlf0eon8dDMQ', 1, 1, 0, '0', '2018-04-09 04:17:47', '2018-04-09 04:17:47'),
+(49, 'shohidur', NULL, 'Rahman', NULL, 'super_admin', 0, 0, 'sohidurr49@gmail.com', '$2y$10$.JwEQcEC.OTXRG4aP/PsU.iomnby.5ndA35BeOVrh2Mb03x1LMlsS', '01792755683', 'N2qmbObK5V6IlqyJZ0G6p5C6u06oFRhvXz0vRbTWuDiIE4hhNQw8sohfJTdI', 1, 1, 0, '0', '2018-04-09 04:17:47', '2018-04-09 04:17:47'),
 (50, 'Shohid', NULL, NULL, NULL, 'company_user', 49, 18, 'test111@mail.com', '$2y$10$lhlWW/5g71MYtdPWgcGLbOlCEzeVRcVlhmab7KGhHEI7.n2EtmC.O', '1234567890', 'I0QouznQ2v43e8SflagFdAzhvPGLvm3328IZLS76Yt1PZJny12BmolxXhNg9', 1, 31, 0, '0', '2018-05-10 00:10:17', '2018-05-10 00:10:17'),
 (51, 'shohidur', NULL, NULL, NULL, 'company_user', 49, 19, 'abc2@gmail.com', '$2y$10$mgh9bfjNxFzzwwa9cLkOqu/VJQJA2eLCL8SgLQPlRa1mBWJr/Gn7.', '01723232232', 'z8QLd0EhlOwruI1KWevQeIvNYqbtdrFu5xCMfJ7VdelqigNN9FDBM3SoMyS2', 1, 36, 0, '0', '2018-09-06 04:16:20', '2018-09-06 04:16:20'),
-(52, 'Shohan', NULL, NULL, NULL, 'company_user', 49, 17, 'sales-2bd@maxim-group.com', '$2y$10$YOYHDA/ponNSLPkVS54zROMH5RkS/Ct4iKSLRdIP54FIFyiTr9vMC', '01713154860', 'fV6e6Fgmr5VggqlzSeebxrQT2NJYxGz3PIr3Wb1ohUhaudkj3jrFM3p0fH2A', 1, 37, 0, '0', '2018-09-09 21:54:47', '2018-09-12 05:20:24'),
+(52, 'Shohan', NULL, NULL, NULL, 'company_user', 49, 17, 'sales-2bd@maxim-group.com', '$2y$10$YOYHDA/ponNSLPkVS54zROMH5RkS/Ct4iKSLRdIP54FIFyiTr9vMC', '01713154860', 'fXcPL2D0WZ84Xzu4NC2JhGc2BZYFsWgr5wVYRyKvzLhU04reAdguxu64usuC', 1, 37, 0, '0', '2018-09-09 21:54:47', '2018-09-12 05:20:24'),
 (53, 'Asraf', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-1bd@maxim-group.com', '$2y$10$XKvmgruJJhSNZQ1/Tt02UuC4SPhBdduKLRwuk8it4ONGtOtzqhIXW', '01740331629', '9AgQ0SUbijUfFYJNgEAHpKRpZGL9ZGNqH90QZ9dapid46JctslRXETo0LEDU', 1, 37, 0, '0', '2018-09-11 04:01:48', '2018-09-19 23:19:13'),
-(54, 'Sujon', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-2bd@maxim-group.com', '$2y$10$hKdhEI5.nNoRS6Ga5bPJNeYEuAggJj.ZL2DdQzjRdCTb4lkh8CJQ.', '0', '7ouZGDz8thRbqfhL70ubnnMEdNV4PY8Ac3fLCjpS0uydGaHmfFOuNUPAOk7z', 1, 37, 0, '0', '2018-09-11 04:03:51', '2018-09-11 04:08:12'),
+(54, 'Sujon', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-2bd@maxim-group.com', '$2y$10$hKdhEI5.nNoRS6Ga5bPJNeYEuAggJj.ZL2DdQzjRdCTb4lkh8CJQ.', '0', '00NpHYjQtA1ZRHITRknpLt6TbqZtaiMKaUxLnlYlNiMndFZOj7dNqBtCdBjN', 1, 37, 0, '0', '2018-09-11 04:03:51', '2018-09-11 04:08:12'),
 (55, 'Bashar', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-3bd@maxim-group.com', '$2y$10$tvykh0hXTzM/PKCF.L3T/.nbUacxBfxg9kN3afAr2Eh7s2tAXKYBq', '\'01799926476', NULL, 1, 37, 0, '0', '2018-09-11 04:09:56', '2018-09-11 04:09:56'),
 (56, 'Jewel', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-4bd@maxim-group.com', '$2y$10$KymLyat1m2Yj7alsbBiTx.K1xPIYq2rgR5jMTfXEYvjk2rfCYD/iW', '01676596644', NULL, 1, 37, 0, '0', '2018-09-11 04:11:04', '2018-09-11 04:11:04'),
 (57, 'Pias', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-6bd@maxim-group.com', '$2y$10$N2TXaHY62EmCGyXjXY7B/OJpDCzTaS2Pbl7YZ4xswfgAWe9SzxBsq', '0', NULL, 1, 37, 0, '0', '2018-09-11 04:12:12', '2018-09-19 23:15:12'),
@@ -2782,7 +2992,7 @@ INSERT INTO `mxp_users` (`user_id`, `first_name`, `middle_name`, `last_name`, `a
 (70, 'Faruk', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-20bd@maxim-group.com', '$2y$10$8SC1LQxllJUlO.CYe9JIzeN32iJ6f0l.8N/mxfKZ0l8rAW9YsVUAW', '01531773905', NULL, 1, 37, 0, '0', '2018-09-11 04:31:32', '2018-09-11 04:31:32'),
 (71, 'Aymon', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-21bd@maxim-group.com', '$2y$10$yW18325DMnI/UcTIYQplyuVtgan252Ykj6iU4oUDBvVZPPsRAJruO', '01884629529', NULL, 1, 37, 0, '0', '2018-09-11 04:33:05', '2018-09-11 04:33:05'),
 (72, 'Bijoy', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-22bd@maxim-group.com', '$2y$10$Jl6LPTurDYjP4kyLZi3ly.TM74EFwaqeoISMkYWc686bHs/rQdnSu', '01711092406', NULL, 1, 37, 0, '0', '2018-09-11 04:34:12', '2018-09-11 04:34:12'),
-(73, 'Rahat', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-23bd@maxim-group.com', '$2y$10$vbA/oD91.vsjyu.97khQRebZNkMpgBvOELc98pTmk.gcOboYQ94q6', '01911077887', '9wl256XjtVxBmBtJteNSTPM6wZuOcvFbru1fChx2UkntGRBXNTV0cl8aN11J', 1, 37, 0, '0', '2018-09-11 04:35:15', '2018-09-11 04:35:15'),
+(73, 'Rahat', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-23bd@maxim-group.com', '$2y$10$vbA/oD91.vsjyu.97khQRebZNkMpgBvOELc98pTmk.gcOboYQ94q6', '01911077887', 't2uX3hODhCot1LWWpXaeEXdAYHbY846fu3arjn6O16BsGSBdi2FgSNitfRGG', 1, 37, 0, '0', '2018-09-11 04:35:15', '2018-09-11 04:35:15'),
 (74, 'Munmun', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-25bd@maxim-group.com', '$2y$10$FRRJKxvxT128tCSs/DpjoOs5HpQDJEWnpjqUSX2LewzJglATm..0W', '01729955480', NULL, 1, 37, 0, '0', '2018-09-11 04:37:15', '2018-09-11 04:37:15'),
 (75, 'Zarin', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-26bd@maxim-group.com', '$2y$10$gYpQbfFUPPM5JVuoHqXEB.1/FAVduj2aC723KisjR.gQR2zlLV.2e', '01708681652', NULL, 1, 37, 0, '0', '2018-09-11 04:38:27', '2018-09-11 04:38:27'),
 (76, 'Sharmin', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-27bd@maxim-group.com', '$2y$10$KFlUEFMSQgCJym6keTBoGeZvSGjx5GDqVMzFAdkNP0CSmQdEaVtSO', '01615-572572', NULL, 1, 37, 0, '0', '2018-09-11 04:39:27', '2018-09-11 04:39:27'),
@@ -2791,9 +3001,9 @@ INSERT INTO `mxp_users` (`user_id`, `first_name`, `middle_name`, `last_name`, `a
 (79, 'Akram', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-30bd@maxim-group.com', '$2y$10$uNBXDtmgupr3q5N5bCT5iO3TbyFi41UlaKA.r1.et12IVhK3zNQru', '01674293832', NULL, 1, 37, 0, '0', '2018-09-11 04:45:26', '2018-09-19 22:37:34'),
 (80, 'Nowreen', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-31bd@maxim-group.com', '$2y$10$IIynmxptiGMEsEdOSNyyc.N5lWp3RH2QZP73XiwqpE5P0CzSmR4AK', '01763745496', NULL, 1, 37, 0, '0', '2018-09-11 04:46:18', '2018-09-11 04:46:18'),
 (81, 'Nayim', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-33bd@maxim-group.com', '$2y$10$ULzK/qLd8vG/Vls5CqBf8OlBoWd1pWEd1Tuz3EoLEuHE7454ZdbHe', '01713154867', NULL, 1, 37, 0, '0', '2018-09-11 04:47:07', '2018-09-11 04:47:07'),
-(82, 'Feroze', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-11bd@maxim-group.com', '$2y$10$p5TZJ7g6.dGn.DoPysKhXeaxVJ.6ips08grpmzQFQMxMHSUG1oOii', '01670250963', '5xnWVp11NNjaFi7vd9KtmgYyPSBlKgJz0LXSKklh0YLixgnodIzVTvBt0Vuh', 1, 39, 0, '0', '2018-09-13 00:47:26', '2018-09-24 23:32:52'),
+(82, 'Feroze', NULL, NULL, NULL, 'company_user', 49, 17, 'cs-11bd@maxim-group.com', '$2y$10$p5TZJ7g6.dGn.DoPysKhXeaxVJ.6ips08grpmzQFQMxMHSUG1oOii', '01670250963', 'mZaYLszHgQLqUY6KJwFYlj7UY98SwVXfXcvluu1Fcc4AHNfYn17531CqE9vH', 1, 39, 0, '0', '2018-09-13 00:47:26', '2018-09-24 23:32:52'),
 (83, 'Sheefa', NULL, 'Haque', NULL, 'super_admin', 0, 0, 'cs-manager@maxim-group.com', '$2y$10$.JwEQcEC.OTXRG4aP/PsU.iomnby.5ndA35BeOVrh2Mb03x1LMlsS', '01790288907', 'QGygqVpV1Th0P9yLeVisd3dmEjMKjJE2fX2tMHTyqyDcf9568ru2ck3g844t', 1, 1, 0, '0', '2018-09-12 18:00:00', '2018-09-12 18:00:00'),
-(84, 'management-1bd', NULL, NULL, NULL, 'company_user', 49, 17, 'management-1bd@maxim-group.com', '$2y$10$9MBsnIHtTYlnkPz6QZceQeOuGkz3Yy4ZaYXYE3u983mKzmOxI8Ik.', NULL, 'h24YG6MKBAk2ZnnWHj3fJ4eLWBytOXC8LRYCkMqBszWpuHIS71uZVX0ENJED', 1, 38, 0, '0', '2018-09-23 23:09:33', '2018-09-23 23:09:33');
+(84, 'management-1bd', NULL, NULL, NULL, 'company_user', 49, 17, 'management-1bd@maxim-group.com', '$2y$10$9MBsnIHtTYlnkPz6QZceQeOuGkz3Yy4ZaYXYE3u983mKzmOxI8Ik.', NULL, '81FOwi6CKW8mVQmWXsfpfaWRxgzRj5msy2y8CNBjX963afcKahBIWfnBnGGy', 1, 38, 0, '0', '2018-09-23 23:09:33', '2018-09-23 23:09:33');
 
 -- --------------------------------------------------------
 
@@ -3170,19 +3380,6 @@ INSERT INTO `mxp_user_role_menu` (`role_menu_id`, `role_id`, `menu_id`, `company
 (1704, 1, 168, 0, 1, NULL, NULL),
 (1705, 1, 170, 0, 1, NULL, NULL),
 (1757, 1, 166, 0, 1, NULL, NULL),
-(1842, 38, 98, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1843, 38, 4, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1844, 38, 148, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1845, 38, 141, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1846, 38, 99, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1847, 38, 97, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1848, 38, 147, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1849, 38, 143, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1850, 38, 145, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1851, 38, 146, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1852, 38, 144, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1853, 38, 170, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
-(1854, 38, 140, 17, 1, '2018-09-24 03:53:04', '2018-09-24 03:53:04'),
 (2478, 37, 90, 17, 1, '2018-09-25 00:22:42', '2018-09-25 00:22:42'),
 (2479, 37, 98, 17, 1, '2018-09-25 00:22:42', '2018-09-25 00:22:42'),
 (2480, 37, 142, 17, 1, '2018-09-25 00:22:43', '2018-09-25 00:22:43'),
@@ -3276,7 +3473,22 @@ INSERT INTO `mxp_user_role_menu` (`role_menu_id`, `role_id`, `menu_id`, `company
 (2696, 39, 91, 17, 1, '2018-09-26 00:38:41', '2018-09-26 00:38:41'),
 (2697, 39, 87, 17, 1, '2018-09-26 00:38:41', '2018-09-26 00:38:41'),
 (2698, 39, 75, 17, 1, '2018-09-26 00:38:42', '2018-09-26 00:38:42'),
-(2699, 39, 93, 17, 1, '2018-09-26 00:38:42', '2018-09-26 00:38:42');
+(2699, 39, 93, 17, 1, '2018-09-26 00:38:42', '2018-09-26 00:38:42'),
+(2714, 38, 98, 17, 1, '2018-10-08 05:16:53', '2018-10-08 05:16:53'),
+(2715, 38, 4, 17, 1, '2018-10-08 05:16:53', '2018-10-08 05:16:53'),
+(2716, 38, 148, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2717, 38, 141, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2718, 38, 183, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2719, 38, 184, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2720, 38, 99, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2721, 38, 97, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2722, 38, 147, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2723, 38, 143, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2724, 38, 145, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2725, 38, 146, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2726, 38, 144, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2727, 38, 170, 17, 1, '2018-10-08 05:16:54', '2018-10-08 05:16:54'),
+(2728, 38, 140, 17, 1, '2018-10-08 05:16:55', '2018-10-08 05:16:55');
 
 -- --------------------------------------------------------
 
@@ -3288,7 +3500,7 @@ CREATE TABLE `mxp_vendor_prices` (
   `price_id` int(10) UNSIGNED NOT NULL,
   `party_table_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `vendor_com_price` double(8,2) DEFAULT NULL,
+  `vendor_com_price` double(8,8) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3298,132 +3510,18 @@ CREATE TABLE `mxp_vendor_prices` (
 --
 
 INSERT INTO `mxp_vendor_prices` (`price_id`, `party_table_id`, `product_id`, `vendor_com_price`, `created_at`, `updated_at`) VALUES
-(1, 81, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(2, 49, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(3, 64, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(4, 61, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(5, 139, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(6, 136, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(7, 53, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(8, 54, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(9, 55, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(10, 56, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(11, 57, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(12, 58, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(13, 59, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(14, 60, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(15, 63, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(16, 62, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(17, 52, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(18, 121, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(19, 122, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(20, 142, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(21, 129, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(22, 66, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(23, 67, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(24, 68, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(25, 69, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(26, 70, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(27, 65, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(28, 78, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(29, 73, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(30, 71, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(31, 80, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(32, 79, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(33, 77, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(34, 76, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(35, 72, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(36, 75, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(37, 74, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(38, 18, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(39, 17, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(40, 19, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(41, 20, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(42, 131, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(43, 38, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(44, 3, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(45, 5, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(46, 4, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(47, 2, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(48, 132, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(49, 39, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(50, 28, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(51, 24, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(52, 30, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(53, 29, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(54, 25, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(55, 26, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(56, 27, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(57, 130, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(58, 123, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(59, 40, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(60, 138, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(61, 137, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(62, 41, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(63, 31, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(64, 32, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(65, 134, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(66, 33, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(67, 34, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(68, 35, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(69, 36, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(70, 37, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(71, 140, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(72, 124, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(73, 141, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(74, 42, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(75, 100, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(76, 117, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(77, 118, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(78, 119, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(79, 120, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(80, 116, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(81, 115, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(82, 114, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(83, 111, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(84, 109, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(85, 108, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(86, 104, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(87, 103, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(88, 102, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(89, 96, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(90, 90, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(91, 94, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(92, 89, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(93, 87, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(94, 86, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(95, 84, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(96, 83, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(97, 82, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(98, 95, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(99, 126, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(100, 7, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(101, 16, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(102, 15, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(103, 6, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(104, 13, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(105, 14, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(106, 8, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(107, 11, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(108, 10, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(109, 9, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(110, 12, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(111, 43, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(112, 128, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(113, 125, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(114, 44, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(115, 127, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(116, 135, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(117, 45, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(118, 46, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(119, 48, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(120, 47, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(121, 51, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(122, 50, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(123, 133, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(124, 21, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(125, 22, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44'),
-(126, 23, 1, 121.00, '2018-09-27 01:11:44', '2018-09-27 01:11:44');
+(1, 224, 4, 0.00045345, '2018-10-07 00:43:09', '2018-10-07 00:47:48'),
+(2, 225, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:44:11'),
+(3, 226, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(4, 227, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(5, 228, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(6, 229, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(7, 230, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(8, 231, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(9, 232, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(10, 233, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(11, 234, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09'),
+(12, 235, 4, NULL, '2018-10-07 00:43:09', '2018-10-07 00:43:09');
 
 -- --------------------------------------------------------
 
@@ -3462,7 +3560,8 @@ INSERT INTO `suppliers` (`supplier_id`, `name`, `phone`, `address`, `is_delete`,
 (1, 'MyName', 'Contact', 'Address', 1, 1, '2018-07-21 01:58:35', '2018-08-30 06:38:05'),
 (2, 'new Supllier', '01743654654', 'Address', 1, 1, '2018-08-07 00:25:31', '2018-09-27 00:51:46'),
 (3, 'Name', '1715627724', 'village: kalikabari danggapara, Union : Boro Chondipur (5), Post :Havra', 1, 1, '2018-08-30 02:16:20', '2018-09-27 00:51:48'),
-(4, 'maximum', '1715627724', 'village: kalikabari danggapara, Union : Boro Chondipur (5), Post :Havra', 1, 1, '2018-09-05 11:58:37', '2018-09-27 00:51:49');
+(4, 'maximum', '1715627724', 'village: kalikabari danggapara, Union : Boro Chondipur (5), Post :Havra', 1, 1, '2018-09-05 11:58:37', '2018-09-27 00:51:49'),
+(5, 'Shohidur Rahman', '1715627724', 'village: kalikabari danggapara, Union : Boro Chondipur (5), Post :Havra', 0, 1, '2018-10-04 05:12:48', '2018-10-04 05:12:48');
 
 --
 -- Indexes for dumped tables
@@ -3565,6 +3664,12 @@ ALTER TABLE `mxp_items_details_by_booking_challan`
   ADD PRIMARY KEY (`items_details_id`);
 
 --
+-- Indexes for table `mxp_item_cost_price`
+--
+ALTER TABLE `mxp_item_cost_price`
+  ADD PRIMARY KEY (`cost_price_id`);
+
+--
 -- Indexes for table `mxp_item_description`
 --
 ALTER TABLE `mxp_item_description`
@@ -3634,12 +3739,6 @@ ALTER TABLE `mxp_party`
 -- Indexes for table `mxp_pi`
 --
 ALTER TABLE `mxp_pi`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `mxp_piformat_data_info`
---
-ALTER TABLE `mxp_piformat_data_info`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3758,7 +3857,7 @@ ALTER TABLE `booking_files`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=287;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=288;
 
 --
 -- AUTO_INCREMENT for table `mxp_accounts_heads`
@@ -3782,19 +3881,19 @@ ALTER TABLE `mxp_acc_classes`
 -- AUTO_INCREMENT for table `mxp_booking`
 --
 ALTER TABLE `mxp_booking`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `mxp_bookingbuyer_details`
 --
 ALTER TABLE `mxp_bookingbuyer_details`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `mxp_booking_challan`
 --
 ALTER TABLE `mxp_booking_challan`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `mxp_brand`
@@ -3824,7 +3923,7 @@ ALTER TABLE `mxp_companies`
 -- AUTO_INCREMENT for table `mxp_gmts_color`
 --
 ALTER TABLE `mxp_gmts_color`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `mxp_header`
@@ -3836,19 +3935,25 @@ ALTER TABLE `mxp_header`
 -- AUTO_INCREMENT for table `mxp_ipo`
 --
 ALTER TABLE `mxp_ipo`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `mxp_items_details_by_booking_challan`
 --
 ALTER TABLE `mxp_items_details_by_booking_challan`
-  MODIFY `items_details_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `items_details_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `mxp_item_cost_price`
+--
+ALTER TABLE `mxp_item_cost_price`
+  MODIFY `cost_price_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `mxp_item_description`
 --
 ALTER TABLE `mxp_item_description`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `mxp_languages`
@@ -3866,13 +3971,13 @@ ALTER TABLE `mxp_maximbill`
 -- AUTO_INCREMENT for table `mxp_menu`
 --
 ALTER TABLE `mxp_menu`
-  MODIFY `menu_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
+  MODIFY `menu_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT for table `mxp_mrf_table`
 --
 ALTER TABLE `mxp_mrf_table`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `mxp_multiplechallan`
@@ -3908,43 +4013,37 @@ ALTER TABLE `mxp_pageheader`
 -- AUTO_INCREMENT for table `mxp_party`
 --
 ALTER TABLE `mxp_party`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=225;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=236;
 
 --
 -- AUTO_INCREMENT for table `mxp_pi`
 --
 ALTER TABLE `mxp_pi`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `mxp_piformat_data_info`
---
-ALTER TABLE `mxp_piformat_data_info`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `mxp_product`
 --
 ALTER TABLE `mxp_product`
-  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `mxp_productsize`
 --
 ALTER TABLE `mxp_productsize`
-  MODIFY `proSize_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `proSize_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `mxp_products_colors`
 --
 ALTER TABLE `mxp_products_colors`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `mxp_products_sizes`
 --
 ALTER TABLE `mxp_products_sizes`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `mxp_purchase_orders`
@@ -3968,7 +4067,7 @@ ALTER TABLE `mxp_role`
 -- AUTO_INCREMENT for table `mxp_supplier_prices`
 --
 ALTER TABLE `mxp_supplier_prices`
-  MODIFY `supplier_price_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `supplier_price_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `mxp_task`
@@ -4010,19 +4109,19 @@ ALTER TABLE `mxp_users`
 -- AUTO_INCREMENT for table `mxp_user_role_menu`
 --
 ALTER TABLE `mxp_user_role_menu`
-  MODIFY `role_menu_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2700;
+  MODIFY `role_menu_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2729;
 
 --
 -- AUTO_INCREMENT for table `mxp_vendor_prices`
 --
 ALTER TABLE `mxp_vendor_prices`
-  MODIFY `price_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `price_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `supplier_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

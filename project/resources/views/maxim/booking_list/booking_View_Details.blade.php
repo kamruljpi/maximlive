@@ -7,9 +7,17 @@
     // print_r(session('data'));
     // print_r("</pre>");
  
-    $object = new App\Http\Controllers\Source\User\UserRoleDefine();
+    $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
 ?>
+<div class="row">
+    <div class="col-sm-2">
+        <div class="form-group ">
+            <a href="{{ URL::previous() }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
+            <i class="fa fa-arrow-left"></i> Back</a>
+        </div>
+    </div>
+</div>
 
 @if(Session::has('empty_message'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_message') ))
@@ -73,7 +81,7 @@
                         @endif
                         <th>Job No.</th>
                         <th width="15%">ERP Code</th>
-                        <th width="20%">Item / Code No.</th>
+                        <th width="20%">Item Code</th>
                         <th width="5%">Season Code</th>
                         <th>OOS No.</th>
                         <th>Style</th>
@@ -159,28 +167,28 @@
             <table class="table table-bordered">
                 <tr>
                     <thead>
-                        <th>Serial no</th>
-                        <th>MRF Id</th>
+                        <th>Job No.</th>
+                        <th width="17%">MRF No.</th>
                         <th>Item Code</th>
-                        <th>Color</th>
-                        <th>Item Size</th>
-                        <th>MRF Quantity</th>
+                        <th>GMTS Color</th>
+                        <th width="8%">Item Size</th>
+                        <th>Quantity</th>
                         <th>Delivered Quantity</th>
-                        <th>MRF Shipment Date</th>
-                        <th>MRF Status</th>
+                        <th>Shipment Date</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </thead>
                 </tr>
-                @php($j=1)
                 <tbody>
                 @foreach($bookingDetails->mrf as $value)
                 <?php 
+                    $idstrcount = (8 - strlen($value->job_id));
                     $gmts_color = explode(',', $value->gmts_color);
                     $itemsize = explode(',', $value->item_size);
                     $mrf_quantity = explode(',', $value->mrf_quantity);
                 ?>
                 <tr>
-                    <td>{{$j++}}</td>
+                    <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->mrf_id}}</td>
                     <td>{{$value->item_code}}</td>
                     <td class="colspan-td">
@@ -227,15 +235,15 @@
             <table class="table table-bordered">
                 <tr>
                     <thead>
-                        <th>Serial no</th>
-                        <th>IPO Id</th>
+                        <th>Job No.</th>
+                        <th>IPO No.</th>
                         <th>Item Code</th>
                         <th>Color</th>
                         <th>Item Size</th>
-                        <th>IPO Quantity</th>
+                        <th>Quantity</th>
                         <th>Delivered Quantity</th>
-                        <th>IPO Shipment Date</th>
-                        <th>IPO Status</th>
+                        <th>Shipment Date</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </thead>
                 </tr>
@@ -243,13 +251,14 @@
                 <tbody>
 
                 @foreach($bookingDetails->ipo as $value)
-                <?php 
+                <?php
+                    $idstrcount = (8 - strlen($value->job_id));
                     $gmts_color = explode(',', $value->gmts_color);
                     $itemsize = explode(',', $value->item_size);
                     $ipo_quantity = explode(',', $value->ipo_quantity);
                 ?>
                 <tr>
-                    <td>{{$j++}}</td>
+                    <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->ipo_id}}</td>
                     <td>{{$value->item_code}}</td>
                     <td class="colspan-td">

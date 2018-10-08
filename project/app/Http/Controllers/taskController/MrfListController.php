@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Validator;
 use Auth;
 use DB;
+use App\Model\MxpBookingBuyerDetails;
 
 class MrfListController extends Controller
 {
@@ -26,11 +27,14 @@ class MrfListController extends Controller
     }
 
     public function showMrfReport(Request $request){
-        $mrfDeatils = DB::table('mxp_mrf_table')->where('mrf_id',$request->mid)->get();
-        $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
-        $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$request->bid)->get();
+        $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
+                        ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
+                        ->where('mrf_id',$request->mid)
+                        ->get();
+        $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
+        $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->bid)->first();
         $footerData =[];
-        return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','headerValue','buyerDetails','footerData'));
+        return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));
     }
 
     public function getMrfListByMrfId(Request $request){

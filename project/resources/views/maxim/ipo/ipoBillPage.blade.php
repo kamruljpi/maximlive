@@ -17,7 +17,7 @@
 	</div>
 @endforeach --}}
 
-@foreach($headerValue as $value)
+@foreach($companyInfo as $value)
 	<div class="row">
 		<div class="col-md-2 col-sm-12 col-xs-12">
 			@if($value->logo_allignment === "left")

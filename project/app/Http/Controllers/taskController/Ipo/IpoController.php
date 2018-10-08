@@ -12,6 +12,7 @@ use App\MxpIpo;
 use Validator;
 use Auth;
 use DB;
+use App\Model\MxpBookingBuyerDetails;
 
 class IpoController extends Controller
 {
@@ -42,10 +43,11 @@ class IpoController extends Controller
     public function storeIpo(Request $request){
 
 		$datas = $request->all();
+    // $this->print_me($datas);
     $booking_order_id = $request->booking_order_id;
     $allId = $datas['ipo_id'];
     $product_qty = $datas['product_qty'];
-    $ipoIncrease = $datas['ipo_increase_percentage'];
+    $ipoIncrease = (!empty($datas['ipo_increase_percentage']) ? $datas['ipo_increase_percentage'] : 0);
 
        /**
       - This Array most important to create challan
@@ -250,11 +252,11 @@ class IpoController extends Controller
       $mainData = $this->increaseIpoValue($allId, $ipoIncrease,$mainData);
 
       foreach ($mainData as $key => $value) {
-      // $this->print_me($value);
         $getBookingChallanValue = DB::table("mxp_booking_challan")->where('id',$key)->get();
         foreach ($getBookingChallanValue as $bookingChallanValue) {
             $createIpo                   = new MxpIpo();
             $createIpo->user_id          = Auth::user()->user_id;
+            $createIpo->job_id           = $bookingChallanValue->job_id;
       			$createIpo->ipo_id           = $ipo_id;
             $createIpo->booking_order_id = $bookingChallanValue->booking_order_id;
             $createIpo->erp_code         = $bookingChallanValue->erp_code;
@@ -278,13 +280,16 @@ class IpoController extends Controller
         }
       }
 
-      $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
-      $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$booking_order_id)->get();
+      $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
+      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$booking_order_id)->first();
       $footerData =[];
-      $ipoDetails = DB::table("mxp_ipo")->where('ipo_id', $ipo_id)->get();
+      $ipoDetails = MxpIpo::join('mxp_booking as mp','mp.id','job_id')
+                  ->select('mxp_ipo.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
+                  ->where('ipo_id',$ipo_id)
+                  ->get();
 
       return view('maxim.ipo.ipoBillPage', [
-          'headerValue'  => $headerValue,
+          'companyInfo'  => $companyInfo,
           'initIncrease' => $request->ipoIncrease,
           'buyerDetails' => $buyerDetails,
           'sentBillId'   => $ipoDetails,
@@ -294,11 +299,11 @@ class IpoController extends Controller
     }
 
 
-    public function increaseIpoValue(array $ipo_id = [], array $increase = [], array $maindata = null){
+    public function increaseIpoValue(array $ipo_id = [], array $increase = [], array $maindata = []){
       $ipoAndIncreaseValue = [];
       $temp = $this->array_combine_ ($ipo_id ,$increase);
       foreach ($temp as $key => $values) {
-        $ipoAndIncreaseValue[$key]['increaseValue']= implode(',', $values);
+        $ipoAndIncreaseValue[$key]['increaseValue']= (sizeof($temp[$key]) == 1)? $values :implode(',', $values);
       }
       foreach ($maindata as $keys => $valuess) {
         $ipoAndIncreaseValue[$keys]['item_quantity']= $valuess;

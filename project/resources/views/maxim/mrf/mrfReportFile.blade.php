@@ -2,62 +2,52 @@
 @section('title','MRF Maxim')
 @section('print-body')
 
-	<center>
-		<a href="#" onclick="myFunction()"  class="print">Print & Preview</a>
-	</center>
+<center><a href="#" onclick="myFunction()"  class="print">Print & Preview</a></center>
 
-	@php($i=0)
-	@foreach($headerValue as $value)
-	@for($i;$i <= 0;$i++)
+@foreach($companyInfo as $value)
 	<div class="row">
-		<div class="col-md-2 col-sm-2 col-xs-2">
-			@if($value->logo_allignment == "left")
+		<div class="col-md-2 col-sm-12 col-xs-12">
+			@if($value->logo_allignment === "left")
 				@if(!empty($value->logo))
 					<div class="pull-left">
-						<img src="/upload/{{$value->logo}}" height="100px" width="150px" />
+						<img src="/upload/{{$value->logo}}" height="40px" width="150px" style="margin-top:  15px;" />
 					</div>
 				@endif
 			@endif
 		</div>
-		<div class="col-md-8 col-sm-8 col-xs-8" style="padding-left: 40px;">
+		<div class="col-md-8 col-sm-12 col-xs-12" style="padding-left: 40px;">
 			<h2 align="center">{{ $value->header_title}}</h2>
 			<div align="center">
-					<p>FACTORY ADDRESS :  {{$value->address1}} {{$value->address2}} {{$value->address3}}</p>
+				<p>OFFICE ADDRESS :  {{$value->address1}} {{$value->address2}} {{$value->address3}}</p>
 			</div>
 		</div>
-		<div class="col-md-2 col-sm-2 col-xs-2">
-			@if($value->logo_allignment == "right")
+		<div class="col-md-2 col-sm-12 col-xs-12">
+			@if($value->logo_allignment === "right")
 				@if(!empty($value->logo))
 					<div class="pull-right">
-						<img src="/upload/{{$value->logo}}" height="100px" width="150px" />
+						<img src="/upload/{{$value->logo}}" height="40px" width="150px" style="margin-top:  15px;" />
 					</div>
 				@endif
 			@endif
 		</div>
 	</div>
-	@endfor
-	@endforeach
-	<div class="row header-bottom">
-		<div class="col-md-12 header-bottom-b">
-			<span>MRF List</span>
-		</div>
+@endforeach
+<div class="row header-bottom">
+	<div class="col-md-12 header-bottom-b">
+		<span>MRF Report</span>
 	</div>
+</div>
 
 	<div class="row body-top">
 		<div class="col-md-8 col-sm-8 col-xs-7 body-list">
-					@php($i=0)
-					@foreach($buyerDetails as $Details)
-					@for($i;$i <= 0;$i++)
-						<ul>
-							<li>Buyer : {{$Details->buyer_name}}</li>
-							<li>Sold To : {{$Details->Company_name}}</li>
-							<li>{{$Details->address_part1_invoice}}
-						{{$Details->address_part2_invoice}}</li>
-							<li>Atten : {{$Details->attention_invoice}}</li>
-							<li>Cell : {{$Details->mobile_invoice}}</li>
-						</ul>
-					@endfor
-					@endforeach
+			<ul>
+				<li>Buyer : {{$buyerDetails->buyer_name}}</li>
+				<li>Company Name  : {{$buyerDetails->Company_name}}</li>
+				<li>Address : {{$buyerDetails->address_part1_invoice}}</li>
+				<li> {{$buyerDetails->address_part2_invoice}}</li>
+				<li>{{($formatTypes == 1001 )?'Contact ' :'Attn' }} : {{$buyerDetails->attention_invoice}}</li>
+				<li>{{($formatTypes == 1001 )?'Contact No ' :'Cell No' }} : {{$buyerDetails->mobile_invoice}}</li>
+			</ul>
 		</div>
 
 		<div class="col-md-4 col-sm-4 col-xs-5 valueGenarate">
@@ -92,7 +82,7 @@
 <div class="row">
 	<div class="col-md-12">
 		<h4>Dear Sir</h4>
-		<p>We take the Plasure in issuing PROFORM INVOICE for the following article (s) on the terms and conditions set forth here under</p>
+		<p>We take the Plasure in issuing PROFORMA INVOICE for the following article (s) on the terms and conditions set forth here under</p>
 	</div>
 </div>
 
@@ -100,92 +90,54 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-        	<th width="4%">SI No</th>
-        	<th width="15%">Description</th>
-        	<th width="10%">Item code</th>
-        	<!-- <th width="10%">OSS</th> -->
-            <!-- <th width="10%">Style</th> -->
-            <th width="14%">Color</th>
-            <th width="14%">Size</th>
-            <th width="7%">MRF Quantity</th>
+        	<th>Job No.</th>
+        	<th width="15%">ERP Code</th>
+        	<th width="20%">Item / Code No.</th>
+        	<th width="5%">Season Code</th>
+        	<th>OOS No.</th>
+        	<th>Style</th>
+        	<th>PO/Cat No.</th>
+        	<th>Description</th>
+        	<th>GMTS Color</th>
+        	<th width="15%">Size</th>
+        	<th>Sku</th>
+        	<th>Order Qty</th>
+        	<th>Unit</th>
         </tr>
     </thead>
     <tbody>
-    	<?php
-    		$j = 1;
-    		$i = 0;
-    		$totalAllQty = 0;
-    		$totalUsdAmount = 0;
-    		$BDTandUSDavarage = 80;
-    		// print_r("<pre>");
-    		// print_r($sentBillId);die();
-    	 ?>
-    		@foreach ($mrfDeatils as $key => $item)
+	    @foreach($mrfDeatils as $key => $details)
+	    	<?php 
+	    		$TotalBookingQty += $details->item_quantity; 
+	    		$jobId = (8 - strlen($details->id));
+	    	?>
 
-    			<?php
-    				$totalQty =0;
-    				$itemsize = explode(',', $item->item_size);
-    				$itemcolor = explode(',', $item->gmts_color);
-    				$qty = explode(',', $item->mrf_quantity);
-    				$itemlength = 0;
-    				foreach ($itemsize as $itemlengths) {
-    					$itemlength = sizeof($itemlengths);
-    				}
-    				$itemQtyValue = array_combine($itemsize, $qty);
-
-    				$emptyCheckMrf = 0;
-    				foreach ($qty as $mrfQtys) {
-    					$emptyCheckMrf += $mrfQtys;
-    				}
-    			?>
-    			@if( $emptyCheckMrf > 0)
-	    			<tr>
-	    				<td>{{$j++}}</td>
-	    				<td>{{$item->erp_code}}</td>
-	    				<td>{{$item->item_code}}</td>
-
-						@if ($itemlength >= 1 )
-							<td colspan="3" class="colspan-td">
-								<table>
-									@foreach($qty as $key => $quantity)
-									<tr>
-										<td width="40%">{{$itemcolor[$key]}}</td>
-										<td width="40%">{{$itemsize[$key]}}</td>
-										<td width="20%" style="text-align: center;">{{$quantity}}</td>
-									</tr>
-										@php
-											$i++;
-											$totalQty += $quantity;
-										@endphp
-									@endforeach
-
-									@if( $i > 1 )
-									<tr>
-										<td colspan="2" style="text-align: center; font-weight: bold;">Item Total</td>
-										<td style="font-weight: bold; text-align: center;" >{{$totalQty}}</td>
-									</tr>
-									@endif
-								</table>
-							</td>
-						@endif
-
-			    		<?php
-    						$totalAllQty += $totalQty;
-    					?>
-	    			</tr>
-	    		@endif
-    		@endforeach
-
-    	<tr>
-			<td colspan="5"><div style="text-align: center; font-weight: bold;font-size: ;"><span>Total Qty </span></div></td>
-			<td style="text-align: center;">{{$totalAllQty}}</td>
-		</tr>
-		<tr>
-			<td colspan="5"><div style="text-align: center;font-weight: bold;font-size: ;"><span> Total weight & Box : </span></div></td>
-			<td style="text-align: center;">{{$totalAllQty}}</td>
-		</tr>
-
+	    	<tr>
+		    	<td>{{ str_repeat('0',$jobId) }}{{ $details->id }}</td>
+		    	<td width="20%">{{$details->erp_code}}</td>
+            	<td width="10%">{{$details->item_code}}</td>
+		    	<td width="5%">{{$details->season_code}}</td>
+		    	<td width="5%">{{$details->oos_number}}</td>
+		    	<td width="5%">{{$details->style}}</td>
+		    	<td>{{$details->poCatNo}}</td>
+		    	<td>{{$details->item_description}}</td>
+		    	<td width="17%">{{$details->gmts_color}}</td>
+		    	<td width="17%">{{$details->item_size}}</td>
+		        <td>{{$details->sku}}</td>
+		        <td>{{$details->item_quantity}}</td>
+		        <td>PCS</td>
+	        </tr>
+	    @endforeach
     </tbody>
+</table>
+<table class="table table-bordered">
+	<tr>
+		<td>
+			<span class="pull-right" style="font-weight: bold; font-size:18px;">MRF Total Qty: {{$TotalBookingQty}}
+			</span>
+		</td>
+		<td style="width: 4%;"></td>
+	</tr>	
 </table>
 
 <h5><strong>REMARK</strong></h5>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\taskController\BookingView\Mrf;
 
 use App\Model\MxpMrf;
-use App\Model\MxpBooking;
+use App\Model\MxpBookingChallan;
 
 class MrfController
 {
@@ -11,7 +11,7 @@ class MrfController
 		$getDbValue = [];
 		if(is_array($id) && !empty($id)){
 			foreach ($id as $idValue) {
-				$getDbValue[] = MxpBooking::where('id',$idValue)->get();
+				$getDbValue[] = MxpBookingChallan::where('job_id',$idValue)->get();
 			}
 		}
 

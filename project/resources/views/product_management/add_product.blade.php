@@ -13,15 +13,16 @@
 	// print_r("</pre>");
 ?>
 
-{{-- <div class="col-sm-2">
-		<div class="form-group ">
-			<a href="{{URL::previews}}" class="btn btn-primary ">
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-2">
+			<div class="form-group ">
+				<a href="{{ URL::previous() }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
 				<i class="fa fa-arrow-left"></i> Back</a>
+			</div>
 		</div>
 	</div>
-<div class="col-sm-10"></div> --}}
 
-<div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
             	@if(count($errors) > 0)

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Source\User;
 use App\Mxp_role;
 use Auth;
 
-class UserRoleDefine
+class PlanningRoleDefine
 {
 	public function getRole(){
 		$roleId  = Auth::user()->user_role_id;

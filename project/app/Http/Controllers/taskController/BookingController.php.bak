@@ -7,6 +7,7 @@ use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RoleManagement;
 use App\Model\BookingFile;
+use App\MxpProduct;
 use Illuminate\Http\Request;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\MxpBookingChallan;
@@ -18,13 +19,19 @@ use Auth;
 use DB;
 use App\Http\Controllers\taskController\BookingListController;
 use App\userbuyer;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
+use App\Http\Controllers\Message\ActionMessage;
 
 class BookingController extends Controller
-{
-    public function orderInputDetails(Request $request){
-      return json_encode(DB::select('Call getProductSizeQuantityWithConcat("'.$request->item.'")'));
+{ 
+    use UserAccessBuyerList;
 
-      // return json_encode($this->abc_test($request->item));
+    const UNSTAGE_FLUG = 'unstage';
+
+    public function orderInputDetails(Request $request){
+      // return json_encode(DB::select('Call getProductSizeQuantityWithConcat("'.$request->item.'")'));
+
+      return json_encode($this->getItemDetails($request->item));
     }
 
     public function getVendorPrice(Request $request){
@@ -138,9 +145,14 @@ class BookingController extends Controller
         $style = (isset($data['style'])) ? $data['style'] : '';
         $erp = (isset($data['erp'])) ? $data['erp'] : 0;
         $sku = $data['sku'];
-      
+
+
+
       for ($i=0; $i < count($item_code); $i++) {
         $insertBooking = new MxpBooking();
+
+        $item_details = MxpProduct::where('product_code',$item_code[$i])->get();
+
         $insertBooking->user_id           = Auth::user()->user_id;
         $insertBooking->booking_order_id  = $customid ;//'booking-abc-001';
         $insertBooking->erp_code          = $erp[$i];
@@ -150,9 +162,9 @@ class BookingController extends Controller
         $insertBooking->others_color      = (!empty($others_color[$i]) ? $others_color[$i] : 0);
         $insertBooking->item_description  = (!empty($item_description[$i]) ? $item_description[$i] : 0);
 
-        $insertBooking->oos_number  = (!empty($oos_number[$i]) ? $oos_number[$i] : 0);
-        $insertBooking->poCatNo  = (!empty($poCatNo[$i]) ? $poCatNo[$i] : 0);
-        $insertBooking->style  = (!empty($style[$i]) ? $style[$i] : 0);
+        $insertBooking->oos_number        = (!empty($oos_number[$i]) ? $oos_number[$i] : 0);
+        $insertBooking->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : 0);
+        $insertBooking->style             = (!empty($style[$i]) ? $style[$i] : 0);
 
         $insertBooking->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : 0);
         $insertBooking->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : 0 );
@@ -162,15 +174,19 @@ class BookingController extends Controller
         $insertBooking->shipmentDate      = $request->shipmentDate;
         // $insertBooking->poCatNo           = $request->poCatNo;
         $insertBooking->season_code       = $request->season_code;
+        $insertBooking->item_size_width_height       = $item_details[0]->item_size_width_height;
         $insertBooking->is_type           = $request->is_type;
-        $insertBooking->is_pi_type        = 'unstage';
+        $insertBooking->is_pi_type        = self::UNSTAGE_FLUG;
         $insertBooking->save();
       }
 
       $bookingValues = DB::select('SELECT erp_code,item_code,sku,others_color,item_description,item_price,orderDate,orderNo,shipmentDate,poCatNo, GROUP_CONCAT(gmts_color) as gmts_color,GROUP_CONCAT(item_size) as item_size, GROUP_CONCAT(item_quantity) as item_quantity FROM mxp_booking WHERE booking_order_id= "'.$customid.'" GROUP BY item_code');
 
       foreach ($bookingValues as $bookingValues) {
-        /** insert mxp_booking_challan table need to create multiple challan **/        
+
+        /** insert mxp_booking_challan table need to create multiple challan **/
+        $item_details = MxpProduct::where('product_code',$bookingValues->item_code)->get();
+            
         $insertBookingChallan = new MxpBookingChallan();
         $insertBookingChallan->user_id           = Auth::user()->user_id;
         $insertBookingChallan->booking_order_id  = $customid ;//'booking-abc-001';
@@ -187,7 +203,9 @@ class BookingController extends Controller
         $insertBookingChallan->orderDate         = $bookingValues->orderDate;
         $insertBookingChallan->orderNo           = $bookingValues->orderNo;
         $insertBookingChallan->shipmentDate      = $bookingValues->shipmentDate;
+        $insertBookingChallan->shipmentDate      = $bookingValues->shipmentDate;
         $insertBookingChallan->poCatNo           = $bookingValues->poCatNo;
+        $insertBookingChallan->item_size_width_height       = $item_details[0]->item_size_width_height;
         $insertBookingChallan->save();
         $bookingChallanId = $insertBookingChallan->id;
 
@@ -212,19 +230,14 @@ class BookingController extends Controller
 
       // $bookingReport = DB::select('call getBookinAndBuyerDeatils("'.$customid.'")');
       $bookingReport = $BookingListController->getBookingDetailsValue($customid);
-      
-      // $bookingReport = DB::table('mxp_booking as mb')
-      //     ->join('mxp_bookingbuyer_details as mbd','mb.booking_order_id','mbd.booking_order_id')
-      //     ->where('booking_order_id',$customid)
-      //     ->get();
-
+      $bookingBuyer = $BookingListController->getBookingBuyerDetails($customid);
       $is_type = $request->is_type;
-
-      // $gmtsOrSizeGroup = DB::select("SELECT gmts_color,GROUP_CONCAT(item_size) as itemSize,GROUP_CONCAT(item_quantity) as quantity from mxp_booking WHERE booking_order_id = '".$customid."' GROUP BY gmts_color");
       $footerData = DB::select("select * from mxp_reportfooter");
-        $getBookingUserDetails =  $this->getUserDetails( $customid );
+      $getBookingUserDetails =  $this->getUserDetails( $customid );
 
-      return view('maxim.orderInput.reportFile',compact('bookingReport','companyInfo','gmtsOrSizeGroup','footerData','is_type','getBookingUserDetails'));
+
+
+      return view('maxim.orderInput.reportFile',compact('bookingReport','companyInfo','footerData','is_type','getBookingUserDetails','bookingBuyer'));
     }
 
 
@@ -259,22 +272,34 @@ class BookingController extends Controller
     }
 
 
-    public function abc_test($item_size){
-            $userbuyer = userbuyer::where("id_user",Auth::user()->user_id)->get();
-            $buyerList = [];
-            if(isset($userbuyer) && !empty($userbuyer)){
-                foreach ($userbuyer as $buyerusr) {
-                    $buyerList[] = $buyerusr->id_buyer;
-                }
+    public function getItemDetails($item_size){
+            $buyerList = $this->getUserByerList();
+            if(isset($buyerList) && !empty($buyerList)){
+              $value = DB::table('mxp_product as mp')
+                ->leftJoin('mxp_productsize as mps','mps.product_code', '=','mp.product_code')
+                ->leftJoin('mxp_gmts_color as mgs','mgs.item_code', '=', 'mps.product_code')
+                ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(mps.product_size) as size'),DB::raw('GROUP_CONCAT(mgs.color_name) as color'))
+                ->where([
+                    ['mp.product_code',$item_size],
+                    ['mp.status',ActionMessage::ACTIVE]
+                  ])
+                ->whereIn('id_buyer',$buyerList)
+                ->get();
+                
+            }else if(Auth::user()->type == 'super_admin'){
+              $value = DB::table('mxp_product as mp')
+                ->leftJoin('mxp_productsize as mps','mp.product_code','mps.product_code')
+                ->leftJoin('mxp_gmts_color as mgs','mp.product_code','mgs.item_code')
+                ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(mps.product_size) as size'),DB::raw('GROUP_CONCAT(mgs.color_name) as color'))
+                ->where([
+                    ['mp.product_code',$item_size],
+                    ['mp.status',ActionMessage::ACTIVE]
+                  ])
+                ->get();
+            }else{
+                  $value = [];
             }
-
-            $value = DB::table('mxp_product as mp')
-              ->join('mxp_productsize as mps','mps.product_code', '=','mp.product_code')
-              ->join('mxp_gmts_color as mgs','mgs.item_code', '=', 'mps.product_code')
-              ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description','GROUP_CONCAT(mps.product_size order by product_size) as size','GROUP_CONCAT(mgs.color_name) as color')
-              ->where('mp.product_code',$item_size)
-              ->whereIn('id_buyer',$buyerList)
-              ->get();
+            
 
           return $value;
     }

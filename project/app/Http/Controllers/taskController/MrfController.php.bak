@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Validator;
 use Auth;
 use DB;
-use App\Model\MxpBookingBuyerDetails;
 
 class MrfController extends Controller
 {
@@ -33,7 +32,7 @@ class MrfController extends Controller
     public function addMrf(Request $request){
 
       $datas = $request->all();
-      // $this->print_me($datas);
+      $this->print_me($datas);
       $booking_order_id = $request->booking_order_id;
       $allId = $datas['allId'];
       $product_qty = $datas['product_qty'];
@@ -244,7 +243,6 @@ class MrfController extends Controller
         $getBookingChallanValue = DB::table("mxp_booking_challan")->where('id',$key)->get();
         foreach ($getBookingChallanValue as $bookingChallanValue) {
             $insertMrfValue = new MxpMrf();
-            $insertMrfValue->job_id = $bookingChallanValue->job_id;
             $insertMrfValue->user_id = Auth::user()->user_id;
             $insertMrfValue->mrf_id = $mrf_id;
             $insertMrfValue->supplier_id= $request->supplier_id;
@@ -268,13 +266,11 @@ class MrfController extends Controller
             $insertMrfValue->save();
         }
       }
+      $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
+      $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$booking_order_id)->get();
       $footerData =[];
-      $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
-      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$booking_order_id)->first();
-      $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
-                      ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
-                      ->where('mrf_id',$mrf_id)
-                      ->get();
-      return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));
+      $mrfDeatils = DB::table('mxp_mrf_table')->where('mrf_id',$mrf_id)->get();
+
+      return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','headerValue','buyerDetails','footerData'));
     }
 }

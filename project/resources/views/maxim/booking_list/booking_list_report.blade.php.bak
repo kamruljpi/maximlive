@@ -117,7 +117,7 @@
 							<th>Order Date</th>
 							<th>Requested Date</th>
 							<th>Item Code</th>
-							<th width="">ERP Code</th>
+							<th width="200px">ERP Code</th>
 							<th>Size</th>
 							<th>Item Description</th>
 							<th>Quantity</th>
@@ -147,15 +147,33 @@
 							<td>{{$value->Company_name}}</td>
 							<td>{{$value->attention_invoice}}</td>
 							<td>{{$value->booking_order_id}}</td>
-							<td>{{$valuelist->pi->p_ids}}</td>
-							<td>{{$valuelist->challan->challan_ids}}</td>
+							@if($value->pi_ipo_Mrf_challan_list->pi[0]->p_id != '')
+							<?php $array_value= []; ?>
+								@foreach($value->pi_ipo_Mrf_challan_list->pi as $piValues)
+								<?php $array_value[$piValues->job_no] = $piValues->job_no ?>
+									@if($piValues->job_no == $valuelist->id)
+										<td>{{$piValues->p_id}}</td>
+										<?php break; ?>
+									@endif
+								@endforeach
+								@if($valuelist->id == array_search($valuelist->id,$array_value))
+								@else
+								<td></td>
+								@endif
+							@else
+								<td></td>
+							@endif
+							<td></td>
 							<td>{{$valuelist->ipo->ipo_ids}}</td>
 							<td>{{$valuelist->mrf->mrf_ids}}</td>
 							<td>
 								{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
 							<td>
 								{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}
-							</td>							
+							</td>
+							<!-- <td>{{$value->pi_ipo_Mrf_challan_list->challan[$ccc]->challan_id}}</td> 
+							-->
+							
 						<?php
 						}else if(count($value->itemLists) > 1){
 							if($ilc == 1){
@@ -166,14 +184,32 @@
 									<td>{{$value->Company_name}}</td>
 									<td>{{$value->attention_invoice}}</td>
 									<td>{{$value->booking_order_id}}</td>
-									<td>{{$valuelist->pi->p_ids}}</td>
-									<td>{{$valuelist->challan->challan_ids}}</td>
+									@if($value->pi_ipo_Mrf_challan_list->pi[0]->p_id !='')
+									<?php $array_value= []; ?>
+										@foreach($value->pi_ipo_Mrf_challan_list->pi as $piValues)
+											<?php $array_value[$piValues->job_no] = $piValues->job_no;?>
+											@if($piValues->job_no == $valuelist->id)
+												<td>{{$piValues->p_id}}</td>
+												<?php break; ?>
+											@endif
+										@endforeach
+										@if($valuelist->id == array_search($valuelist->id,$array_value))
+										@else
+										<td></td>
+										@endif
+									@else
+									<td></td>
+									@endif
+									<td></td>
 									<td>{{$valuelist->ipo->ipo_ids}}</td>
 									<td>{{$valuelist->mrf->mrf_ids}}</td>
 									<td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
 									<td>
 										{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}
-									</td>									
+									</td>
+									<!-- <td>{{$value->pi_ipo_Mrf_challan_list->challan[$ccc]->challan_id}}</td> -->
+
+									
 								<?php
 							}else{
 								?>
@@ -203,14 +239,31 @@
 								<td>{{$value->Company_name}}</td>
 								<td>{{$value->attention_invoice}}</td>
 								<td>{{$value->booking_order_id}}</td>
-								<td>{{$valuelist->pi->p_ids}}</td>
-								<td>{{$valuelist->challan->challan_ids}}</td>
+								@if($value->pi_ipo_Mrf_challan_list->pi[0]->p_id !='')
+								<?php $array_value= []; ?>
+									@foreach($value->pi_ipo_Mrf_challan_list->pi as $piValues)
+									<?php $array_value[$piValues->job_no] = $piValues->job_no;?>
+										@if($piValues->job_no == $valuelist->id)
+											<td>{{$piValues->p_id}}</td>
+											<?php break; ?>
+										@endif
+									@endforeach
+									@if($valuelist->id == array_search($valuelist->id,$array_value))
+									@else
+									<td></td>
+									@endif
+								@else
+								<td></td>
+								@endif
+								<td></td>
 								<td>{{$valuelist->ipo->ipo_ids}}</td>
 								<td>{{$valuelist->mrf->mrf_ids}}</td>
 								<td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
 								<td>
 									{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}
-								</td>								
+								</td>
+								<!-- <td>{{$value->pi_ipo_Mrf_challan_list->challan[$ccc]->challan_id}}</td> -->
+								
 								<?php
 							}
 						}
@@ -257,7 +310,7 @@
 							<?php $ccc++; ?>
 					@endforeach
 						<tr>
-							<td colspan="15"></td>
+							<td colspan="13"></td>
 							<td><strong style="font-size: 12px;">All Total :</strong></td>
 							<td><strong>${{ round($fullTotalAmount,2) }}</strong></td>
 							<td></td>

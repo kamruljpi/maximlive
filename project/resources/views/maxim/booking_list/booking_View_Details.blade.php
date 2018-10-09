@@ -119,7 +119,7 @@
                         <?php $jobId = (8 - strlen($bookedItem->id)); ?>
                         <tr>
                             <td width="3.5%">
-                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control">
+                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>
                             </td>
                             <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>            
                             <td>{{$bookedItem->erp_code}}</td>
@@ -143,12 +143,12 @@
                     <div class="col-md-4 ">
                         <div class="form-group pull-right">
                             <label class="radio-inline">
-                                <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px">IPO
+                                <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>IPO
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" >MRF
+                                <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>MRF
                             </label>
-                            <button type="submit" class="btn btn-primary" style="margin-left: 10px">
+                            <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>
                                 Submit
                             </button>
                         </div>

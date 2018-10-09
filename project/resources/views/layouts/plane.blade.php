@@ -26,7 +26,6 @@
 	<script src="{{ asset('assets/customByMxp/js/select2.min.js') }}"></script>
 	<script type="text/javascript">
 		var baseURL = '{{ url("/") }}';
-		var baseURLs = '{{ url("/") }}/';
 	</script>
 </head>
 <body>

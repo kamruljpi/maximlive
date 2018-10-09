@@ -85,7 +85,7 @@ trans('others.header_list_label'))
                     <td>{{$page->header_colour}}</td> -->
                     <td>
                         @if(!empty($page->logo))
-                        <img src="/upload/{{$page->logo}}" height="50px" weidth="90px" />
+                        <img src="{{ asset('upload')}}/{{$page->logo}}" height="50px" weidth="90px" />
                         @endif
                     </td>
                     <!-- <td>{{$page->logo_allignment}}</td> -->

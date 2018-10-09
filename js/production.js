@@ -207,7 +207,7 @@ function addRow(results, start)
 }
 
 function addbookingRow(results, start)
-{
+{   
     $('.pagination').empty();
     $('#booking_list_tbody').empty();
     $("#booking_list_pagination").css('display','none');
@@ -227,6 +227,8 @@ function addbookingRow(results, start)
         return [value];
     });
 
+    console.log(rows);
+
     var fullTotalAmount = 0;
     var book_html = '';
     for (var i = start; i < end; i++)
@@ -238,6 +240,8 @@ function addbookingRow(results, start)
         var itemListse = itemLists.length;
         for (var ij = itemListsi; ij < itemListse; ij++)
         {
+            console.log(itemLists[ij].mrf.length);
+
             var idstrcount = (8 - itemLists[ij].job_number.toString().length);
             var jobnumber = zeroc.repeat(idstrcount)+''+itemLists[ij].job_number;
             var ilc = 1;
@@ -249,9 +253,12 @@ function addbookingRow(results, start)
                 book_html += '<td>'+rows[i].Company_name+'</td>';
                 book_html += '<td>'+rows[i].attention_invoice+'</td>';
                 book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                book_html += '<td>'+rows[i].booking_order_id+'</td>';
+                book_html += '<td>'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
+                book_html += '<td>'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
+                book_html += '<td>'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
+                book_html += '<td>'+((itemLists[ij].mrf.length != 0)? itemLists[ij].mrf[0].mrf_ids : '')+'</td>';
                 book_html += '<td>'+rows[i].created_at+'</td>';
-                book_html += '<td></td>';
+                book_html += '<td>'+rows[i].shipmentDate+'</td>';
             }else if(itemListse > 1){
                 if(ij == 0){
                     book_html += '<tr class="booking_list_table">';
@@ -260,9 +267,12 @@ function addbookingRow(results, start)
                     book_html += '<td>'+rows[i].Company_name+'</td>';
                     book_html += '<td>'+rows[i].attention_invoice+'</td>';
                     book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                    book_html += '<td>'+rows[i].booking_order_id+'</td>';
+                    book_html += '<td>'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
+                    book_html += '<td>'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
+                    book_html += '<td>'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
+                    book_html += '<td>'+((itemLists[ij].mrf.length != 0)? itemLists[ij].mrf[0].mrf_ids : '')+'</td>';
                     book_html += '<td>'+rows[i].created_at+'</td>';
-                    book_html += '<td></td>';
+                    book_html += '<td>'+rows[i].shipmentDate+'</td>';
                 }else{
                     book_html += '</tr>';
                     book_html += '<tr id="booking_list_table">';
@@ -278,9 +288,12 @@ function addbookingRow(results, start)
                     book_html += '<td>'+rows[i].Company_name+'</td>';
                     book_html += '<td>'+rows[i].attention_invoice+'</td>';
                     book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                    book_html += '<td>'+rows[i].booking_order_id+'</td>';
+                    book_html += '<td>'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
+                    book_html += '<td>'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
+                    book_html += '<td>'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
+                    book_html += '<td>'+((itemLists[ij].mrf.length != 0)? itemLists[ij].mrf[0].mrf_ids : '')+'</td>';
                     book_html += '<td>'+rows[i].created_at+'</td>';
-                    book_html += '<td></td>';
+                    book_html += '<td>'+rows[i].shipmentDate+'</td>';
                 }
             }
             book_html += '<td>'+itemLists[ij].item_code+'</td>';
@@ -296,7 +309,7 @@ function addbookingRow(results, start)
             book_html += '</tr>';
             if(itemListse == 1){
                 book_html += '<tr>';
-                book_html += '<td colspan="13"></td>';
+                book_html += '<td colspan="15"></td>';
                 book_html += '<td><strong>Total : </strong></td>';
 
                 book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
@@ -304,7 +317,7 @@ function addbookingRow(results, start)
             }else if(itemListse > 1){
                 if(ij == itemListse){
                     book_html += '<tr>';
-                    book_html += '<td colspan="13"></td>';
+                    book_html += '<td colspan="15"></td>';
                     book_html += '<td><strong>Total :</strong></td>';
                     book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
                     book_html += '</tr>';
@@ -314,7 +327,7 @@ function addbookingRow(results, start)
         sl++;
     }
     book_html += '<tr>';
-    book_html += '<td colspan="13"></td>';
+    book_html += '<td colspan="16"></td>';
     book_html += '<td><strong>All Total :</strong></td>';
     book_html += '<td><strong>$'+Number((fullTotalAmount).toFixed(2))+'</strong></td>';
     book_html += '</tr>';

@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Model\MxpBooking;
 
 class MxpMrf extends Model
 {
@@ -34,4 +34,8 @@ class MxpMrf extends Model
 //    {
 //        return $this->hasOne('App\Supplier', 'supplier_id', 'supplier_id');
 //    }
+
+    public function mrf_ids(){
+        return $this->hasMany(MxpBooking::class, 'id','job_id');
+    }
 }

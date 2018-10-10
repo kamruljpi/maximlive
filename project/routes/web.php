@@ -937,6 +937,13 @@ Route::group(['middleware' => 'auth'], function () {
                 'as'=>'task_ipo_action',
                 'uses'=>'taskController\Ipo\IpoController@storeIpo'
             ]);
+
+        // Route::get('task/ipo/actionview',
+        //     [
+        //         'as'=>'redirectviewpage',
+        //         'uses'=>'taskController\Ipo\IpoController@redirectviewpage'
+        //     ]);
+
         Route::get('ipo/report/view',
             [
                 'as'=>'ipo_list_action_task',
@@ -1001,6 +1008,7 @@ Route::group(['middleware' => 'auth'], function () {
                 'as'=>'booking_list_details_view',
                 'uses'=>'taskController\BookingListController@detailsViewForm'
             ]);
+
 
         Route::get('booking/list/createIpo/{booking_id?}',
             [

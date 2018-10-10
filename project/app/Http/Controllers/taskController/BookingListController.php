@@ -329,7 +329,7 @@ class BookingListController extends Controller
 
     public function detailsViewForm(Request $request)
     {
-        $bookingDetails = MxpBookingBuyerDetails::with('bookings', 'ipo', 'mrf')
+        $bookingDetails = MxpBookingBuyerDetails::with('bookings','bookings_challan_table', 'ipo', 'mrf')
                           ->where('booking_order_id', $request->booking_id)
                           ->first();
 

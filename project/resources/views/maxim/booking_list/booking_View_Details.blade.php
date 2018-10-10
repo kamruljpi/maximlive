@@ -3,7 +3,7 @@
 @section('section')
 <?php 
     // print_r("<pre>");
-    // print_r($bookingDetails->booking_status);
+    // print_r($bookingDetails->bookings_challan_table);
     // print_r(session('data'));
     // print_r("</pre>");
  
@@ -73,7 +73,7 @@
         </div>
         <form action="{{route('ipo_mrf_define')}}" method="post">
            {{csrf_field()}}
-            <table class="table table-bordered">
+            <table class="table table-bordered vi_table">
                 <tr>
                     <thead>
                         @if($roleCheck == 'p')
@@ -90,7 +90,10 @@
                         <th width="15%">Size</th>
                         <th>Sku</th>
                         <th>Order Qty</th>
-                        <!-- <th>Price</th> -->
+                        @if($roleCheck == 'p')
+                        <th>IPO QTY</th>
+                        <th>MRF QTY</th>
+                        @endif
                     </thead>
                 </tr>
                 
@@ -109,19 +112,20 @@
                             <td>{{$bookedItem->gmts_color }}</td>
                             <td>{{$bookedItem->item_size}}</td>
                             <td>{{$bookedItem->sku}}</td>
-                            <td>{{$bookedItem->item_quantity}}</td>
+                            <td>{{$bookedItem->item_quantity}}</td>                            
                         </tr>
                         @endforeach
                     </tbody>
                 @elseif($roleCheck == 'p')                        
                     <tbody>              
-                        @foreach($bookingDetails->bookings as $bookedItem)
+                        @foreach($bookingDetails->bookings_challan_table as $bookedItem)
                         <?php $jobId = (8 - strlen($bookedItem->id)); ?>
                         <tr>
+                            <label for="job_id">
                             <td width="3.5%">
-                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>
+                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
                             </td>
-                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>            
+                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>           
                             <td>{{$bookedItem->erp_code}}</td>
                             <td>{{$bookedItem->item_code}}</td>
                             <td>{{$bookedItem->season_code}}</td>
@@ -131,7 +135,10 @@
                             <td>{{$bookedItem->gmts_color }}</td>
                             <td>{{$bookedItem->item_size}}</td>
                             <td>{{$bookedItem->sku}}</td>
-                            <td>{{$bookedItem->item_quantity}}</td>
+                            <td>{{$bookedItem->left_mrf_ipo_quantity}}</td>
+                            <td>{{$bookedItem->ipo_quantity}}</td>
+                            <td>{{$bookedItem->mrf_quantity}}</td>
+                            </label>
                         </tr>
                         @endforeach                        
                     </tbody>
@@ -139,19 +146,23 @@
             </table>
             @if($roleCheck == 'p')
             <div class="row">
-                <div class="col-md-8"></div>
-                    <div class="col-md-4 ">
-                        <div class="form-group pull-right">
-                            <label class="radio-inline">
-                                <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>IPO
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>MRF
-                            </label>
-                            <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>
-                                Submit
-                            </button>
-                        </div>
+                <div class="col-md-6"></div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="text" name="increase_value" class="form-control increase_field hidden" placeholder="Increase Value">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group pull-right">
+                        <label class="radio-inline">
+                            <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>IPO
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>MRF
+                        </label>
+                        <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>
+                            Submit
+                        </button>
                     </div>
                 </div>
             </div>                    
@@ -183,41 +194,17 @@
                 @foreach($bookingDetails->mrf as $value)
                 <?php 
                     $idstrcount = (8 - strlen($value->job_id));
-                    $gmts_color = explode(',', $value->gmts_color);
-                    $itemsize = explode(',', $value->item_size);
-                    $mrf_quantity = explode(',', $value->mrf_quantity);
+                    // $gmts_color = explode(',', $value->gmts_color);
+                    // $itemsize = explode(',', $value->item_size);
+                    // $mrf_quantity = explode(',', $value->mrf_quantity);
                 ?>
                 <tr>
                     <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->mrf_id}}</td>
                     <td>{{$value->item_code}}</td>
-                    <td class="colspan-td">
-                        <table id="sampleTbl">
-                            @foreach($gmts_color as $gmtsColor)
-                            <tr>
-                                <td>{{$gmtsColor}}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </td>
-                    <td class="colspan-td" width="18%">
-                        <table id="sampleTbl">
-                            @foreach($itemsize as $valuess)
-                            <tr>
-                                <td>{{$valuess}}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </td>
-                    <td class="colspan-td">
-                        <table id="sampleTbl">
-                            @foreach($mrf_quantity as $mrfQuantity)
-                            <tr>
-                                <td>{{$mrfQuantity}}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </td>
+                    <td>{{$value->gmts_color}}</td>                    
+                    <td width="18%">{{$value->item_size}}</td>
+                    <td>{{$value->mrf_quantity}}</td>
                     <td>Delivered Quantity</td>
                     <td>{{$value->shipmentDate}}</td>
                     <td>{{$value->mrf_status}}</td>
@@ -253,41 +240,17 @@
                 @foreach($bookingDetails->ipo as $value)
                 <?php
                     $idstrcount = (8 - strlen($value->job_id));
-                    $gmts_color = explode(',', $value->gmts_color);
-                    $itemsize = explode(',', $value->item_size);
-                    $ipo_quantity = explode(',', $value->ipo_quantity);
+                    // $gmts_color = explode(',', $value->gmts_color);
+                    // $itemsize = explode(',', $value->item_size);
+                    // $ipo_quantity = explode(',', $value->ipo_quantity);
                 ?>
                 <tr>
                     <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->ipo_id}}</td>
                     <td>{{$value->item_code}}</td>
-                    <td class="colspan-td">
-                        <table id="sampleTbl">
-                            @foreach($gmts_color as $gmtsColor)
-                            <tr>
-                                <td>{{$gmtsColor}}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </td>
-                    <td class="colspan-td" width="18%">
-                        <table id="sampleTbl">
-                            @foreach($itemsize as $valuess)
-                            <tr>
-                                <td>{{$valuess}}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </td>
-                    <td class="colspan-td">
-                        <table id="sampleTbl">
-                            @foreach($ipo_quantity as $ipoQuantity)
-                            <tr>
-                                <td>{{$ipoQuantity}}</td>
-                            </tr>
-                            @endforeach
-                        </table>
-                    </td>
+                    <td>{{$value->gmts_color}}</td>                    
+                    <td width="18%">{{$value->item_size}}</td>
+                    <td>{{$value->ipo_quantity}}</td>
                     <td>Delivered Quantity</td>
                     <td>{{$value->shipmentDate}}</td>
                     <td>{{$value->ipo_status}}</td>
@@ -300,10 +263,7 @@
         </div>
     </div>
 @endif
-
-<script type="text/javascript">
-    $('#normal-btn-success').delay(5000).fadeOut( "slow", function() {
-        $('.close').prop("disabled", false);
-    });
-</script>
 @endsection
+@section('LoadScript')
+<script type="text/javascript" src="{{ asset('assets/scripts/booking/booking_view/view_page.js') }}"></script>
+@stop

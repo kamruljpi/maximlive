@@ -14,7 +14,7 @@
 			@if($value->logo_allignment == "left")
 				@if(!empty($value->logo))
 					<div class="pull-left">
-						<img src="/upload/{{$value->logo}}"  height="40px" width="150px" style="margin-top:  15px;"/>
+						<img src="{{ asset('upload')}}/{{$value->logo}}"  height="40px" width="150px" style="margin-top:  15px;"/>
 					</div>
 				@endif
 			@endif

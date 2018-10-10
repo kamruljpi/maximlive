@@ -176,8 +176,9 @@ class TaskController extends Controller {
 //            return $bookingDetails;
 			return view('maxim.mrf.mrf', compact('bookingDetails', 'MrfDetails', 'booking_order_id', 'suppliers'));
 
-		} elseif ($taskType === 'challan') {
-
+		} elseif ($taskType === 'challan') { // it's not working now. 
+		
+			return "Coming soon ";
 			$validMessages = [
 				'bookingIdList.required' => 'Booking Id field is required.',
 			];

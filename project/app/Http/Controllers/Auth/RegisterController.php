@@ -68,7 +68,7 @@ class RegisterController extends Controller
             'first_name' => $data['first_name'],
             'middle_name' => $data['middle_name'],
             'last_name' => $data['last_name'],
-            'type' => "super_admin",
+            'type' => "",
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'phone_no' => $data['phone_no'],

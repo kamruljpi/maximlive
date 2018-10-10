@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use  App\Model\MxpBookingBuyerDetails;
 use App\MxpIpo;
 use App\Model\MxpMrf;
+use App\Model\MxpPi;
+use App\Model\MxpMultipleChallan;
+
 class MxpBooking extends Model
 {
     protected $table = "mxp_booking";
@@ -30,11 +33,19 @@ class MxpBooking extends Model
         return $this->hasOne(MxpBookingBuyerDetails::class, 'booking_order_id','booking_order_id');
     }
 
+    function pi(){
+        return $this->hasMany(MxpPi::class, 'booking_order_id','booking_order_id');
+    }
+
     function ipo(){
         return $this->hasMany(MxpIpo::class, 'booking_order_id','booking_order_id');
     }
 
     function mrf(){
         return $this->hasMany(MxpMrf::class, 'booking_order_id','booking_order_id');
+    }
+
+    function challan(){
+        return $this->hasMany(MxpMultipleChallan::class, 'checking_id','booking_order_id');
     }
 }

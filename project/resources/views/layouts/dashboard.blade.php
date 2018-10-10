@@ -1,5 +1,9 @@
 @extends('layouts.plane')
 @section('body')
+<?php 
+    $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
+    $roleCheck = $object->getRole();
+?>
  <div id="wrapper">
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -255,13 +259,14 @@
              <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
+                        @if($roleCheck != 'p')
                          <li {{ (Request::is('*dashboard') ? 'class="active"' : '') }}>
                             <a href="{{ Route ('task_dashboard_view') }}">
                                 <i class="fa fa-dashboard fa-fw"></i>
                                 {{ trans('others.task_label') }}
                             </a>
                         </li>
-
+                        @endif
 
                         @if(!is_array(session()->get('UserMenus')) || is_object(session()->get('UserMenus')) )
                                 <script type="text/javascript">

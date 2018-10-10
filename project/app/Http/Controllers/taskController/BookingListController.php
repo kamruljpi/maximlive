@@ -9,10 +9,13 @@ use App\Http\Controllers\taskController\BookingController;
 use App\Http\Controllers\RoleManagement;
 use App\Model\BookingFile;
 use App\Model\MxpBooking;
+use App\Model\MxpMultipleChallan;
+use App\Model\MxpPi;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Supplier;
 use App\MxpIpo;
+use App\Model\MxpMrf;
 use Validator;
 use Auth;
 use DB;
@@ -60,23 +63,24 @@ class BookingListController extends Controller
 
     public function bookingListReport(){
 
-        $bookingList = DB::table('mxp_bookingbuyer_details')
-            ->where('is_complete', 0)
-            ->groupBy('booking_order_id')
-            ->orderBy('id','DESC')
-            ->paginate(150);
+        $bookingList = DB::table('mxp_bookingbuyer_details')->where('is_complete', 0)->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(150);
 
         if(isset($bookingList) && !empty($bookingList)){
             foreach ($bookingList as &$booking) {
                 $booking->itemLists = $this->getBookingItemLists($booking->booking_order_id);
-                $booking->pi_ipo_Mrf_challan_list = MxpBookingBuyerDetails::with('pi','challan','ipo', 'mrf')
-                          ->where('booking_order_id', $booking->booking_order_id)
-                          ->first();
+
+                foreach ($booking->itemLists as &$itemListssvalue) {
+
+                    $itemListssvalue->pi = MxpPi::select(DB::Raw('GROUP_CONCAT(p_id) as p_ids'))->where('job_no',$itemListssvalue->id)->groupBy('job_no')->first();   
+
+                    $itemListssvalue->challan = MxpMultipleChallan::select('mxp_multiplechallan.*',DB::Raw('GROUP_CONCAT(challan_id) as challan_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
+
+                    $itemListssvalue->mrf = MxpMrf::select(DB::Raw('GROUP_CONCAT(mrf_id) as mrf_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
+
+                    $itemListssvalue->ipo = MxpIpo::select(DB::Raw('GROUP_CONCAT(ipo_id) as ipo_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
+                }
             }
         }
-
-        // $this->print_me($bookingList);
-
 
         return view('maxim.booking_list.booking_list_report',compact('bookingList'));
     }
@@ -141,9 +145,16 @@ class BookingListController extends Controller
         if(isset($bookingList) && !empty($bookingList)){
             foreach ($bookingList as &$booking) {
                 $booking->itemLists = $this->getBookingItemLists($booking->booking_order_id);
-                $booking->pi_ipo_Mrf_challan_list = MxpBookingBuyerDetails::with('pi','challan','ipo', 'mrf')
-                          ->where('booking_order_id', $booking->booking_order_id)
-                          ->first();
+                foreach ($booking->itemLists as &$itemListssvalue) {
+
+                    $itemListssvalue->pi = MxpPi::select('mxp_pi.*',DB::Raw('GROUP_CONCAT(p_id) as p_ids'))->where('job_no',$itemListssvalue->id)->groupBy('job_no')->get();   
+
+                    $itemListssvalue->challan = MxpMultipleChallan::select('mxp_multiplechallan.*',DB::Raw('GROUP_CONCAT(challan_id) as challan_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+
+                    $itemListssvalue->ipo = MxpIpo::select('mxp_ipo.*',DB::Raw('GROUP_CONCAT(ipo_id) as ipo_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+
+                    $itemListssvalue->mrf = MxpMrf::select('mxp_mrf_table.*',DB::Raw('GROUP_CONCAT(mrf_id) as mrf_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+                }
             }
         }
         return $bookingList;

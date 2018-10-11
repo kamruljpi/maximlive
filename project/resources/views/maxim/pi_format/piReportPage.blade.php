@@ -7,29 +7,30 @@
 // print_r("</pre>");
 	$objectConvertController = new App\Http\Controllers\Source\ConverterText();
 ?>
+
 <center>
 	<a href="#" onclick="myFunction()" class="print">Print & Preview</a>
 </center>
 
 @foreach($companyInfo as $value)
 	<div class="row">
-		<div class="col-md-2 col-sm-12 col-xs-12">
-			@if($value->logo_allignment === "left")
+		<div class="col-md-2 col-sm-2 col-xs-2">
+			@if($value->logo_allignment == "left")
 				@if(!empty($value->logo))
 					<div class="pull-left">
-						<img src="{{ asset('upload')}}/{{$value->logo}}" height="40px" width="150px" style="margin-top:  15px;" />
+						<img src="{{ asset('upload')}}/{{$value->logo}}" width="160px" style="margin-top:  25px;" />
 					</div>
 				@endif
 			@endif
 		</div>
-		<div class="col-md-8 col-sm-12 col-xs-12" style="padding-left: 40px;">
-			<h2 align="center">{{ $value->header_title}}</h2>
+		<div class="col-md-10 col-sm-10 col-xs-10" >
+			<h2 align="center" style="font-size: 27px;">{{ $value->header_title}}</h2>
 			<div align="center">
 				<p>OFFICE ADDRESS :  {{$value->address1}} {{$value->address2}} {{$value->address3}}</p>
 			</div>
 		</div>
 		<div class="col-md-2 col-sm-12 col-xs-12">
-			@if($value->logo_allignment === "right")
+			@if($value->logo_allignment == "right")
 				@if(!empty($value->logo))
 					<div class="pull-right">
 						<img src="/upload/{{$value->logo}}" height="40px" width="150px" style="margin-top:  15px;" />
@@ -279,10 +280,11 @@
 @foreach ($footerData as $value)
 	@if(!empty($value->siginingPerson_2))
 
-		<section class="report-footer">
+		<div class="report-footer">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-4 ">
+					<div class="col-md-4 col-sm-4">
+						<div class="pull-left">
 						<div class="col-md-8" style="margin-bottom: 20px; height: 90px;">
 							@if(!empty($value->siginingPersonSeal_2))
 								<img src="/upload/{{$value->siginingPersonSeal_2}}" height="150px" width="160px" style="display: block;margin-left: auto;margin-right: auto;"/>
@@ -295,8 +297,9 @@
 							<h4 style="text-align: center; margin-top: 0px;">Seal & Signature of Buyer</h4>
 						</div>
 					</div>
-					<div class="col-md-4"></div>
-					<div class="col-md-4">
+					</div>
+					<div class="col-md-4 col-sm-4"></div>
+					<div class="col-md-4 col-sm-4">
 						<div class="authorized pull-right">
 							<h4 style="margin-bottom: 0px">For Maxim</h4></br>
 							<div class="col-md-12" style="margin-bottom: 10px; height: 50px;">
@@ -313,7 +316,7 @@
 					</div>
 				</div>
 			</div>
-		</section>
+		</div>
 
 		{{--<div class="row">--}}
 			{{--<div class="col-md-12 col-xs-12" style="padding-bottom: 20px;">--}}

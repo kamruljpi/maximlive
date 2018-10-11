@@ -7,12 +7,12 @@ ul li {
 .header-bottom .header-bottom-b{
 	padding:5px 0px 5px 0px;
 	text-align: center;
-	background-color: black;
+	background-color: black !important;
 }
 .header-bottom-b span{
 	font-size: 25px;
 	font-weight: bold;
-	color:#FFF;
+	color:#FFF !important;
 }
 .body-top{
 	padding-top: 5px;
@@ -98,7 +98,6 @@ ul li {
   .mainBody .grandTotal span{
     font-weight: bold;
   }
-
   @media print {
       .header-bottom .header-bottom-b
         {
@@ -112,4 +111,7 @@ ul li {
       .header-bottom-b {
           /*color: white !important;*/
       }
+
+  .report-footer{
+    margin-top: 30px;
   }

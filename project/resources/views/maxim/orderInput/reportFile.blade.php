@@ -18,17 +18,17 @@
 	</center>
 @foreach($companyInfo as $value)
 	<div class="row">
-		<div class="col-md-2 col-sm-12 col-xs-12">
+		<div class="col-md-2 col-sm-2 col-xs-2">
 			@if($value->logo_allignment == "left")
 				@if(!empty($value->logo))
 					<div class="pull-left">
-						<img src="{{ asset('upload')}}/{{$value->logo}}" height="40px" width="150px" style="margin-top:  15px;" />
+						<img src="{{ asset('upload')}}/{{$value->logo}}" width="160px" style="margin-top:  25px;" />
 					</div>
 				@endif
 			@endif
 		</div>
-		<div class="col-md-8 col-sm-12 col-xs-12" style="padding-left: 40px;">
-			<h2 align="center">{{ $value->header_title}}</h2>
+		<div class="col-md-10 col-sm-10 col-xs-10" >
+			<h2 align="center" style="font-size: 27px;">{{ $value->header_title}}</h2>
 			<div align="center">
 				<p>OFFICE ADDRESS :  {{$value->address1}} {{$value->address2}} {{$value->address3}}</p>
 			</div>
@@ -45,8 +45,8 @@
 	</div>
 @endforeach
 <div class="row">
-	<div style="background-color: #000;">
-		<h3 align="center" style="color:#fff; padding:8px; font-weight: bold;">BOOKING FORM</h3>
+	<div style="background-color: #000 !important;">
+		<h3 align="center" style="color:#fff !important; padding:8px; font-weight: bold;">BOOKING FORM</h3>
 	</div>
 
 	<div style="padding-top: 10px;">
@@ -145,9 +145,18 @@
 		    @endforeach
 
 	    </tbody>
+	    <tfoot>
+	    	<tr>
+	    		<td colspan="12">
+	    			<span class="pull-right" style="font-weight: bold; font-size:18px;">Booking Total Qty: {{$TotalBookingQty}}
+	    			</span>
+	    		</td>
+	    		<td style="width: 4%;"></td>
+	    	</tr>
+	    </tfoot>
 	</table>
 	
-<table class="table table-bordered">
+<!-- <table class="table table-bordered">
 	<tr>
 		<td>
 			<span class="pull-right" style="font-weight: bold; font-size:18px;">Booking Total Qty: {{$TotalBookingQty}}
@@ -155,7 +164,10 @@
 		</td>
 		<td style="width: 4%;"></td>
 	</tr>	
-</table>
+</table> -->
+
+
+
 <!-- @foreach ($footerData as $value)
 	@if(!empty($value->siginingPerson_2))
 		<div class="row">

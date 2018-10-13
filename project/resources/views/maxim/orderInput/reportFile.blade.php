@@ -45,8 +45,8 @@
 	</div>
 @endforeach
 <div class="row">
-	<div style="background-color: #000 !important;">
-		<h3 align="center" style="color:#fff !important; padding:8px; font-weight: bold;">BOOKING FORM</h3>
+	<div class="report-header">
+		<h3 align="center" style=" padding:8px; font-weight: bold;">BOOKING FORM</h3>
 	</div>
 
 	<div style="padding-top: 10px;">

@@ -35,10 +35,18 @@
 	</div>
 @endforeach
 
-<div class="row header-bottom">
-    <div class="col-md-12 header-bottom-b">
-        <span>Production Order</span>
-    </div>
+
+<!-- <div class="row header-bottom">
+	<div class="col-md-12 col-sm-12 header-bottom-b">
+		<span>Internal Purchase Order</span>
+	</div>
+	<hr>
+</div> -->
+<div class="row">
+	<div class="report-header">
+		<h3 align="center" style=" padding:8px; font-weight: bold;">Production Order</h3>
+	</div>
+
 </div>
 <div class="row body-top">
 	<div class="col-md-8 col-sm-8 col-xs-7 body-list">

@@ -329,9 +329,11 @@ class BookingListController extends Controller
 
     public function detailsViewForm(Request $request)
     {
-        $bookingDetails = MxpBookingBuyerDetails::with('bookings','bookings_challan_table', 'ipo', 'mrf')
-                          ->where('booking_order_id', $request->booking_id)
-                          ->first();
+        $bookingDetails = MxpBookingBuyerDetails::with('bookings', 'ipo', 'mrf')
+                            ->join('mxp_users as mu','mu.user_id','status_changes_user_id')
+                            ->select('mxp_bookingbuyer_details.*','mu.first_name','mu.last_name')
+                            ->where('booking_order_id', $request->booking_id)
+                            ->first();
 
         return view('maxim.booking_list.booking_View_Details',
                     [

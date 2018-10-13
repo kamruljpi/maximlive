@@ -101,3 +101,18 @@ ul li {
   .report-footer{
     margin-top: 30px;
   }
+  .report-header{
+      background-color: black !important;
+   }
+   .report-header h3{
+      color: white !important;
+   }
+@media print {
+   .report-header{
+      background-color: black !important;
+      -webkit-print-color-adjust: exact;
+   }
+   .report-header h3{
+      color: white !important;
+   }
+}  

@@ -42,6 +42,11 @@
 			<span>Challan / Packing List</span>
 		</div>
 	</div>
+	<div class="row">
+		<div class="report-header">
+			<h3 align="center" style=" padding:8px; font-weight: bold;">Challan / Packing List</h3>
+		</div>
+	</div>
 
 	<div class="row body-top">
 		<div class="col-md-8 col-sm-8 col-xs-7 body-list">

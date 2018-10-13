@@ -32,11 +32,16 @@
 		</div>
 	</div>
 @endforeach
-<div class="row header-bottom">
+<!-- <div class="report-header">
 	<div class="col-md-12 header-bottom-b">
-		<span>MRF Report</span>
+		<h3 align="center" style=" padding:8px; font-weight: bold;">MRF Report</h3>
 	</div>
-</div>
+</div> -->
+	<div class="row">
+		<div class="report-header">
+			<h3 align="center" style=" padding:8px; font-weight: bold;">MRF Report</h3>
+		</div>
+	</div>
 
 	<div class="row body-top">
 		<div class="col-md-8 col-sm-8 col-xs-7 body-list">

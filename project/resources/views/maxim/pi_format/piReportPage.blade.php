@@ -40,10 +40,16 @@
 		</div>
 	</div>
 @endforeach
-<div class="row header-bottom">
+<!-- <div class="row header-bottom">
 	<div class="col-md-12 header-bottom-b">
 		<span>PROFORMA INVOICE</span>
 	</div>
+</div> -->
+<div class="row">
+	<div class="report-header">
+		<h3 align="center" style=" padding:8px; font-weight: bold;">PROFORMA INVOICE</h3>
+	</div>
+
 </div>
 
 <div class="row body-top">
@@ -310,7 +316,7 @@
 							<div></div>
 							<div class="col-md-12" style="border-top: 2px solid #000;">
 								<h4>Authorized Signature</h4>
-								<h4>Preapred By: <b>{{$getUserDetails[0]->first_name}}</b></h4>
+								<h4 class="hidden">Preapred By: <b>{{$getUserDetails[0]->first_name}}</b></h4>
 							</div>
 						</div>
 					</div>

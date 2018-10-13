@@ -1,6 +1,11 @@
 @extends('layouts.dashboard')
 @section('page_heading', trans("others.mxp_menu_booking_list") )
 @section('section')
+<?php 
+	// print_r("<pre>");
+	// print_r($bookingList);
+	// print_r("</pre>");
+?>
 <style type="text/css">
 	.b1{
 		border-bottom-left-radius: 4px;
@@ -16,6 +21,12 @@
 	   .btn-group .btn-group + .btn-group {
     margin-left: -5px;
 }
+.popoverOption:hover{
+	text-decoration: underline;
+}
+/*.popper-content ul{
+	list-style-type: none;
+}*/
 </style>
 	@if(Session::has('empty_booking_data'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_booking_data') ))
@@ -116,21 +127,25 @@
 						<td>{{$value->booking_order_id}}</td>
 						<td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
 						<td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
-						<td>
-							@if($value->booking_status != 'Booked')
-								<div style="width:90%; float:left;">
-									{{$value->booking_status}}
-								</div>
-								<div style="width:10%; float:left;">
-									<i class="fa fa-bell" id="checking_booking_status"></i>
-								</div>
-							@else
-							{{$value->booking_status}}
-							@endif
+						<td>							
+							<a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">{{$value->booking_status}}</a>
+
+							<div class="popper-content hide">
+								<label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}})</label><br>
+
+								<label>Booking Accepted by: {{$value->accepted->first_name}} {{$value->accepted->last_name}}
+									{{(!empty($value->updated_at)?'('.Carbon\Carbon::parse($value->updated_at)->format('d-m-Y').')':'')}}
+								</label><br>
+
+								<label>MRF Issue by: {{$value->mrf->first_name}} {{$value->mrf->last_name}}
+									{{(!empty($value->mrf->created_at)?'('.Carbon\Carbon::parse($value->mrf->created_at)->format('d-m-Y').')':'')}}
+								</label><br>
+
+								<label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} {{(!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y').')':'')}}</label><br>
+							</div>
 						</td>
 						<td width="12%">
 							<div class="btn-group">
-
 								<form action="{{ Route('booking_list_action_task') }}" target="_blank">
 									<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
 									<button class="btn btn-success b1">Report</button>
@@ -173,4 +188,14 @@
 @endsection
 @section('LoadScript')
   <script type="text/javascript" src="{{ asset('assets/scripts/booking_status/show_all_action.js') }}"></script>
+	<script type="text/javascript">
+		$('.popoverOption').popover({
+			trigger: "hover",
+		    container: 'body',
+		    html: true,
+		    content: function () {
+		        return $(this).next('.popper-content').html();
+		    }
+		});
+	</script>
 @stop

@@ -24,6 +24,7 @@ use ZipArchive;
 use App\Model\MxpBookingBuyerDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\User;
 
 class BookingListController extends Controller
 {   
@@ -32,11 +33,16 @@ class BookingListController extends Controller
 
     public function bookingListView(){
 
-        $bookingList = DB::table('mxp_bookingbuyer_details')
-            ->where('is_complete', 0)
-            ->groupBy('booking_order_id')
+        $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
             ->orderBy('id','DESC')
             ->paginate(15);
+        foreach($bookingList as &$booking){
+            $booking->booking = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->user_id)->first();
+            $booking->accepted = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->accepted_user_id)->first();
+            $booking->mrf = MxpMrf::where('booking_order_id',$booking->booking_order_id)->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
+            $booking->ipo = MxpIpo::where('booking_order_id',$booking->booking_order_id)->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
+
+        }
 
         return view('maxim.booking_list.booking_list_page',compact('bookingList'));
     }
@@ -330,7 +336,7 @@ class BookingListController extends Controller
     public function detailsViewForm(Request $request)
     {
         $bookingDetails = MxpBookingBuyerDetails::with('bookings', 'ipo', 'mrf')
-                            ->join('mxp_users as mu','mu.user_id','status_changes_user_id')
+                            ->join('mxp_users as mu','mu.user_id','accepted_user_id')
                             ->select('mxp_bookingbuyer_details.*','mu.first_name','mu.last_name')
                             ->where('booking_order_id', $request->booking_id)
                             ->first();

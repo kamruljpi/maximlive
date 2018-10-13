@@ -155,62 +155,10 @@
 	    	</tr>
 	    </tfoot>
 	</table>
-	
-<!-- <table class="table table-bordered">
-	<tr>
-		<td>
-			<span class="pull-right" style="font-weight: bold; font-size:18px;">Booking Total Qty: {{$TotalBookingQty}}
-			</span>
-		</td>
-		<td style="width: 4%;"></td>
-	</tr>	
-</table> -->
-
-
-
-<!-- @foreach ($footerData as $value)
-	@if(!empty($value->siginingPerson_2))
-		<div class="row">
-			<div class="col-md-12 col-xs-12" style="padding-bottom: 20px;">
-				<div class="col-md-8 col-xs-8" style="padding: 5px; padding-left: 50px;">
-					@if(!empty($value->siginingPersonSeal_2))
-						<img src="/upload/{{$value->siginingPersonSeal_2}}" height="100px" width="150px" />
-					@endif
-
-					@if(!empty($value->siginingPerson_1))
-						<div class="col-md-7 col-xs-7"  style="">
-							<div align="center" style="margin:auto;
-						    	border: 2px solid black;
-						    	padding: 5px;margin-top:30px;">
-								{{$value->siginingPerson_1}}
-							</div>
-						</div>
-					@endif
-				</div>
-				
-				<div class="col-md-4 col-xs-4"  style="">
-					<div align="center">
-						@if(!empty($value->siginingSignature_2))
-							<img src="/upload/{{$value->siginingSignature_2}}" height="100px" width="150px" />
-						@endif
-					</div>
-
-					@if(!empty($value->siginingPerson_2))
-						<div align="center" style="margin:auto;
-					    	border: 2px solid black;
-					    	padding: 5px;margin-top:30px;">
-							{{$value->siginingPerson_2}}
-						</div>
-					@endif
-				</div>
-			</div>
-		</div>
-	@endif
-@endforeach -->
 
 	<script type="text/javascript">
 		function myFunction() {
-			$(".print").addClass("hidden");
+			// $(".print").addClass("hidden");
 		    window.print();
 		}
 	</script>

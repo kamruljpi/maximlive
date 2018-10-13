@@ -24,5 +24,6 @@ class MxpIpo extends Model
     			'orderNo',
     			'shipmentDate',
     			'poCatNo',
-    			'status'];
+    			'status',
+                'ipo_id'];
 }

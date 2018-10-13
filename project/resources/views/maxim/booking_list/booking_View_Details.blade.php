@@ -67,7 +67,7 @@
             <p >Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
             @if($roleCheck == 'p')
                 @if($bookingDetails->booking_status == 'Process')
-                    <p style="font-size: 15px;"><strong>Accepted by</strong> <span style="color:red;">Shohid</span></p>
+                    <p style="font-size: 15px;"><strong>Accepted by</strong> <span style="color:red;">{{$bookingDetails->first_name}}{{$bookingDetails->last_name}}</span></p>
                @endif
             @endif
         </div>

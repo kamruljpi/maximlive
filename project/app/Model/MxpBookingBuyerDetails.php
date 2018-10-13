@@ -9,6 +9,7 @@ use App\Model\MxpPi;
 use App\Model\MxpMrf;
 use App\Model\MxpBooking;
 use App\Model\MxpMultipleChallan;
+use App\Model\MxpBookingChallan;
 
 class MxpBookingBuyerDetails extends Model
 {
@@ -35,6 +36,10 @@ class MxpBookingBuyerDetails extends Model
 
     function bookings(){
         return $this->hasMany(MxpBooking::class, 'booking_order_id','booking_order_id');
+    }
+
+    function bookings_challan_table(){
+        return $this->hasMany(MxpBookingChallan::class, 'booking_order_id','booking_order_id');
     }
 
     function pi(){

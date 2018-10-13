@@ -243,7 +243,8 @@ class IpoController extends Controller
         $challanMinusValueInsert->update();
       }
 
-      $cc = MxpIpo::count();
+      $cc = MxpIpo::select('ipo_id')->groupBy('ipo_id')->get();
+      $cc = count($cc);
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
       $id = "IPO"."-";
       $date = date('dmY') ;
@@ -287,17 +288,29 @@ class IpoController extends Controller
                   ->select('mxp_ipo.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
                   ->where('ipo_id',$ipo_id)
                   ->get();
-
+                  
+                  // return redirect('redirectviewpage')->with('redirectviewpage')->
+                  
       return view('maxim.ipo.ipoBillPage', [
           'companyInfo'  => $companyInfo,
           'initIncrease' => $request->ipoIncrease,
           'buyerDetails' => $buyerDetails,
-          'sentBillId'   => $ipoDetails,
+          'ipoDetails'   => $ipoDetails,
           'footerData'   => $footerData
         ]
       );
     }
-
+    // public function redirectviewpage(Request $request)
+    // {
+    //   return view('maxim.ipo.ipoBillPage', [
+    //       'companyInfo'  => $companyInfo,
+    //       'initIncrease' => $request->ipoIncrease,
+    //       'buyerDetails' => $buyerDetails,
+    //       'ipoDetails'   => $ipoDetails,
+    //       'footerData'   => $footerData
+    //     ]
+    //   );
+    // }
 
     public function increaseIpoValue(array $ipo_id = [], array $increase = [], array $maindata = []){
       $ipoAndIncreaseValue = [];

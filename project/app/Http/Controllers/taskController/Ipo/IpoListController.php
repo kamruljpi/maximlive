@@ -18,7 +18,7 @@ class IpoListController extends Controller
 {
 
 	public function getIpoValue(){
-		$ipoDetails = MxpIpo::orderBy('ipo_id','DESC')
+		$ipoDetails = MxpIpo::orderBy('ipo_id','DESC')->groupBy('ipo_id')
 			->paginate(20);
 		return view('maxim.ipo.list.ipo_list',compact('ipoDetails'));
 	}
@@ -40,7 +40,7 @@ class IpoListController extends Controller
 		    'companyInfo'  => $companyInfo,
 		    'initIncrease' => $ipoIncrease,
 		    'buyerDetails' => $buyerDetails,
-		    'sentBillId'   => $ipoDetails,
+		    'ipoDetails'   => $ipoDetails,
 		    'footerData'   => $footerData
 		  ]
 		);

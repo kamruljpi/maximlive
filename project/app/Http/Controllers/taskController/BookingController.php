@@ -21,6 +21,7 @@ use App\Http\Controllers\taskController\BookingListController;
 use App\userbuyer;
 use App\Http\Controllers\Source\User\UserAccessBuyerList;
 use App\Http\Controllers\Message\ActionMessage;
+use Redirect;
 
 class BookingController extends Controller
 { 
@@ -71,8 +72,6 @@ class BookingController extends Controller
     }
 
     public function addBooking(Request $request,BookingListController $BookingListController){
-      // $this->print_me($request->all());
-
       $roleManage = new RoleManagement();
 
       $validMessages = [
@@ -215,74 +214,20 @@ class BookingController extends Controller
 
    		}
 
-
-
-
-
-      // $bookingValues = DB::select('SELECT erp_code,item_code,sku,others_color,item_description,item_price,orderDate,orderNo,shipmentDate,poCatNo, GROUP_CONCAT(gmts_color) as gmts_color,GROUP_CONCAT(item_size) as item_size, GROUP_CONCAT(item_quantity) as item_quantity FROM mxp_booking WHERE booking_order_id= "'.$customid.'" GROUP BY item_code');
-
-      // foreach ($bookingValues as $bookingValues) {
-
-      //   /** insert mxp_booking_challan table need to create multiple challan **/
-      //   $item_details = MxpProduct::where('product_code',$bookingValues->item_code)->get();
-            
-      //   $insertBookingChallan = new MxpBookingChallan();
-      //   $insertBookingChallan->user_id           = Auth::user()->user_id;
-      //   $insertBookingChallan->booking_order_id  = $customid ;//'booking-abc-001';
-      //   $insertBookingChallan->erp_code          = $bookingValues->erp_code;
-      //   $insertBookingChallan->item_code         = $bookingValues->item_code;
-      //   $insertBookingChallan->sku               = $bookingValues->sku;
-      //   $insertBookingChallan->gmts_color        = $bookingValues->gmts_color;
-      //   $insertBookingChallan->others_color      = $bookingValues->others_color;
-      //   $insertBookingChallan->item_description  = $bookingValues->item_description;
-      //   $insertBookingChallan->item_size         = $bookingValues->item_size;
-      //   $insertBookingChallan->item_quantity     = $bookingValues->item_quantity;
-      //   $insertBookingChallan->left_mrf_ipo_quantity     = $bookingValues->item_quantity;
-      //   $insertBookingChallan->item_price        = $bookingValues->item_price;
-      //   $insertBookingChallan->orderDate         = $bookingValues->orderDate;
-      //   $insertBookingChallan->orderNo           = $bookingValues->orderNo;
-      //   $insertBookingChallan->shipmentDate      = $bookingValues->shipmentDate;
-      //   $insertBookingChallan->shipmentDate      = $bookingValues->shipmentDate;
-      //   $insertBookingChallan->poCatNo           = $bookingValues->poCatNo;
-      //   $insertBookingChallan->item_size_width_height       = $item_details[0]->item_size_width_height;
-      //   $insertBookingChallan->save();
-      //   $bookingChallanId = $insertBookingChallan->id;
-
-      //   $item_size = explode(',', $bookingValues->item_size);
-      //   $item_qnty = explode(',', $bookingValues->item_quantity);
-      //   $item_color = explode(',', $bookingValues->gmts_color);
-
-      //   for ($i = 0; $i < count($item_size); $i++){
-      //       $itemQntyByChalan = new MxpItemsQntyByBookingChallan();
-      //       $itemQntyByChalan->booking_challan_id = $bookingChallanId;
-      //       $itemQntyByChalan->booking_order_id = $insertBookingChallan->booking_order_id;
-      //       $itemQntyByChalan->item_code = $insertBookingChallan->item_code;
-      //       $itemQntyByChalan->erp_code = $insertBookingChallan->erp_code;
-      //       $itemQntyByChalan->item_size = $item_size[$i];
-      //       $itemQntyByChalan->item_quantity = $item_qnty[$i];
-      //       $itemQntyByChalan->gmts_color = $item_color[$i];
-      //       $itemQntyByChalan->save();
-      //   }
-      // }
-
-
-
-
-      $companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
-
-      // $bookingReport = DB::select('call getBookinAndBuyerDeatils("'.$customid.'")');
-      $bookingReport = $BookingListController->getBookingDetailsValue($customid);
-      $bookingBuyer = $BookingListController->getBookingBuyerDetails($customid);
       $is_type = $request->is_type;
+      return \Redirect::route('refresh_booking_view', ['booking_id' => $customid,'is_type' => $request->is_type]);
+    }
+
+    public function redirectBookingReport(Request $request,BookingListController $BookingListController){
+      $is_type = $request->is_type;
+      $companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
+      $bookingReport = $BookingListController->getBookingDetailsValue($request->booking_id);
+      $bookingBuyer = $BookingListController->getBookingBuyerDetails($request->booking_id);
       $footerData = DB::select("select * from mxp_reportfooter");
-      $getBookingUserDetails =  $this->getUserDetails( $customid );
-
-
+      $getBookingUserDetails =  $this->getUserDetails($request->booking_id);
 
       return view('maxim.orderInput.reportFile',compact('bookingReport','companyInfo','footerData','is_type','getBookingUserDetails','bookingBuyer'));
     }
-
-
 
     public function uploadBookingFiles(Request $request, $buyerId)
     {

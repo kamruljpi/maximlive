@@ -91,17 +91,14 @@ class ProductController extends Controller
 
     Public function addProductListView(){
 
-        $brands = MxpBrand::where([['user_id',Auth::user()->user_id],['status', self::ACTIVE_BRAND]])->get();
-    	$colors = MxpGmtsColor::where('user_id',Auth::user()->user_id)->where('item_code', NULL)->where('status', '=', 1)->get();
-        $sizes = MxpProductSize::where('user_id',Auth::user()->user_id)->where('product_code', '')->where('status', '=', 1)->get();
-
+        $brands = MxpBrand::where('status', self::ACTIVE_BRAND)->get();
+    	$colors = MxpGmtsColor::where('status', '=', 1)->get();
+        $sizes = MxpProductSize::where('status', '=', 1)->get();
         $vendorCompanyList = MaxParty::select('id', 'name', 'name_buyer')->get()->sortBy('name_buyer');
-
         $supplierList = Supplier::where('status', 1)
                         ->where('is_delete', 0)
                         ->get();
         $itemList = MxpItemDescription::where('is_active', '1')->get();
-        // $buyers = buyer::all();
         $buyers = DB::table('mxp_buyer')->select('id_mxp_buyer','buyer_name')->orderBy('buyer_name', ASC)->get();
 
        return view('product_management.add_product',compact('brands', 'colors', 'sizes', 'vendorCompanyList', 'supplierList','itemList','buyers'));
@@ -109,15 +106,10 @@ class ProductController extends Controller
 
     Public function updateProductView(Request $request){
         $brands = MxpBrand::where('status', self::ACTIVE_BRAND)->get();
-    	//     $product = MxpProduct::where('product_id', $request->product_id)->get();
 
         $product = $this->allProducts($request->product_id);
-
-        // $this->print_me($product[0]->id_buyer);
         $colors = MxpGmtsColor::where('item_code', NULL)->get();
         $sizes = MxpProductSize::where('product_code', '')->get();
-
-
         $colorsJs=[];
         $sizesJs=[];
 
@@ -142,15 +134,10 @@ class ProductController extends Controller
                             ->where([['mxp_party.status', '=', 1],['id_buyer',$product[0]->id_buyer]])
                             ->where('mxp_vendor_prices.party_table_id', null)
                             ->get();
-//        return count($vendorCompanyList);
 
         if(count($vendorCompanyListPrice)==0){
             $vendorCompanyList = MaxParty::select('id', 'name', 'name_buyer')->where('id_buyer',$product[0]->id_buyer)->get()->sortBy('name_buyer');
         }
-
-//        return $vendorCompanyList;
-
-
 
         $supplierList = Supplier::select('suppliers.supplier_id', 'suppliers.name', 'suppliers.phone', 'suppliers.address', 'suppliers.status')
                         ->leftJoin('mxp_supplier_prices', 'mxp_supplier_prices.supplier_id', '=', 'suppliers.supplier_id')
@@ -175,7 +162,6 @@ class ProductController extends Controller
     Public function addProduct(Request $request){
 
         $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;
-        $this->print_me($request->all());
     	$roleManage = new RoleManagement();
 
         $validMessages = [
@@ -199,8 +185,6 @@ class ProductController extends Controller
 		    ],
             $validMessages
         );
-
-		// self::print_me($validator);
 
 		if ($validator->fails()) {
 			return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
@@ -232,8 +216,6 @@ class ProductController extends Controller
 
         $lastProId = $createProduct->product_id;
 
-
-
         $this->addVendorPrice($request, $lastProId);
 
         SupplierController::saveSupplierProductPrice($request, $lastProId);
@@ -251,7 +233,6 @@ class ProductController extends Controller
 
             $this->saveColor($colorData[1], $request->p_code);
         }
-
 
         for ($i=0; $i<count($request->sizes); $i++){
 

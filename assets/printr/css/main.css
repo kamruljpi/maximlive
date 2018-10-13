@@ -98,20 +98,6 @@ ul li {
   .mainBody .grandTotal span{
     font-weight: bold;
   }
-  @media print {
-      .header-bottom .header-bottom-b
-        {
-          /*background-color: black !important;*/
-          /*-webkit-print-color-adjust: exact; */
-        }
-        /*body {-webkit-print-color-adjust: exact;}*/
-  }
-
-  @media print {
-      .header-bottom-b {
-          /*color: white !important;*/
-      }
-
   .report-footer{
     margin-top: 30px;
   }

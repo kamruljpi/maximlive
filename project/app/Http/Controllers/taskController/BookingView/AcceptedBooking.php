@@ -6,6 +6,7 @@ use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
+use Carbon\Carbon;
 
 class AcceptedBooking extends Controller
 {
@@ -15,7 +16,8 @@ class AcceptedBooking extends Controller
 		try {
 			MxpBookingBuyerDetails::where('booking_order_id',$request)->update([
 				'booking_status' => self::PROCESS_MESSAGE,
-				'accepted_user_id' => Auth::user()->user_id
+				'accepted_user_id' => Auth::user()->user_id,
+				'accepted_date_at' => Carbon::today(),
 			]);
 			return redirect()->back()->with('data', self::PROCESS_MESSAGE);
 		} catch (Exception $e) {

@@ -134,7 +134,7 @@
 								<label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}})</label><br>
 
 								<label>Booking Accepted by: {{$value->accepted->first_name}} {{$value->accepted->last_name}}
-									{{(!empty($value->updated_at)?'('.Carbon\Carbon::parse($value->updated_at)->format('d-m-Y').')':'')}}
+									{{(!empty($value->accepted_date_at)?'('.Carbon\Carbon::parse($value->accepted_date_at)->format('d-m-Y').')':'')}}
 								</label><br>
 
 								<label>MRF Issue by: {{$value->mrf->first_name}} {{$value->mrf->last_name}}

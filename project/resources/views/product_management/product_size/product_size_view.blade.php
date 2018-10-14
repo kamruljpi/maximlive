@@ -40,18 +40,18 @@ trans('others.product_size_list'))
             	<table class="table table-bordered" id="tblSearch">
 	                <thead>
 	                    <tr>
-	                    	<th width="10%">Serial no</th>
+	                    	<th width="10%">No</th>
 	                    	<!-- <th width="25%">Product code</th> -->
 	                    	<th width="20%">Product size</th>
 	                    	<th width="20%">Status</th>
 	                        <th width="25%">Action</th>
 	                    </tr>
 	                </thead>
-                <tbody>  
-                    @php($i=1)
+                <tbody>
+                  @php($j=1 + $productSize->perPage() * ($productSize->currentPage() - 1))
                     @foreach($productSize as $size)                  
                         <tr>                        	
-                        	<td>{{$i++}}</td>
+                        	<td>{{$j++}}</td>
                         	<!-- <td>{{$size->product_code}}</td>                	 -->
                         	<td>{{$size->product_size}}</td>                	
                         	<td>

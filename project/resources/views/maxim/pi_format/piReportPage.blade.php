@@ -149,7 +149,7 @@
 		<?php 
 			$jobId = (8 - strlen($detailsValue->job_no));
 
-			$totalQtyAmt = $detailsValue->item_quantity * $detailsValue->item_price;
+			$totalQtyAmt = $detailsValue->item_quantity * (is_numeric($detailsValue->item_price)?$detailsValue->item_price:'');
 			$totalUsdAmount += $totalQtyAmt;
 			$totalAllqnty += $detailsValue->item_quantity;
 		?>
@@ -185,7 +185,7 @@
 			</td>
 			<td>{{ $detailsValue->item_size }}</td>
 			<td>{{ $detailsValue->item_quantity}}</td>
-			<td>{{(!empty($detailsValue->item_price)? '$'.$detailsValue->item_price: '')}}</td>
+			<td>{{(!empty($detailsValue->item_price)?((is_numeric($detailsValue->item_price))?'$':'').$detailsValue->item_price: '')}}</td>
 			<td>{{(!empty($detailsValue->item_quantity)? '$'. $totalQtyAmt: '')}}</td>
 		</tr>
 			<?php $itemcodestatus = $detailsValue->item_code; ?>

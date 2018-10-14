@@ -73,6 +73,7 @@
         </div>
         <form action="{{route('ipo_mrf_define')}}" method="post">
            {{csrf_field()}}
+           <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
             <table class="table table-bordered vi_table">
                 <tr>
                     <thead>

@@ -113,10 +113,9 @@
     <tbody>
 	    @foreach($mrfDeatils as $key => $details)
 	    	<?php 
-	    		$TotalBookingQty += $details->item_quantity; 
+	    		$TotalBookingQty += $details->mrf_quantity; 
 	    		$jobId = (8 - strlen($details->id));
 	    	?>
-
 	    	<tr>
 		    	<td>{{ str_repeat('0',$jobId) }}{{ $details->id }}</td>
 		    	<td width="20%">{{$details->erp_code}}</td>
@@ -129,7 +128,7 @@
 		    	<td width="17%">{{$details->gmts_color}}</td>
 		    	<td width="17%">{{$details->item_size}}</td>
 		        <td>{{$details->sku}}</td>
-		        <td>{{$details->item_quantity}}</td>
+		        <td>{{$details->mrf_quantity}}</td>
 		        <td>PCS</td>
 	        </tr>
 	    @endforeach

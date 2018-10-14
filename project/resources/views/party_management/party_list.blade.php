@@ -88,16 +88,8 @@ trans('others.party_list_label'))
                     </td>
 
                     <td>
-                        <table>
-                          <tr>
-                              <td class="">
-                                  <a href="{{ Route('party_edit_view')}}/{{$party->id}}" class="btn btn-success">edit</a>
-                              </td>   
-                              <td class="td-pad">
-                                  <a href="{{ Route('party_delete_action')}}/{{$party->id}}" class="btn btn-danger">delete</a>
-                              </td>
-                          </tr>
-                        </table>
+                        <a href="{{ Route('party_edit_view')}}/{{$party->id}}" class="btn btn-success">edit</a>
+                        <a href="{{ Route('party_delete_action')}}/{{$party->id}}" class="btn btn-danger">delete</a>
                     </td>
                 </tr>
                   @endforeach 

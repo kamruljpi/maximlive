@@ -50,17 +50,11 @@ trans('others.buyer_list_label'))
                         <tr>                        	
                         	<td>{{$buyer->id_mxp_buyer}}</td>
                         	<td>{{$buyer->buyer_name}}</td>                	            	
-                        	<td>                        		
-                        		<table>
-                                  <tr>
-                                      <td class="">
-                                          <a href="{{ Route('update_buyer_view')}}/{{$buyer->id_mxp_buyer}}" class="btn btn-success">edit</a>
-                                      </td>
-                                      <td class="td-pad">
-                                          <a href="{{ Route('delete_buyer_action')}}/{{$buyer->id_mxp_buyer}}" class="btn btn-danger">delete</a>
-                                      </td>
-                                  </tr>
-                              </table>                                 
+                        	<td>
+                                <a href="{{ Route('update_buyer_view')}}/{{$buyer->id_mxp_buyer}}" class="btn btn-success">edit</a>
+
+                                <a href="{{ Route('delete_buyer_action')}}/{{$buyer->id_mxp_buyer}}" class="btn btn-danger">delete</a>
+                                
                         	</td>
                          </tr>                    
                     @endforeach                      

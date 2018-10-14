@@ -311,7 +311,8 @@ inform us in 3days. After this period, you concern about this goods shall not be
 	@endforeach
 
 <script type="text/javascript">
-		function myFunction() {
+	function myFunction() {
+		$(".print").addClass("hidden");
 	    window.print();
 	}
 </script>

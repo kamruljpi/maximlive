@@ -328,6 +328,7 @@
 
 <script type="text/javascript">
 	function myFunction() {
+	$(".print").addClass("hidden");
 	    window.print();
 	}
 </script>

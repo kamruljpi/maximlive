@@ -49,25 +49,17 @@ class ProductController extends Controller
 
         if(isset($buyerList) && !empty($buyerList)){
             if($productId == null ){
-                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->whereIn('id_buyer',$buyerList)->paginate(20);
+                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->whereIn('id_buyer',$buyerList)->orderBy('product_id','DESC')->paginate(20);
             }else{
-                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->whereIn('id_buyer',$buyerList)->paginate(20);
+                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->whereIn('id_buyer',$buyerList)->orderBy('product_id','DESC')->paginate(20);
             }
         }else if(Auth::user()->type == 'super_admin'){
             if($productId == null ){
-                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->paginate(20);
+                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->orderBy('product_id','DESC')->paginate(20);
             }else{
-                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->paginate(20);
+                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->orderBy('product_id','DESC')->paginate(20);
             }
         }
-        // $this->print_me($proWithSizeColors);
-
-        // if($productId == null ){
-        //     $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('user_id',Auth::user()->user_id)->paginate(20);
-        // }else{
-        //     $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->where('user_id',Auth::user()->user_id)->paginate(20);
-        // }
-
 
         $i=0;
         foreach ($proWithSizeColors as $proWithSizeColor) {
@@ -106,7 +98,6 @@ class ProductController extends Controller
 
     Public function updateProductView(Request $request){
         $brands = MxpBrand::where('status', self::ACTIVE_BRAND)->get();
-
         $product = $this->allProducts($request->product_id);
         $colors = MxpGmtsColor::where('item_code', NULL)->get();
         $sizes = MxpProductSize::where('product_code', '')->get();
@@ -160,7 +151,6 @@ class ProductController extends Controller
     }
 
     Public function addProduct(Request $request){
-
         $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;
     	$roleManage = new RoleManagement();
 
@@ -191,16 +181,15 @@ class ProductController extends Controller
 		}
 
 		$validationError = $validator->messages();
-
         $description_name = MxpItemDescription::where('id',$request->p_description)->select('name')->first();
-
+        $buyer_name = buyer::where('id_mxp_buyer',$request->id_buyer)->select('buyer_name')->first();
     	$createProduct = new MxpProduct();
     	$createProduct->product_code = $request->p_code;
     	$createProduct->product_name = $request->p_name;
         $createProduct->product_type = $request->product_type;
     	$createProduct->product_description = $description_name->name;
         $createProduct->item_description_id = $request->p_description;
-    	$createProduct->brand = htmlspecialchars($request->p_brand);
+    	$createProduct->brand = htmlspecialchars($buyer_name->buyer_name);
     	$createProduct->erp_code = $request->p_erp_code;
     	$createProduct->item_inc_percentage = $request->item_inc_percentage;
     	$createProduct->unit_price = $request->p_unit_price;
@@ -215,11 +204,8 @@ class ProductController extends Controller
     	$createProduct->save();
 
         $lastProId = $createProduct->product_id;
-
         $this->addVendorPrice($request, $lastProId);
-
         SupplierController::saveSupplierProductPrice($request, $lastProId);
-
 
        for ($i=0; $i<count($request->colors); $i++){
 
@@ -256,19 +242,13 @@ class ProductController extends Controller
         ]);
 
 		StatusMessage::create('new_product_create', 'New product Created Successfully');
-
 		return \Redirect()->Route('product_list_view');    	
     }
 
-    public function updateProduct(Request $request){
-        
+    public function updateProduct(Request $request){        
         $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;
-//        VendorPrice::where('product_id', $request->product_id)->delete();
         $this->addVendorPrice($request, $request->product_id);
-
         SupplierController::updateProductPrice($request);
-
-
     	$roleManage = new RoleManagement();
 
         $validMessages = [
@@ -292,12 +272,13 @@ class ProductController extends Controller
 		$validationError = $validator->messages();
 
         $description_name = MxpItemDescription::where('id',$request->p_description)->select('name')->first();
+        $buyer_name = buyer::where('id_mxp_buyer',$request->id_buyer)->select('buyer_name')->first();
     	$updateProduct = MxpProduct::find($request->product_id);
     	$updateProduct->product_code = $request->p_code;
     	$updateProduct->product_name = $request->p_name;
         $updateProduct->product_type = $request->product_type;
    	    $updateProduct->product_description = $description_name->name;
-    	$updateProduct->brand = $request->p_brand;
+    	$updateProduct->brand = $buyer_name->buyer_name;
     	$updateProduct->erp_code = $request->p_erp_code;
         $updateProduct->item_inc_percentage = $request->item_inc_percentage;
         $updateProduct->item_description_id = $request->p_description;
@@ -333,8 +314,6 @@ class ProductController extends Controller
                 $this->saveColor($color_name, $request->p_code);
             }
         }
-
-
         MxpProductsSizes::where('product_id', $lastProductID)->delete();
         MxpProductSize::where('product_code', $request->p_code)->delete();
 
@@ -343,7 +322,6 @@ class ProductController extends Controller
 
                 $id = explode(',', $request->sizes[$i])[0];
                 $size_name = explode(',', $request->sizes[$i])[1];
-
                 $size = new MxpProductsSizes();
                 $size ->product_id = $lastProductID;
                 $size ->size_id = $id;
@@ -415,15 +393,12 @@ class ProductController extends Controller
             }else{
                 $sPrice = new VendorPrice();
             }
-
             $sPrice->party_table_id = $request->party_table_id[$i];
             $sPrice->product_id = $productId;
             $sPrice->vendor_com_price = $request->v_com_price[$i];
             $sPrice->save();
 
         }
-
-
         return true;
     }
 

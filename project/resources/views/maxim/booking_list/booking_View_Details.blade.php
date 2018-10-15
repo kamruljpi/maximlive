@@ -265,6 +265,3 @@
     </div>
 @endif
 @endsection
-@section('LoadScript')
-<script type="text/javascript" src="{{ asset('assets/scripts/booking/booking_view/view_page.js') }}"></script>
-@stop

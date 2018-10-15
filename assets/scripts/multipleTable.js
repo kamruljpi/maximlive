@@ -337,14 +337,19 @@ $(document).ready(function(){
 
             if (taskType == 'challan'){
               $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
-              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +',');
+              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
               $("#bookingId").val("").focus();
             }
-            // else if(taskType == 'PI'){
-            //   $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
-            //   $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +',');
-            //   $("#bookingId").val("").focus();
-            // }
+            else if(taskType == 'PI'){
+              $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
+              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
+              $("#bookingId").val("").focus();
+            }
+            else if(taskType == 'FSC PI'){
+              $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
+              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
+              $("#bookingId").val("").focus();
+            }
         }
     },
 
@@ -366,9 +371,11 @@ $(document).ready(function(){
     $("#bookingIdList").on("click",".challan_list_rmv", function(){
         var order_item = $(this).parent(".challan_item").text();
         $(this).parent(".challan_item").remove();
-        // alert(order_item);
+        var order_item_1 = order_item.replace('x', ",");
         var order_items = $('#hiddenBookingIdList').val();
-        var order_items =  order_items.replace(' , '+order_item, "W3Schools");
+        var order_itemss =  order_items.replace(order_item_1, " ");
+        $('#hiddenBookingIdList').val(" ");
+        $('#hiddenBookingIdList').val(order_itemss);
     })
 });
 

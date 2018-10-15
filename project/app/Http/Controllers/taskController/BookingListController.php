@@ -25,6 +25,8 @@ use App\Model\MxpBookingBuyerDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\User;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+
 
 class BookingListController extends Controller
 {   
@@ -34,6 +36,7 @@ class BookingListController extends Controller
     public function bookingListView(){
 
         $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
+            ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
             ->orderBy('id','DESC')
             ->paginate(15);
         foreach($bookingList as &$booking){
@@ -69,7 +72,7 @@ class BookingListController extends Controller
 
     public function bookingListReport(){
 
-        $bookingList = DB::table('mxp_bookingbuyer_details')->where('is_complete', 0)->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(150);
+        $bookingList = DB::table('mxp_bookingbuyer_details')->where([['is_complete', BookingFulgs::IS_COMPLETE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(150);
 
         if(isset($bookingList) && !empty($bookingList)){
             foreach ($bookingList as &$booking) {

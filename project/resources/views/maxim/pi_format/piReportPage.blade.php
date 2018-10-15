@@ -131,10 +131,10 @@
 	    	<th>OOS No. </th>
 	    	<th width="10%">Item code</th>
 	    	<th width="18%">ERP Code</th>
-	    	<th>GMTS/Item Color</th>
+	    	<!-- <th>GMTS / Item Color</th> -->
 	        <th>Item Descreption</th>
 	        <th>Style</th>
-	        <th width="10%">Item Size</th>
+	        <!-- <th width="10%">Item Size</th> -->
 	        <th>Qty / Pcs</th>
 	        <th>Unit Price / Pcs</th>
 	        <th>USD Amount / USD</th>
@@ -142,6 +142,7 @@
 	</thead>
 	<tbody>
 		<?php 
+			$j = 1;
 			$itemcodestatus = ''; 
 			$totalUsdAmount = 0;
 		?>
@@ -154,7 +155,8 @@
 			$totalAllqnty += $detailsValue->item_quantity;
 		?>
 		<tr>
-			<td>{{ str_repeat('0',$jobId) }}{{ $detailsValue->job_no}}</td>
+			<!-- <td>{{ str_repeat('0',$jobId) }}{{ $detailsValue->job_no}}</td> -->
+			<td>{{ $j++ }}</td>
 			<td>{{ $detailsValue->poCatNo }}</td>
 			<td>{{ $detailsValue->oos_number }}</td>
 			<td>{{ $detailsValue->item_code }}
@@ -177,13 +179,13 @@
 		    @else
 		    <td></td>
 	    	@endif -->
-			<td>{{ $detailsValue->gmts_color }}</td>
+			<!-- <td>{{ $detailsValue->gmts_color }}</td> -->
 			<td>{{ $detailsValue->item_description }}</td>
 			<td style="width: 10%;">
 				{{ $detailsValue->style }}
 				
 			</td>
-			<td>{{ $detailsValue->item_size }}</td>
+			<!-- <td>{{ $detailsValue->item_size }}</td> -->
 			<td>{{ $detailsValue->item_quantity}}</td>
 			<td>{{(!empty($detailsValue->item_price)?((is_numeric($detailsValue->item_price))?'$':'').$detailsValue->item_price: '')}}</td>
 			<td>{{(!empty($detailsValue->item_quantity)? '$'. $totalQtyAmt: '')}}</td>
@@ -191,7 +193,7 @@
 			<?php $itemcodestatus = $detailsValue->item_code; ?>
 		@endforeach		
 			<tr>
-				<td colspan="9">
+				<td colspan="7">
 					<span style="font-weight: bold; font-size: 18px; float: right;">Total Quantity:</span>
 				</td>
 				<td>{{$totalAllqnty}}</td>

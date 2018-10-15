@@ -46,7 +46,7 @@ $(document).ready(function(){
 		}else if(selectedValue === 'PI'){
 
 			$('#buyerChange').attr("disabled","true");
-			$('#hiddenBookingIdList').prop("disabled","true");
+			$('#hiddenBookingIdList').removeAttr("disabled","false");
             $('#bookingIdList').attr("disabled","true");
 			$('#buyerChange').val('');
 			$('#companyName').attr("disabled","true");
@@ -61,12 +61,12 @@ $(document).ready(function(){
 			$('.ipo_increase').addClass('hidden');
 			$('.piFormatH').removeClass('hidden');
 			$('.orderId').removeClass('hidden');
-            $('#bookingIdList').addClass('hidden');
+            $('#bookingIdList').removeClass('hidden');
             $('.conversion_rate').addClass('hidden');
         }else if(selectedValue === 'FSC PI'){
 
 			$('#buyerChange').attr("disabled","true");
-			$('#hiddenBookingIdList').prop("disabled","true");
+			$('#hiddenBookingIdList').removeAttr("disabled","false");
             $('#bookingIdList').attr("disabled","true");
 			$('#buyerChange').val('');
 			$('#companyName').attr("disabled","true");
@@ -81,7 +81,7 @@ $(document).ready(function(){
 			$('.ipo_increase').addClass('hidden');
 			$('.piFormatH').removeClass('hidden');
 			$('.orderId').removeClass('hidden');
-            $('#bookingIdList').addClass('hidden');
+            $('#bookingIdList').removeClass('hidden');
             $('.conversion_rate').addClass('hidden');
 
 		}else if(selectedValue === 'bill'){

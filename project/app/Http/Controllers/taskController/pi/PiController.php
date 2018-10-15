@@ -103,11 +103,12 @@ class PiController extends Controller
 
 	public function redirectPiReport(Request $request){
 		$companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
-		$bookingDetails = DB::table('mxp_pi')
-			->where([
-				['p_id',$request->p_id],
+		$bookingDetails = MxpPi::where([
+				['p_id',$request->pid],
 				['is_type',$request->is_type],
 			])
+			->select('*',DB::Raw('sum(item_quantity) as item_quantity'))
+			->groupBy('item_code')
 			->get();
         $footerData = DB::table('mxp_reportfooter')->where('status', 1)->get();
 		$buyerDetails = DB::table('mxp_bookingbuyer_details')

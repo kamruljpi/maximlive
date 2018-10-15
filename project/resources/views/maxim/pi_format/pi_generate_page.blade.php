@@ -13,7 +13,7 @@
 	@endif
 	<div class="row">
 		<form action="{{ route('pi_generate_action') }}">
-			<table class="table table-bordered">
+			<table class="table table-bordered vi_table">
 				<thead>
 					<th>#</th>
 					<th>Job No</th>

@@ -70,7 +70,10 @@ class TaskController extends Controller {
 			$companyName = '';
 			$iteration = 0;
 			foreach ($booking_id as $bookingid) {
-				$vendorDetails = MxpBookingBuyerDetails::where('booking_order_id',$bookingid)->first();
+				$vendorDetails = MxpBookingBuyerDetails::where([['booking_order_id',$bookingid],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
+				if (! $vendorDetails->Company_name) {
+					return redirect()->back()->withErrors($bookingid." Booking No not found.");
+				}
 				if ($iteration > 0) {
 					if ($buyerName != $vendorDetails->buyer_name || 
 						$companyName != $vendorDetails->Company_name ) {
@@ -106,10 +109,13 @@ class TaskController extends Controller {
 				if ($validator->fails()) {
 					return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
 				}
-				$validationError = $validator->messages();	
+				$validationError = $validator->messages();
 
+				$vendorDetails = MxpBookingBuyerDetails::where([['booking_order_id',$request->bookingId],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
+				if (! $vendorDetails->Company_name) {
+					return redirect()->back()->withErrors($request->bookingId." Booking No not found.");
+				}
 				$ipoValue = DB::table("mxp_booking_challan")->where('booking_order_id', $request->bookingId)->get();
-
 				if (empty($ipoValue)) {
 					return \Redirect()->Route('dashboard_view');
 				}

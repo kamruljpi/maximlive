@@ -123,7 +123,7 @@ class BookingController extends Controller
         $InserBuyerDetails->shipmentDate          = $request->shipmentDate;
         $InserBuyerDetails->booking_status        = BookingFulgs::BOOKED_FLUG;
         $InserBuyerDetails->last_action_at        = BookingFulgs::LAST_ACTION_CREATE;
-        $InserBuyerDetails->is_complete           = 0;
+        $InserBuyerDetails->is_complete           = BookingFulgs::IS_COMPLETE;
         $InserBuyerDetails->save();
         $buyerId = $InserBuyerDetails->id;
       }

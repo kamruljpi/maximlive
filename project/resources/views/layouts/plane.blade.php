@@ -49,6 +49,7 @@
 	<script src="{{ asset('assets/scripts/item/apend_unit_price.js') }}"></script>
 	<script src="{{ asset('assets/scripts/jquery.easy-autocomplete.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/production.js') }}"></script>
+	<script src="{{ asset('assets/scripts/booking/booking_view/view_page.js') }}"></script>
 
 	{{--<script>--}}
 	    {{--$(document).ready(function(){--}}

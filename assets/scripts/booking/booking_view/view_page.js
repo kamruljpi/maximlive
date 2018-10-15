@@ -14,12 +14,23 @@ var booking_views_js = (function(){
 		        }
 		    });
 
+		    var $checked = $('.vi_table tbody tr').find('input[type="checkbox"]');
+			if($checked.prop("checked") == true){
+	        	$('.vi_table tbody tr').css('background-color','#C4d1FF');
+	        }
+
 		    $('.vi_table tbody tr').on('click', function (e) {
-		    	// if ($(this).hasAttribute('disabled')) {
-       //          	return false;
-       //      	}
 		        var checked= $(this).find('input[type="checkbox"]');
-		        checked.prop('checked', !checked.is(':checked'));
+		        if(checked.prop('disabled') != true){
+			        checked.prop('checked', !checked.is(':checked'));
+			        if(checked.prop("checked") == true){
+			        	$(this).css('background-color','#C4d1FF');
+			        }else{
+			        	$(this).css('background-color','');
+			        }
+		    	}else{
+		    		alert('Please Accept the Booking.');
+		    	}
 		    });
 
 		    $('input[type="checkbox"]').on('click',function () {

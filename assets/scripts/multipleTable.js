@@ -339,16 +339,19 @@ $(document).ready(function(){
               $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
               $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
               $("#bookingId").val("").focus();
+              $('#bookingIdList').removeClass('hidden');
             }
             else if(taskType == 'PI'){
               $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
               $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
               $("#bookingId").val("").focus();
+              $('#bookingIdList').removeClass('hidden');
             }
             else if(taskType == 'FSC PI'){
               $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
               $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
               $("#bookingId").val("").focus();
+              $('#bookingIdList').removeClass('hidden');
             }
         }
     },

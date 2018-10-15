@@ -64,9 +64,9 @@ class PiController extends Controller
 		$date = date('dmY') ;
 
 		if($request->is_type === 'fsc'){
-			$customid = "fsc-".$date."-".$buyerDetails->C_sort_name."-".$count;
+			$customid = "fsc-".$date.$count;
 		}else{
-			$customid = $date."-".$buyerDetails->C_sort_name."-".$count;
+			$customid = $date.$count;
 		}
 
 		if(isset($pi_details) && !empty($pi_details)) {
@@ -104,7 +104,7 @@ class PiController extends Controller
 	public function redirectPiReport(Request $request){
 		$companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
 		$bookingDetails = MxpPi::where([
-				['p_id',$request->pid],
+				['p_id',$request->p_id],
 				['is_type',$request->is_type],
 			])
 			->select('*',DB::Raw('sum(item_quantity) as item_quantity'))

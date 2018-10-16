@@ -9,9 +9,12 @@ class BookingFulgs
 	const IS_NOT_DELETED = 0;
 
 	const BOOKED_FLUG = 'Booked';
+	const BOOKING_PROCESS_FLUG = 'Process';
+
 	const IS_PI_FSC_TYPE = 'fsc';
 	const IS_PI_UNSTAGE_TYPE = 'unstage';
 	const IS_PI_NON_FSC_TYPE = 'non_fsc';
+	
 	const LAST_ACTION_CREATE = 'create';
 	const LAST_ACTION_UPDATE = 'update';
 	const LAST_ACTION_DELETE = 'delete';

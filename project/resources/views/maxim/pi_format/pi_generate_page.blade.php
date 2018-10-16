@@ -30,6 +30,7 @@
 				</thead>
 				<tbody>
 					<input type="hidden" name="is_type" value="{{$is_type}}">
+					@if(!empty($bookingDetails[0]->id))
 					<?php $itemcodestatus = ''; ?>
 					@foreach($bookingDetails as $detailsValue)
 						<?php
@@ -79,6 +80,11 @@
 						<?php $itemcodestatus = $detailsValue->item_code; ?>
 						@endforeach
 					@endforeach
+					@else
+						<tr>
+							<td colspan="12"><center>PI has been compelete.</center></td>
+						</tr>
+					@endif
 				</tbody>
 			</table>
 			<div class="form-group ">

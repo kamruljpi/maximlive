@@ -50,7 +50,7 @@ class BookingController extends Controller
     public function getordercode()
     {
       $results = array();
-      $orderDetails = DB::select("SELECT `booking_order_id` FROM `mxp_booking` group by `booking_order_id` order by `id` DESC ");
+      $orderDetails = MxpBookingBuyerDetails::where('is_deleted',BookingFulgs::IS_NOT_DELETED)->select('booking_order_id')->groupBy('booking_order_id')->orderBy('id',DESC)->get();
       if(isset($orderDetails) && !empty($orderDetails)){
           foreach ($orderDetails as $orderKey => $orderValue) {
               

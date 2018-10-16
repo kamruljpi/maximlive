@@ -37,11 +37,6 @@
 	</div>
 	@endfor
 	@endforeach
-	<div class="row header-bottom">
-		<div class="col-md-12 header-bottom-b">
-			<span>Challan / Packing List</span>
-		</div>
-	</div>
 	<div class="row">
 		<div class="report-header">
 			<h3 align="center" style=" padding:8px; font-weight: bold;">Challan / Packing List</h3>
@@ -316,7 +311,8 @@ inform us in 3days. After this period, you concern about this goods shall not be
 	@endforeach
 
 <script type="text/javascript">
-		function myFunction() {
+	function myFunction() {
+		$(".print").addClass("hidden");
 	    window.print();
 	}
 </script>

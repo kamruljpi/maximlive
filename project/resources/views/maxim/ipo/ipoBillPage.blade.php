@@ -261,7 +261,8 @@
 </div>
 <script type="text/javascript">
     function myFunction() {
-    	$('.print').hide();
+
+		$(".print").addClass("hidden");
         window.print();
     }
 </script>

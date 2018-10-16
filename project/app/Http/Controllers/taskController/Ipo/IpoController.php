@@ -281,15 +281,17 @@ class IpoController extends Controller
         }
       }
 
+      return \Redirect::route('refresh_ipo_view', ['ipo_id' => $ipo_id,'booking' => $booking_order_id]);
+    }
+    public function redirectIpoReport(Request $request)
+    {
       $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
-      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$booking_order_id)->first();
+      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
       $footerData =[];
       $ipoDetails = MxpIpo::join('mxp_booking as mp','mp.id','job_id')
                   ->select('mxp_ipo.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
-                  ->where('ipo_id',$ipo_id)
+                  ->where('ipo_id',$request->ipo_id)
                   ->get();
-                  
-                  // return redirect('redirectviewpage')->with('redirectviewpage')->
                   
       return view('maxim.ipo.ipoBillPage', [
           'companyInfo'  => $companyInfo,
@@ -300,17 +302,6 @@ class IpoController extends Controller
         ]
       );
     }
-    // public function redirectviewpage(Request $request)
-    // {
-    //   return view('maxim.ipo.ipoBillPage', [
-    //       'companyInfo'  => $companyInfo,
-    //       'initIncrease' => $request->ipoIncrease,
-    //       'buyerDetails' => $buyerDetails,
-    //       'ipoDetails'   => $ipoDetails,
-    //       'footerData'   => $footerData
-    //     ]
-    //   );
-    // }
 
     public function increaseIpoValue(array $ipo_id = [], array $increase = [], array $maindata = []){
       $ipoAndIncreaseValue = [];

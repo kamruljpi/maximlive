@@ -305,51 +305,30 @@ class ChallanController extends Controller
         foreach ($buyerDetails as $getSortCname) {
             $companySortName = $getSortCname->C_sort_name;
         }
-
-        // $cc = MxpBookingMultipleChallan::count();
         $cc = MxpMultipleChallan::distinct('challan_id')->count('challan_id');
         $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
 //          $this->print_me($count);
         $id = "M-CHA" . "-";
         $date = date('dmY');
         $MultipleChallanUniqueID = $date . "-" . $companySortName . "-" . $count;
-//        $MultipleCheckingUniqueID = $id . $date . "-" . $companySortName . "-" . $count;
 
         /** End this code only for Challan increment id genarate **/
 
         $allBookingId = [];
 
-//        $this->print_me($mainData);
-
         foreach ($mainData as $key => $value) {
             $findChallan = DB::select(" select * from mxp_booking_challan where id ='".$key."'");
-            //		 self::print_me($findChallan);
             foreach ($findChallan as $challanValue) {
-
                 $insertMultipleChallan = new MxpMultipleChallan();
                 $insertMultipleChallan->user_id = Auth::user()->user_id;
-
                 $insertMultipleChallan->challan_id = $MultipleChallanUniqueID;
                 $insertMultipleChallan->checking_ids_of_challan = $checkingOrders;
                 $insertMultipleChallan->checking_id = $challanValue->booking_order_id;
-
-                // $insertMultipleChallan->bill_id = $challanValue->bill_id;
                 $insertMultipleChallan->erp_code = $challanValue->erp_code;
                 $insertMultipleChallan->item_code = $challanValue->item_code;
-                // $insertMultipleChallan->oss = $challanValue->oss;
-                // $insertMultipleChallan->style = $challanValue->style;
                 $insertMultipleChallan->gmts_color = $challanValue->gmts_color;
                 $insertMultipleChallan->item_size = $challanValue->item_size;
                 $insertMultipleChallan->quantity = $value;
-                // $insertMultipleChallan->unit_price = $challanValue->unit_price;
-                // $insertMultipleChallan->total_price = $challanValue->total_price;
-                // $insertMultipleChallan->party_id = $challanValue->party_id;
-                // $insertMultipleChallan->name_buyer = $challanValue->name_buyer;
-                // $insertMultipleChallan->name = $challanValue->name;
-                // $insertMultipleChallan->address = $challanValue->address;
-                // $insertMultipleChallan->attention_invoice = $challanValue->attention_invoice;
-                // $insertMultipleChallan->mobile_invoice = $challanValue->mobile_invoice;
-                // $insertMultipleChallan->incrementValue = $incrementValue;
                 $insertMultipleChallan->status = self::CREATE_MULTIPLE_CHALLAN;
                 $insertMultipleChallan->save();
 

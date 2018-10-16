@@ -25,6 +25,8 @@ use App\Model\MxpBookingBuyerDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\User;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+
 
 class BookingListController extends Controller
 {   
@@ -34,6 +36,7 @@ class BookingListController extends Controller
     public function bookingListView(){
 
         $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
+            ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
             ->orderBy('id','DESC')
             ->paginate(15);
         foreach($bookingList as &$booking){
@@ -69,7 +72,7 @@ class BookingListController extends Controller
 
     public function bookingListReport(){
 
-        $bookingList = DB::table('mxp_bookingbuyer_details')->where('is_complete', 0)->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(150);
+        $bookingList = DB::table('mxp_bookingbuyer_details')->where([['is_complete', BookingFulgs::IS_COMPLETE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(150);
 
         if(isset($bookingList) && !empty($bookingList)){
             foreach ($bookingList as &$booking) {
@@ -336,7 +339,7 @@ class BookingListController extends Controller
     public function detailsViewForm(Request $request)
     {
         $bookingDetails = MxpBookingBuyerDetails::with('bookings', 'ipo', 'mrf')
-                            ->join('mxp_users as mu','mu.user_id','accepted_user_id')
+                            ->leftjoin('mxp_users as mu','mu.user_id','accepted_user_id')
                             ->select('mxp_bookingbuyer_details.*','mu.first_name','mu.last_name')
                             ->where('booking_order_id', $request->booking_id)
                             ->first();
@@ -349,12 +352,9 @@ class BookingListController extends Controller
     }
 
     public static function getBookingDetailsValue($booking_order_id){
-        // $bookingDetails = DB::select('SELECT mb.oos_number,mb.season_code,mb.style,mb.is_type,GROUP_CONCAT(mb.id) as job_id,mb.sku,mb.erp_code,mb.item_code,mb.item_price,mb.item_description, mb.orderDate,mb.orderNo,mb.shipmentDate,mb.poCatNo,mb.others_color ,GROUP_CONCAT(mb.item_size) as itemSize,GROUP_CONCAT(mb.gmts_color) as gmtsColor,GROUP_CONCAT(mb.item_quantity) as quantity,mbd.buyer_name,mbd.Company_name,mbd.C_sort_name,mbd.address_part1_invoice,mbd.address_part2_invoice,mbd.attention_invoice,mbd.mobile_invoice,mbd.telephone_invoice,mbd.fax_invoice,mbd.address_part1_delivery,mbd.address_part2_delivery,mbd.attention_delivery,mbd.mobile_delivery,mbd.telephone_delivery,mbd.fax_delivery,mbd.is_complete,mbd.booking_status,mbd.shipmentDate,mbd.booking_order_id from mxp_booking mb INNER JOIN mxp_bookingbuyer_details mbd on(mbd.booking_order_id = mb.booking_order_id) WHERE mb.booking_order_id = "' . $booking_order_id . '" GROUP BY mb.item_code ORDER BY mb.id ASC');
-
         $bookingDetails = MxpBooking::where('booking_order_id',$booking_order_id)
                     ->orderBy('id','ASC')
                     ->get();
-
         return $bookingDetails;
     }
 

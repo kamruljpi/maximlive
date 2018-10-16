@@ -3,7 +3,7 @@
 @section('section')
 <?php
 	// print_r("<pre>");
-	// print_r($is_type);
+	// print_r($bookingDetails);
 	// print_r("</pre>");
 	$TotalBookingQty =0;
 ?>
@@ -13,7 +13,7 @@
 	@endif
 	<div class="row">
 		<form action="{{ route('pi_generate_action') }}">
-			<table class="table table-bordered">
+			<table class="table table-bordered vi_table">
 				<thead>
 					<th>#</th>
 					<th>Job No</th>
@@ -33,11 +33,9 @@
 					<?php $itemcodestatus = ''; ?>
 					@foreach($bookingDetails as $detailsValue)
 						<?php
-							$gmtsColor = explode(',', $detailsValue->gmtsColor);
-							$itemSize = explode(',', $detailsValue->itemSize);
-							$quantity = explode(',', $detailsValue->quantity);
-							$id = explode(',', $detailsValue->abc);
-
+							$gmtsColor = explode(',', $detailsValue->gmts_color);
+							$itemSize = explode(',', $detailsValue->item_size);
+							$quantity = explode(',', $detailsValue->item_quantity);
 						?>
 						<?php $rowspanValue = 0; ?>
 
@@ -46,14 +44,14 @@
 							<?php 
 								$TotalBookingQty += $qtyValue; 
 								$rowspanValue += $rowspanValue +1; 
-								$idstrcount = (8 - strlen($id[$key]));
+								$idstrcount = (8 - strlen($detailsValue->id));
 
 							?>
 							<tr>
 								<td width="3.5%">
-									<input type="checkbox" name="job_id[]" value="{{$id[$key]}}" class="form-control" checked>
+									<input type="checkbox" name="job_id[]" value="{{$detailsValue->id}}" class="form-control" checked>
 								</td>
-								<td>{{ str_repeat('0',$idstrcount) }}{{ $id[$key] }}</td>
+								<td>{{ str_repeat('0',$idstrcount) }}{{ $detailsValue->id }}</td>
 								<td>{{$detailsValue->poCatNo}}</td>
 								<td>{{$detailsValue->oos_number}}</td>
 								<td>{{$detailsValue->item_code}}</td>

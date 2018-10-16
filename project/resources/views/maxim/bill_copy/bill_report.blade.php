@@ -141,7 +141,8 @@
 				foreach ($gmtsquantity as $qtyValue) {
 					$totalQntyValue = $totalQntyValue + $qtyValue;
 				}
-				$totalPrice = $totalQntyValue * $Details->item_price;
+				// $totalPrice = $totalQntyValue * $Details->item_price;
+				$totalPrice = $totalQntyValue * (is_numeric($Details->item_price)?$Details->item_price:'');
 
 				$totalAllqnty = $totalAllqnty + $totalQntyValue;
 				$totalUsdAmount = $totalUsdAmount + $totalPrice;
@@ -323,6 +324,7 @@
 
 <script type="text/javascript">
 	function myFunction() {
+		$(".print").addClass("hidden");
 	    window.print();
 	}
 </script>

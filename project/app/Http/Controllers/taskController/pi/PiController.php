@@ -27,7 +27,6 @@ class PiController extends Controller
 		}else if($request->is_type === 'fsc'){
 			$is_type = 'fsc';
 		}
-		// $this->print_me($is_type);
 
 		if (empty($data)) {
 			StatusMessage::create('empty_booking_data', 'Have not checked any Item !');
@@ -57,22 +56,19 @@ class PiController extends Controller
 
 	    $buyerDetails = DB::table('mxp_bookingbuyer_details')
 	    	->where('booking_order_id',$pi_details[0]->booking_order_id)
-	    	// ->select('C_sort_name')
 	    	->first();
 
-		// $ccc = DB::table('mxp_pi')->orderBy('DESC')->limit(1);
-		// $this->print_me($ccc);
-		$cc = MxpPI::count();
+	    $cc = MxpPI::select('p_id')->groupBy('p_id')->get();
+      	$cc = count($cc);
 		$count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
 		$date = date('dmY') ;
 
 		if($request->is_type === 'fsc'){
-			$customid = "fsc-".$date."-".$buyerDetails->C_sort_name."-".$count;
+			$customid = "fsc-".$date.$count;
 		}else{
-			$customid = $date."-".$buyerDetails->C_sort_name."-".$count;
+			$customid = $date.$count;
 		}
 
-		// $this->print_me($customid);/
 		if(isset($pi_details) && !empty($pi_details)) {
 			foreach ($pi_details as $piValues) {
 
@@ -102,27 +98,26 @@ class PiController extends Controller
 			}
 		}
 
-		$bookingDetails = DB::table('mxp_pi')
-			->where([
-				['p_id',$customid],
-				['is_type',$is_type],
-			])
-			->get();
-		$companyInfo = DB::table('mxp_header')->where([
-            ['header_type', 11 ]
-        ])
-            ->get();
-
-        $footerData = DB::table('mxp_reportfooter')->where('status', 1)->get();
-//		$footerData = DB::select("select * from mxp_reportfooter where ");
-
-
-		$getUserDetails = $this->getUserDetails($bookingDetails[0]->user_id);
-		// $this->print_me($getUserDetails);
-
-		return view('maxim.pi_format.piReportPage', compact('companyInfo', 'bookingDetails','footerData','buyerDetails','is_type','getUserDetails'));
+		return \Redirect::route('refresh_pi_view',['is_type' => $is_type,'p_id' => $customid]);
 	}
 
+	public function redirectPiReport(Request $request){
+		$companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
+		$bookingDetails = MxpPi::where([
+				['p_id',$request->p_id],
+				['is_type',$request->is_type],
+			])
+			->select('*',DB::Raw('sum(item_quantity) as item_quantity'))
+			->groupBy('item_code')
+			->get();
+        $footerData = DB::table('mxp_reportfooter')->where('status', 1)->get();
+		$buyerDetails = DB::table('mxp_bookingbuyer_details')
+	    	->where('booking_order_id',$bookingDetails[0]->booking_order_id)
+	    	->first();
+	    $is_type = $request->is_type;
+		$getUserDetails = $this->getUserDetails($bookingDetails[0]->user_id);
+		return view('maxim.pi_format.piReportPage', compact('companyInfo', 'bookingDetails','footerData','buyerDetails','is_type','getUserDetails'));
+	}
 
 	public static function getUserDetails($userId){
         $data = DB::table('mxp_users')

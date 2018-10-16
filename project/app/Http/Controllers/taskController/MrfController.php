@@ -268,12 +268,18 @@ class MrfController extends Controller
             $insertMrfValue->save();
         }
       }
+
+      return \Redirect::route('refresh_mrf_view', ['mrf_id' => $mrf_id,'booking' => $booking_order_id]);
+      
+    }
+
+    public function redirectMrfReport(Request $request){
       $footerData =[];
       $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
-      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$booking_order_id)->first();
+      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
       $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
                       ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
-                      ->where('mrf_id',$mrf_id)
+                      ->where('mrf_id',$request->mrf_id)
                       ->get();
       return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));
     }

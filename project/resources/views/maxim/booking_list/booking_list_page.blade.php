@@ -187,7 +187,6 @@
 	</div>
 @endsection
 @section('LoadScript')
-  <script type="text/javascript" src="{{ asset('assets/scripts/booking_status/show_all_action.js') }}"></script>
 	<script type="text/javascript">
 		$('.popoverOption').popover({
 			trigger: "hover",

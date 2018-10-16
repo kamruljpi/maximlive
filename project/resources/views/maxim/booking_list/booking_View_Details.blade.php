@@ -73,9 +73,10 @@
         </div>
         <form action="{{route('ipo_mrf_define')}}" method="post">
            {{csrf_field()}}
+           <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
             <table class="table table-bordered vi_table">
-                <tr>
-                    <thead>
+                <thead>
+                    <tr>
                         @if($roleCheck == 'p')
                         <th>#</th>
                         @endif
@@ -94,14 +95,14 @@
                         <th>IPO QTY</th>
                         <th>MRF QTY</th>
                         @endif
-                    </thead>
-                </tr>
+                    </tr>
+                </thead>
                 
                 @if($roleCheck == 'empty')
                     <tbody>
                         @foreach($bookingDetails->bookings as $bookedItem)
                         <?php $jobId = (8 - strlen($bookedItem->id)); ?>
-                        <tr>
+                        <tr style="">
                             <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>                
                             <td>{{$bookedItem->erp_code}}</td>
                             <td>{{$bookedItem->item_code}}</td>
@@ -120,7 +121,7 @@
                     <tbody>              
                         @foreach($bookingDetails->bookings_challan_table as $bookedItem)
                         <?php $jobId = (8 - strlen($bookedItem->id)); ?>
-                        <tr>
+                        <tr style="">
                             <label for="job_id">
                             <td width="3.5%">
                                 <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
@@ -264,6 +265,3 @@
     </div>
 @endif
 @endsection
-@section('LoadScript')
-<script type="text/javascript" src="{{ asset('assets/scripts/booking/booking_view/view_page.js') }}"></script>
-@stop

@@ -11,6 +11,7 @@ class PiListController extends Controller
 {
 	public function getPiList(){
 		$piDetails = MxpPi::orderBy('id','DESC')
+			->select('*',DB::Raw('GROUP_CONCAT(DISTINCT booking_order_id) as booking_order_id'))
 			->groupBy('p_id')
 			->paginate(20);
 		return view('maxim.pi_format.list.pi_list',compact('piDetails'));
@@ -23,17 +24,17 @@ class PiListController extends Controller
 	    	->where('booking_order_id',$request->bid)
 	    	->first();
 
-		$bookingDetails = DB::table('mxp_pi')
-			->where([
+		$bookingDetails = MxpPi::where([
 				['p_id',$request->pid],
 				['is_type',$is_type],
 			])
+			->select('*',DB::Raw('sum(item_quantity) as item_quantity'))
+			->groupBy('item_code')
 			->get();
-		// $this->print_me($bookingDetails);
+			
 		$companyInfo = DB::table('mxp_header')->where('header_type', 11)->get();
 		$footerData = DB::select("select * from mxp_reportfooter");
 		$getUserDetails = PiController::getUserDetails($bookingDetails[0]->user_id);
-		// $this->print_me($getUserDetails);
 
 		return view('maxim.pi_format.piReportPage', compact('companyInfo', 'bookingDetails', 'footerData','buyerDetails','is_type','getUserDetails'));
 	}

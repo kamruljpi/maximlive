@@ -7,6 +7,7 @@
     <title>{{ trans('others.company_name')}}</title>
 
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{asset('assets/img/icon.png')}}" type="image/x-icon" width="50%"/>
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>

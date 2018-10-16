@@ -52,17 +52,9 @@ trans('others.item_description_list_label'))
                         <tr>                        	
                         	<td>{{$i}}</td>
                         	<td>{{$item->name}}</td>                	            	
-                        	<td>                        		
-                        		<table>
-                                  <tr>
-                                      <td class="">
-                                          <a href="{{ Route('update_description_view')}}/{{$item->id}}" class="btn btn-success">edit</a>
-                                      </td>
-                                      <td class="td-pad">
-                                          <a href="{{ Route('delete_description_action')}}/{{$item->id}}" class="btn btn-danger">delete</a>
-                                      </td>
-                                  </tr>
-                              </table>                                 
+                        	<td> 
+                                <a href="{{ Route('update_description_view')}}/{{$item->id}}" class="btn btn-success">edit</a>
+                                <a href="{{ Route('delete_description_action')}}/{{$item->id}}" class="btn btn-danger">delete</a>                             
                         	</td>
                          </tr>
                         @php($i++)

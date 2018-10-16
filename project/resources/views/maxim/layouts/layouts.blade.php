@@ -10,7 +10,8 @@
 	<meta content="width=device-width, initial-scale=1" name="viewport"/>
 	<meta content="" name="description"/>
 	<meta content="" name="author"/>
-	<link rel="icon" src="/public/favicon.ico" type="image/gif" sizes="16x16">
+	<!-- <link rel="icon" src="/public/favicon.ico" type="image/gif" sizes="16x16"> -->
+	<link rel="shortcut icon" href="{{asset('assets/img/icon.png')}}" type="image/x-icon" sizes="16x16"/>
 	<link rel="stylesheet" href="{{ asset('assets/printr/css/bootstrap.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/printr/css/main.css') }}" />
 	<script src="{{ asset('assets/scripts/jquery-3.3.1.min.js') }}"></script>

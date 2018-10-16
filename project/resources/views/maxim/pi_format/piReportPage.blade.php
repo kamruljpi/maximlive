@@ -131,10 +131,10 @@
 	    	<th>OOS No. </th>
 	    	<th width="10%">Item code</th>
 	    	<th width="18%">ERP Code</th>
-	    	<th>GMTS/Item Color</th>
+	    	<!-- <th>GMTS / Item Color</th> -->
 	        <th>Item Descreption</th>
 	        <th>Style</th>
-	        <th width="10%">Item Size</th>
+	        <!-- <th width="10%">Item Size</th> -->
 	        <th>Qty / Pcs</th>
 	        <th>Unit Price / Pcs</th>
 	        <th>USD Amount / USD</th>
@@ -142,6 +142,7 @@
 	</thead>
 	<tbody>
 		<?php 
+			$j = 1;
 			$itemcodestatus = ''; 
 			$totalUsdAmount = 0;
 		?>
@@ -149,12 +150,13 @@
 		<?php 
 			$jobId = (8 - strlen($detailsValue->job_no));
 
-			$totalQtyAmt = $detailsValue->item_quantity * $detailsValue->item_price;
+			$totalQtyAmt = $detailsValue->item_quantity * (is_numeric($detailsValue->item_price)?$detailsValue->item_price:'');
 			$totalUsdAmount += $totalQtyAmt;
 			$totalAllqnty += $detailsValue->item_quantity;
 		?>
 		<tr>
-			<td>{{ str_repeat('0',$jobId) }}{{ $detailsValue->job_no}}</td>
+			<!-- <td>{{ str_repeat('0',$jobId) }}{{ $detailsValue->job_no}}</td> -->
+			<td>{{ $j++ }}</td>
 			<td>{{ $detailsValue->poCatNo }}</td>
 			<td>{{ $detailsValue->oos_number }}</td>
 			<td>{{ $detailsValue->item_code }}
@@ -177,21 +179,21 @@
 		    @else
 		    <td></td>
 	    	@endif -->
-			<td>{{ $detailsValue->gmts_color }}</td>
+			<!-- <td>{{ $detailsValue->gmts_color }}</td> -->
 			<td>{{ $detailsValue->item_description }}</td>
 			<td style="width: 10%;">
 				{{ $detailsValue->style }}
 				
 			</td>
-			<td>{{ $detailsValue->item_size }}</td>
+			<!-- <td>{{ $detailsValue->item_size }}</td> -->
 			<td>{{ $detailsValue->item_quantity}}</td>
-			<td>{{(!empty($detailsValue->item_price)? '$'.$detailsValue->item_price: '')}}</td>
+			<td>{{(!empty($detailsValue->item_price)?((is_numeric($detailsValue->item_price))?'$':'').$detailsValue->item_price: '')}}</td>
 			<td>{{(!empty($detailsValue->item_quantity)? '$'. $totalQtyAmt: '')}}</td>
 		</tr>
 			<?php $itemcodestatus = $detailsValue->item_code; ?>
 		@endforeach		
 			<tr>
-				<td colspan="9">
+				<td colspan="7">
 					<span style="font-weight: bold; font-size: 18px; float: right;">Total Quantity:</span>
 				</td>
 				<td>{{$totalAllqnty}}</td>
@@ -251,33 +253,34 @@
 <div class="row body-top">
 	<div class="col-md-12 col-xs-12 body-list">
 		<ul>
-			<li>1.Payment Terms：BBLC/ CHAQUE/ CASH BEFORE SHIPMENT</li>
-			<li>2.Shipment: BY COURIER/ CARGO</li>		
-			<li>3.Packing: MAXIM STANDARD PACKING</li>									
-			<li>Beneficiary Bank: EBL Bangladesh</li>								
-			<li>Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh	</li>	 		
-			<li>Telephone : (880 2) 9553053-6(Direct), 7113711-2, 7113714-8 Ext: 149-162</li>							
-			<li>Beneficiary:MAXIM LABEL & PACKAGING (BD) PVT., LTD</li>						 
-			<li>Account Number: 1041060234447</li>								 
-			<li>SWIFT:   EBLDBDDH</li>					
-			<li>Origin : BANGLADESH</li>								
-			<li>VAT Registration: 17011037475</li>
-			<li>E-BIN NO: 000412786</li>					
-			<li>01. Payment : By Irrevocable Letter of Credit (L/C) to be opened in our favor to be</li>
-			<li>Advised through " Eastern bank Ltd, Bangladesh ,Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh  and Original L/C must be received to Our Bank. SWIFT CODE : EBLDBDDH </li>								
-			<li>02. Bill of Exchange will be Signed by the Applicant before Submitting to the Applicant's Bank.</li>
-			<li>03. Payment to be made in US Dollar within 90/60/45/30 days or Sight from the Date of Delivery not Acceptance .</li>
-			<li>04. Payment reimbursement proceeds through FDD/Cheque in Foreign Currency (US Dollar) Drawn on Bangladesh Bank.	</li>								
-			<li>05. Overdue interest to be paid for delayed period at 15% p@ from the date of Maturity .</li>		
-			<li>06. All charge (Swift,Payment ,Reimbursement,Handling fee,etc) will bear by applicant.</li>							
-			<li>07. Maturity date will be calculated from the date of delivery.</li>			
-			<li>08. No. discrepancy clause will be accepted into BBLC.</li>					
-			<li>09.L/C   value  should   be  minimum    US$  1500.00 otherwise  L/C   to  be  opened   at Sight & $75 will be  added  to  the  invoice   as collection  and  bank  charge.</li>
-			<li>10.The  Bill  of  exchange and  Delivery  Challan/Truck Receipt   are need  to be  Signed by Customer Signatory within 07-10 days from the date of Submission. </li>									
+			<li>1. Shipment: BY COURIER/ CARGO</li>		
+			<li>2. Packing: MAXIM STANDARD PACKING</li>
+			<li>3. Beneficiary Details:</li>
+			<li> <b>i) Beneficiary Bank: EBL Bangladesh</b></li>				
+			<li> <b>ii) Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh</b></li>	 		
+			<li> <b> iii) Telephone : (880 2) 9553053-6(Direct), 7113711-2, 7113714-8 Ext: 149-162</b></li>							
+			<li> <b>iv) Beneficiary:MAXIM LABEL & PACKAGING (BD) PVT., LTD</b></li>						 
+			<li> <b>v) Account Number: 1041060234447</b></li>								 
+			<li><b>vi) SWIFT:   EBLDBDDH</b></li>					
+			<li><b>vii) Origin : BANGLADESH</b></li>							
+			<li><b>viii) VAT Registration: 17011037475</b></li>
+			<li><b>ix) E-BIN NO: 000412786</b> </li>
+			<li>4. Payment Terms：BBLC/ CHAQUE/ CASH BEFORE SHIPMENT</li>
+			<li>i) Payment : By Irrevocable Letter of Credit (L/C) to be opened in our favor to be Advised through " Eastern bank Ltd, Bangladesh ,Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh  and Original L/C must be received to Our Bank. SWIFT CODE : EBLDBDDH </li>
+			<li>ii) Bill of Exchange will be Signed by the Applicant before Submitting to the Applicant's Bank.</li>
+			<li>iii) Payment to be made in US Dollar within 90/60/45/30 days or Sight from the Date of Delivery not Acceptance .</li>
+			<li>iv) Payment reimbursement proceeds through FDD/Cheque in Foreign Currency (US Dollar) Drawn on Bangladesh Bank.	</li>								
+			<li style="text-decoration: underline;">v) Overdue interest to be paid for delayed period at 15% p@ from the date of Maturity .</li>		
+			<li style="text-decoration: underline;">vi) All charge (Swift,Payment ,Reimbursement,Handling fee,etc) will bear by applicant.</li>							
+			<li style="text-decoration: underline;">vii) Maturity date will be calculated from the date of delivery.</li>			
+			<li style="text-decoration: underline;">viii) No. discrepancy clause will be accepted into BBLC.</li>					
+			<li style="text-decoration: underline;">ix) L/C   value  should   be  minimum    US$  1500.00 otherwise  L/C   to  be  opened   at Sight & $75 will be  added  to  the  invoice   as collection  and  bank  charge.</li>
+			<li style="text-decoration: underline;">x) The  Bill  of  exchange and  Delivery  Challan/Truck Receipt   are need  to be  Signed by Customer Signatory within 07-10 days from the date of Submission. </li>									
 												
-			<li>Information: Master Export L/C No & Date be clearly Mentioned in the Back to Back L/C.</li>							
+			<li>xi) Information: Master Export L/C No & Date be clearly Mentioned in the Back to Back L/C.</li>							
 												
-			<li>Quality Complain: Any Claim of Quality & Quantity Should be informed within 15 days after Shipment.</li>
+			<li>xii) Quality Complain: Any Claim of Quality & Quantity Should be informed within 15 days after Shipment.</li>
+
 		</ul>
 	</div>
 </div>
@@ -327,6 +330,7 @@
 
 <script type="text/javascript">
 	function myFunction() {
+	$(".print").addClass("hidden");
 	    window.print();
 	}
 </script>

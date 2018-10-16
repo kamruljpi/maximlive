@@ -11,6 +11,7 @@
 	<meta content="width=device-width, initial-scale=1" name="viewport"/>
 	<meta content="" name="description"/>
 	<meta content="" name="author"/>
+	<link rel="shortcut icon" href="{{asset('assets/img/icon.png')}}" type="image/x-icon" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/styles.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/main.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/bootstrap-datepicker.css') }}" />
@@ -49,6 +50,7 @@
 	<script src="{{ asset('assets/scripts/item/apend_unit_price.js') }}"></script>
 	<script src="{{ asset('assets/scripts/jquery.easy-autocomplete.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/production.js') }}"></script>
+	<script src="{{ asset('assets/scripts/booking/booking_view/view_page.js') }}"></script>
 
 	{{--<script>--}}
 	    {{--$(document).ready(function(){--}}

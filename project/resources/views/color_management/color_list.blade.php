@@ -41,7 +41,7 @@ trans('others.Gmts_color_list_label'))
         <table class="table table-bordered" id="tblSearch">
             <thead>
                 <tr>
-                	<th>Serial No</th>
+                	<th>Color No</th>
                 	{{--<th>Item Code</th>--}}
                 	<th>GMTS Color</th>
                 	<th>Status</th>
@@ -49,29 +49,22 @@ trans('others.Gmts_color_list_label'))
                 </tr>
             </thead>
             <tbody>
-              @php($i=1)
-                    @foreach($gmtsColor as $color)                  
-                        <tr>                        	
-                        	<td>{{$i++}}</td>
-                        	{{--                           <td>{{$color->item_code}}</td>                  --}}        	
-                        	<td>{{$color->color_name}}</td>                	
-                        	<td>
-                            {{($color->status == 1)? trans("others.action_active_label"):trans("others.action_inactive_label")}}
-                          </td>                	
-                        	<td>                        		
-                        		<table>
-                                <tr>
-                                    <td class="">
-                                        <a href="{{ Route('update_gmtscolor_view')}}/{{$color->id}}" class="btn btn-success">edit</a>
-                                    </td>
-                                    <td class="td-pad">
-                                        <a href="{{ Route('delete_gmtscolor_action')}}/{{$color->id}}" class="btn btn-danger">delete</a>
-                                    </td>
-                                </tr>
-                            </table>                                 
-                        	</td>
-                         </tr>                    
-                    @endforeach 
+                @php($j=1 + $gmtsColor->perPage() * ($gmtsColor->currentPage() - 1))
+                @foreach($gmtsColor as $color)                  
+                    <tr>                        	
+                    	<td>{{$j++}}</td>
+                    {{--<td>{{$color->item_code}}</td>--}}        	
+                    	<td>{{$color->color_name}}</td>                	
+                    	<td>
+                        {{($color->status == 1)? trans("others.action_active_label"):trans("others.action_inactive_label")}}
+                      </td>                	
+                    	<td>
+                             <a href="{{ Route('update_gmtscolor_view')}}/{{$color->id}}" class="btn btn-success">edit</a>
+
+                            <a href="{{ Route('delete_gmtscolor_action')}}/{{$color->id}}" class="btn btn-danger">delete</a>                                
+                    	</td>
+                     </tr>                    
+                @endforeach 
             </tbody>
         </table>
          	{{$gmtsColor->links()}}

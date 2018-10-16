@@ -2,6 +2,68 @@
 @section('title','Production Order')
 @section('print-body')
 
+    <style type="text/css">
+        .body-top .body-list label{
+            font-size: 16px;
+        }
+        .body-top .body-list ul li {
+            margin-left: -13px;
+        }
+
+        input[type=checkbox] {
+            opacity: 0;
+        }
+
+        input[type=checkbox] + label {
+            margin: 0 0 0 38px;
+            position: relative;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        input[type=checkbox] + label ~ label {
+            margin: 0 0 0 40px;
+        }
+
+        input[type=checkbox] + label::before {
+            content: ' ';
+            position: absolute;
+            left: -35px;
+            top: -3px;
+            width: 25px;
+            height: 25px;
+            display: block;
+            background: white;
+            border: 1px solid #A9A9A9;
+        }
+        input[type=checkbox] + label::after {
+            content: ' ';
+            position: absolute;
+            left: -35px;
+            top: -3px;
+            width: 23px;
+            height: 23px;
+            display: block;
+            z-index: 1;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjE4MS4yIDI3MyAxNyAxNiIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAxODEuMiAyNzMgMTcgMTYiPjxwYXRoIGQ9Ik0tMzA2LjMgNTEuMmwtMTEzLTExM2MtOC42LTguNi0yNC04LjYtMzQuMyAwbC01MDYuOSA1MDYuOS0yMTIuNC0yMTIuNGMtOC42LTguNi0yNC04LjYtMzQuMyAwbC0xMTMgMTEzYy04LjYgOC42LTguNiAyNCAwIDM0LjNsMjMxLjIgMjMxLjIgMTEzIDExM2M4LjYgOC42IDI0IDguNiAzNC4zIDBsMTEzLTExMyA1MjQtNTI0YzctMTAuMyA3LTI1LjctMS42LTM2eiIvPjxwYXRoIGZpbGw9IiMzNzM3MzciIGQ9Ik0xOTcuNiAyNzcuMmwtMS42LTEuNmMtLjEtLjEtLjMtLjEtLjUgMGwtNy40IDcuNC0zLjEtMy4xYy0uMS0uMS0uMy0uMS0uNSAwbC0xLjYgMS42Yy0uMS4xLS4xLjMgMCAuNWwzLjMgMy4zIDEuNiAxLjZjLjEuMS4zLjEuNSAwbDEuNi0xLjYgNy42LTcuNmMuMy0uMS4zLS4zLjEtLjV6Ii8+PHBhdGggZD0iTTExODcuMSAxNDMuN2wtNTYuNS01Ni41Yy01LjEtNS4xLTEyLTUuMS0xNy4xIDBsLTI1My41IDI1My41LTEwNi4yLTEwNi4yYy01LjEtNS4xLTEyLTUuMS0xNy4xIDBsLTU2LjUgNTYuNWMtNS4xIDUuMS01LjEgMTIgMCAxNy4xbDExNC43IDExNC43IDU2LjUgNTYuNWM1LjEgNS4xIDEyIDUuMSAxNy4xIDBsNTYuNS01Ni41IDI2Mi0yNjJjNS4yLTMuNCA1LjItMTIgLjEtMTcuMXpNMTYzNC4xIDE2OS40bC0zNy43LTM3LjdjLTMuNC0zLjQtOC42LTMuNC0xMiAwbC0xNjkuNSAxNjkuNS03MC4yLTcxLjljLTMuNC0zLjQtOC42LTMuNC0xMiAwbC0zNy43IDM3LjdjLTMuNCAzLjQtMy40IDguNiAwIDEybDc3LjEgNzcuMSAzNy43IDM3LjdjMy40IDMuNCA4LjYgMy40IDEyIDBsMzcuNy0zNy43IDE3NC43LTE3Ni40YzEuNi0xLjcgMS42LTYuOS0uMS0xMC4zeiIvPjwvc3ZnPg==') no-repeat center center;
+            -ms-transition: all .2s ease;
+            -webkit-transition: all .2s ease;
+            transition: all .3s ease;
+            -ms-transform: scale(0);
+            -webkit-transform: scale(0);
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        input[type=checkbox]:checked + label::after {
+            -ms-transform: scale(1);
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            opacity: 1;
+        }
+    </style>
+
 <center><a href="#" onclick="myFunction()"  class="print">Print & Preview</a></center>
 
 @foreach($companyInfo as $value)
@@ -51,8 +113,8 @@
 <div class="row body-top">
 	<div class="col-md-8 col-sm-8 col-xs-7 body-list">
 		<ul>
-			<li>Maxim Production Order: </li>
-			<li>Brand : {{$buyerDetails->buyer_name}}</li>
+			<li>Production Order: {{ $ipoDetails[0]->ipo_id }}</li>
+			<li>Brand: {{$buyerDetails->buyer_name}}</li>
 		</ul>
 	</div>
 	
@@ -61,7 +123,7 @@
 			<tr>
 				<td colspan="2">
 					<div style="text-align: right;">
-						<p style="padding-left :5px;">Vendor ID: {{(!empty($buyerDetails->party_id)? $buyerDetails->party_id : ' ')}}</p>
+						<p style="padding-left :5px;">Booking ID: {{ $ipoDetails[0]->booking_order_id }}</p>
 					</div>
 				</td>
 			</tr>
@@ -85,6 +147,7 @@
 	        	<th width="15%">Size</th>
 	        	<!-- <th>Sku</th> -->
 	        	<th>Order Qty</th>
+				<th>Increase Qty</th>
 	        	<th>Unit</th>
 	        	<th>Remarks</th>
             </thead>
@@ -110,7 +173,13 @@
 			    	<td width="17%">{{$details->gmts_color}}</td>
 			    	<td width="17%">{{$details->item_size}}</td>
 			        <!-- <td>{{$details->sku}}</td> -->
-			        <td>{{$details->item_quantity}}</td>
+			        <td>{{$details->item_quantity}}{{ !empty($details->initial_increase)? '('.$details->initial_increase.'%)' : '' }}</td>
+					<td><?php
+							$p = ( ($details->item_quantity * $details->initial_increase)/100) + $details->item_quantity;
+							echo $p;
+							$totalIncrease += $p;
+						?>
+					</td>
 			        <td>PSC</td>
 			        <td></td>
 	        	</tr>
@@ -118,28 +187,31 @@
         	<tr style="height: 30px;">
         		<td colspan="6"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
         		<td> {{$TotalBookingQty}}</td>
+        		<td>{{ $totalIncrease }}</td>
         		<td></td>
         		<td></td>
         	</tr>
         </tbody>
     </table>
 </div>
-<style type="text/css">
-	.body-top .body-list label{
-		font-size: 16px;
-	}
-	.body-top .body-list ul li {
-		margin-left: -13px;
-	}
-</style>
+
 <div class="row body-top">
-	<div class="col-md-9 col-xs-9 body-list">
-		<label >Special Requirements/Notes: 特殊要求／备注：</label>
+	<div class="col-md-9 col-sm-9 col-xs-9 body-list">
+		<label >Special Requirements/Notes:</label>
 		<ul>
-			<li>1. This order is: Normal order:  Urgent  Order: Top Urgent  Order: Export goods.</li>
-			<li>2. Provide PPS PCS , Or provide production samples for sales 提供产前样_______PCS，或产后业务留样_______PCS</li>
+			<li>1. This order is:
+                <input id="normal" type="checkbox" name="normal" value="normal" disabled>
+                <label for="normal">Normal order</label>
+                <input id="urgent" type="checkbox" name="urgent" value="urgent" disabled>
+                <label for="urgent">Urgent order</label>
+                <input id="topurgent" type="checkbox" name="topurgent" value="topurgent" disabled>
+                <label for="topurgent">Top Urgent order</label>
+                <input id="exportgoods" type="checkbox" name="exportgoods" value="exportgoods" disabled>
+                <label for="exportgoods">Export goods</label>
+            </li>
+			<li>2. Provide PPS PCS , Or provide production samples for sales _______PCS</li>
 			<li>3. Special requirements for shipment:</li>
-			<li style="margin-left: 6px;">出货时有特别要求：</li>
+			<li style="margin-left: 6px;"></li>
 			<li>4.</li>
 			<li>5.</li>
 			<li>6.</li>
@@ -149,12 +221,12 @@
 		</ul>
 	</div>
 
-	<div class="col-md-3 col-sm-3 -col-xs-3" style="border:1px solid #DCDCDC;height: 250px;">
-		<label>Special requirements for production: <br\>生产上的特别要求：</label>
+	<div class="col-md-3 col-sm-3 col-xs-3" style="border:1px solid #DCDCDC;height: 250px;">
+		<label>Special requirements for production: </label>
 	</div>
 </div>
 
-<div class="row body-top">
+<div class="row body-top" style="margin-top: 35px;margin-bottom: 20px;">
 	<div class="col-md-3 col-sm-3 col-xs-3">
 		<span style="font-weight: bold;">CS:
 			<div style="border-bottom: 2px solid black; "></div>
@@ -177,7 +249,7 @@
 	</div>	
 </div>
 
-<div class="row body-top" style="margin-top: 15px;margin-bottom: 20px;">
+<div class="row body-top" style="margin-top: 25px;margin-bottom: 20px;">
 	<div class="col-md-3 col-sm-3 col-xs-3"></div>
 	<div class="col-md-3 col-sm-3 col-xs-3"></div>
 	<div class="col-md-3 col-sm-3 col-xs-3"></div>
@@ -189,6 +261,7 @@
 </div>
 <script type="text/javascript">
     function myFunction() {
+
 		$(".print").addClass("hidden");
         window.print();
     }

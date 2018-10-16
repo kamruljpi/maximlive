@@ -160,7 +160,7 @@
 									    	<a href="{{ Route('booking_list_details_view', $value->booking_order_id) }}">Views</a>
 									    </li>
 									    <!-- <li>
-									    	<a href="{{ Route('booking_list_create_ipo', $value->booking_order_id) }}">IPO</a>
+									    	<a href="{{ Route('booking_list_create_ipo', $value->bookig_order_id) }}">IPO</a>
 									    </li>
 									    <li>
 									    	<a href="{{ Route('booking_list_create_mrf', $value->booking_order_id) }}">MRF</a>

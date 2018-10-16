@@ -1041,6 +1041,7 @@ Route::group(['middleware' => 'auth'], function () {
             ]);
     });
 });
+Route::post('tracking/export','taskController\BookingView\Report\TrackingController@exportReport')->name('tracking_export');
 
 include('pi_route.php');
 include('ipo_route.php');

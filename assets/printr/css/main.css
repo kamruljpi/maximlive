@@ -122,11 +122,12 @@ ul li {
       color: white !important;
    }
 @media print {
-   .report-header{
-      background-color: black !important;
-      -webkit-print-color-adjust: exact;
-   }
-   .report-header h3{
-      color: white !important;
-   }
-}  
+    .report-header {
+        background-color: black !important;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .report-header h3 {
+        color: white !important;
+    }
+}

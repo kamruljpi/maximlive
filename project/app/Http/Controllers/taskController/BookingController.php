@@ -23,6 +23,7 @@ use App\Http\Controllers\Source\User\UserAccessBuyerList;
 use App\Http\Controllers\Message\ActionMessage;
 use Redirect;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Model\MxpItemDescription;
 
 class BookingController extends Controller
 { 
@@ -285,5 +286,17 @@ class BookingController extends Controller
             $value = [];
       }
     return $value;
+  }
+
+  public function updateBookingView(Request $request){
+    $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
+    $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED],['id',$request->job_id]])->first();
+    // $this->print_me($mxpBooking);
+    // $data = 
+    return view('maxim.booking_list.booking_update',compact('description','mxpBooking'));
+  }
+
+  public function updateBooking(Request $request){
+    $this->print_me($request->all());
   }
 }

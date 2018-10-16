@@ -72,7 +72,7 @@ class TaskController extends Controller {
 			foreach ($booking_id as $bookingid) {
 				$vendorDetails = MxpBookingBuyerDetails::where([['booking_order_id',$bookingid],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
 				if (! $vendorDetails->Company_name) {
-					return redirect()->back()->withErrors($bookingid." Booking No not found.");
+					return redirect()->back()->withErrors($bookingid." Booking No. not found.");
 				}
 				if ($iteration > 0) {
 					if ($buyerName != $vendorDetails->buyer_name || 

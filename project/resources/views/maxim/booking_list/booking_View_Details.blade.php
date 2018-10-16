@@ -72,9 +72,7 @@
                @endif
             @endif
         </div>
-        <form action="{{route('ipo_mrf_define')}}" method="post">
-           {{csrf_field()}}
-           <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
+        
             <table class="table table-bordered vi_table">
                 <thead>
                     <tr>
@@ -92,6 +90,7 @@
                         <th width="15%">Size</th>
                         <th>Sku</th>
                         <th>Order Qty</th>
+                        <th>Action</th>
                         @if($roleCheck == 'p')
                         <th>IPO QTY</th>
                         <th>MRF QTY</th>
@@ -114,10 +113,20 @@
                             <td>{{$bookedItem->gmts_color }}</td>
                             <td>{{$bookedItem->item_size}}</td>
                             <td>{{$bookedItem->sku}}</td>
-                            <td>{{$bookedItem->item_quantity}}</td>                            
+                            <td>{{$bookedItem->item_quantity}}</td>                         
+                            <td>
+                                <form method="POST" action="{{route('booking_details_update_view')}}" target="_blank">
+                                    {{csrf_field()}}
+                                    <input type="hidden" name="job_id" value="{{$bookedItem->id}}">
+                                    <button class="form-control">Edit</button>
+                                </form>
+                            </td>                         
                         </tr>
                         @endforeach
                     </tbody>
+                <form action="{{route('ipo_mrf_define')}}" method="post">
+           {{csrf_field()}}
+           <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
                 @elseif($roleCheck == 'p')                        
                     <tbody>              
                         @foreach($bookingDetails->bookings_challan_table as $bookedItem)

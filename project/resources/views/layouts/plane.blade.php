@@ -11,6 +11,7 @@
 	<meta content="width=device-width, initial-scale=1" name="viewport"/>
 	<meta content="" name="description"/>
 	<meta content="" name="author"/>
+	<link rel="shortcut icon" href="{{asset('assets/img/icon.png')}}" type="image/x-icon" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/styles.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/main.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/bootstrap-datepicker.css') }}" />

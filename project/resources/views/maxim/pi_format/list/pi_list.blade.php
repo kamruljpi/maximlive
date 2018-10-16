@@ -70,6 +70,9 @@
 			<tbody>
 			@php($j=1 + $piDetails->perPage() * ($piDetails->currentPage() - 1))
 			@foreach($piDetails as $value)
+				<?php 
+					$booking_id = explode(',', $value->booking_order_id);
+				?>
 				<tr id="mrf_list_table">
 					<td>{{$j++}}</td>
 					<td>{{$value->booking_order_id}}</td>
@@ -79,7 +82,7 @@
 							{{ csrf_field() }}
 							<input type="hidden" name="pid" value="{{$value->p_id}}">
 							<input type="hidden" name="is_type" value="{{$value->is_type}}">
-							<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+							<input type="hidden" name="bid" value="{{$booking_id[0]}}">
 							<button class="btn btn-success">Report</button>
 						</form>
 					</td>

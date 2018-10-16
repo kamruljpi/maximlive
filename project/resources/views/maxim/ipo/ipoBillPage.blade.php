@@ -51,8 +51,8 @@
 <div class="row body-top">
 	<div class="col-md-8 col-sm-8 col-xs-7 body-list">
 		<ul>
-			<li>Maxim Production Order: </li>
-			<li>Brand : {{$buyerDetails->buyer_name}}</li>
+			<li>Production Order: {{ $ipoDetails[0]->ipo_id }}</li>
+			<li>Brand: {{$buyerDetails->buyer_name}}</li>
 		</ul>
 	</div>
 	
@@ -61,7 +61,7 @@
 			<tr>
 				<td colspan="2">
 					<div style="text-align: right;">
-						<p style="padding-left :5px;">Vendor ID: {{(!empty($buyerDetails->party_id)? $buyerDetails->party_id : ' ')}}</p>
+						<p style="padding-left :5px;">Booking ID: {{ $ipoDetails[0]->booking_order_id }}</p>
 					</div>
 				</td>
 			</tr>
@@ -85,6 +85,7 @@
 	        	<th width="15%">Size</th>
 	        	<!-- <th>Sku</th> -->
 	        	<th>Order Qty</th>
+				<th>Increase Qty</th>
 	        	<th>Unit</th>
 	        	<th>Remarks</th>
             </thead>
@@ -110,7 +111,13 @@
 			    	<td width="17%">{{$details->gmts_color}}</td>
 			    	<td width="17%">{{$details->item_size}}</td>
 			        <!-- <td>{{$details->sku}}</td> -->
-			        <td>{{$details->item_quantity}}</td>
+			        <td>{{$details->item_quantity}}{{ !empty($details->initial_increase)? '('.$details->initial_increase.'%)' : '' }}</td>
+					<td><?php
+							$p = ( ($details->item_quantity * $details->initial_increase)/100) + $details->item_quantity;
+							echo $p;
+							$totalIncrease += $p;
+						?>
+					</td>
 			        <td>PSC</td>
 			        <td></td>
 	        	</tr>
@@ -118,6 +125,7 @@
         	<tr style="height: 30px;">
         		<td colspan="6"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
         		<td> {{$TotalBookingQty}}</td>
+        		<td>{{ $totalIncrease }}</td>
         		<td></td>
         		<td></td>
         	</tr>
@@ -134,12 +142,12 @@
 </style>
 <div class="row body-top">
 	<div class="col-md-9 col-xs-9 body-list">
-		<label >Special Requirements/Notes: 特殊要求／备注：</label>
+		<label >Special Requirements/Notes:</label>
 		<ul>
 			<li>1. This order is: Normal order:  Urgent  Order: Top Urgent  Order: Export goods.</li>
-			<li>2. Provide PPS PCS , Or provide production samples for sales 提供产前样_______PCS，或产后业务留样_______PCS</li>
+			<li>2. Provide PPS PCS , Or provide production samples for sales _______PCS</li>
 			<li>3. Special requirements for shipment:</li>
-			<li style="margin-left: 6px;">出货时有特别要求：</li>
+			<li style="margin-left: 6px;"></li>
 			<li>4.</li>
 			<li>5.</li>
 			<li>6.</li>
@@ -150,7 +158,7 @@
 	</div>
 
 	<div class="col-md-3 col-sm-3 -col-xs-3" style="border:1px solid #DCDCDC;height: 250px;">
-		<label>Special requirements for production: <br\>生产上的特别要求：</label>
+		<label>Special requirements for production: </label>
 	</div>
 </div>
 

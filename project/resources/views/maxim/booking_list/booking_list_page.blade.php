@@ -1,7 +1,11 @@
 @extends('layouts.dashboard')
 @section('page_heading', trans("others.mxp_menu_booking_list") )
 @section('section')
-<?php 
+<?php
+	use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+	$object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
+	$roleCheck = $object->getRole();
+
 	// print_r("<pre>");
 	// print_r($bookingList);
 	// print_r("</pre>");
@@ -159,12 +163,13 @@
 									    <li>
 									    	<a href="{{ Route('booking_list_details_view', $value->booking_order_id) }}">Views</a>
 									    </li>
-									    <!-- <li>
-									    	<a href="{{ Route('booking_list_create_ipo', $value->bookig_order_id) }}">IPO</a>
-									    </li>
+									    @if($roleCheck != 'p')
+									    @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
 									    <li>
-									    	<a href="{{ Route('booking_list_create_mrf', $value->booking_order_id) }}">MRF</a>
-									    </li> -->
+									    	<a href="#">Cancel</a>
+									    </li>
+									    @endif
+									    @endif
 										<li>
 											<a href="{{ Route('booking_files_download', $value->id) }}" class="btn btn-info">Download Files</a>
 										</li>

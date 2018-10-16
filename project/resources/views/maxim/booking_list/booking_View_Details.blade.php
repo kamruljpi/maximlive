@@ -6,7 +6,8 @@
     // print_r($bookingDetails->bookings_challan_table);
     // print_r(session('data'));
     // print_r("</pre>");
- 
+    use App\Http\Controllers\taskController\Flugs\Role\PlaningFlugs;
+    use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
 ?>
@@ -24,7 +25,7 @@
 @endif
         
 @if($roleCheck == 'p')
-    @if($bookingDetails->booking_status == 'Booked')
+    @if($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
@@ -35,7 +36,7 @@
         </div>
     @endif
 
-    @if(session('data') == 'Process')
+    @if(session('data') == BookingFulgs::BOOKING_PROCESS_FLUG)
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-success" id="normal-btn-success">
@@ -66,7 +67,7 @@
             <p >Oreder Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
             <p >Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
             @if($roleCheck == 'p')
-                @if($bookingDetails->booking_status == 'Process')
+                @if($bookingDetails->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG)
                     <p style="font-size: 15px;"><strong>Accepted by</strong> <span style="color:red;">{{$bookingDetails->first_name}}{{$bookingDetails->last_name}}</span></p>
                @endif
             @endif
@@ -124,7 +125,7 @@
                         <tr style="">
                             <label for="job_id">
                             <td width="3.5%">
-                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
+                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
                             </td>
                             <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>           
                             <td>{{$bookedItem->erp_code}}</td>
@@ -156,12 +157,12 @@
                 <div class="col-md-4">
                     <div class="form-group pull-right">
                         <label class="radio-inline">
-                            <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>IPO
+                            <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>IPO
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>MRF
+                            <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>MRF
                         </label>
-                        <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == 'Booked') ? 'disabled' : ''}}>
+                        <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>
                             Submit
                         </button>
                     </div>

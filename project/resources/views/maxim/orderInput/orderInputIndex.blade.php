@@ -170,7 +170,7 @@
   <div style="padding-top: 20px;"></div>
 
 
-  <div class="table-responsive" style="height: 200px;">
+  <div class="table-responsive" style="height: 400px;">
     <table class="table-striped " style="overflow-y: scroll;" id="filed_increment">
       <thead>
         <tr>

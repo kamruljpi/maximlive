@@ -36,6 +36,23 @@
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_booking_data') ))
     @endif
 
+    {{ $msg }}
+    @if (!empty($msg))
+        <div class="alert alert-success">
+            <ul>
+                {{ $msg }}
+            </ul>
+        </div>
+    @endif
+
+    @if(Session::has('message'))
+        <div class="alert alert-danger">
+            <ul>
+                {{ Session::get('message') }}
+            </ul>
+        </div>
+    @endif
+
     <button class="btn btn-warning" type="button" id="booking_reset_btn">Reset</button>
     <div id="booking_simple_search_form">
         <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
@@ -166,7 +183,7 @@
                                         @if($roleCheck != 'p')
                                             @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
                                                 <li>
-                                                    <a href="#">Cancel</a>
+                                                    <a href="{{ Route('booking_details_cancel_action', $value->booking_order_id) }}">Cancel</a>
                                                 </li>
                                             @endif
                                         @endif

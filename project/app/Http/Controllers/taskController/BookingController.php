@@ -291,12 +291,47 @@ class BookingController extends Controller
   public function updateBookingView(Request $request){
     $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
     $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED],['id',$request->job_id]])->first();
-    // $this->print_me($mxpBooking);
-    // $data = 
+//     $this->print_me($request->all());
+    // $data =
+
     return view('maxim.booking_list.booking_update',compact('description','mxpBooking'));
   }
 
   public function updateBooking(Request $request){
-    $this->print_me($request->all());
+//    $this->print_me($request->all());
+
+      $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
+
+      $insertBooking->item_description = $request->item_description;
+      $insertBooking->oos_number = $request->oos_number;
+      $insertBooking->style = $request->style;
+      $insertBooking->poCatNo = $request->poCatNo;
+      $insertBooking->item_code = $request->item_code;
+      $insertBooking->gmts_color = $request->gmts_color;
+      $insertBooking->item_size = $request->item_size;
+      $insertBooking->sku = $request->sku;
+      $insertBooking->item_quantity = $request->item_qty;
+      $insertBooking->item_price = $request->item_price;
+      $insertBooking->save();
+
+      $insertBookingChallan = MxpBookingChallan::where('id', $request->booking_id)->first();
+
+      $insertBookingChallan->item_description = $request->item_description;
+      $insertBookingChallan->oos_number = $request->oos_number;
+      $insertBookingChallan->style = $request->style;
+      $insertBookingChallan->poCatNo = $request->poCatNo;
+      $insertBookingChallan->item_code = $request->item_code;
+      $insertBookingChallan->gmts_color = $request->gmts_color;
+      $insertBookingChallan->item_size = $request->item_size;
+      $insertBookingChallan->sku = $request->sku;
+      $insertBookingChallan->item_quantity = $request->item_qty;
+      $insertBookingChallan->item_price = $request->item_price;
+      $insertBookingChallan->save();
+
+      $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
+      $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
+
+      return view('maxim.booking_list.booking_update',compact('description','mxpBooking'))->with('msg','Booking successfully updated');
+
   }
 }

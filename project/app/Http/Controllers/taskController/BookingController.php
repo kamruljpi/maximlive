@@ -342,10 +342,7 @@ class BookingController extends Controller
       }
       Session::flash('message', $msg);
 
-      $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
-      $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
-
-      return view('maxim.booking_list.booking_update',compact('description','mxpBooking'));
+      return redirect()->route('booking_list_details_view', $insertBooking->booking_order_id);
     }
 
     public function cancelBooking($id){

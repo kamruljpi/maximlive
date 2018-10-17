@@ -45,21 +45,6 @@
                 </ul>
             </div>
         @endif
-        @if(Session::has('message'))
-            <div class="alert alert-success">
-                <ul>
-                    {{ Session::get('message') }}
-                </ul>
-            </div>
-        @endif
-        @if(Session::has('error-m'))
-            <div class="alert alert-danger">
-                <ul>
-                    {{ Session::get('error-m') }}
-                </ul>
-            </div>
-        @endif
-
 
         @if(Session::has('error_code'))
             @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ))

@@ -23,6 +23,20 @@
 @if(Session::has('empty_message'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_message') ))
 @endif
+@if(Session::has('message'))
+    <div class="alert alert-success">
+        <ul>
+            {{ Session::get('message') }}
+        </ul>
+    </div>
+@endif
+@if(Session::has('error-m'))
+    <div class="alert alert-danger">
+        <ul>
+            {{ Session::get('error-m') }}
+        </ul>
+    </div>
+@endif
         
 @if($roleCheck == 'p')
     @if($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)

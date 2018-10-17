@@ -17,6 +17,9 @@ use App\MxpItemsQntyByBookingChallan;
 use Validator;
 use Auth;
 use DB;
+use App\User;
+use App\Model\MxpMrf;
+use App\MxpIpo;
 use App\Http\Controllers\taskController\BookingListController;
 use App\userbuyer;
 use App\Http\Controllers\Source\User\UserAccessBuyerList;
@@ -24,6 +27,8 @@ use App\Http\Controllers\Message\ActionMessage;
 use Redirect;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Model\MxpItemDescription;
+use Carbon;
+use Session;
 
 class BookingController extends Controller
 { 
@@ -300,38 +305,98 @@ class BookingController extends Controller
   public function updateBooking(Request $request){
 //    $this->print_me($request->all());
 
-      $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
-
-      $insertBooking->item_description = $request->item_description;
-      $insertBooking->oos_number = $request->oos_number;
-      $insertBooking->style = $request->style;
-      $insertBooking->poCatNo = $request->poCatNo;
-      $insertBooking->item_code = $request->item_code;
-      $insertBooking->gmts_color = $request->gmts_color;
-      $insertBooking->item_size = $request->item_size;
-      $insertBooking->sku = $request->sku;
-      $insertBooking->item_quantity = $request->item_qty;
-      $insertBooking->item_price = $request->item_price;
-      $insertBooking->save();
-
+       $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
+      
+      if(isset($insertBooking) && !empty($insertBooking)){
+        $insertBooking->item_description = $request->item_description;
+        $insertBooking->oos_number = $request->oos_number;
+        $insertBooking->style = $request->style;
+        $insertBooking->poCatNo = $request->poCatNo;
+        $insertBooking->item_code = $request->item_code;
+        $insertBooking->gmts_color = $request->gmts_color;
+        $insertBooking->item_size = $request->item_size;
+        $insertBooking->sku = $request->sku;
+        $insertBooking->item_quantity = $request->item_qty;
+        $insertBooking->item_price = $request->item_price;
+        $insertBooking->save();
+        $msg = "Booking Successfully updated";
+      }else{
+        $msg = "Something went wrong please try again later"; 
+      }
       $insertBookingChallan = MxpBookingChallan::where('id', $request->booking_id)->first();
-
-      $insertBookingChallan->item_description = $request->item_description;
-      $insertBookingChallan->oos_number = $request->oos_number;
-      $insertBookingChallan->style = $request->style;
-      $insertBookingChallan->poCatNo = $request->poCatNo;
-      $insertBookingChallan->item_code = $request->item_code;
-      $insertBookingChallan->gmts_color = $request->gmts_color;
-      $insertBookingChallan->item_size = $request->item_size;
-      $insertBookingChallan->sku = $request->sku;
-      $insertBookingChallan->item_quantity = $request->item_qty;
-      $insertBookingChallan->item_price = $request->item_price;
-      $insertBookingChallan->save();
+      if(isset($insertBookingChallan) && !empty($insertBookingChallan)){
+        $insertBookingChallan->item_description = $request->item_description;
+        $insertBookingChallan->oos_number = $request->oos_number;
+        $insertBookingChallan->style = $request->style;
+        $insertBookingChallan->poCatNo = $request->poCatNo;
+        $insertBookingChallan->item_code = $request->item_code;
+        $insertBookingChallan->gmts_color = $request->gmts_color;
+        $insertBookingChallan->item_size = $request->item_size;
+        $insertBookingChallan->sku = $request->sku;
+        $insertBookingChallan->item_quantity = $request->item_qty;
+        $insertBookingChallan->item_price = $request->item_price;
+        $insertBookingChallan->save();
+        $msg = "Booking Successfully updated";
+      }else{
+        $msg = "Something went wrong please try again later";
+      }
+      Session::flash('message', $msg);
 
       $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
       $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
 
-      return view('maxim.booking_list.booking_update',compact('description','mxpBooking'))->with('msg','Booking successfully updated');
+      return view('maxim.booking_list.booking_update',compact('description','mxpBooking'));
+    }
 
-  }
+    public function cancelBooking($id){
+      
+      $booking = MxpBooking::where('id', $id)->get();
+
+      if(isset($booking) && !empty($booking)){
+        foreach ($booking as $value) {
+          $value->is_deleted = 1;
+          $value->deleted_user_id = Auth::User()->user_id;
+          $value->deleted_date_at = Carbon\Carbon::now();
+          $value->save();
+          $msg = "Booking ".$id." canceled"; 
+        }
+        
+      }else{
+        $error = "Something went wrong please try again later";
+      }
+      $challan = MxpBookingChallan::where('job_id', $id)->get();
+      // $this->print_me($challan);
+
+      if(isset($challan) && !empty($challan)){
+        foreach ($challan as $value) {
+          $value->is_deleted = 1;
+          $value->deleted_user_id = Auth::User()->user_id;
+          $value->deleted_date_at = Carbon\Carbon::now();
+          $value->save();
+          $msg = "Booking ".$id." canceled"; 
+        }
+          
+      }else{
+        $error = "Something went wrong please try again later";
+      }
+      
+      $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
+      if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
+        foreach ($InserBuyerDetails as $value) {
+          $value->is_deleted = 1;
+          $value->deleted_user_id = Auth::User()->user_id;
+          $value->deleted_date_at = Carbon\Carbon::now();
+          $value->save();
+          $msg = "Booking ".$id." canceled";  
+        }
+        
+      }else{
+        $error = "Something went wrong please try again later";
+      }
+
+      Session::flash('message', $msg);
+      Session::flash('error-m', $error);
+      
+      return Redirect()->back();
+    }
 }

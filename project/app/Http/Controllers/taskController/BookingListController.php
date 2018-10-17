@@ -36,7 +36,7 @@ class BookingListController extends Controller
     public function bookingListView(){
 
         $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
-            ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+            ->where('is_deleted',0)
             ->orderBy('id','DESC')
             ->paginate(15);
         foreach($bookingList as &$booking){

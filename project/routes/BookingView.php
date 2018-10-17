@@ -6,7 +6,7 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController'], function 
 		Route::any('booking_list_view/{id?}', 'BookingView\AcceptedBooking')->name('accepted_booking');
 		Route::post('booking/details/update/view', 'BookingController@updateBookingView')->name('booking_details_update_view');
 		Route::post('booking/details/update', 'BookingController@updateBooking')->name('booking_details_update_action');
-		Route::post('booking/details/update', 'BookingController@updateBooking')->name('booking_details_update_action');
+		Route::get('booking/details/cancel/{id}', 'BookingController@cancelBooking')->name('booking_details_cancel_action');
 
 	// });
 });

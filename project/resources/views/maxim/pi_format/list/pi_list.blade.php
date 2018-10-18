@@ -1,7 +1,11 @@
 @extends('layouts.dashboard')
 @section('page_heading','PI List' )
 @section('section')
-
+<?php
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+$object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
+$roleCheck = $object->getRole();
+?>
 <!-- <button class="btn btn-warning" type="button" id="mrf_reset_btn">Reset</button>
 <div id="mrf_simple_search_form">
 	<div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
@@ -12,6 +16,52 @@
 	</div>
 	<button class="btn btn-primary " type="button" id="mrf_advanc_search">Advance Search</button>
 </div> -->
+<style type="text/css">
+    .b1{
+        border-bottom-left-radius: 4px;
+        border-top-right-radius: 0px;
+    }
+    .b2{
+        border-bottom-left-radius: 0px;
+        border-top-right-radius: 4px;
+    }
+    .btn-group .btn + .btn,
+    .btn-group .btn + .btn-group,
+    .btn-group .btn-group + .btn,
+    .btn-group .btn-group + .btn-group {
+        margin-left: -5px;
+    }
+    .popoverOption:hover{
+        text-decoration: underline;
+    }
+    /*.popper-content ul{
+        list-style-type: none;
+    }*/
+</style>
+
+@if (!empty($msg))
+    <div class="alert alert-success">
+        <ul>
+            {{ $msg }}
+        </ul>
+    </div>
+@endif
+
+@if(Session::has('message'))
+    <div class="alert alert-danger">
+        <ul>
+            {{ Session::get('message') }}
+        </ul>
+    </div>
+@endif
+
+@if(Session::has('error-m'))
+    <div class="alert alert-danger">
+        <ul>
+            {{ Session::get('error-m') }}
+        </ul>
+    </div>
+@endif
 
 <div>
 	<form id="mrf_advance_search_form"  style="display: none" method="post">
@@ -78,14 +128,27 @@
 					<td>{{$value->booking_order_id}}</td>
 					<td>{{$value->p_id}}</td>
 					<td>
-						<form action="{{ Route('pi_list_report_view') }}" role="form" target="_blank">
-							{{ csrf_field() }}
-							<input type="hidden" name="pid" value="{{$value->p_id}}">
-							<input type="hidden" name="is_type" value="{{$value->is_type}}">
-							<input type="hidden" name="bid" value="{{$booking_id[0]}}">
-							<button class="btn btn-success">Report</button>
-						</form>
-					</td>
+                        <div class="btn-group">
+                            <form action="{{ Route('pi_list_report_view') }}" target="_blank">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="pid" value="{{$value->p_id}}">
+                                <input type="hidden" name="is_type" value="{{$value->is_type}}">
+                                <input type="hidden" name="bid" value="{{$booking_id[0]}}">
+                                <button class="btn btn-success b1">Report</button>
+
+                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a  type="button" class="submit_customdemo" href="{{ Route('pi_edit_action', $value->p_id) }}" >Delete</a>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </td>
 				</tr>
 			@endforeach
 			</tbody>
@@ -99,3 +162,18 @@
 	</div>
 </div>
 @endsection
+@section('LoadScript')
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".submit_customdemo").on("click",function(e){
+                e.preventDefault();
+                if(confirm("Are you sure want to delete") == true){
+                    document.location.href="{{ Route('pi_edit_action', $value->p_id) }}";
+                }else {
+                    console.log('false');
+                }
+            });
+        });
+    </script>
+@stop

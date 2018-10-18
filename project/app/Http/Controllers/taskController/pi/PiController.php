@@ -7,7 +7,6 @@ use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
 use App\Model\MxpBookingChallan;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Validator;
 use Auth;
 use DB;
@@ -15,6 +14,8 @@ use App\Model\MxpBookingBuyerDetails;
 use App\Model\MxpBooking;
 use App\Model\MxpPi;
 use App\User;
+use Carbon;
+use Session;
 
 
 class PiController extends Controller
@@ -124,5 +125,27 @@ class PiController extends Controller
             ->where('user_id',$userId)
             ->get();
         return $data;
+    }
+    public function piEdit($p_id){
+
+        $pi_value = MxpPi::where('p_id', $p_id)->get();
+
+        if(isset($pi_value) && !empty($pi_value)){
+            foreach ($pi_value as $value) {
+                $value->is_deleted = 1;
+                $value->deleted_user_id = Auth::User()->user_id;
+                $value->deleted_date_at = Carbon\Carbon::now();
+                $value->save();
+                $msg = "Pi ".$p_id." deleted successfully.";
+            }
+
+        }else{
+            $error = "Something went wrong please try again later";
+        }
+
+        Session::flash('message', $msg);
+        Session::flash('error-m', $error);
+
+        return Redirect()->back();
     }
 }

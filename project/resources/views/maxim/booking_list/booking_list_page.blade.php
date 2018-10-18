@@ -6,9 +6,9 @@
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
 
-    // print_r("<pre>");
-    // print_r($bookingList);
-    // print_r("</pre>");
+//     print_r("<pre>");
+//     print_r($bookingList);
+//     print_r("</pre>");
     ?>
     <style type="text/css">
         .b1{
@@ -130,6 +130,7 @@
                     <th>Company Name</th>
                     <th>Attention</th>
                     <th>booking No.</th>
+                    <th>PO NO.</th>
                     <th width="10%">Order Date</th>
                     <th width="10%">Requested Date</th>
                     <th>Status</th>
@@ -146,6 +147,11 @@
                         <td>{{$value->Company_name}}</td>
                         <td>{{$value->attention_invoice}}</td>
                         <td>{{$value->booking_order_id}}</td>
+                        <td>
+                            @foreach($value->po as $values)
+                                {{ $values->ipo_id }},
+                            @endforeach
+                        </td>
                         <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
                         <td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
                         <td>

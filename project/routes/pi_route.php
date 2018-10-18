@@ -18,5 +18,6 @@ Route::group(['middleware' => 'auth'], function () {
             'as'=>'pi_list_report_view',
             'uses'=>'taskController\pi\PiListController@getPiReport'
         ]);
+    Route::get('pi/cancel/{p_id}','taskController\pi\PiController@piEdit')->name('pi_edit_action');
     });
 });

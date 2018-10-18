@@ -12,6 +12,7 @@ class PiListController extends Controller
 	public function getPiList(){
 		$piDetails = MxpPi::orderBy('id','DESC')
 			->select('*',DB::Raw('GROUP_CONCAT(DISTINCT booking_order_id) as booking_order_id'))
+            ->where('is_deleted','0')
 			->groupBy('p_id')
 			->paginate(20);
 		return view('maxim.pi_format.list.pi_list',compact('piDetails'));

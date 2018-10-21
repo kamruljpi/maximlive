@@ -118,4 +118,14 @@
 		</div>
 	</div>
 </form>
+<script type="text/javascript">
+	$('input[name="product_qty[]"]').on("keyup",function () {
+		var qnty = parseFloat($(this).val());
+		var availQnty = parseFloat($(this).attr("value"));
+		if(qnty > availQnty){
+			alert("Qunatity should be less than balance quantity "+availQnty);
+	        $(this).val(availQnty);
+		}
+	});
+</script>
 @stop

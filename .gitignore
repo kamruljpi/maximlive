@@ -1,6 +1,8 @@
 project/node_modules
 project/public/hot
-project/vendor
+project/public/storage
+project/storage/
+project/storage/*.key
 project/.idea
 /.idea
 project/.vscode

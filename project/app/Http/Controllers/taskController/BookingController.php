@@ -296,16 +296,15 @@ class BookingController extends Controller
   public function updateBookingView(Request $request){
     $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
     $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED],['id',$request->job_id]])->first();
-//     $this->print_me($request->all());
-    // $data =
-
+    
     return view('maxim.booking_list.booking_update',compact('description','mxpBooking'));
   }
 
   public function updateBooking(Request $request){
-//    $this->print_me($request->all());
+    $idstrcount = (8 - strlen($request->booking_id));
+    $job_id_id = str_repeat('0',$idstrcount).$request->booking_id;
 
-       $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
+    $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
       
       if(isset($insertBooking) && !empty($insertBooking)){
         $insertBooking->item_description = $request->item_description;
@@ -319,7 +318,7 @@ class BookingController extends Controller
         $insertBooking->item_quantity = $request->item_qty;
         $insertBooking->item_price = $request->item_price;
         $insertBooking->save();
-        $msg = "Booking Successfully updated";
+        $msg = $job_id_id." Job id Successfully updated.";
       }else{
         $msg = "Something went wrong please try again later"; 
       }
@@ -336,9 +335,9 @@ class BookingController extends Controller
         $insertBookingChallan->item_quantity = $request->item_qty;
         $insertBookingChallan->item_price = $request->item_price;
         $insertBookingChallan->save();
-        $msg = "Booking Successfully updated";
+        $msg = $job_id_id." Job id Successfully updated.";
       }else{
-        $msg = "Something went wrong please try again later";
+        $msg = "Something went wrong please try again later.";
       }
       Session::flash('message', $msg);
 

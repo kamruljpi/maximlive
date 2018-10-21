@@ -246,7 +246,7 @@ class IpoController extends Controller
       $cc = MxpIpo::select('ipo_id')->groupBy('ipo_id')->get();
       $cc = count($cc);
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
-      $id = "IPO"."-";
+      $id = "PO"."-";
       $date = date('dmY') ;
       $ipo_id = $id.$date."-".$count;
 

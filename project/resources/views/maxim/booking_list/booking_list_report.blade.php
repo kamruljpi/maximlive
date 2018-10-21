@@ -116,7 +116,7 @@
                             <th>Booking No.</th>
                             <th>PI No.</th>
                             <th>Challan No.</th>
-                            <th>IPO No.</th>
+                            <th>PO No.</th>
                             <th>MRF No.</th>
                             <th>Order Date</th>
                             <th>Requested Date</th>

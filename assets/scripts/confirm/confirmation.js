@@ -2,7 +2,7 @@ var check = (function(){
 	return {
         init: function () {
 			$('.deleteButton').on('click',function(){
-				var confirmValue = confirm("Are you sure! You want to delete this!");
+				var confirmValue = confirm("Are you sure!");
 				if (confirmValue == true) {
 					return true;
 				}else{

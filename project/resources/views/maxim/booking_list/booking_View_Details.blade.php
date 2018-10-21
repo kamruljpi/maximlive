@@ -137,7 +137,7 @@
                                 </form>
                                 </div>
                                 <div style="float: right;width: 54%;">
-                                <button class="form-control" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</button>
+                                <button class="form-control deleteButton" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</button>
                                 </div>
                             </td>                    
                         </tr>

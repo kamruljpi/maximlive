@@ -1,6 +1,5 @@
-@extends('layouts.dashboard')
-@section('page_heading', trans("others.mxp_menu_booking_list") )
-@section('section')
+<?php $__env->startSection('page_heading', trans("others.mxp_menu_booking_list") ); ?>
+<?php $__env->startSection('section'); ?>
     <?php
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
@@ -32,43 +31,46 @@
             list-style-type: none;
         }*/
     </style>
-    @if(Session::has('empty_booking_data'))
-        @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_booking_data') ))
-    @endif
+    <?php if(Session::has('empty_booking_data')): ?>
+        <?php echo $__env->make('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_booking_data') ), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php endif; ?>
 
-    {{ $msg }}
-    @if (!empty($msg))
+    <?php echo e($msg); ?>
+
+    <?php if(!empty($msg)): ?>
         <div class="alert alert-success">
             <ul>
-                {{ $msg }}
+                <?php echo e($msg); ?>
+
             </ul>
         </div>
-    @endif
+    <?php endif; ?>
 
-    @if(Session::has('message'))
+    <?php if(Session::has('message')): ?>
         <div class="alert alert-danger">
             <ul>
-                {{ Session::get('message') }}
+                <?php echo e(Session::get('message')); ?>
+
             </ul>
         </div>
-    @endif
+    <?php endif; ?>
 
     <button class="btn btn-warning" type="button" id="booking_reset_btn">Reset</button>
     <div id="booking_simple_search_form">
         <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
             <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
             <button class="btn btn-info" type="button" id="booking_simple_search">
-                Search{{--<i class="fa fa-search"></i>--}}
+                Search
             </button>
         </div>
-        {{--<div class="col-sm-2">--}}
-        {{--<input class="btn btn-primary" type="submit" value="Advanced Search" name="booking_advanc_search" id="booking_advanc_search">--}}
-        {{--</div>--}}
+        
+        
+        
         <button class="btn btn-primary " type="button" id="booking_advanc_search">Advance Search</button>
     </div>
     <div>
         <form id="advance_search_form"  style="display: none" method="post">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
             <div class="col-sm-12">
                 <div class="col-sm-3">
                     <label class="col-sm-12 label-control">Order date from</label>
@@ -106,15 +108,7 @@
                 </div>
             </div>
 
-            {{--<div class="col-sm-2">
-                <input type="text" name="searchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" name="searchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" name="searchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
-            </div>--}}
+            
             <button class="btn btn-primary" type="button" id="booking_simple_search_btn">Simple Search</button>
         </form>
     </div>
@@ -138,43 +132,47 @@
                 </tr>
                 </thead>
 
-                @php($j=1)
+                <?php ($j=1); ?>
                 <tbody id="booking_list_tbody">
-                @foreach($bookingList as $value)
+                <?php $__currentLoopData = $bookingList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr id="booking_list_table">
-                        <td>{{$j++}}</td>
-                        <td>{{$value->buyer_name}}</td>
-                        <td>{{$value->Company_name}}</td>
-                        <td>{{$value->attention_invoice}}</td>
-                        <td>{{$value->booking_order_id}}</td>
+                        <td><?php echo e($j++); ?></td>
+                        <td><?php echo e($value->buyer_name); ?></td>
+                        <td><?php echo e($value->Company_name); ?></td>
+                        <td><?php echo e($value->attention_invoice); ?></td>
+                        <td><?php echo e($value->booking_order_id); ?></td>
                         <td>
-                            @foreach($value->po as $values)
-                                {{ $values->ipo_id }},
-                            @endforeach
+                            <?php $__currentLoopData = $value->po; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $values): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php echo e($values->ipo_id); ?>,
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </td>
-                        <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
-                        <td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
+                        <td><?php echo e(Carbon\Carbon::parse($value->created_at)->format('d-m-Y')); ?></td>
+                        <td><?php echo e(Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')); ?></td>
                         <td>
-                            <a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">{{$value->booking_status}}</a>
+                            <a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;"><?php echo e($value->booking_status); ?></a>
 
                             <div class="popper-content hide">
-                                <label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}})</label><br>
+                                <label>Booking Prepared by: <?php echo e($value->booking->first_name); ?> <?php echo e($value->booking->last_name); ?> (<?php echo e(Carbon\Carbon::parse($value->created_at)->format('d-m-Y')); ?>)</label><br>
 
-                                <label>Booking Accepted by: {{$value->accepted->first_name}} {{$value->accepted->last_name}}
-                                    {{(!empty($value->accepted_date_at)?'('.Carbon\Carbon::parse($value->accepted_date_at)->format('d-m-Y').')':'')}}
+                                <label>Booking Accepted by: <?php echo e($value->accepted->first_name); ?> <?php echo e($value->accepted->last_name); ?>
+
+                                    <?php echo e((!empty($value->accepted_date_at)?'('.Carbon\Carbon::parse($value->accepted_date_at)->format('d-m-Y').')':'')); ?>
+
                                 </label><br>
 
-                                <label>MRF Issue by: {{$value->mrf->first_name}} {{$value->mrf->last_name}}
-                                    {{(!empty($value->mrf->created_at)?'('.Carbon\Carbon::parse($value->mrf->created_at)->format('d-m-Y').')':'')}}
+                                <label>MRF Issue by: <?php echo e($value->mrf->first_name); ?> <?php echo e($value->mrf->last_name); ?>
+
+                                    <?php echo e((!empty($value->mrf->created_at)?'('.Carbon\Carbon::parse($value->mrf->created_at)->format('d-m-Y').')':'')); ?>
+
                                 </label><br>
 
-                                <label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} {{(!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y').')':'')}}</label><br>
+                                <label>PO Issue by: <?php echo e($value->ipo->first_name); ?> <?php echo e($value->ipo->last_name); ?> <?php echo e((!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y').')':'')); ?></label><br>
                             </div>
                         </td>
                         <td width="12%">
                             <div class="btn-group">
-                                <form action="{{ Route('booking_list_action_task') }}" target="_blank">
-                                    <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+                                <form action="<?php echo e(Route('booking_list_action_task')); ?>" target="_blank">
+                                    <input type="hidden" name="bid" value="<?php echo e($value->booking_order_id); ?>">
                                     <button class="btn btn-success b1">Report</button>
 
                                     <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -184,28 +182,28 @@
 
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a href="{{ Route('booking_list_details_view', $value->booking_order_id) }}">Views</a>
+                                            <a href="<?php echo e(Route('booking_list_details_view', $value->booking_order_id)); ?>">Views</a>
                                         </li>
-                                        @if($roleCheck != 'p')
-                                            @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
+                                        <?php if($roleCheck != 'p'): ?>
+                                            <?php if($value->booking_status == BookingFulgs::BOOKED_FLUG): ?>
                                                 <li>
-                                                    <a href="{{ Route('booking_details_cancel_action', $value->booking_order_id) }}" class="deleteButton">Cancel</a>
+                                                    <a href="<?php echo e(Route('booking_details_cancel_action', $value->booking_order_id)); ?>" class="deleteButton">Cancel</a>
                                                 </li>
-                                            @endif
-                                        @endif
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                         <li>
-                                            <a href="{{ Route('booking_files_download', $value->id) }}" class="btn btn-info">Download Files</a>
+                                            <a href="<?php echo e(Route('booking_files_download', $value->id)); ?>" class="btn btn-info">Download Files</a>
                                         </li>
                                     </ul>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
 
-            <div id="booking_list_pagination">{{$bookingList->links()}}</div>
+            <div id="booking_list_pagination"><?php echo e($bookingList->links()); ?></div>
             <div class="pagination-container">
                 <nav>
                     <ul class="pagination"></ul>
@@ -213,8 +211,8 @@
             </div>
         </div>
     </div>
-@endsection
-@section('LoadScript')
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('LoadScript'); ?>
     <script type="text/javascript">
         $('.popoverOption').popover({
             trigger: "hover",
@@ -225,4 +223,5 @@
             }
         });
     </script>
-@stop
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.dashboard', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

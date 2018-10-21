@@ -296,7 +296,7 @@ class BookingController extends Controller
   public function updateBookingView(Request $request){
     $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
     $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED],['id',$request->job_id]])->first();
-    
+
     return view('maxim.booking_list.booking_update',compact('description','mxpBooking'));
   }
 
@@ -317,6 +317,7 @@ class BookingController extends Controller
         $insertBooking->sku = $request->sku;
         $insertBooking->item_quantity = $request->item_qty;
         $insertBooking->item_price = $request->item_price;
+        $insertBooking->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
         $insertBooking->save();
         $msg = $job_id_id." Job id Successfully updated.";
       }else{
@@ -334,6 +335,7 @@ class BookingController extends Controller
         $insertBookingChallan->sku = $request->sku;
         $insertBookingChallan->item_quantity = $request->item_qty;
         $insertBookingChallan->item_price = $request->item_price;
+        $insertBookingChallan->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
         $insertBookingChallan->save();
         $msg = $job_id_id." Job id Successfully updated.";
       }else{
@@ -350,9 +352,10 @@ class BookingController extends Controller
 
       if(isset($booking) && !empty($booking)){
         foreach ($booking as $value) {
-          $value->is_deleted = 1;
+          $value->is_deleted = BookingFulgs::IS_DELETED;
           $value->deleted_user_id = Auth::User()->user_id;
           $value->deleted_date_at = Carbon\Carbon::now();
+          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
           $value->save();
           $msg = "Booking ".$id." canceled"; 
         }
@@ -365,9 +368,10 @@ class BookingController extends Controller
 
       if(isset($challan) && !empty($challan)){
         foreach ($challan as $value) {
-          $value->is_deleted = 1;
+          $value->is_deleted = BookingFulgs::IS_DELETED;
           $value->deleted_user_id = Auth::User()->user_id;
           $value->deleted_date_at = Carbon\Carbon::now();
+          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
           $value->save();
           $msg = "Booking ".$id." canceled"; 
         }
@@ -379,9 +383,10 @@ class BookingController extends Controller
       $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
       if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
         foreach ($InserBuyerDetails as $value) {
-          $value->is_deleted = 1;
+          $value->is_deleted = BookingFulgs::IS_DELETED;
           $value->deleted_user_id = Auth::User()->user_id;
           $value->deleted_date_at = Carbon\Carbon::now();
+          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
           $value->save();
           $msg = "Booking ".$id." canceled";  
         }

@@ -92,7 +92,7 @@
 							<div class="form-group">
 								<label class="col-sm-12 label-control">Shipment Date</label>
 								<div class="col-sm-12">
-									<input class="form-control" type="Date" name="mrf_shipment_date" required>
+									<input id="datePickerDate" class="form-control" type="Date" name="mrf_shipment_date" required>
 								</div>
 							</div>
 						</div>
@@ -159,4 +159,14 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	$('input[name="product_qty[]"]').on("keyup",function () {
+		var qnty = parseFloat($(this).val());
+		var availQnty = parseFloat($(this).attr("value"));
+		if(qnty > availQnty){
+			alert("Qunatity should be less than balance quantity "+availQnty);
+	        $(this).val(availQnty);
+		}
+	});
+</script>
 @stop

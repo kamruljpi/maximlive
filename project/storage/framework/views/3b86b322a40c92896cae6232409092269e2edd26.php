@@ -1,6 +1,5 @@
-@extends('layouts.dashboard')
-@section('page_heading',$taskType)
-@section('section')
+<?php $__env->startSection('page_heading',$taskType); ?>
+<?php $__env->startSection('section'); ?>
     <style type="text/css">
         .top-div{
             background-color: #f9f9f9;
@@ -36,28 +35,29 @@
 
 
     <div class="col-md-12">
-        @if ($errors->any())
+        <?php if($errors->any()): ?>
             <div class="alert alert-danger">
                 <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if(Session::has('error_code'))
-            @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ))
-        @endif
+        <?php if(Session::has('error_code')): ?>
+            <?php echo $__env->make('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php endif; ?>
         <?php
             $jobId = (8 - strlen($mxpBooking->id));
             ?>
-        <h3>Update booking: Job ID {{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</h3>
+        <h3>Update booking: Job ID <?php echo e(str_repeat('0',$jobId)); ?><?php echo e($mxpBooking->id); ?></h3>
         <div style="padding-top: 20px;"></div>
 
-        <form action="{{route('booking_details_update_action')}}" method="POST">
-                {{csrf_field()}}
-            <input type="hidden" name="booking_id" value="{{ $mxpBooking->id }}">
+        <form action="<?php echo e(route('booking_details_update_action')); ?>" method="POST">
+                <?php echo e(csrf_field()); ?>
+
+            <input type="hidden" name="booking_id" value="<?php echo e($mxpBooking->id); ?>">
             <div class="table-responsive" style="height: 300px;">
                 <table class="table-striped " style="overflow-y: scroll;" id="filed_increment">
                     <thead>
@@ -83,7 +83,7 @@
                         <!-- PO/Cat No -->
                         <td>
                             <div class="form-group">
-                                <input type="text" name="poCatNo" class="form-control" placeholder="PO Cat No" title ="PO Cat No" id="item_po_cat_no"  value="{{ $mxpBooking->poCatNo }}">
+                                <input type="text" name="poCatNo" class="form-control" placeholder="PO Cat No" title ="PO Cat No" id="item_po_cat_no"  value="<?php echo e($mxpBooking->poCatNo); ?>">
                             </div>
                         </td>
                         <!-- end -->
@@ -91,20 +91,20 @@
                         <!-- OOS Number -->
                         <td>
                             <div class="form-group ">
-                                <input type="text" name="oos_number" class="form-control" placeholder="OOS Number" title="OOS Number" id="item_oos_number" value="{{ $mxpBooking->oos_number }}">
+                                <input type="text" name="oos_number" class="form-control" placeholder="OOS Number" title="OOS Number" id="item_oos_number" value="<?php echo e($mxpBooking->oos_number); ?>">
                             </div>
                         </td>
                         <!-- end -->
 
                         <td width="15%" style="padding-top: 15px;">
                             <div class="form-group item_codemxp_parent">
-                                <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code"  id="item_codemxp" data-parent="tr_clone" value="{{$mxpBooking->item_code}}">
+                                <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code"  id="item_codemxp" data-parent="tr_clone" value="<?php echo e($mxpBooking->item_code); ?>">
 
                             </div>
                         </td>
                         <td>
                             <div class="form-group" style="    width: 200px !important;">
-                                <input type="text" name="erp" class="form-control erpNo" id="erpNo" readonly = "true" value="{{ $mxpBooking->erp_code }}">
+                                <input type="text" name="erp" class="form-control erpNo" id="erpNo" readonly = "true" value="<?php echo e($mxpBooking->erp_code); ?>">
                                 <!-- <select name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true"> -->
                                 </select>
                             </div>
@@ -113,7 +113,7 @@
                         <!-- description -->
                         <td>
                             <div class="form-group">
-                                <input type="text" name="item_description" class="item_description form-control" id="item_description" value="{{ $mxpBooking->item_description }}" readonly>
+                                <input type="text" name="item_description" class="item_description form-control" id="item_description" value="<?php echo e($mxpBooking->item_description); ?>" readonly>
                             </div>
                         </td>
                         <!--end -->
@@ -121,16 +121,16 @@
                         <td>
                             <div class="form-group" style="    width: 145px !important;">
                                 <select name="item_gmts_color" class="form-control itemGmtsColor" id="itemGmtsColor" readonly="true">
-                                    <option value="{{ $mxpBooking->gmts_color }}">{{ $mxpBooking->gmts_color }}</option>
+                                    <option value="<?php echo e($mxpBooking->gmts_color); ?>"><?php echo e($mxpBooking->gmts_color); ?></option>
                                 </select>
                             </div>
                         </td>
                         <td>
                             <div class="form-group" style="    width: 200px !important;">
-                                {{--<input type="text" name="item_size[]" class="form-control">--}}
+                                
 
                                 <select name="item_size" class="form-control itemSize" id="itemSize" disabled = "true" >
-                                    <option value="{{ $mxpBooking->item_size }}">{{ $mxpBooking->item_size }}</option>
+                                    <option value="<?php echo e($mxpBooking->item_size); ?>"><?php echo e($mxpBooking->item_size); ?></option>
                                 </select>
                             </div>
                         </td>
@@ -139,26 +139,26 @@
                         <!-- Style -->
                         <td>
                             <div class="form-group">
-                                <input type="text" name="style" class="form-control item_style" id="item_style" value="{{ $mxpBooking->style }}">
+                                <input type="text" name="style" class="form-control item_style" id="item_style" value="<?php echo e($mxpBooking->style); ?>">
                             </div>
                         </td>
                         <!-- end -->
 
                         <td>
                             <div class="form-group">
-                                <input type="text" name="sku" class="form-control item_sku" id="item_sku" value="{{ $mxpBooking->sku }}">
+                                <input type="text" name="sku" class="form-control item_sku" id="item_sku" value="<?php echo e($mxpBooking->sku); ?>">
                             </div>
                         </td>
 
                         <td>
                             <div class="form-group">
-                                <input type="text" name="item_qty" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" value="{{ $mxpBooking->item_quantity }}">
+                                <input type="text" name="item_qty" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" value="<?php echo e($mxpBooking->item_quantity); ?>">
                             </div>
                         </td>
 
                         <td>
                             <div class="form-group">
-                                <input type="text" name="item_price" class="form-control item_price" readonly="true" value="{{ $mxpBooking->item_price }}">
+                                <input type="text" name="item_price" class="form-control item_price" readonly="true" value="<?php echo e($mxpBooking->item_price); ?>">
                                 <!-- readonly -->
                             </div>
                         </td>
@@ -171,16 +171,19 @@
             <div class="form-group">
                 <div class="col-sm-2 col-md-2 pull-right">
                     <button type="submit" class="btn btn-primary deleteButton" style="margin-right: 15px; width: 100%;">
-                        {{ trans('others.update_button') }}
+                        <?php echo e(trans('others.update_button')); ?>
+
                     </button>
                 </div>
             </div>
 
         </form>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('LoadScript')
-    <script type="text/javascript" src="{{ asset('assets/scripts/date_compare/custom.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/scripts/date_compare/booking.js') }}"></script>
-@stop
+<?php $__env->startSection('LoadScript'); ?>
+    <script type="text/javascript" src="<?php echo e(asset('assets/scripts/date_compare/custom.js')); ?>"></script>
+    <script type="text/javascript" src="<?php echo e(asset('assets/scripts/date_compare/booking.js')); ?>"></script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.dashboard', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

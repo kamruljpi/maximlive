@@ -146,7 +146,7 @@
                         @endforeach
                     </tbody>
                 @elseif($roleCheck == 'p')                        
-                <form action="{{route('ipo_mrf_define')}}" method="post">
+                <form action="{{route('ipo_mrf_define')}}">
            {{csrf_field()}}
            <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
                     <tbody>              

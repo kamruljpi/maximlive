@@ -104,9 +104,7 @@
                         <th width="15%">Size</th>
                         <th>Sku</th>
                         <th>Order Qty</th>
-                        @if($roleCheck != 'p')
                         <th width="20%">Action</th>
-                        @endif
                         @if($roleCheck == 'p')
                         <th>IPO QTY</th>
                         <th>MRF QTY</th>

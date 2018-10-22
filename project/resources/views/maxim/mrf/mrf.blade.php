@@ -170,3 +170,7 @@
 	});
 </script>
 @stop
+@section('LoadScript')
+  <script type="text/javascript" src="{{ asset('assets/scripts/date_compare/custom.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/scripts/date_compare/booking.js') }}"></script>
+@stop

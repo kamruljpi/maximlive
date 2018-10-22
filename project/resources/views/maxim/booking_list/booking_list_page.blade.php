@@ -130,7 +130,8 @@
                     <th>Company Name</th>
                     <th>Attention</th>
                     <th>booking No.</th>
-                    <th>PO NO.</th>
+                    <th>PO No.</th>
+                    <th>PO/CAT No.</th>
                     <th width="10%">Order Date</th>
                     <th width="10%">Requested Date</th>
                     <th>Status</th>
@@ -148,6 +149,7 @@
                         <td>{{$value->attention_invoice}}</td>
                         <td>{{$value->booking_order_id}}</td>
                         <td>{{$value->po->ipo_id }}</td>
+                        <td>{{$value->bookingDetails->po_cat }}</td>
                         <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
                         <td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
                         <td>

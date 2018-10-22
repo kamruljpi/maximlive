@@ -349,7 +349,7 @@ class BookingController extends Controller
 
     public function cancelBooking($id){
       
-      $booking = MxpBooking::where('id', $id)->get();
+      $booking = MxpBooking::where('booking_order_id', $id)->get();
 
       if(isset($booking) && !empty($booking)){
         foreach ($booking as $value) {
@@ -360,53 +360,53 @@ class BookingController extends Controller
           $value->save();
           $msg = "Booking ".$id." canceled"; 
         }
+
+          $challan = MxpBookingChallan::where('booking_order_id', $id)->get();
+
+          if(isset($challan) && !empty($challan)){
+              foreach ($challan as $value) {
+                  $value->is_deleted = BookingFulgs::IS_DELETED;
+                  $value->deleted_user_id = Auth::User()->user_id;
+                  $value->deleted_date_at = Carbon\Carbon::now();
+                  $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+                  $value->save();
+                  $msg = "Booking ".$id." canceled";
+              }
+
+          }else{
+              $error = "Something went wrong on Booking Challan Table please try again later";
+          }
+
+          $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
+
+          if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
+              foreach ($InserBuyerDetails as $value) {
+                  $value->is_deleted = BookingFulgs::IS_DELETED;
+                  $value->deleted_user_id = Auth::User()->user_id;
+                  $value->deleted_date_at = Carbon\Carbon::now();
+                  $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+                  $value->save();
+                  $msg = "Booking ".$id." canceled";
+              }
+
+          }else{
+              $error = "Something went wrong on Buyer Details table please try again later";
+          }
+
+          $pi_value = MxpPi::where('booking_order_id', $id)->get();
+
+          if(isset($pi_value) && !empty($pi_value)) {
+              foreach ($pi_value as $value) {
+                  $value->is_deleted = 1;
+                  $value->deleted_user_id = Auth::User()->user_id;
+                  $value->deleted_date_at = Carbon\Carbon::now();
+                  $value->save();
+              }
+          }
         
       }else{
-        $error = "Something went wrong please try again later";
+        $error = "Something went wrong please on booking table try again later ";
       }
-      $challan = MxpBookingChallan::where('job_id', $id)->get();
-      // $this->print_me($challan);
-
-      if(isset($challan) && !empty($challan)){
-        foreach ($challan as $value) {
-          $value->is_deleted = BookingFulgs::IS_DELETED;
-          $value->deleted_user_id = Auth::User()->user_id;
-          $value->deleted_date_at = Carbon\Carbon::now();
-          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-          $value->save();
-          $msg = "Booking ".$id." canceled"; 
-        }
-          
-      }else{
-        $error = "Something went wrong please try again later";
-      }
-      
-      $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
-
-      if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
-        foreach ($InserBuyerDetails as $value) {
-          $value->is_deleted = BookingFulgs::IS_DELETED;
-          $value->deleted_user_id = Auth::User()->user_id;
-          $value->deleted_date_at = Carbon\Carbon::now();
-          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-          $value->save();
-          $msg = "Booking ".$id." canceled";  
-        }
-        
-      }else{
-        $error = "Something went wrong please try again later";
-      }
-
-        $pi_value = MxpPi::where('booking_order_id', $id)->get();
-
-        if(isset($pi_value) && !empty($pi_value)) {
-            foreach ($pi_value as $value) {
-                $value->is_deleted = 1;
-                $value->deleted_user_id = Auth::User()->user_id;
-                $value->deleted_date_at = Carbon\Carbon::now();
-                $value->save();
-            }
-        }
 
         Session::flash('message', $msg);
         Session::flash('error-m', $error);

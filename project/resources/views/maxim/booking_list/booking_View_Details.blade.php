@@ -104,7 +104,7 @@
                         <th width="15%">Size</th>
                         <th>Sku</th>
                         <th>Order Qty</th>
-                        <th width="15%">Action</th>
+                        <th width="20%">Action</th>
                         @if($roleCheck == 'p')
                         <th>IPO QTY</th>
                         <th>MRF QTY</th>
@@ -133,11 +133,11 @@
                                 <form method="POST" action="{{route('booking_details_update_view')}}" target="_blank">
                                     {{csrf_field()}}
                                     <input type="hidden" name="job_id" value="{{$bookedItem->id}}">
-                                    <button class="form-control" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>
+                                    <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>
                                 </form>
                                 </div>
-                                <div style="float: right;width: 54%;">
-                                <button class="form-control deleteButton" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</button>
+                                <div style="float: right;">
+                                <button class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</button>
                                 </div>
                             </td>                    
                         </tr>

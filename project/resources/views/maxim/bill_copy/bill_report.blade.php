@@ -10,35 +10,43 @@
 
 @foreach($companyInfo as $value)
 	<div class="row">
-		<div class="col-md-2 col-sm-12 col-xs-12">
-			@if($value->logo_allignment === "left")
+		<div class="col-md-2 col-sm-2 col-xs-2">
+			@if($value->logo_allignment == "left")
 				@if(!empty($value->logo))
 					<div class="pull-left">
-						<img src="{{ asset('upload')}}/{{$value->logo}}" height="100px" width="150px" />
+						<img src="{{ asset('upload')}}/{{$value->logo}}" width="160px" style="margin-top:  25px;" />
 					</div>
 				@endif
 			@endif
 		</div>
-		<div class="col-md-8 col-sm-12 col-xs-12" style="padding-left: 40px;">
-			<h2 align="center">{{ $value->header_title}}</h2>
+		<div class="col-md-10 col-sm-10 col-xs-10" >
+			<h2 align="center" style="font-size: 27px;">{{ $value->header_title}}</h2>
 			<div align="center">
 				<p>OFFICE ADDRESS :  {{$value->address1}} {{$value->address2}} {{$value->address3}}</p>
 			</div>
 		</div>
-		<div class="col-md-2 col-sm-12 col-xs-12">
+		<div class="col-md-2 col-sm-8 col-xs-8">
 			@if($value->logo_allignment === "right")
 				@if(!empty($value->logo))
 					<div class="pull-right">
-						<img src="/upload/{{$value->logo}}" height="100px" width="150px" />
+						<!-- <a href="{{ route ('dashboard_view') }}"> -->
+							<img src="/upload/{{$value->logo}}" height="40px" width="150px" style="margin-top:  15px;" />
+						<!-- </a> -->
 					</div>
 				@endif
 			@endif
 		</div>
 	</div>
 @endforeach
-<div class="row header-bottom">
+<!-- <div class="row header-bottom">
 	<div class="col-md-12 header-bottom-b">
 		<span>Bill Copy</span>
+	</div>
+</div> -->
+
+<div class="row">
+	<div class="report-header">
+		<h3 align="center" style=" padding:8px; font-weight: bold;">Bill Copy</h3>
 	</div>
 </div>
 
@@ -48,13 +56,13 @@
 		@foreach($bookingDetails as $Details)
 			@for($is;$is <= 0;$is++)
 				<ul>
-					<li>Buyer : {{$Details->buyer_name}}</li>
-					<li>Company Name  : {{$Details->Company_name}}</li>
-					<li>Address : {{$Details->address_part1_invoice}}</li>
+					<li>Buyer: {{$Details->buyer_name}}</li>
+					<li>Company Name: {{$Details->Company_name}}</li>
+					<li>Address: {{$Details->address_part1_invoice}}</li>
 					<li> {{$Details->address_part2_invoice}}
 					</li>
-					<li>{{($formatTypes == 1001 )?'Contact ' :'Attn' }} : {{$Details->attention_invoice}}</li>
-					<li>{{($formatTypes == 1001 )?'Contact No ' :'Cell No' }} : {{$Details->mobile_invoice}}</li>
+					<li>{{($formatTypes == 1001 )?'Contact ' :'Attn' }}: {{$Details->attention_invoice}}</li>
+					<li>{{($formatTypes == 1001 )?'Contact No ' :'Cell No' }}: {{$Details->mobile_invoice}}</li>
 				</ul>
 			@endfor
 		@endforeach
@@ -68,7 +76,7 @@
 					<tr>
 						<td colspan="2">
 							<div style="text-align: right;">
-								<p style="padding-left :5px;"> PI No : {{$details->booking_order_id}} </p>
+								<p style="padding-left :5px;">Booking No: {{$details->booking_order_id}} </p>
 							</div>
 						</td>
 					</tr>
@@ -168,7 +176,7 @@
 
 				<td>
 					@if(!empty(totalPrice))
-					<img src="/assets/img/bd_taka_icon.png" width="10px">
+					<img src="{{asset('assets/img/bd_taka_icon.png')}}" width="10px">
 					{{ $Details->item_price * $conversion_rate }}
 					@endif
 				</td>
@@ -176,7 +184,7 @@
 				<td>{{(!empty($totalPrice)? '$'.$totalPrice: '')}}</td>
 
 				<td>@if(!empty(totalPrice))
-					<img src="/assets/img/bd_taka_icon.png" width="10px">
+					<img src="{{asset('assets/img/bd_taka_icon.png')}}" width="10px">
 					{{ $totalPrice * $conversion_rate}}
 					@endif
 				</td>
@@ -196,7 +204,7 @@
 			<tr>
 				<td colspan="8"><center><b>Total BDT</b></center></td>
 				<td> {{$conversion_rate}}</td>
-				<td><img src="/assets/img/bd_taka_icon.png" width="10px"> {{(!empty($BDTandUSD)? $BDTandUSD: '')}}</td>
+				<td><img src="{{asset('assets/img/bd_taka_icon.png')}}" width="10px"> {{(!empty($BDTandUSD)? $BDTandUSD: '')}}</td>
 			</tr>
 	
 	</tbody>
@@ -282,7 +290,7 @@
 	</div>
 </div>
 
-@foreach ($footerData as $value)
+<!-- @foreach ($footerData as $value)
 	@if(!empty($value->siginingPerson_2))
 		<div class="row">
 			<div class="col-md-12 col-xs-12" style="padding-bottom: 20px;">
@@ -320,7 +328,7 @@
 			</div>
 		</div>
 	@endif
-@endforeach
+@endforeach -->
 
 <script type="text/javascript">
 	function myFunction() {

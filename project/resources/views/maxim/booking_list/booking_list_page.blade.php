@@ -147,11 +147,7 @@
                         <td>{{$value->Company_name}}</td>
                         <td>{{$value->attention_invoice}}</td>
                         <td>{{$value->booking_order_id}}</td>
-                        <td>
-                            @foreach($value->po as $values)
-                                {{ $values->ipo_id }},
-                            @endforeach
-                        </td>
+                        <td>{{$value->po->ipo_id }}</td>
                         <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
                         <td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
                         <td>

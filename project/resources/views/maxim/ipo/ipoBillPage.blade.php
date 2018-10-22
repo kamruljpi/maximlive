@@ -108,8 +108,8 @@
 	<div class="report-header">
 		<h3 align="center" style=" padding:8px; font-weight: bold;">Production Order</h3>
 	</div>
-
 </div>
+
 <div class="row body-top">
 	<div class="col-md-8 col-sm-8 col-xs-7 body-list">
 		<ul>

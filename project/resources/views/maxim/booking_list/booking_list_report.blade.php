@@ -2,9 +2,9 @@
 @section('page_heading', "Tracking List")
 @section('section')
 <?php 
-	// print_r("<pre>");
-	// print_r($bookingList->itemLists);
-	// print_r("</pre>");
+//	 print_r("<pre>");
+//	 print_r($bookingList[0]->itemLists);
+//	 print_r("</pre>");
 ?>
 <style type="text/css">
 	.b1{
@@ -114,6 +114,7 @@
                             <th style="width:50% !important;">Vendor Name</th>
                             <th>Attention</th>
                             <th>Booking No.</th>
+                            <th>PO/CAT No.</th>
                             <th>PI No.</th>
                             <th>Challan No.</th>
                             <th>PO No.</th>
@@ -143,14 +144,20 @@
                             @foreach($value->itemLists as $valuelist)
                                 <?php
                                 $idstrcount = (8 - strlen($valuelist->id));
+//                                	 print_r("<pre>");
+//                                	 print_r($valuelist->poCatNo);
+//                                	 print_r("</pre>");die();
+
                                 if(count($value->itemLists) == 1){
                                 ?>
+
                                 <tr id="booking_list_table">
                                     <td><input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" hidden> {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}</td>
                                     <td><input name="buyer_name[]" value="{{$value->buyer_name}}" hidden>{{$value->buyer_name}}</td>
                                     <td><input name="company_name[]" value="{{$value->Company_name}}" hidden><{{$value->Company_name}}</td>
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
                                     <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
+                                    <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
                                     <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
                                     <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
                                     <td><input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" hidden>{{$valuelist->ipo->ipo_ids}}</td>
@@ -170,6 +177,7 @@
                                     <td><input name="company_name[]" value="{{$value->Company_name}}" hidden>{{$value->Company_name}}</td>
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
                                     <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
+                                    <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
                                     <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
                                     <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
                                     <td><input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" hidden>{{$valuelist->ipo->ipo_ids}}</td>
@@ -207,6 +215,7 @@
                                     <td><input name="company_name[]" value="{{$value->Company_name}}" hidden>{{$value->Company_name}}</td>
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
                                     <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
+                                    <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
                                     <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
                                     <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
                                     <td><input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" hidden>{{$valuelist->ipo->ipo_ids}}</td>

@@ -23,5 +23,6 @@ class MxpBookingChallan extends Model
     			'orderDate',
     			'orderNo',
     			'shipmentDate',
-    			'poCatNo'];
+    			'poCatNo',
+                'job_id'];
 }

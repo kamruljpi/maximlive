@@ -932,7 +932,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         /** there are all IPO routes here **/
 
-        Route::post('task/ipo/action',
+        Route::any('task/ipo/action',
             [
                 'as'=>'task_ipo_action',
                 'uses'=>'taskController\Ipo\IpoController@storeIpo'

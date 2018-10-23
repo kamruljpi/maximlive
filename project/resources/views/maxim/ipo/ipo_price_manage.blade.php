@@ -58,7 +58,7 @@
 @endif
 
 <!-- <form action="{{ Route('task_action') }}" method="POST"> -->
-<form action="{{ Route('task_ipo_action') }}" method="POST">
+<form action="{{ Route('task_ipo_action') }}">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<input type="hidden" name="booking_order_id" value="{{$sentBillId[0]->booking_order_id}}">
 	<table class="table table-bordered mainBody">
@@ -113,7 +113,7 @@
 	</table>
 	<div class="form-group">
 		<div class="col-md-2 pull-right">
-			<button type="submit" class="btn btn-primary form-control" style="margin-right: 15px; font-weight: bold;">Genarate
+			<button type="submit" class="btn btn-primary form-control deleteButton" style="margin-right: 15px; font-weight: bold;">Genarate
 			</button>
 		</div>
 	</div>

@@ -80,13 +80,25 @@ class BookingController extends Controller
       $roleManage = new RoleManagement();
 
       $validMessages = [
-            'item_code.required' => 'Brand Name field is required.'
+            'item_code.required' => 'Brand Name field is required.',
+            'poCatNo.required' => 'Po/Cat number field is required',
+            'item_size.required' => 'Item Size field is required',
+            'style.required' => 'Style field is required',
+            'sku.required' => 'Sku field is required',
+            'item_qty.required' => 'Item Quantity field is required',
+            'item_price.required' => 'Item Price field is required'
             ];
       $datas = $request->all();
 
       $validator = Validator::make($datas, 
             [
-          'item_code' => 'required'
+          'item_code' => 'required',
+          'poCatNo' => 'required',
+          'item_size' => 'required',
+          'style' => 'required',
+          'sku' => 'required',
+          'item_qty' => 'required',
+          'item_price' => 'required'
         ],
             $validMessages
         );

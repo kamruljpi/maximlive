@@ -191,7 +191,7 @@
           <!-- PO/Cat No -->
           <td>
             <div class="form-group">
-                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO Cat No" title ="PO Cat No" id="item_po_cat_no" >
+                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO Cat No" title ="PO Cat No" id="item_po_cat_no" required>
               </div>
           </td>
           <!-- end -->
@@ -199,20 +199,20 @@
           <!-- OOS Number -->
           <td>
             <div class="form-group ">
-                <input type="text" name="oos_number[]" class="form-control" placeholder="OOS Number" title="OOS Number" id="item_oos_number">
+                <input type="text" name="oos_number[]" class="form-control" placeholder="OOS Number" title="OOS Number" id="item_oos_number" >
               </div>
           </td>
           <!-- end -->
 
           <td width="15%" style="padding-top: 15px;">
             <div class="form-group item_codemxp_parent">
-              <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code[]"  id="item_codemxp" data-parent="tr_clone">
+              <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code[]"  id="item_codemxp" data-parent="tr_clone" required>
 
             </div>
           </td>
           <td>
             <div class="form-group" style="    width: 200px !important;">
-              <input type="text" name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true">
+              <input type="text" name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true" >
               <!-- <select name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true"> -->
               </select>
             </div>
@@ -221,7 +221,7 @@
           <!-- description -->
           <td>
             <div class="form-group">
-              <input type="text" name="item_description[]" class="item_description form-control" id="item_description" value="" readonly>
+              <input type="text" name="item_description[]" class="item_description form-control" id="item_description" value="" readonly required>
             </div>
           </td>
           <!--end -->
@@ -235,7 +235,7 @@
             <div class="form-group" style="    width: 200px !important;">
               {{--<input type="text" name="item_size[]" class="form-control">--}}
 
-              <select name="item_size[]" class="form-control itemSize" id="itemSize" disabled = "true" >
+              <select name="item_size[]" class="form-control itemSize" id="itemSize" disabled = "true" required>
               </select>
             </div>
           </td>
@@ -244,26 +244,26 @@
           <!-- Style -->
           <td>
             <div class="form-group">
-              <input type="text" name="style[]" class="form-control item_style" id="item_style">
+              <input type="text" name="style[]" class="form-control item_style" id="item_style" required>
             </div>
           </td>
           <!-- end -->
 
           <td>
             <div class="form-group">
-              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku">
+              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" required>
             </div>
           </td>
 
           <td>
             <div class="form-group">
-              <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp">
+              <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" required>
             </div>
           </td>
 
           <td>
             <div class="form-group">
-              <input type="text" name="item_price[]" class="form-control item_price" readonly="true">
+              <input type="text" name="item_price[]" class="form-control item_price" readonly="true" required>
               <!-- readonly -->
             </div>
           </td>

@@ -18,8 +18,10 @@ class IpoListController extends Controller
 {
 
 	public function getIpoValue(){
-		$ipoDetails = MxpIpo::orderBy('ipo_id','DESC')->groupBy('ipo_id')
+		$ipoDetails = MxpIpo::select('*',DB::Raw('sum(ipo_quantity) as ipo_quantity'))
+            ->orderBy('ipo_id','DESC')->groupBy('ipo_id')
 			->paginate(20);
+
 		return view('maxim.ipo.list.ipo_list',compact('ipoDetails'));
 	}
 

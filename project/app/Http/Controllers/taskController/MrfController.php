@@ -303,7 +303,7 @@ class MrfController extends Controller
         $job_id_id = str_repeat('0',$idstrcount).$oneArrayValue['ipo_id'];
         $dbValue = MxpBookingChallan::where('job_id',$oneArrayValue['ipo_id'])->select('left_mrf_ipo_quantity')->first();
 
-        if($dbValue->left_mrf_ipo_quantity > $oneArrayValue['product_qty'])
+        if($oneArrayValue['product_qty'] > $dbValue->left_mrf_ipo_quantity)
           $errors .= ' Job id '.$job_id_id.' available quantity '.$dbValue->left_mrf_ipo_quantity.' and entered quantity '.$oneArrayValue['product_qty'].'.';
       }
       if(isset($errors) && $errors === 'You try to invalid and grater than quantity.'){

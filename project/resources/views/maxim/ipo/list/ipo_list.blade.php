@@ -64,6 +64,8 @@
 					<th>Serial No.</th>
 					<th>Booking No.</th>
 					<th>Ipo No.</th>
+					<th>Total QTY</th>
+					<th>Total Increased QTY</th>
 					<th>Action</th>
 				</tr>
 			</thead>
@@ -74,6 +76,13 @@
 					<td>{{$j++}}</td>
 					<td>{{$value->booking_order_id}}</td>
 					<td>{{$value->ipo_id}}</td>
+					<td>{{ $value->ipo_quantity }}</td>
+					<td>
+                        <?php
+                            $p = ( ($value->ipo_quantity * $value->initial_increase)/100) + $value->ipo_quantity;
+                            echo floor($p);
+                        ?>
+                    </td>
 					<td>
 						<form action="{{ Route('ipo_list_report_view') }}" role="form" target="_blank">
 							{{ csrf_field() }}

@@ -19,7 +19,7 @@ class MrfListController extends Controller
 {
     public function mrfListView(){
         $bookingList = DB::table('mxp_mrf_table')
-            ->where('user_id',Auth::user()->user_id)
+            ->select('*',DB::Raw('sum(mrf_quantity) as mrf_quantity'))
             ->groupBy('mrf_id')
             ->orderBy('id','DESC')
             ->paginate(15);

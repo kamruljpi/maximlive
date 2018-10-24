@@ -83,7 +83,7 @@
                         <!-- PO/Cat No -->
                         <td>
                             <div class="form-group">
-                                <input type="text" name="poCatNo" class="form-control" placeholder="PO Cat No" title ="PO Cat No" id="item_po_cat_no"  value="{{ $mxpBooking->poCatNo }}">
+                                <input type="text" name="poCatNo" class="form-control" placeholder="PO Cat No" title ="PO Cat No" id="item_po_cat_no"  value="{{ $mxpBooking->poCatNo }}" required>
                             </div>
                         </td>
                         <!-- end -->
@@ -98,7 +98,7 @@
 
                         <td width="15%" style="padding-top: 15px;">
                             <div class="form-group item_codemxp_parent">
-                                <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code"  id="item_codemxp" data-parent="tr_clone" value="{{$mxpBooking->item_code}}">
+                                <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code"  id="item_codemxp" data-parent="tr_clone" value="{{$mxpBooking->item_code}}" required>
 
                             </div>
                         </td>
@@ -129,7 +129,7 @@
                             <div class="form-group" style="    width: 200px !important;">
                                 {{--<input type="text" name="item_size[]" class="form-control">--}}
 
-                                <select name="item_size" class="form-control itemSize" id="itemSize" disabled = "true" >
+                                <select name="item_size" class="form-control itemSize" id="itemSize" disabled = "true" required>
                                     <option value="{{ $mxpBooking->item_size }}">{{ $mxpBooking->item_size }}</option>
                                 </select>
                             </div>
@@ -139,26 +139,26 @@
                         <!-- Style -->
                         <td>
                             <div class="form-group">
-                                <input type="text" name="style" class="form-control item_style" id="item_style" value="{{ $mxpBooking->style }}">
+                                <input type="text" name="style" class="form-control item_style" id="item_style" value="{{ $mxpBooking->style }}" required>
                             </div>
                         </td>
                         <!-- end -->
 
                         <td>
                             <div class="form-group">
-                                <input type="text" name="sku" class="form-control item_sku" id="item_sku" value="{{ $mxpBooking->sku }}">
+                                <input type="text" name="sku" class="form-control item_sku" id="item_sku" value="{{ $mxpBooking->sku }}" required>
                             </div>
                         </td>
 
                         <td>
                             <div class="form-group">
-                                <input type="text" name="item_qty" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" value="{{ $mxpBooking->item_quantity }}">
+                                <input type="text" name="item_qty" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" value="{{ $mxpBooking->item_quantity }}" required>
                             </div>
                         </td>
 
                         <td>
                             <div class="form-group">
-                                <input type="text" name="item_price" class="form-control item_price" readonly="true" value="{{ $mxpBooking->item_price }}">
+                                <input type="text" name="item_price" class="form-control item_price" readonly="true" value="{{ $mxpBooking->item_price }}" required>
                                 <!-- readonly -->
                             </div>
                         </td>

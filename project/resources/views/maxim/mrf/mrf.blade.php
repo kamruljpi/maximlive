@@ -7,7 +7,6 @@
 	// print_r("</pre>");
 ?>
 <div class="container-fluid">
-
 	<div class="row">
 		<div class="col-sm-2">
 			<div class="form-group ">
@@ -16,7 +15,6 @@
 			</div>
 		</div>
 	</div>
-
 	@if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -31,7 +29,6 @@
 	@endif
 	<div class="row">
 		<div class="col-md-12 col-md-offset-0">
-
 			@if(!empty($MrfDetails))
 				<div class="panel showMrfList">
 					<div class="panel-heading">MRP list</div>
@@ -66,7 +63,6 @@
 					</div>
 				</div>
 			@endif
-
 			<div class="panel panel-default">
 				<div class="panel-heading">{{trans('others.new_mrf_create_label')}}</div>
 				<div class="panel-body aaa">
@@ -109,7 +105,7 @@
 									<!-- <th width="">PO/Cat No.</th> -->
 									<th width="15%">Size</th>
 									<th width="">GMTS Color</th>
-									<th width="">Quantity Left</th>
+									<th width="">Quantity</th>
 									<th width="">MRF QTY</th>
 								</tr>
 							</thead>

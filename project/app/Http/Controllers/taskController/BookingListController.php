@@ -228,7 +228,7 @@ class BookingListController extends Controller
     }
 
     public function getBookingListbookSearch(Request $request){
-
+        // return "AAAA";
         $bookingList = DB::table('mxp_bookingbuyer_details');
         $checkValidation = false;
 
@@ -270,6 +270,16 @@ class BookingListController extends Controller
             if(isset($bookings) && !empty($bookings)){
                 foreach ($bookings as &$booking) {
                     $booking->itemLists = $this->getBookingItemLists($booking->booking_order_id);
+                    foreach ($booking->itemLists as &$itemListssvalue) {
+
+                        $itemListssvalue->pi = MxpPi::select('mxp_pi.*',DB::Raw('GROUP_CONCAT(p_id) as p_ids'))->where('job_no',$itemListssvalue->id)->groupBy('job_no')->get();   
+
+                        $itemListssvalue->challan = MxpMultipleChallan::select('mxp_multiplechallan.*',DB::Raw('GROUP_CONCAT(challan_id) as challan_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+
+                        $itemListssvalue->ipo = MxpIpo::select('mxp_ipo.*',DB::Raw('GROUP_CONCAT(ipo_id) as ipo_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+
+                        $itemListssvalue->mrf = MxpMrf::select('mxp_mrf_table.*',DB::Raw('GROUP_CONCAT(mrf_id) as mrf_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+                    }
                 }
             }
             // print '<pre>';
@@ -340,12 +350,14 @@ class BookingListController extends Controller
 
     public function detailsViewForm(Request $request)
     {
+
         $bookingDetails = MxpBookingBuyerDetails::with('bookings', 'ipo', 'mrf')
                             ->leftjoin('mxp_users as mu','mu.user_id','accepted_user_id')
                             ->select('mxp_bookingbuyer_details.*','mu.first_name','mu.last_name')
                             ->where('booking_order_id', $request->booking_id)
                             ->first();
 
+        $bookingDetails->party_id_ = DB::table('mxp_party')->select('id as party_id_')->where('name',$bookingDetails->Company_name)->first();
         return view('maxim.booking_list.booking_View_Details',
                     [
                         'booking_id' => $request->booking_id, 

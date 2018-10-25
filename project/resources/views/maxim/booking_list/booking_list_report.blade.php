@@ -106,7 +106,7 @@
                 <div class="table-responsive" style="max-width: 100%;
 		max-height: 500px;
 		overflow: auto;">
-                    <table class="table table-bordered" style="min-width: 600px;" >
+                    <table class="table table-bordered vi_table" style="min-width: 600px;" >
                         <thead>
                         <tr>
                             <th>Job No.</th>
@@ -234,7 +234,7 @@
                                     <td><input name="item_description[]" value="{{$valuelist->item_description}}" hidden>{{$valuelist->item_description}}</td>
                                     <td><input name="item_quantity[]" value="{{$valuelist->item_quantity}}" hidden>{{$valuelist->item_quantity}}</td>
                                     <td><input name="item_price[]" value="{{$valuelist->item_price}}" hidden>${{$valuelist->item_price}}</td>
-                                    <td><input name="value[]" value="{{ $valuelist->item_quantity*$valuelist->item_price }}" hidden>${{ $valuelist->item_quantity*$valuelist->item_price }}</td>
+                                    <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$valuelist->item_price }}" hidden>${{ $valuelist->item_quantity*$valuelist->item_price }}</td>
                                     <?php
                                     $fullTotalAmount += $valuelist->item_quantity*$valuelist->item_price;
                                     $TotalAmount += $valuelist->item_quantity*$valuelist->item_price;

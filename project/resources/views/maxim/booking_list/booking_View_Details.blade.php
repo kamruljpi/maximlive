@@ -135,11 +135,12 @@
                                 <form method="POST" action="{{route('booking_details_update_view')}}" target="_blank">
                                     {{csrf_field()}}
                                     <input type="hidden" name="job_id" value="{{$bookedItem->id}}">
+                                    <input type="hidden" name="party_id" value="{{$bookingDetails->party_id_->party_id_}}">
                                     <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>
                                 </form>
                                 </div>
                                 <div style="float: right;">
-                                <button class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</button>
+                                <a href="{{Route('booking_job_id_delete_action')}}/{{$bookedItem->id}}" class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</a>
                                 </div>
                             </td>                    
                         </tr>

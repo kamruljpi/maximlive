@@ -319,7 +319,7 @@
 							<!-- Add Vendor Company Price-->
 							<div class="modal fade" id="addVendorComPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 								<div class="modal-dialog" role="document">
-									<div class="modal-content">
+									<div class="modal-content" style="width: 800px">
 										<div class="modal-body">
 											<div class="panel panel-default">
 												<div class="panel-heading">Vendor Company Price

@@ -132,7 +132,7 @@
                             <td>{{$bookedItem->item_quantity}}</td>                         
                             <td>
                                 <div style="float: left;width: 46%;">
-                                <form method="POST" action="{{route('booking_details_update_view')}}" target="_blank">
+                                <form method="POST" action="{{route('booking_details_update_view')}}" >
                                     {{csrf_field()}}
                                     <input type="hidden" name="job_id" value="{{$bookedItem->id}}">
                                     <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>

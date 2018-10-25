@@ -13,8 +13,8 @@
 ?>
 <div class="row">
     <div class="col-sm-2">
-        <div class="form-group ">
-            <a href="{{ URL::previous() }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
+        <div class="form-group "> {{--URL::previous()--}}
+            <a href="{{ Route('booking_list_view') }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
             <i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
@@ -105,7 +105,7 @@
                         <th>Sku</th>
                         <th>Order Qty</th>
                         @if($roleCheck != 'p')
-                        <th width="20%">Action</th>
+                        <th width="25%">Action</th>
                         @endif
                         @if($roleCheck == 'p')
                         <th>IPO QTY</th>

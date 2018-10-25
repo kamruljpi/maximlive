@@ -43,7 +43,7 @@ class BookingController extends Controller
 
     public function getVendorPrice(Request $request){
         $price  = VendorPrice::where('product_id',$request->productId)
-            ->where('party_table_id', $request->company_id)
+            ->orWhere('party_table_id', $request->company_id)
             ->orderBy('price_id', 'DESC')
             // ->get();
             ->first();

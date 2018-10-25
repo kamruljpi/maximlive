@@ -77,7 +77,7 @@ function EmptyValueView(pagination, table, jspatioantion, colspanVal){
     $(table).empty();
     $(jspatioantion).css('display','none');
     $(table).append('<tr><td colspan=" '+ 6 + colspanVal+'" style="text-align: center">Empty Value</center></td></tr>');
-    console.log(colspanVal);
+    // console.log(colspanVal);
 }
 
 $('#booking_reset_btn').on('click',function () {
@@ -227,7 +227,7 @@ function addbookingRow(results, start)
         return [value];
     });
 
-    console.log(rows);
+    // console.log(rows);
 
     var fullTotalAmount = 0;
     var book_html = '';
@@ -240,7 +240,7 @@ function addbookingRow(results, start)
         var itemListse = itemLists.length;
         for (var ij = itemListsi; ij < itemListse; ij++)
         {
-            console.log(itemLists[ij].mrf.length);
+            console.log(itemLists[ij]);
 
             var idstrcount = (8 - itemLists[ij].job_number.toString().length);
             var jobnumber = zeroc.repeat(idstrcount)+''+itemLists[ij].job_number;
@@ -253,6 +253,7 @@ function addbookingRow(results, start)
                 book_html += '<td>'+rows[i].Company_name+'</td>';
                 book_html += '<td>'+rows[i].attention_invoice+'</td>';
                 book_html += '<td>'+rows[i].booking_order_id+'</td>';
+                book_html += '<td>'+itemLists[ij].poCatNo+'</td>';
                 book_html += '<td>'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
                 book_html += '<td>'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
                 book_html += '<td>'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
@@ -267,6 +268,7 @@ function addbookingRow(results, start)
                     book_html += '<td>'+rows[i].Company_name+'</td>';
                     book_html += '<td>'+rows[i].attention_invoice+'</td>';
                     book_html += '<td>'+rows[i].booking_order_id+'</td>';
+                    book_html += '<td>'+itemLists[ij].poCatNo+'</td>';
                     book_html += '<td>'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
                     book_html += '<td>'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
                     book_html += '<td>'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
@@ -288,6 +290,7 @@ function addbookingRow(results, start)
                     book_html += '<td>'+rows[i].Company_name+'</td>';
                     book_html += '<td>'+rows[i].attention_invoice+'</td>';
                     book_html += '<td>'+rows[i].booking_order_id+'</td>';
+                    book_html += '<td>'+itemLists[ij].poCatNo+'</td>';
                     book_html += '<td>'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
                     book_html += '<td>'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
                     book_html += '<td>'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
@@ -307,27 +310,27 @@ function addbookingRow(results, start)
             fullTotalAmount += itemLists[ij].item_quantity*itemLists[ij].item_price;
             TotalAmount += itemLists[ij].item_quantity*itemLists[ij].item_price;
             book_html += '</tr>';
-            if(itemListse == 1){
-                book_html += '<tr>';
-                book_html += '<td colspan="15"></td>';
-                book_html += '<td><strong>Total : </strong></td>';
+            // if(itemListse == 1){
+            //     book_html += '<tr>';
+            //     book_html += '<td colspan="15"></td>';
+            //     book_html += '<td><strong>Total : </strong></td>';
 
-                book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
-                book_html += '</tr>';
-            }else if(itemListse > 1){
-                if(ij == itemListse){
-                    book_html += '<tr>';
-                    book_html += '<td colspan="15"></td>';
-                    book_html += '<td><strong>Total :</strong></td>';
-                    book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
-                    book_html += '</tr>';
-                }
-            }
+            //     book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
+            //     book_html += '</tr>';
+            // }else if(itemListse > 1){
+            //     if(ij == itemListse){
+            //         book_html += '<tr>';
+            //         book_html += '<td colspan="15"></td>';
+            //         book_html += '<td><strong>Total :</strong></td>';
+            //         book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
+            //         book_html += '</tr>';
+            //     }
+            // }
         }
         sl++;
     }
     book_html += '<tr>';
-    book_html += '<td colspan="16"></td>';
+    book_html += '<td colspan="17"></td>';
     book_html += '<td><strong>All Total :</strong></td>';
     book_html += '<td><strong>$'+Number((fullTotalAmount).toFixed(2))+'</strong></td>';
     book_html += '</tr>';

@@ -43,9 +43,8 @@ class BookingController extends Controller
 
     public function getVendorPrice(Request $request){
         $price  = VendorPrice::where('product_id',$request->productId)
-            ->orWhere('party_table_id', $request->company_id)
+            ->Where('party_table_id', $request->company_id)
             ->orderBy('price_id', 'DESC')
-            // ->get();
             ->first();
 
         if (count($price) > 0)
@@ -309,8 +308,8 @@ class BookingController extends Controller
   public function updateBookingView(Request $request){
     $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
     $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED],['id',$request->job_id]])->first();
-
-    return view('maxim.booking_list.booking_update',compact('description','mxpBooking'));
+    $party_id = $request->party_id;
+    return view('maxim.booking_list.booking_update',compact('description','mxpBooking','party_id'));
   }
 
   public function updateBooking(Request $request){
@@ -423,6 +422,28 @@ class BookingController extends Controller
         Session::flash('message', $msg);
         Session::flash('error-m', $error);
       
+      return Redirect()->back();
+    }
+
+    public function bookingJobIdDelete(Request $request){
+      $idstrcount = (8 - strlen($request->id));
+      $job_id_id = str_repeat('0',$idstrcount).$request->id;
+
+      MxpBooking::where('id', $request->id)->update([
+        'is_deleted' => BookingFulgs::IS_DELETED,
+        'deleted_user_id' => Auth::User()->user_id,
+        'deleted_date_at' =>  Carbon\Carbon::now(),
+        'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
+      ]);
+
+      MxpBookingChallan::where('job_id', $request->id)->update([
+        'is_deleted' => BookingFulgs::IS_DELETED,
+        'deleted_user_id' => Auth::User()->user_id,
+        'deleted_date_at' =>  Carbon\Carbon::now(),
+        'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
+      ]);
+
+      Session::flash('message', $job_id_id." Job id Successfully Deleted.");
       return Redirect()->back();
     }
 }

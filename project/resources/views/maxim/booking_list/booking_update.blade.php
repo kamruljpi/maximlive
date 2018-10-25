@@ -33,7 +33,9 @@
         }
     </style>
 
-
+<input type="hidden" name="companyIdForBookingOrder" value="{{$party_id}}">
+<input type="hidden" name="check_item_size" value="{{$mxpBooking->item_size}}">
+<input type="hidden" name="check_gmts_color" value="{{$mxpBooking->gmts_color}}">
 
     <div class="col-md-12">
         @if ($errors->any())

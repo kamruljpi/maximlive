@@ -196,14 +196,13 @@ $(document).ready(function(){
                     text : "Select Size"
                     }));
 
+                    var check_item_size = $("input[name=check_item_size]").val();
                     var sizes = myObj[i].size.split(',');
                         sizes = $.unique(sizes);
                     for(j in sizes){
-                      $('.'+item_parent_class+' .itemSize').append($('<option>', {
-                        value: sizes[j],
-                        text : sizes[j]
-                    }));
-                  }
+                      $('.'+item_parent_class+' .itemSize').append($('<option value="'+sizes[j]+'" '+((sizes[j] === check_item_size)?' selected':'')+'>'+sizes[j]+'</option>'));
+                    }
+
                   }             
                 }
 
@@ -220,13 +219,11 @@ $(document).ready(function(){
                     text : "Select colors"
                     }));
 
+                    var check_gmts_color = $("input[name=check_gmts_color]").val();
                     var colors = myObj[s].color.split(',');
                     var colors = $.unique(colors);
                     for(h in colors){
-                      $('.'+item_parent_class+' .itemGmtsColor').append($('<option>', {
-                        value: colors[h],
-                        text : colors[h]
-                    }));
+                      $('.'+item_parent_class+' .itemGmtsColor').append($('<option value="'+colors[h]+'" '+((colors[h] === check_gmts_color)?' selected':'')+'>'+colors[h]+'</option>'));
                     }
 
                     $('.'+item_parent_class+' .itemGmtsColor').removeAttr("readonly","false");
@@ -241,7 +238,7 @@ $(document).ready(function(){
                   var company_id = $("input[name=companyIdForBookingOrder]").val();
                   var priceDetails = ajaxFunc("/get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
 
-                  console.log(priceDetails.responseJSON);
+                  // console.log(priceDetails.responseJSON);
                   if(priceDetails.responseJSON.vendor_com_price != null){
                       $('.'+item_parent_class+' .item_price').eq(increI).val(priceDetails.responseJSON.vendor_com_price);
                       $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
@@ -383,7 +380,7 @@ $(document).ready(function(){
 });
 
 function isNotItemUserAccess(itemCode){
-  console.log(itemCode);
+  // console.log(itemCode);
   $.ajax({
       type: "GET",
       url: baseURL+"/get/item/check/user/access",

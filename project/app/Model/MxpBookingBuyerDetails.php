@@ -10,6 +10,7 @@ use App\Model\MxpMrf;
 use App\Model\MxpBooking;
 use App\Model\MxpMultipleChallan;
 use App\Model\MxpBookingChallan;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 
 class MxpBookingBuyerDetails extends Model
 {
@@ -35,26 +36,26 @@ class MxpBookingBuyerDetails extends Model
     			'fax_delivery'];
 
     function bookings(){
-        return $this->hasMany(MxpBooking::class, 'booking_order_id','booking_order_id');
+        return $this->hasMany(MxpBooking::class, 'booking_order_id','booking_order_id')->where('is_deleted',BookingFulgs::IS_NOT_DELETED);
     }
 
     function bookings_challan_table(){
-        return $this->hasMany(MxpBookingChallan::class, 'booking_order_id','booking_order_id');
+        return $this->hasMany(MxpBookingChallan::class, 'booking_order_id','booking_order_id')->where('is_deleted',BookingFulgs::IS_NOT_DELETED);
     }
 
     function pi(){
-        return $this->hasMany(MxpPi::class, 'booking_order_id','booking_order_id');
+        return $this->hasMany(MxpPi::class, 'booking_order_id','booking_order_id')->where('is_deleted',BookingFulgs::IS_NOT_DELETED);;
     }
 
     function ipo(){
-        return $this->hasMany(MxpIpo::class, 'booking_order_id','booking_order_id');
+        return $this->hasMany(MxpIpo::class, 'booking_order_id','booking_order_id')->where('is_deleted',BookingFulgs::IS_NOT_DELETED);;
     }
 
     function mrf(){
-        return $this->hasMany(MxpMrf::class, 'booking_order_id','booking_order_id');
+        return $this->hasMany(MxpMrf::class, 'booking_order_id','booking_order_id')->where('is_deleted',BookingFulgs::IS_NOT_DELETED);;
     }
 
     function challan(){
-        return $this->hasMany(MxpMultipleChallan::class, 'checking_id','booking_order_id');
+        return $this->hasMany(MxpMultipleChallan::class, 'checking_id','booking_order_id')->where('is_deleted',BookingFulgs::IS_NOT_DELETED);;
     }
 }

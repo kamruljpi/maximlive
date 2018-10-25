@@ -345,24 +345,44 @@
 														</div>
 													@endif
 
-													@foreach($vendorCompanyList as $vCom)
-														<input type="hidden" name="party_table_id[]" value="{{ $vCom->id  }}" >
+													{{--@foreach($vendorCompanyList as $vCom)--}}
+														{{--<input type="hidden" name="party_table_id[]" value="{{ $vCom->id  }}" >--}}
 
-														<div class="col-md-4">
+														{{--<div class="col-md-4">--}}
 															{{--<label class="control-label">Size Name</label>--}}
-															<input type="text" class="form-control" value="{{ $vCom->name_buyer  }}" disabled>
+															{{--<input type="text" class="form-control" value="{{ $vCom->name_buyer  }}" disabled>--}}
+														{{--</div>--}}
+
+														{{--<div class="col-md-5">--}}
+															{{--<label class="control-label col-md-12">Size Name</label>--}}
+															{{--<input type="text" class="form-control" value="{{ $vCom->name  }}" disabled>--}}
+														{{--</div>--}}
+
+														{{--<div class="col-md-3">--}}
+															{{--<label class="control-label">Size Name</label>--}}
+															{{--<input type="text" class="form-control v_com_price" name="v_com_price[]" value="" placeholder="Enter Price">--}}
+														{{--</div>--}}
+													{{--@endforeach--}}
+													<div class="empty">
+														<div class="party_table_id"></div>
+														<div class="col-md-4">
+														{{--<label class="control-label">Size Name</label>--}}
+														<!-- <input type="text" class="form-control" value="{{ $vCom->name_buyer  }}" disabled> -->
+															<div class="buyer_name"></div>
 														</div>
 
 														<div class="col-md-5">
-															{{--<label class="control-label col-md-12">Size Name</label>--}}
-															<input type="text" class="form-control" value="{{ $vCom->name  }}" disabled>
+														{{--<label class="control-label col-md-12">Size Name</label>--}}
+														<!-- <input type="text" class="form-control" value="{{ $vCom->name  }}" disabled> -->
+															<div class="name"></div>
 														</div>
 
 														<div class="col-md-3">
-															{{--<label class="control-label">Size Name</label>--}}
-															<input type="text" class="form-control v_com_price" name="v_com_price[]" value="" placeholder="Enter Price">
+														{{--<label class="control-label">Size Name</label>--}}
+														<!-- <input type="text" class="form-control v_com_price" name="v_com_price[]" value="" placeholder="Enter Price"> -->
+															<div class="v_com_price"></div>
 														</div>
-													@endforeach
+													</div>
 
 													{{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
 
@@ -447,10 +467,15 @@
             </div>
         </div>
     </div>
-
-    <script type="text/javascript">
+	<script type="text/javascript">
         $(".selections").select2();
         $(".select-color-list").select2();
         $(".select-size-list").select2();
-    </script>
+	</script>
+
+@endsection
+@section('LoadScript')
+	<script src="{{ asset('assets/scripts/item/buyer.js') }}"></script>
+
+
 @endsection

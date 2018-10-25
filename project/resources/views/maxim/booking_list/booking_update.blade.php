@@ -54,7 +54,11 @@
         <?php
             $jobId = (8 - strlen($mxpBooking->id));
             ?>
-        <h3>Update booking: Job ID {{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</h3>
+
+        <div class="row">
+            <div class="col-md-12"><h3>Update booking: Job ID {{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</h3></div>
+            <div class="col-md-12"><a href="{{ Route('booking_list_details_view', $mxpBooking->booking_order_id) }}" class="btn btn-primary" style="width: 15%; margin: 10px 0px 5px 0px;">Back</a> </div>
+        </div>
         <div style="padding-top: 20px;"></div>
 
         <form action="{{route('booking_details_update_action')}}" method="POST">

@@ -45,7 +45,6 @@ class BookingController extends Controller
         $price  = VendorPrice::where('product_id',$request->productId)
             ->Where('party_table_id', $request->company_id)
             ->orderBy('price_id', 'DESC')
-            // ->get();
             ->first();
 
         if (count($price) > 0)

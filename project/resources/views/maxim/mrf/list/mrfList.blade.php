@@ -65,6 +65,7 @@
 					<th>Serial no</th>
 					<th>booking No.</th>
 					<th>MRF No.</th>
+					<th>Order Qty</th>
 					<th>MRF Create Date</th>
 					<th>MRF Shipment Date</th>
 					<th>Action</th>
@@ -77,13 +78,14 @@
 						<td>{{$j++}}</td>
 						<td>{{$value->booking_order_id}}</td>
 						<td>{{$value->mrf_id}}</td>
+						<td>{{$value->mrf_quantity}}</td>
 						<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
 						<td>{{$value->shipmentDate}}</td>
 						<td>
 							<form action="{{Route('mrf_list_action_task') }}" role="form" target="_blank">
 								<input type="hidden" name="mid" value="{{$value->mrf_id}}">
 								<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
-								<button class="btn btn-success" target="_blank">View</button>
+								<button class="btn btn-success" target="_blank">Report</button>
 							</form>
 						</td>
 					</tr>

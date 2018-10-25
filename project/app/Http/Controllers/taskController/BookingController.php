@@ -7,6 +7,7 @@ use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RoleManagement;
 use App\Model\BookingFile;
+use App\Model\MxpPi;
 use App\MxpProduct;
 use Illuminate\Http\Request;
 use App\Model\MxpBookingBuyerDetails;
@@ -42,7 +43,7 @@ class BookingController extends Controller
 
     public function getVendorPrice(Request $request){
         $price  = VendorPrice::where('product_id',$request->productId)
-            ->where('party_table_id', $request->company_id)
+            ->orWhere('party_table_id', $request->company_id)
             ->orderBy('price_id', 'DESC')
             // ->get();
             ->first();
@@ -79,13 +80,25 @@ class BookingController extends Controller
       $roleManage = new RoleManagement();
 
       $validMessages = [
-            'item_code.required' => 'Brand Name field is required.'
+            'item_code.required' => 'Brand Name field is required.',
+            'poCatNo.required' => 'Po/Cat number field is required',
+            'item_size.required' => 'Item Size field is required',
+            'style.required' => 'Style field is required',
+            'sku.required' => 'Sku field is required',
+            'item_qty.required' => 'Item Quantity field is required',
+            'item_price.required' => 'Item Price field is required'
             ];
       $datas = $request->all();
 
       $validator = Validator::make($datas, 
             [
-          'item_code' => 'required'
+          'item_code' => 'required',
+          'poCatNo' => 'required',
+          'item_size' => 'required',
+          'style' => 'required',
+          'sku' => 'required',
+          'item_qty' => 'required',
+          'item_price' => 'required'
         ],
             $validMessages
         );
@@ -348,7 +361,7 @@ class BookingController extends Controller
 
     public function cancelBooking($id){
       
-      $booking = MxpBooking::where('id', $id)->get();
+      $booking = MxpBooking::where('booking_order_id', $id)->get();
 
       if(isset($booking) && !empty($booking)){
         foreach ($booking as $value) {
@@ -359,44 +372,56 @@ class BookingController extends Controller
           $value->save();
           $msg = "Booking ".$id." canceled"; 
         }
+
+          $challan = MxpBookingChallan::where('booking_order_id', $id)->get();
+
+          if(isset($challan) && !empty($challan)){
+              foreach ($challan as $value) {
+                  $value->is_deleted = BookingFulgs::IS_DELETED;
+                  $value->deleted_user_id = Auth::User()->user_id;
+                  $value->deleted_date_at = Carbon\Carbon::now();
+                  $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+                  $value->save();
+                  $msg = "Booking ".$id." canceled";
+              }
+
+          }else{
+              $error = "Something went wrong on Booking Challan Table please try again later";
+          }
+
+          $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
+
+          if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
+              foreach ($InserBuyerDetails as $value) {
+                  $value->is_deleted = BookingFulgs::IS_DELETED;
+                  $value->deleted_user_id = Auth::User()->user_id;
+                  $value->deleted_date_at = Carbon\Carbon::now();
+                  $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+                  $value->save();
+                  $msg = "Booking ".$id." canceled";
+              }
+
+          }else{
+              $error = "Something went wrong on Buyer Details table please try again later";
+          }
+
+          $pi_value = MxpPi::where('booking_order_id', $id)->get();
+
+          if(isset($pi_value) && !empty($pi_value)) {
+              foreach ($pi_value as $value) {
+                  $value->is_deleted = 1;
+                  $value->deleted_user_id = Auth::User()->user_id;
+                  $value->deleted_date_at = Carbon\Carbon::now();
+                  $value->save();
+              }
+          }
         
       }else{
-        $error = "Something went wrong please try again later";
-      }
-      $challan = MxpBookingChallan::where('job_id', $id)->get();
-      // $this->print_me($challan);
-
-      if(isset($challan) && !empty($challan)){
-        foreach ($challan as $value) {
-          $value->is_deleted = BookingFulgs::IS_DELETED;
-          $value->deleted_user_id = Auth::User()->user_id;
-          $value->deleted_date_at = Carbon\Carbon::now();
-          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-          $value->save();
-          $msg = "Booking ".$id." canceled"; 
-        }
-          
-      }else{
-        $error = "Something went wrong please try again later";
-      }
-      
-      $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
-      if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
-        foreach ($InserBuyerDetails as $value) {
-          $value->is_deleted = BookingFulgs::IS_DELETED;
-          $value->deleted_user_id = Auth::User()->user_id;
-          $value->deleted_date_at = Carbon\Carbon::now();
-          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-          $value->save();
-          $msg = "Booking ".$id." canceled";  
-        }
-        
-      }else{
-        $error = "Something went wrong please try again later";
+        $error = "Something went wrong please on booking table try again later ";
       }
 
-      Session::flash('message', $msg);
-      Session::flash('error-m', $error);
+        Session::flash('message', $msg);
+        Session::flash('error-m', $error);
       
       return Redirect()->back();
     }

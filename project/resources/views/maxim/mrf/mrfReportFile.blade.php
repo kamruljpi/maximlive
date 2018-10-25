@@ -114,10 +114,10 @@
 	    @foreach($mrfDeatils as $key => $details)
 	    	<?php 
 	    		$TotalBookingQty += $details->mrf_quantity; 
-	    		$jobId = (8 - strlen($details->id));
+	    		$jobId = (8 - strlen($details->job_id));
 	    	?>
 	    	<tr>
-		    	<td>{{ str_repeat('0',$jobId) }}{{ $details->id }}</td>
+		    	<td>{{ str_repeat('0',$jobId) }}{{ $details->job_id }}</td>
 		    	<td width="20%">{{$details->erp_code}}</td>
             	<td width="10%">{{$details->item_code}}</td>
 		    	<td width="5%">{{$details->season_code}}</td>

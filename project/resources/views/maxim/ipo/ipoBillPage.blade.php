@@ -108,8 +108,8 @@
 	<div class="report-header">
 		<h3 align="center" style=" padding:8px; font-weight: bold;">Production Order</h3>
 	</div>
-
 </div>
+
 <div class="row body-top">
 	<div class="col-md-8 col-sm-8 col-xs-7 body-list">
 		<ul>
@@ -147,6 +147,7 @@
 	        	<th width="15%">Size</th>
 	        	<!-- <th>Sku</th> -->
 	        	<th>Order Qty</th>
+				<th>Increase percentage</th>
 				<th>Increase Qty</th>
 	        	<th>Unit</th>
 	        	<th>Remarks</th>
@@ -173,21 +174,23 @@
 			    	<td width="17%">{{$details->gmts_color}}</td>
 			    	<td width="17%">{{$details->item_size}}</td>
 			        <!-- <td>{{$details->sku}}</td> -->
-			        <td>{{$details->item_quantity}}{{ !empty($details->initial_increase)? '('.$details->initial_increase.'%)' : '' }}</td>
+			        <td>{{$details->item_quantity}}</td>
+					<td>{{ !empty($details->initial_increase)? $details->initial_increase.'%' : '' }}</td>
 					<td><?php
 							$p = ( ($details->item_quantity * $details->initial_increase)/100) + $details->item_quantity;
-							echo $p;
+							echo floor($p);
 							$totalIncrease += $p;
 						?>
 					</td>
-			        <td>PSC</td>
+			        <td>PCS</td>
 			        <td></td>
 	        	</tr>
         	@endforeach
         	<tr style="height: 30px;">
         		<td colspan="6"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
         		<td> {{$TotalBookingQty}}</td>
-        		<td>{{ $totalIncrease }}</td>
+				<td></td>
+        		<td><?= floor($totalIncrease); ?></td>
         		<td></td>
         		<td></td>
         	</tr>

@@ -34,6 +34,10 @@ class MrfController extends Controller
 
       $datas = $request->all();
       // $this->print_me($datas);
+      $errors = $this->checkQuantity($datas);
+      if(!empty($errors)){
+        return redirect()->back()->withInput($request->input())->withErrors($errors);
+      }
       $booking_order_id = $request->booking_order_id;
       $allId = $datas['allId'];
       $product_qty = $datas['product_qty'];
@@ -282,5 +286,29 @@ class MrfController extends Controller
                       ->where('mrf_id',$request->mrf_id)
                       ->get();
       return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));
+    }
+
+    protected function checkQuantity($data){
+      $errors = 'You try to invalid and grater than quantity.';
+      $datas['ipo_id'] = $data['allId'];
+      $datas['product_qty'] = $data['product_qty'];
+      $oneArray = [];
+      foreach ($datas['ipo_id'] as $key => $value) {
+        $oneArray[$key]['ipo_id'] = $value;
+        $oneArray[$key]['product_qty'] = $datas['product_qty'][$key];
+      }
+      $dbValue = [];
+      foreach ($oneArray as $key => $oneArrayValue) {
+        $idstrcount = (8 - strlen($oneArrayValue['ipo_id']));
+        $job_id_id = str_repeat('0',$idstrcount).$oneArrayValue['ipo_id'];
+        $dbValue = MxpBookingChallan::where('job_id',$oneArrayValue['ipo_id'])->select('left_mrf_ipo_quantity')->first();
+
+        if($oneArrayValue['product_qty'] > $dbValue->left_mrf_ipo_quantity)
+          $errors .= ' Job id '.$job_id_id.' available quantity '.$dbValue->left_mrf_ipo_quantity.' and entered quantity '.$oneArrayValue['product_qty'].'.';
+      }
+      if(isset($errors) && $errors === 'You try to invalid and grater than quantity.'){
+        $errors = '';
+      }
+      return $errors;
     }
 }

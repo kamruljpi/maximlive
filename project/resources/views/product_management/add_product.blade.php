@@ -389,7 +389,7 @@
 														<div class="form-group">
 															<div class="col-md-2 col-md-offset-10">
 																<button class="btn btn-primary vendor-price-btn" style="margin-right: 15px;">
-																	{{trans('others.save_button')}}
+																	Next
 																</button>
 															</div>
 														</div>

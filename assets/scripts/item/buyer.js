@@ -4,7 +4,7 @@ var item_buyer_select = (function(){
 		init: function(){
 			$('#id_buyer').on('change',function(){
 				var $buyer_id = $(this).val();
-        size($buyer_id);
+        // size($buyer_id);
 				vendor($buyer_id);
 			});
 		}

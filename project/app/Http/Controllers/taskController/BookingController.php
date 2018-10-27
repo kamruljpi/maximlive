@@ -286,7 +286,7 @@ class BookingController extends Controller
               ['mp.product_code',$item_size],
               ['mp.status',ActionMessage::ACTIVE]
             ])
-          ->whereIn('id_buyer',$buyerList)
+          ->whereIn('mp.id_buyer',$buyerList)
           ->get();
           
       }else if(Auth::user()->type == 'super_admin'){

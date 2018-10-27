@@ -118,6 +118,37 @@ class ProductController extends Controller
         }
 
         $vendorCompanyListPrice = VendorPrice::with('party')->where('product_id', $request->product_id)->get();
+
+        /* find missing vendor in vendor list*/
+        $array1 = [];
+        $array2 = [];
+
+        $party_id_product_wise = MaxParty::select('id')->where('id_buyer',$product[0]->id_buyer)->get();
+
+        if(isset($party_id_product_wise) && !empty($party_id_product_wise))
+        {
+            foreach ($party_id_product_wise as $value_product_wise) {
+                $array1[] = $value_product_wise->id;
+            }    
+        }                  
+        if(isset($vendorCompanyListPrice) && !empty($vendorCompanyListPrice)){
+            foreach ($vendorCompanyListPrice as $value) {
+                $array2[] = $value->party->id;
+            }    
+        }
+        
+        $missing_vendor = array_diff($array1,$array2);
+
+        if(isset($missing_vendor) && !empty($missing_vendor)){
+            foreach ($missing_vendor as $key => $missing_vendor_value) {
+                # code...
+            }
+            $vendorCompanyListPrice->missingParty = MaxParty::where('id',$missing_vendor_value)->get();
+        }
+
+        /* end*/
+
+        // $this->print_me($vendorCompanyListPrice);
         $supplierPrices = MxpSupplierPrice::with('supplier')->where('product_id', $request->product_id)->get();
 
         $vendorCompanyList = MaxParty::select('mxp_party.id', 'mxp_party.name', 'mxp_party.name_buyer')
@@ -147,6 +178,8 @@ class ProductController extends Controller
             $productValues->cost_price = ItemCostPrice::where('id_product',$productValues->product_id)->first();
         }
         $buyers = DB::table('mxp_buyer')->select('id_mxp_buyer','buyer_name')->orderBy('buyer_name', ASC)->get(); 
+
+        // $this->print_me($vendorCompanyListPrice);
        return view('product_management.update_product', compact('product', 'vendorCompanyListPrice', 'supplierPrices', 'supplierList', 'vendorCompanyList',  'colors', 'sizes', 'colorsJs', 'sizesJs', 'buyers'))->with('brands',$brands)->with('itemList',$itemList);
     }
 
@@ -350,7 +383,7 @@ class ProductController extends Controller
             ]);
         }        
 
-		StatusMessage::create('update_product_create', $request->p_name .' update Successfully');
+		StatusMessage::create('update_product_create', 'Item No ( '.$lastProductID .' ) Successfully update');
 
 		return \Redirect()->Route('product_list_view');
     }

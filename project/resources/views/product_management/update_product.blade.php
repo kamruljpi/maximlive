@@ -4,8 +4,9 @@ trans('others.update_product_label'))
 @section('section')
 <?php 
     // print_r("<pre>");
-    // print_r($product[0]->cost_price);
+    // print_r($vendorCompanyListPrice);
     // print_r("</pre>");
+    // die();
 ?>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
 
@@ -352,7 +353,28 @@ trans('others.update_product_label'))
 															{{--<label class="control-label">Size Name</label>--}}
 															<input type="text" class="form-control v_com_price" name="v_com_price[]" value="{{$vCom->vendor_com_price}}" placeholder="Enter Price">
 														</div>
-													@endforeach
+
+                                                    @endforeach
+
+                                                    @if(isset($vendorCompanyListPrice->missingParty) && !empty($vendorCompanyListPrice->missingParty))
+
+                                                        @foreach($vendorCompanyListPrice->missingParty as $missing_party)
+                                                        <input type="hidden" name="price_id[]" value="" >
+                                                        <input type="hidden" name="party_table_id[]" value="{{ $missing_party->id  }}" >
+
+                                                        <div class="col-md-4">
+                                                            <input type="text" class="form-control" value="{{ $missing_party->name_buyer  }}" disabled>
+                                                        </div>
+
+                                                        <div class="col-md-5">
+                                                            <input type="text" class="form-control" value="{{ $missing_party->name  }}" disabled>
+                                                        </div>
+
+                                                        <div class="col-md-3">
+                                                            <input type="text" class="form-control v_com_price" name="v_com_price[]" value="" placeholder="Enter Price">
+                                                        </div>
+                                                        @endforeach
+                                                    @endif
 
                                                     @foreach($vendorCompanyList as $vCom)
                                                         <input type="hidden" name="party_table_id[]" value="{{ $vCom->id  }}" >
@@ -378,7 +400,7 @@ trans('others.update_product_label'))
 														<div class="form-group">
 															<div class="col-md-2 col-md-offset-10">
 																<button class="btn btn-primary vendor-price-btn" style="margin-right: 15px;">
-																	{{trans('others.save_button')}}
+																	Next
 																</button>
 															</div>
 														</div>
@@ -445,7 +467,7 @@ trans('others.update_product_label'))
                                                     <div class="form-group">
                                                         <div class="col-md-2 col-md-offset-10">
                                                             <button class="btn btn-primary supplier-price-btn" style="margin-right: 15px;">
-                                                                {{trans('others.save_button')}}
+                                                                Next
                                                             </button>
                                                         </div>
                                                     </div>
@@ -489,7 +511,7 @@ trans('others.update_product_label'))
                                                     <div class="form-group">
                                                         <div class="col-md-2 col-md-offset-10">
                                                             <button class="btn btn-primary addCostPrice " style="margin-right: 15px;">
-                                                                {{trans('others.save_button')}}
+                                                                Next
                                                             </button>
                                                         </div>
                                                     </div>

@@ -79,7 +79,7 @@
                         {{$color->color_name}}@if (!$loop->last),@endif
                     @endforeach
                 </td>
-                <td>
+                <td >
                   {{($product->status == 1)? trans("others.action_active_label"):trans("others.action_inactive_label")}}
                 </td>
                 <td >

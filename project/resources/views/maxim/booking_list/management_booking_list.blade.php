@@ -115,7 +115,7 @@
                             <th>Attention</th>
                             <th>Booking No.</th>
                             <th>PO/CAT No.</th>
-                            <th>PI No.</th>
+                            {{--<th>PI No.</th>--}}
                             <th>Challan No.</th>
                             <th>PO No.</th>
                             <th>MRF No.</th>
@@ -158,7 +158,7 @@
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
                                     <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
                                     <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
-                                    <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
+                                    {{--<td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>--}}
                                     <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
                                     <td><input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" hidden>{{$valuelist->ipo->ipo_ids}}</td>
                                     <td><input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" hidden>{{$valuelist->mrf->mrf_ids}}</td>
@@ -178,7 +178,7 @@
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
                                     <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
                                     <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
-                                    <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
+                                    {{--<td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>--}}
                                     <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
                                     <td><input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" hidden>{{$valuelist->ipo->ipo_ids}}</td>
                                     <td><input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" hidden>{{$valuelist->mrf->mrf_ids}}</td>
@@ -216,7 +216,7 @@
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
                                     <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
                                     <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
-                                    <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
+                                    {{--<td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>--}}
                                     <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
                                     <td><input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" hidden>{{$valuelist->ipo->ipo_ids}}</td>
                                     <td><input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" hidden>{{$valuelist->mrf->mrf_ids}}</td>

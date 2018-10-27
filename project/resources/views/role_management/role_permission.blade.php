@@ -73,7 +73,7 @@
                                         
                                         <div class="col-sm-4">
                                             <label>
-                                                <input disabled class="single_check_box" id="{{ $menu->menu_id }}" name="menu_list[]" type="checkbox" value="{{ $menu->menu_id }}" 
+                                                <input disabled class="single_check_box" id="{{ $menu->menu_id }}" name="menu_list[]" type="checkbox" value="{{ $menu->menu_id }}"
                                                 @foreach($roleMenuList as $checkmenu)
                                                         @if($checkmenu->menu_id == $menu->menu_id)
                                                         {{ 'checked' }}

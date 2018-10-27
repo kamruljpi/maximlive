@@ -377,4 +377,5 @@ class BookingListController extends Controller
                     ->get();
         return $buyerDetails;
     }
+
 }

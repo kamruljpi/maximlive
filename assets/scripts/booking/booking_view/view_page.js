@@ -33,7 +33,7 @@ var booking_views_js = (function(){
 		    	}
 		    });
 
-		    $('input[type="checkbox"]').on('click',function () {
+		    $('#select_check input[type="checkbox"]').on('click',function () {
 		        $(this).prop('checked', !$(this).is(':checked'));
 		    });
 		}

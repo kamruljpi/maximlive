@@ -772,7 +772,6 @@ function addBookingListRow(results, start){
 
     for (var i = start; i < end; i++)
     {
-        console.log(rows[i]);
         book_html += '<tr class="booking_list_table">';
         book_html += '<td>'+sl+'</td>';            
         book_html += '<td>'+rows[i].buyer_name+'</td>';        

@@ -44,30 +44,30 @@
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<div class="col-sm-12">
 				<div class="col-sm-3">
-					<label class="col-sm-12 label-control">Order date from</label>
+					<label class="col-sm-12 label-control">Order Date From</label>
 					<input type="date" name="from_oder_date_search" class="form-control" id="from_oder_date_search">
 				</div>
 				<div class="col-sm-3">
-					<label class="col-sm-12 label-control">Order date to</label>
+					<label class="col-sm-12 label-control">Order Date To</label>
 					<input type="date" name="to_oder_date_search" class="form-control" id="to_oder_date_search">
 				</div>
 				<div class="col-sm-3">
-					<label class="col-sm-12 label-control">Shipment date from</label>
+					<label class="col-sm-12 label-control">Shipment Date From</label>
 					<input type="date" name="from_shipment_date_search" class="form-control" id="from_shipment_date_search">
 				</div>
 				<div class="col-sm-3">
-					<label class="col-sm-12 label-control">Shipment date to</label>
+					<label class="col-sm-12 label-control">Shipment Date To</label>
 					<input type="date" name="to_shipment_date_search" class="form-control" id="to_shipment_date_search">
 				</div>
 			</div>
 			<div class="col-sm-12">
 				<div class="col-sm-3">
-					<label class="col-sm-12 label-control">Buyer name</label>
-					<input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer name search" id="buyer_name_search">
+					<label class="col-sm-12 label-control">Buyer Name</label>
+					<input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer Name" id="buyer_name_search">
 				</div>
 				<div class="col-sm-3">
-					<label class="col-sm-12 label-control">Vendor name</label>
-					<input type="text" name="company_name_search" class="form-control" placeholder="Company name search" id="company_name_search">
+					<label class="col-sm-12 label-control">Vendor Name</label>
+					<input type="text" name="company_name_search" class="form-control" placeholder="Vendor Name" id="company_name_search">
 				</div>
 				<!-- <div class="col-sm-3">
 					<label class="col-sm-12 label-control">Attention</label>

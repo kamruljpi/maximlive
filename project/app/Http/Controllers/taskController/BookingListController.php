@@ -51,6 +51,53 @@ class BookingListController extends Controller
         return view('maxim.booking_list.booking_list_page',compact('bookingList'));
     }
 
+    public function getbookingListAdvanceSearch_(Request $request){
+        $bookingList = DB::table('mxp_bookingbuyer_details');
+        $checkValidation = false;
+
+        if($request->buyer_name_search != '')
+        {
+            $checkValidation = true;
+            $bookingList->where('buyer_name','like','%'.$request->buyer_name_search.'%');
+        }
+        if($request->company_name_search != '')
+        {
+            $checkValidation = true;
+            $bookingList->where('Company_name','like','%'.$request->company_name_search.'%');
+        }
+        if($request->attention_search != '')
+        {
+            $checkValidation = true;
+            $bookingList->where('attention_invoice','like','%'.$request->attention_search.'%');
+        }
+        if($request->from_oder_date_search != '' && $request->to_oder_date_search != '')
+        {
+            $checkValidation = true;
+            if($request->from_oder_date_search == $request->to_oder_date_search)
+                $bookingList->whereDate('created_at', $request->from_oder_date_search);
+            else
+                $bookingList->whereDate('created_at','>=',$request->from_oder_date_search)->whereDate('created_at','<=',$request->to_oder_date_search);
+        }
+
+        if($checkValidation)
+        {
+            $bookings = $bookingList->groupBy('booking_order_id')->orderBy('id','DESC')->get();
+            if(isset($bookings) && !empty($bookings)){
+                foreach ($bookings as &$booking) {
+                    $booking->booking = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->user_id)->first();
+                    $booking->accepted = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->accepted_user_id)->first();
+                    $booking->mrf = MxpMrf::where('booking_order_id',$booking->booking_order_id)->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
+                    $booking->ipo = MxpIpo::where('booking_order_id',$booking->booking_order_id)->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
+                    $booking->po = MxpIpo::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
+                    $booking->bookingDetails = MxpBooking::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'))->groupBy('item_code')->first();
+                }
+            }
+            return $bookings;
+        }else{
+            return null;
+        }
+    }
+
     public function getBookingItemLists($booking_id = null){
 
         if($booking_id == null)
@@ -216,18 +263,25 @@ class BookingListController extends Controller
             else
                 $bookingList->whereDate('created_at','>=',$request->from_oder_date_search)->whereDate('created_at','<=',$request->to_oder_date_search);
         }
-//      if($request->from_shipment_date_search != '' && $request->to_shipment_date_search != '')
-//      {
-//          $checkValidation = true;
-//          if($request->from_shipment_date_search == $request->to_shipment_date_search)
-//              $bookingList->whereDate('created_at', $request->from_shipment_date_search);
-//          else
-//              $bookingList->whereBetween('created_at', [$request->from_shipment_date_search, $request->to_shipment_date_search]);
-//      }
 
         if($checkValidation)
         {
             $bookings = $bookingList->groupBy('booking_order_id')->orderBy('id','DESC')->get();
+            if(isset($bookings) && !empty($bookings)){
+                foreach ($bookings as &$booking) {
+                    $booking->itemLists = $this->getBookingItemLists($booking->booking_order_id);
+                    foreach ($booking->itemLists as &$itemListssvalue) {
+
+                        $itemListssvalue->pi = MxpPi::select('mxp_pi.*',DB::Raw('GROUP_CONCAT(p_id) as p_ids'))->where('job_no',$itemListssvalue->id)->groupBy('job_no')->get();   
+
+                        $itemListssvalue->challan = MxpMultipleChallan::select('mxp_multiplechallan.*',DB::Raw('GROUP_CONCAT(challan_id) as challan_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+
+                        $itemListssvalue->ipo = MxpIpo::select('mxp_ipo.*',DB::Raw('GROUP_CONCAT(ipo_id) as ipo_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+
+                        $itemListssvalue->mrf = MxpMrf::select('mxp_mrf_table.*',DB::Raw('GROUP_CONCAT(mrf_id) as mrf_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->get();
+                    }
+                }
+            }
             return $bookings;
         }
         else
@@ -262,14 +316,6 @@ class BookingListController extends Controller
             else
                 $bookingList->whereDate('created_at','>=',$request->from_oder_date_search)->whereDate('created_at','<=',$request->to_oder_date_search);
         }
-//      if($request->from_shipment_date_search != '' && $request->to_shipment_date_search != '')
-//      {
-//          $checkValidation = true;
-//          if($request->from_shipment_date_search == $request->to_shipment_date_search)
-//              $bookingList->whereDate('created_at', $request->from_shipment_date_search);
-//          else
-//              $bookingList->whereBetween('created_at', [$request->from_shipment_date_search, $request->to_shipment_date_search]);
-//      }
 
         if($checkValidation)
         {
@@ -289,10 +335,6 @@ class BookingListController extends Controller
                     }
                 }
             }
-            // print '<pre>';
-            // print_r($bookings);
-            // print '</pre>';
-            // die();
             return $bookings;
         }
         else

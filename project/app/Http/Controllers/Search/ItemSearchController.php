@@ -19,14 +19,10 @@ class ItemSearchController extends Controller{
 
             $products = MxpProduct::where('product_code', 'LIKE', '%' . $request->search . "%")->get();
 
-
             if (!empty($products[0]->product_code)) {
 
                 foreach ($products as $key => $product) {
-
-
                     $output .= '<tr>' .
-
                         '<td>' .$product->product_id. '</td>' .
                         '<td>' .$product->brand. '</td>' .
                         '<td>' .$product->product_code. '</td>' .

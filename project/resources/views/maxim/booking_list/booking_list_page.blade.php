@@ -5,10 +5,6 @@
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
-
-//     print_r("<pre>");
-//     print_r($bookingList);
-//     print_r("</pre>");
 ?>
     <style type="text/css">
         .b1{
@@ -56,47 +52,47 @@
     <button class="btn btn-warning" type="button" id="booking_reset_btn">Reset</button>
     <div id="booking_simple_search_form">
         <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
-            <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
-            <button class="btn btn-info" type="button" id="booking_simple_search">
+            <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking No." id="booking_id_search">
+            <button class="btn btn-info" type="button" id="booking_list_simple_search">
                 Search
             </button>
         </div>
 
-        <button class="btn btn-primary " type="button" id="booking_advanc_search">Advance Search</button>
+        <button class="btn btn-primary " type="button" id="booking_list_advance_search">Advance Search</button>
     </div>
     <div>
-        <form id="advance_search_form"  style="display: none" method="post">
+        <form id="booking_list_advance_search_form"  style="display: none" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="col-sm-12">
                 <div class="col-sm-3">
-                    <label class="col-sm-12 label-control">Order date from</label>
+                    <label class="col-sm-12 label-control">Order Date From</label>
                     <input type="date" name="from_oder_date_search" class="form-control" id="from_oder_date_search">
                 </div>
                 <div class="col-sm-3">
-                    <label class="col-sm-12 label-control">Order date to</label>
+                    <label class="col-sm-12 label-control">Order Date To</label>
                     <input type="date" name="to_oder_date_search" class="form-control" id="to_oder_date_search">
                 </div>
                 <div class="col-sm-3">
-                    <label class="col-sm-12 label-control">Shipment date from</label>
+                    <label class="col-sm-12 label-control">Shipment Date From</label>
                     <input type="date" name="from_shipment_date_search" class="form-control" id="from_shipment_date_search">
                 </div>
                 <div class="col-sm-3">
-                    <label class="col-sm-12 label-control">Shipment date to</label>
+                    <label class="col-sm-12 label-control">Shipment Date To</label>
                     <input type="date" name="to_shipment_date_search" class="form-control" id="to_shipment_date_search">
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="col-sm-3">
-                    <label class="col-sm-12 label-control">Buyer name</label>
-                    <input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer name search" id="buyer_name_search">
+                    <label class="col-sm-12 label-control">Buyer Name</label>
+                    <input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer Name" id="buyer_name_search">
                 </div>
                 <div class="col-sm-3">
-                    <label class="col-sm-12 label-control">Company name</label>
-                    <input type="text" name="company_name_search" class="form-control" placeholder="Company name search" id="company_name_search">
+                    <label class="col-sm-12 label-control">Vendor Name</label>
+                    <input type="text" name="company_name_search" class="form-control" placeholder="Vendor Name" id="company_name_search">
                 </div>
                 <div class="col-sm-3">
                     <label class="col-sm-12 label-control">Attention</label>
-                    <input type="text" name="attention_search" class="form-control" placeholder="Attention search" id="attention_search">
+                    <input type="text" name="attention_search" class="form-control" placeholder="Attention" id="attention_search">
                 </div>
                 <br>
                 <div class="col-sm-3">
@@ -211,4 +207,6 @@
             }
         });
     </script>
+<script type="text/javascript" src="{{asset('assets/scripts/booking/booking_list/simple_search.js')}}"></script>
+<script type="text/javascript" src="{{asset('assets/scripts/booking/booking_list/advance_search.js')}}"></script>
 @stop

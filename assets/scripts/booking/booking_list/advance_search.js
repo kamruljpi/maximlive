@@ -1,27 +1,35 @@
-var simple_search = (function(){
+var advance_search = (function(){
 	return {
 		init: function(){
-			$("#booking_list_simple_search").click(function ()
+			$('#booking_list_advance_search').on('click',function (ev)
 			{
-			    var booking_id = $('#booking_id_search').val();
+			    displaySetup("#booking_simple_search_form", "#booking_list_advance_search_form");
+			});
 
-			    if(booking_id == ''){
-			        alert("The search field cannot be empty");
-			        return;
-			    }
-			    else
-			    {
-			        var results = ajaxFunc("/booking_list_by_booking_id", "GET", "booking_id="+booking_id);
-			        if((results.responseJSON != '') && (results.responseJSON != null))
-			            addBookingListRow(results.responseJSON, 0);
-			        else {
-			            EmptyValueView('.pagination', '#booking_list_tbody', "#booking_list_pagination", 9);
-			        }
+			$('#booking_simple_search_btn').on('click',function (ev)
+			{
+			    displaySetup("#booking_list_advance_search_form", "#booking_simple_search_form");
+			});
+
+			$('#booking_list_advance_search_form').on('submit',function (ev)
+			{
+			    ev.preventDefault();
+			    var  data = $('#booking_list_advance_search_form').serialize();
+			    var results = ajaxFunc("/booking_list_advance_search_", "POST", data);
+			    if((results.responseJSON != '') && (results.responseJSON != null))
+			        addBookingListRow(results.responseJSON, 0);
+			    else {
+			        EmptyValueView('.pagination', '#booking_list_tbody', "#booking_list_pagination", 9);
 			    }
 			});
 		}
 	}
 })();
+
+function displaySetup(disNone, disBlock){
+    $(disNone).css('display','none');
+    $(disBlock).css('display','block');
+}
 
 function ajaxFunc(url, type, data){
     return $.ajax({
@@ -31,6 +39,36 @@ function ajaxFunc(url, type, data){
         cache: false,
         async: false,
     });
+}
+
+function EmptyValueView(pagination, table, jspatioantion, colspanVal){
+    $(pagination).empty();
+    $(table).empty();
+    $(jspatioantion).css('display','none');
+    $(table).append('<tr><td colspan=" '+ 6 + colspanVal+'" style="text-align: center">Empty Value</center></td></tr>');
+}
+
+function setPagination(results, position) {
+    var pageNum = Math.ceil(results.length/15);
+    var previous = (position-1);
+    var next = (position+1);
+    if(position == 1)
+        previous = 1;
+    if(position == pageNum)
+        next = pageNum;
+    $('.pagination').append('<li data-page="'+ previous +'"><span>&laquo;<span class="sr-only">(current)</span></span></li>').show();
+    for (i = 1; i <= pageNum;)
+    {
+        $('.pagination').append('<li data-page="'+i+'">\<span>'+ i++ +'<span class="sr-only">(current)</span></span>\</li>').show();
+    }
+    $('.pagination').append('<li data-page="'+ next +'"><span>&raquo;<span class="sr-only">(current)</span></span></li>').show();
+    $('.pagination li:nth-child('+ (position+1) +')').addClass('active');
+
+    if(position == 1)
+        $('.pagination li:first-child').addClass('disabled');
+    if(position == pageNum)
+        $('.pagination li:last-child').addClass('disabled');
+    // }
 }
 
 function addBookingListRow(results, start){
@@ -61,7 +99,7 @@ function addBookingListRow(results, start){
         book_html += '<td>'+rows[i].attention_invoice+'</td>';       
         book_html += '<td>'+rows[i].booking_order_id+'</td>';    
         book_html += '<td>'+((rows[i].po != null)? ((rows[i].po.ipo_id !=null)? rows[i].po.ipo_id :'') : '')+'</td>';  
-        book_html += '<td>'+rows[i].bookingDetails.po_cat+'</td>';  
+        book_html += '<td>'+((rows[i].bookingDetails != null)? ((rows[i].bookingDetails.po_cat !=null)? rows[i].bookingDetails.po_cat :'') : '')+'</td>';  
         book_html += '<td>'+rows[i].created_at+'</td>';
         book_html += '<td>'+rows[i].shipmentDate+'</td>';
         book_html += '<td><a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">'+rows[i].booking_status+'</a>';
@@ -118,45 +156,15 @@ function addBookingListRow(results, start){
     });
 
     $('.deleteButton').on('click',function(){
-                var confirmValue = confirm("Are you sure!");
-                if (confirmValue == true) {
-                    return true;
-                }else{
-                    return false;
-                }
-            });
-}
-
-function EmptyValueView(pagination, table, jspatioantion, colspanVal){
-    $(pagination).empty();
-    $(table).empty();
-    $(jspatioantion).css('display','none');
-    $(table).append('<tr><td colspan=" '+ 6 + colspanVal+'" style="text-align: center">Empty Value</center></td></tr>');
-}
-
-function setPagination(results, position) {
-    var pageNum = Math.ceil(results.length/15);
-    var previous = (position-1);
-    var next = (position+1);
-    if(position == 1)
-        previous = 1;
-    if(position == pageNum)
-        next = pageNum;
-    $('.pagination').append('<li data-page="'+ previous +'"><span>&laquo;<span class="sr-only">(current)</span></span></li>').show();
-    for (i = 1; i <= pageNum;)
-    {
-        $('.pagination').append('<li data-page="'+i+'">\<span>'+ i++ +'<span class="sr-only">(current)</span></span>\</li>').show();
-    }
-    $('.pagination').append('<li data-page="'+ next +'"><span>&raquo;<span class="sr-only">(current)</span></span></li>').show();
-    $('.pagination li:nth-child('+ (position+1) +')').addClass('active');
-
-    if(position == 1)
-        $('.pagination li:first-child').addClass('disabled');
-    if(position == pageNum)
-        $('.pagination li:last-child').addClass('disabled');
-    // }
+        var confirmValue = confirm("Are you sure!");
+        if (confirmValue == true) {
+            return true;
+        }else{
+            return false;
+        }
+    });
 }
 
 $(document).ready(function(){
-	simple_search.init();
+	advance_search.init();
 });

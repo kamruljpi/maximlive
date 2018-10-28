@@ -52,7 +52,7 @@
       @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ))
   @endif
 
-  <form class="" action="{{ Route('booking_order_action') }}" role="form" method="POST" enctype="multipart/form-data" target="_blank">
+  <form class="" action="{{ Route('booking_order_action') }}" role="form" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="hidden" name="buyerDetails" value="{{$buyerDetails}}">
     @if($taskType == $general)

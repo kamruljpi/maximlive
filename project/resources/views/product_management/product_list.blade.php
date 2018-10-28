@@ -30,6 +30,11 @@
         </button>
       </div>
   </div>
+<div class="col-sm-12">
+    <div class="form-group">
+        <input type="text" class="form-controller" id="search" name="search"></input>
+    </div>
+</div>
 
 <div class="col-sm-12">
   <table class="table table-bordered" id="tblSearch">
@@ -77,7 +82,7 @@
                 <td>
                   {{($product->status == 1)? trans("others.action_active_label"):trans("others.action_inactive_label")}}
                 </td>
-                <td>
+                <td >
                     <a href="{{ Route('update_product_view')}}/{{$product->product_id}}" class="btn btn-success">edit</a>
                     <a href="{{ Route('delete_product_action')}}/{{$product->product_id}}" class="btn btn-danger">delete</a>
                 </td>
@@ -88,4 +93,37 @@
   </table>           
   {{$products->links()}}
 </div>
+@stop
+
+@section('LoadScript')
+    <script type="text/javascript">
+
+        $('#search').on('keyup',function(){
+
+            $value=$(this).val();
+
+            $.ajax({
+
+                type : 'get',
+
+                url : '{{URL::to('product/lists')}}',
+
+                data:{'search':$value},
+
+                success:function(data){
+
+                    $('tbody').html(data);
+                }
+
+            });
+        })
+
+    </script>
+
+    <script type="text/javascript">
+
+        $.ajaxSetup({ headers: { 'csrftoken' : '{{ csrf_token() }}' } });
+
+    </script>
+
 @stop

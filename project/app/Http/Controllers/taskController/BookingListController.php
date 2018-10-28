@@ -36,7 +36,7 @@ class BookingListController extends Controller
     public function bookingListView(){
 
         $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
-            ->where('is_deleted',0)
+            ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
             ->orderBy('id','DESC')
             ->paginate(15);
         foreach($bookingList as &$booking){
@@ -47,7 +47,6 @@ class BookingListController extends Controller
             $booking->po = MxpIpo::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
             $booking->bookingDetails = MxpBooking::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'))->groupBy('item_code')->first();
         }
-//        $this->print_me($booking->po);
 
         return view('maxim.booking_list.booking_list_page',compact('bookingList'));
     }
@@ -174,10 +173,18 @@ class BookingListController extends Controller
     public function getBookingListByBookingId(Request $request){
 
         $bookingList = DB::table('mxp_bookingbuyer_details')
-            ->where('booking_order_id', 'like', '%'.$request->booking_id.'%')
+            ->where([['booking_order_id', 'like', '%'.$request->booking_id.'%'],['is_deleted',BookingFulgs::IS_NOT_DELETED]])
             ->orderBy('id','DESC')
             ->get();
 
+        foreach($bookingList as &$booking){
+            $booking->booking = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->user_id)->first();
+            $booking->accepted = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->accepted_user_id)->first();
+            $booking->mrf = MxpMrf::where('booking_order_id',$booking->booking_order_id)->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
+            $booking->ipo = MxpIpo::where('booking_order_id',$booking->booking_order_id)->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
+            $booking->po = MxpIpo::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
+            $booking->bookingDetails = MxpBooking::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'))->groupBy('item_code')->first();
+        }
         return $bookingList;
     }
 

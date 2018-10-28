@@ -139,7 +139,7 @@
                                     <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>
                                 </form>
                                 </div>
-                                <div style="float: right;">
+                                <div style="float: right; width: 52%;">
                                 <a href="{{Route('booking_job_id_delete_action')}}/{{$bookedItem->id}}" class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</a>
                                 </div>
                             </td>                    

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @section('page_heading', trans("others.mxp_menu_booking_list") )
 @section('section')
-    <?php
+<?php
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
@@ -9,7 +9,7 @@
 //     print_r("<pre>");
 //     print_r($bookingList);
 //     print_r("</pre>");
-    ?>
+?>
     <style type="text/css">
         .b1{
             border-bottom-left-radius: 4px;
@@ -58,12 +58,10 @@
         <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
             <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
             <button class="btn btn-info" type="button" id="booking_simple_search">
-                Search{{--<i class="fa fa-search"></i>--}}
+                Search
             </button>
         </div>
-        {{--<div class="col-sm-2">--}}
-        {{--<input class="btn btn-primary" type="submit" value="Advanced Search" name="booking_advanc_search" id="booking_advanc_search">--}}
-        {{--</div>--}}
+
         <button class="btn btn-primary " type="button" id="booking_advanc_search">Advance Search</button>
     </div>
     <div>
@@ -105,16 +103,6 @@
                     <input class="btn btn-info" type="submit" value="Search" name="booking_advanceSearch_btn" id="booking_advanceSearch_btn">
                 </div>
             </div>
-
-            {{--<div class="col-sm-2">
-                <input type="text" name="searchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" name="searchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
-            </div>
-            <div class="col-sm-2">
-                <input type="text" name="searchFld" class="form-control" placeholder="Booking Id search" id="booking_id_search">
-            </div>--}}
             <button class="btn btn-primary" type="button" id="booking_simple_search_btn">Simple Search</button>
         </form>
     </div>
@@ -139,7 +127,7 @@
                 </tr>
                 </thead>
 
-                @php($j=1)
+                @php($j=1 + $bookingList->perPage() * ($bookingList->currentPage() - 1))
                 <tbody id="booking_list_tbody">
                 @foreach($bookingList as $value)
                     <tr id="booking_list_table">
@@ -180,7 +168,7 @@
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
 
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu" style="left:-45px !important;">
                                         <li>
                                             <a href="{{ Route('booking_list_details_view', $value->booking_order_id) }}">Views</a>
                                         </li>

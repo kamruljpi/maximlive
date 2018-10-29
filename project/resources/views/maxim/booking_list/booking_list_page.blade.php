@@ -140,17 +140,17 @@
                             <a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">{{$value->booking_status}}</a>
 
                             <div class="popper-content hide">
-                                <label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}})</label><br>
+                                <label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{Carbon\Carbon::parse($value->created_at)->format('d-m-Y H:i:s')}})</label><br>
 
                                 <label>Booking Accepted by: {{$value->accepted->first_name}} {{$value->accepted->last_name}}
-                                    {{(!empty($value->accepted_date_at)?'('.Carbon\Carbon::parse($value->accepted_date_at)->format('d-m-Y').')':'')}}
+                                    {{(!empty($value->accepted_date_at)?'('.Carbon\Carbon::parse($value->accepted_date_at)->format('d-m-Y H:i:s').')':'')}}
                                 </label><br>
 
                                 <label>MRF Issue by: {{$value->mrf->first_name}} {{$value->mrf->last_name}}
-                                    {{(!empty($value->mrf->created_at)?'('.Carbon\Carbon::parse($value->mrf->created_at)->format('d-m-Y').')':'')}}
+                                    {{(!empty($value->mrf->created_at)?'('.Carbon\Carbon::parse($value->mrf->created_at)->format('d-m-Y H:i:s').')':'')}}
                                 </label><br>
 
-                                <label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} {{(!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y').')':'')}}</label><br>
+                                <label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} {{(!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y H:i:s').')':'')}}</label><br>
                             </div>
                         </td>
                         <td width="12%">

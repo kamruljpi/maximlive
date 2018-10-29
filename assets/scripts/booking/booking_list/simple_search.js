@@ -15,23 +15,13 @@ var simple_search = (function(){
 			        if((results.responseJSON != '') && (results.responseJSON != null))
 			            addBookingListRow(results.responseJSON, 0);
 			        else {
-			            EmptyValueView('.pagination', '#booking_list_tbody', "#booking_list_pagination", 9);
+			            EmptyValueView('.pagination', '#booking_list_tbody', "#booking_list_pagination", 9); // this function use js/production.js
 			        }
 			    }
 			});
 		}
 	}
 })();
-
-function ajaxFunc(url, type, data){
-    return $.ajax({
-        url:baseURL+url,
-        type:type,
-        data:data,
-        cache: false,
-        async: false,
-    });
-}
 
 function addBookingListRow(results, start){
     $('.pagination').empty();
@@ -125,36 +115,6 @@ function addBookingListRow(results, start){
                     return false;
                 }
             });
-}
-
-function EmptyValueView(pagination, table, jspatioantion, colspanVal){
-    $(pagination).empty();
-    $(table).empty();
-    $(jspatioantion).css('display','none');
-    $(table).append('<tr><td colspan=" '+ 6 + colspanVal+'" style="text-align: center">Empty Value</center></td></tr>');
-}
-
-function setPagination(results, position) {
-    var pageNum = Math.ceil(results.length/15);
-    var previous = (position-1);
-    var next = (position+1);
-    if(position == 1)
-        previous = 1;
-    if(position == pageNum)
-        next = pageNum;
-    $('.pagination').append('<li data-page="'+ previous +'"><span>&laquo;<span class="sr-only">(current)</span></span></li>').show();
-    for (i = 1; i <= pageNum;)
-    {
-        $('.pagination').append('<li data-page="'+i+'">\<span>'+ i++ +'<span class="sr-only">(current)</span></span>\</li>').show();
-    }
-    $('.pagination').append('<li data-page="'+ next +'"><span>&raquo;<span class="sr-only">(current)</span></span></li>').show();
-    $('.pagination li:nth-child('+ (position+1) +')').addClass('active');
-
-    if(position == 1)
-        $('.pagination li:first-child').addClass('disabled');
-    if(position == pageNum)
-        $('.pagination li:last-child').addClass('disabled');
-    // }
 }
 
 $(document).ready(function(){

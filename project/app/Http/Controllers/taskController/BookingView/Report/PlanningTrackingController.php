@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\taskController\BookingListController;
 
-class ManagementTrackingController extends Controller
+class PlanningTrackingController extends Controller
 {
-    public function managementTrackingReport(){
+    public function trackingReportView(){
         $bookingList = DB::table('mxp_bookingbuyer_details')->where([['is_complete', BookingFulgs::IS_COMPLETE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(150);
 
         if(isset($bookingList) && !empty($bookingList)){
@@ -34,7 +34,7 @@ class ManagementTrackingController extends Controller
             }
         }
 
-        return view('maxim.booking_list.management_booking_list',compact('bookingList'));
+        return view('maxim.booking_list.planning_booking_list',compact('bookingList'));
     }
 
 }

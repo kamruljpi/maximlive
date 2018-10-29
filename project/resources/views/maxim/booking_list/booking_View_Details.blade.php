@@ -168,7 +168,7 @@
                             <td>{{$bookedItem->gmts_color }}</td>
                             <td>{{$bookedItem->item_size}}</td>
                             <td>{{$bookedItem->sku}}</td>
-                            <td>{{$bookedItem->left_mrf_ipo_quantity}}</td>
+                            <td>{{$bookedItem->left_mrf_ipo_quantity + $bookedItem->ipo_quantity + $bookedItem->mrf_quantity}}</td>
                             <td>{{$bookedItem->ipo_quantity}}</td>
                             <td>{{$bookedItem->mrf_quantity}}</td>
                             </label>

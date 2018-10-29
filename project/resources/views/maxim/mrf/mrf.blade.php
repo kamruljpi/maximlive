@@ -70,7 +70,7 @@
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<input type="hidden" name="booking_order_id" value="{{$bookingDetails[0]->booking_order_id}}">
 
-						<div class="col-sm-6">
+						<!-- <div class="col-sm-6">
 							<div class="form-group">
 								<label class="col-sm-12 label-control">Supplier</label>
 								<div class="col-sm-12">
@@ -83,7 +83,7 @@
 									</select>
 								</div>
 							</div>
-						</div>
+						</div> -->
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="col-sm-12 label-control">Shipment Date</label>
@@ -144,7 +144,7 @@
 						</table>
 						<div class="form-group ">
 							<div class="col-md-6 col-md-offset-10">
-								<button type="submit" class="btn btn-primary" id="rbutton">
+								<button type="submit" class="btn btn-primary deleteButton" id="rbutton">
 									Genarate
 								</button>
 							</div>

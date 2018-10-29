@@ -24,17 +24,9 @@
   </div>
   <div class="col-sm-6">
       <div class="form-group custom-search-form">
-        <input type="text" name="searchFld" class="form-control" placeholder="search" id="user_search">
-        <button class="btn btn-default" type="button">
-                <i class="fa fa-search"></i>
-        </button>
+        <input type="text" class="form-control" id="search" name="search" placeholder="Item Code"></input>
       </div>
   </div>
-<div class="col-sm-12">
-    <div class="form-group">
-        <input type="text" class="form-controller" id="search" name="search"></input>
-    </div>
-</div>
 
 <div class="col-sm-12">
   <table class="table table-bordered" id="tblSearch">

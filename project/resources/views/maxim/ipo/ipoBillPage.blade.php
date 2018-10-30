@@ -178,7 +178,7 @@
 					<td>{{ !empty($details->initial_increase)? $details->initial_increase.'%' : '' }}</td>
 					<td><?php
 							$p = ( ($details->item_quantity * $details->initial_increase)/100) + $details->item_quantity;
-							echo floor($p);
+							echo round($p); 
 							$totalIncrease += $p;
 						?>
 					</td>

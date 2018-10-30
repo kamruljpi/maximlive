@@ -34,7 +34,7 @@ class PlanningTrackingController extends Controller
             }
         }
 
-        return view('maxim.booking_list.planning_booking_list',compact('bookingList'));
+        return view('maxim.booking_list.planning_tracking_report',compact('bookingList'));
     }
 
 }

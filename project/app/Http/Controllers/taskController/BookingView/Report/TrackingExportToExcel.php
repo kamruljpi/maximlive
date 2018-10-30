@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Excel;
 use Carbon;
 
-class TrackingController extends Controller
+class TrackingExportToExcel extends Controller
 {
-    public function __construct(Excel $excel){
+    public function __construct(Excel $excel){ 
         $this->excel = $excel;
     }
 
@@ -41,5 +41,4 @@ class TrackingController extends Controller
         })->download('xlsx');
         return redirect()->back();
     }
-
 }

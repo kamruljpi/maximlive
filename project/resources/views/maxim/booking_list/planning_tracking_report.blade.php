@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading', "Tracking List")
+@section('page_heading', "Planning Tracking Report List")
 @section('section')
 <style type="text/css">
     .b1{

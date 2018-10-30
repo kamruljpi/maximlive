@@ -116,4 +116,8 @@ ul li {
     .report-header h3 {
         color: white !important;
     }
+
+    table thead tr #erp_code{
+      width: 20%;
+    }
 }

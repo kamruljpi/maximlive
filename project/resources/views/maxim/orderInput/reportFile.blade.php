@@ -99,7 +99,7 @@
 	    <thead>
 	        <tr>
 	        	<th>Job No.</th>
-	        	<th width="15%">ERP Code</th>
+	        	<th width="15%" id="erp_code">ERP Code</th>
 	        	<th width="20%">Item / Code No.</th>
 	        	<th width="5%">Season Code</th>
 	        	<th>OOS No.</th>
@@ -123,7 +123,6 @@
 		    		$TotalBookingQty += $details->item_quantity; 
 		    		$jobId = (8 - strlen($details->id));
 		    	?>
-
 		    	<tr>
 			    	<td>{{ str_repeat('0',$jobId) }}{{ $details->id }}</td>
 			    	<td width="20%">{{$details->erp_code}}</td>
@@ -139,21 +138,16 @@
 			        <td>{{$details->item_quantity}}</td>
 			        <td>PCS</td>
 		        </tr>
-
 		        <?php $itemcodestatus = $details->item_code; ?>
-
 		    @endforeach
-
+			    <tr>
+		    		<td colspan="12">
+		    			<span class="pull-right" style="font-weight: bold; font-size:18px;">Total Booking Qty: {{$TotalBookingQty}}
+		    			</span>
+		    		</td>
+		    		<td style="width: 4%;"></td>
+		    	</tr>
 	    </tbody>
-	    <tfoot>
-	    	<tr>
-	    		<td colspan="12">
-	    			<span class="pull-right" style="font-weight: bold; font-size:18px;">Booking Total Qty: {{$TotalBookingQty}}
-	    			</span>
-	    		</td>
-	    		<td style="width: 4%;"></td>
-	    	</tr>
-	    </tfoot>
 	</table>
 
 	<script type="text/javascript">

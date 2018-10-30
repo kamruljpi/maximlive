@@ -72,6 +72,7 @@
 	        	<th width="10%">Size</th>
 	        	<th width="10%">TOTAL PCS/MTR</th>
 	        	<th width="10%">Initial Incrise(%)</th>
+	        	<th width="10%">Incrise(%) Qty</th>
 	        	<th>1ST DELIVERY</th>
 	            <th >Request Date</th>
 	            <th>Confirmation Date</th>
@@ -84,10 +85,11 @@
 					$itemsize = explode(',', $item->item_size);
 					$gmts_color = explode(',', $item->gmts_color);
 					$left_qty = explode(',', $item->left_mrf_ipo_quantity);
-					$idstrcount = (8 - strlen($item->job_id));					
+					$idstrcount = (8 - strlen($item->job_id));
+							// echo floor($p);			
 				?>
 				<input type="hidden" name="ipo_id[]" value="{{$item->id}}">			
-    			<tr>
+    			<tr class="ipo_increase_percentagess_{{$key}}">
     				<td>{{ str_repeat('0',$idstrcount) }}{{ $item->job_id }}</td>
     				<td>{{$item->erp_code}}</td>
     				<td>{{$item->item_code}}</td>
@@ -95,13 +97,17 @@
     				@foreach($itemsize as $keys => $items)
 		    		<td>{{$gmts_color[$keys]}}</td>
 		    		<td>{{$items}}</td>
-		    		<td>
+		    		<td id="item_quantitys">
+		    			<?php 
+		    				$p = round((($left_qty[$keys] * $increase)/100) + $left_qty[$keys]);
+		    			?>
 		    			<input style="" type="text" class="form-control item_quantity" name="product_qty[]" value="{{$left_qty[$keys]}}" >
 		    		</td>
 		    		@endforeach
 		    		<td>
-		    			<input type="text" name="ipo_increase_percentage[]" value="{{$increase}}" placeholder="Percentage" class="form-control">
+		    			<input type="text" name="ipo_increase_percentage[]" value="{{$increase}}" placeholder="Percentage" class="form-control" maxlength="3">
 		    		</td>
+					<td><input type="text" name="incrise_qty[]" class="form-control" readonly="true" value="{{$p}}"></td>
 					<td></td>
 					<td style="padding-top: 20px;">
 						{{Carbon\Carbon::parse($billdata->created_at)->format('d-m-Y')}}
@@ -127,5 +133,26 @@
 	        $(this).val(availQnty);
 		}
 	});
+	
+	$('input[name="ipo_increase_percentage[]"]').on("keyup",function () {
+		var qty = parseFloat($('input[name="product_qty[]"]').val());
+		var increase = ($(this).val() != '')? $(this).val() : 0;
+		if(increase != 0 &&!$.isNumeric(increase)){
+			alert("Enter integer value.");
+			return false;
+		}
+		if(increase >100){
+			alert("you cann't enter over 100%.");
+			$(this).val(" ");
+			increase = ($(this).val() != '')? $(this).val() : 0;
+		}
+		var increase_qty = ((qty * increase)/100) + qty;
+		increase_qty = Math.round((increase_qty));
+
+		var parentClass = $(this).parent().parent().prop('className');
+		$('.'+parentClass).find('input[name="incrise_qty[]"]').val(' ');
+		$('.'+parentClass).find('input[name="incrise_qty[]"]').val(increase_qty);
+	});
+
 </script>
 @stop

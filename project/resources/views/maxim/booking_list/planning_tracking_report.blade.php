@@ -25,7 +25,7 @@
 <div id="booking_simple_search_form">
     <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
         <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking No." id="booking_id_search">
-        <button class="btn btn-info" type="button" id="planning_simple_search">
+        <button class="btn btn-info click_preloder" type="button" id="planning_simple_search">
             Search
         </button>
     </div>
@@ -67,7 +67,7 @@
             </div> -->
             <br>
             <div class="col-sm-3">
-                <input class="btn btn-info" type="submit" value="Search" name="booking_advanceSearch_btn" id="booking_advanceSearch_btn">
+                <input class="btn btn-info click_preloder" type="submit" value="Search" name="booking_advanceSearch_btn" id="booking_advanceSearch_btn">
             </div>
         </div>
         <button class="btn btn-primary" type="button" id="planning_report_simple_search_btn">Simple Search</button>

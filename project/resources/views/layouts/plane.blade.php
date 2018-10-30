@@ -28,11 +28,40 @@
 	<script type="text/javascript">
 		var baseURL = '{{ url("/") }}';
 	</script>
+	<style type="text/css">
+		/* Preloader */
+		#preloader2 {
+		  /*position: fixed;*/
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  z-index: 9999;
+		}
+
+		#status {
+		  width: 200px;
+		  height: 200px;
+		  position: absolute;
+		  left: 50%;
+		  top: 50%;
+		  /*background-color: #ddd; */
+		  background-repeat: no-repeat;
+		  background-position: center;
+		  margin: -100px 0 0 -100px;
+		  background-image: url({{asset('assets/img/preloader/status.gif')}});
+		}
+	</style>
 </head>
 <body>
 	<?php $languages = App\Http\Controllers\Trans\TranslationController::getLanguageList();?>
 	@yield('body')
-
+	<!-- Preloader -->
+    <div class="preloader2">
+      <div class="status">
+          <div class="abc"></div>
+      </div>
+    </div>
 
 	<script src="{{ asset('assets/scripts/moment.min.js') }}"></script>
 	<script src="{{ asset('assets/scripts/bootstrap-datepicker.js') }}" type="text/javascript"></script>
@@ -53,18 +82,20 @@
 	<script src="{{ asset('assets/scripts/booking/booking_view/view_page.js') }}"></script>
 	<script src="{{ asset('assets/scripts/confirm/confirmation.js') }}"></script>
 
-	{{--<script>--}}
-	    {{--$(document).ready(function(){--}}
-	      {{--var date_input=$('#datePickerDate'); //our date input has the name "date"--}}
-	      {{--var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";--}}
-        {{--date_input.datepicker({--}}
-            {{--format: 'mm/dd/yyyy',--}}
-            {{--container: container,--}}
-            {{--todayHighlight: true,--}}
-            {{--autoclose: true,--}}
-        {{--});--}}
-        {{--});--}}
-	{{--</script>--}}
+	<script>
+	    $('.click_preloder').on('click', function() {
+            var parentClass = $('.abc').parent().parent().attr('id');
+            if(typeof(parentClass) =="undefined"){
+                $('.preloader2').attr('id', 'preloader2');
+                $('.status').attr('id', 'status');
+            }
+          $('#status').fadeOut(); 
+          $('#preloader2').delay(1000).fadeOut('slow'); 
+          $('body').delay(1000).css({'overflow':'visible'});
+          $('.status').removeAttr('style',' '); 
+          $('.preloader2').removeAttr('style',' '); 
+        });
+	</script>
 	@yield('LoadScript')
 </body>
 </html>

@@ -72,7 +72,7 @@ function addBookingListRow(results, start){
         book_html += '</td>';
         book_html += '<td width="12%">';
         book_html += '<div class="btn-group">';
-        book_html += '<form action="'+baseURL+'/view"  target="_blank">';
+        book_html += '<form action="'+baseURL+'/booking/list/view"  target="_blank">';
         book_html += '<input type="hidden" name="bid" value="'+ rows[i].booking_order_id+'">';
         book_html += '<button class="btn btn-success b1">Report</button>';
         book_html += '</form>';

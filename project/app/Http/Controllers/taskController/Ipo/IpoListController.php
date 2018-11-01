@@ -13,6 +13,7 @@ use Validator;
 use Auth;
 use DB;
 use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class IpoListController extends Controller
 {
@@ -28,7 +29,7 @@ class IpoListController extends Controller
 	public function getIpoReport(Request $request){
 		$footerData   = [];
 		$companyInfo  = DB::table("mxp_header")
-			->where('header_type',11)
+			->where('header_type',HeaderType::COMPANY)
 			->get();
 			
 		$buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->bid)->first();

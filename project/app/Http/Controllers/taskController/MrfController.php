@@ -14,6 +14,7 @@ use Validator;
 use Auth;
 use DB;
 use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class MrfController extends Controller
 {
@@ -21,15 +22,15 @@ class MrfController extends Controller
   const UPDATE_MRF = "update";
   const OPEN_MRF = "Open";
 
-	function array_combine_($keys, $values)
-	{
-	    $result = array();
-	    foreach ($keys as $i => $k) {
-	        $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
-	    }
-	    array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
-	    return  $result;
-	}
+  function array_combine_($keys, $values)
+  {
+      $result = array();
+      foreach ($keys as $i => $k) {
+          $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
+      }
+      array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
+      return  $result;
+  }
     public function addMrf(Request $request){
 
       $datas = $request->all();
@@ -279,7 +280,7 @@ class MrfController extends Controller
 
     public function redirectMrfReport(Request $request){
       $footerData =[];
-      $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
+      $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
       $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
       $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
                       ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')

@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\User;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class BookingListController extends Controller
 {   
@@ -185,7 +185,7 @@ class BookingListController extends Controller
 
         $bookingReport = $this->getBookingDetailsValue($request->bid);
         $bookingBuyer = $this->getBookingBuyerDetails($request->bid);
-        $companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
+        $companyInfo = DB::table('mxp_header')->where('header_type',HeaderType::COMPANY)->get();
         $user = new BookingController();
         $getBookingUserDetails = $user::getUserDetails( $request->bid );
         // $this->print_me($bookingBuyer);

@@ -13,11 +13,12 @@ use Validator;
 use Auth;
 use DB;
 use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class IpoController extends Controller
 {
   public function ipoReportView(Request $request){
-    $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
+    $headerValue = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
     $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$request->bid)->get();
     $footerData =[];
     $ipoDetails = DB::table("mxp_ipo")->where([['ipo_id', $request->ipoid],['booking_order_id',$request->bid]])->get();
@@ -31,18 +32,18 @@ class IpoController extends Controller
     );
   }
 
-	function array_combine_($keys, $values){
-	    $result = array();
-	    foreach ($keys as $i => $k) {
-	        $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
-	    }
-	    array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
-	    return  $result;
-	}
+  function array_combine_($keys, $values){
+      $result = array();
+      foreach ($keys as $i => $k) {
+          $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
+      }
+      array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
+      return  $result;
+  }
 
     public function storeIpo(Request $request){
 
-		$datas = $request->all();
+    $datas = $request->all();
     $errors = $this->checkQuantity($datas);
     if(!empty($errors)){
       return redirect()->back()->withInput($request->input())->withErrors($errors);
@@ -73,9 +74,9 @@ class IpoController extends Controller
         $length = sizeof($product_qty);
         $count = 0;
         foreach ($product_qty as $value) {
-			if($value == 0 || $value < 0 ){
-				$count++;
-			}
+      if($value == 0 || $value < 0 ){
+        $count++;
+      }
         }
 
       if($count == $length){
@@ -88,8 +89,8 @@ class IpoController extends Controller
       - This Section create to concat all Get input
       - value by item id and store $tempValue Array.
       **/
-		
-		$temp = $this->array_combine_ ($allId ,$product_qty);
+    
+    $temp = $this->array_combine_ ($allId ,$product_qty);
 
 
       /**
@@ -98,10 +99,10 @@ class IpoController extends Controller
 
         $mrfQuantityDb = [];
         foreach ($temp as $key => $value) {
-        	$getMrfDbvalue = DB::select(" select ipo_quantity from mxp_booking_challan where id ='".$key."'");
-        	foreach ($getMrfDbvalue as $Mrfvalue) {
-          		$mrfQuantityDb[$key] = explode(',', $Mrfvalue->ipo_quantity);
-        	}
+          $getMrfDbvalue = DB::select(" select ipo_quantity from mxp_booking_challan where id ='".$key."'");
+          foreach ($getMrfDbvalue as $Mrfvalue) {
+              $mrfQuantityDb[$key] = explode(',', $Mrfvalue->ipo_quantity);
+          }
         }
       // self::print_me($mrfQuantityDb);
        $mrfInputValues = [];
@@ -261,7 +262,7 @@ class IpoController extends Controller
             $createIpo                   = new MxpIpo();
             $createIpo->user_id          = Auth::user()->user_id;
             $createIpo->job_id           = $bookingChallanValue->job_id;
-      			$createIpo->ipo_id           = $ipo_id;
+            $createIpo->ipo_id           = $ipo_id;
             $createIpo->booking_order_id = $bookingChallanValue->booking_order_id;
             $createIpo->erp_code         = $bookingChallanValue->erp_code;
             $createIpo->item_code        = $bookingChallanValue->item_code;
@@ -269,18 +270,18 @@ class IpoController extends Controller
             $createIpo->item_description = $bookingChallanValue->item_description;
             $createIpo->item_quantity    = $value['item_quantity'];
             $createIpo->initial_increase = $value['increaseValue'];
-      			$createIpo->item_price       = $bookingChallanValue->item_price;
-      			$createIpo->matarial         = $bookingChallanValue->matarial;
-      			$createIpo->gmts_color       = $bookingChallanValue->gmts_color;
-      			$createIpo->others_color     = $bookingChallanValue->others_color;
-      			$createIpo->orderDate        = $bookingChallanValue->orderDate;
-      			$createIpo->orderNo          = $bookingChallanValue->orderNo;
-      			$createIpo->shipmentDate     = $bookingChallanValue->shipmentDate;
+            $createIpo->item_price       = $bookingChallanValue->item_price;
+            $createIpo->matarial         = $bookingChallanValue->matarial;
+            $createIpo->gmts_color       = $bookingChallanValue->gmts_color;
+            $createIpo->others_color     = $bookingChallanValue->others_color;
+            $createIpo->orderDate        = $bookingChallanValue->orderDate;
+            $createIpo->orderNo          = $bookingChallanValue->orderNo;
+            $createIpo->shipmentDate     = $bookingChallanValue->shipmentDate;
             $createIpo->poCatNo          = $bookingChallanValue->poCatNo;
             $createIpo->ipo_quantity     = $value['item_quantity'];
-      			$createIpo->sku              = $bookingChallanValue->sku;
-      			$createIpo->status           = ActionMessage::CREATE;
-      			$createIpo->save();
+            $createIpo->sku              = $bookingChallanValue->sku;
+            $createIpo->status           = ActionMessage::CREATE;
+            $createIpo->save();
         }
       }
 
@@ -288,7 +289,7 @@ class IpoController extends Controller
     }
     public function redirectIpoReport(Request $request)
     {
-      $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
+      $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
       $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
       $footerData =[];
       $ipoDetails = MxpIpo::join('mxp_booking as mp','mp.id','job_id')

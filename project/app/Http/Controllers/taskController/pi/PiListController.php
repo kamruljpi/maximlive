@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\MxpPi;
 use DB;
 use App\Http\Controllers\taskController\pi\PiController;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class PiListController extends Controller
 {
@@ -17,6 +18,7 @@ class PiListController extends Controller
 			->paginate(20);
 		return view('maxim.pi_format.list.pi_list',compact('piDetails'));
 	}
+	
 	public function getPiReport(Request $request){
 
 		$is_type = $request->is_type;
@@ -29,11 +31,11 @@ class PiListController extends Controller
 				['p_id',$request->pid],
 				['is_type',$is_type],
 			])
-			->select('*',DB::Raw('sum(item_quantity) as item_quantity'))
+			->select('*',DB::Raw('sum(item_quantity) as item_quantity'),DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as poCatNo'))
 			->groupBy('item_code')
 			->get();
 			
-		$companyInfo = DB::table('mxp_header')->where('header_type', 11)->get();
+		$companyInfo = DB::table('mxp_header')->where('header_type', HeaderType::PI)->get();
 		$footerData = DB::select("select * from mxp_reportfooter");
 		$getUserDetails = PiController::getUserDetails($bookingDetails[0]->user_id);
 

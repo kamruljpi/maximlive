@@ -1,6 +1,9 @@
 @extends('layouts.dashboard')
 @section('page_heading',trans('others.update_ueader'))
 @section('section')
+<?php 
+    use App\Http\Controllers\taskController\Flugs\HeaderType;
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-2">
@@ -34,16 +37,13 @@
                                 <label class="col-md-4 control-label">{{ trans('others.header_type_label') }}</label>
                                 <div class="col-md-6">
                                     <select class="form-control" name="header_type" >
-                                        <option value="{{ $page_edit->header_type }}">
-                                            @if($page_edit->header_type == 11)
-                                                Company Info
-                                            @elseif($page_edit->header_type == 12)
-                                                Booking Info
-                                            @else
-                                            @endif
-                                        </option>
-                                        <option value="11">Company Info </option>
-                                        <option value="12"> Booking </option>
+                                        <option value="">Choose a option</option>
+                                        <option value="{{HeaderType::COMPANY}}" {{($page_edit->header_type == HeaderType::COMPANY)?'selected':''}} >Company Info </option>
+                                        <option value="{{HeaderType::BOOKING}}" {{($page_edit->header_type == HeaderType::BOOKING)?'selected':''}}> Booking </option>
+                                        <option value="{{HeaderType::PI}}" {{($page_edit->header_type == HeaderType::PI)?'selected':''}}> PI </option>
+                                        <option value="{{HeaderType::MRF}}" {{($page_edit->header_type == HeaderType::MRF)?'selected':''}}>MRF</option>
+                                        <option value="{{HeaderType::IPO}}" {{($page_edit->header_type == HeaderType::IPO)?'selected':''}}>Ipo</option>
+                                        <option value="{{HeaderType::CHALLAN}}" {{($page_edit->header_type == HeaderType::CHALLAN)?'selected':''}}> Challan</option>
                                     </select>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-4">{{ trans('others.header_logo_label') }}</label>
                                 <div class="col-md-6">
-                                    <input data-preview="#preview" name="logo" type="file" id="imageInput">
+                                    <input data-preview="#preview" name="logo" type="file" id="imageInput" value="{{$page_edit->logo}}">
                                     <img class="col-sm-6" id="preview"  src="" ></img>
                                 </div>
                             </div>

@@ -1,7 +1,9 @@
 @extends('layouts.dashboard')
-@section('page_heading',
-trans('others.add_header_label'))
+@section('page_heading',trans('others.add_header_label'))
 @section('section')
+<?php 
+    use App\Http\Controllers\taskController\Flugs\HeaderType;
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-2">
@@ -34,9 +36,13 @@ trans('others.add_header_label'))
                                 <label class="col-md-4 control-label">{{ trans('others.header_type_label') }}</label>
                                 <div class="col-md-6">
                                     <select class="form-control" name="header_type" >
-                                        <option value="{{ old('header_type') }}">{{ (11 == old('header_type'))?'Company Info':(12 == old('header_type'))?'Booking':'' }}</option>
-                                        <option value="11">Company Info </option>
-                                        <option value="12"> Booking </option>
+                                        <option value="{{ old('header_type') }}">{{ (empty(old('header_type'))?'Choose a option':ucwords(old('header_type'))) }}</option>
+                                        <option value="{{HeaderType::COMPANY}}">Company Info </option>
+                                        <option value="{{HeaderType::BOOKING}}"> Booking </option>
+                                        <option value="{{HeaderType::PI}}"> PI </option>
+                                        <option value="{{HeaderType::IPO}}">Ipo</option>
+                                        <option value="{{HeaderType::MRF}}">MRF</option>
+                                        <option value="{{HeaderType::CHALLAN}}"> Challan</option>
                                     </select>
                                 </div>
                             </div>

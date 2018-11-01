@@ -16,7 +16,7 @@ use App\Model\MxpPi;
 use App\User;
 use Carbon;
 use Session;
-
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class PiController extends Controller
 {
@@ -103,7 +103,7 @@ class PiController extends Controller
 	}
 
 	public function redirectPiReport(Request $request){
-		$companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
+		$companyInfo = DB::table('mxp_header')->where('header_type',HeaderType::PI)->get();
 		$bookingDetails = MxpPi::where([
 				['p_id',$request->p_id],
 				['is_type',$request->is_type],

@@ -3,9 +3,9 @@
 trans('others.header_list_label'))
 @section('section')
 <style type="text/css">
-	.top-btn-pro{
-		padding-bottom: 15px;
-	}
+    .top-btn-pro{
+        padding-bottom: 15px;
+    }
     .td-pad{
         padding-left: 15px;
     }
@@ -25,11 +25,11 @@ trans('others.header_list_label'))
                 @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('header_updated') ))
         @endif
 
-    	 <div class="col-sm-3 top-btn-pro">
-    	 	<a href="{{ Route('page_header_create') }}" class="btn btn-success form-control">
+         <div class="col-sm-3 top-btn-pro">
+            <a href="{{ Route('page_header_create') }}" class="btn btn-success form-control">
             {{trans('others.add_header_label')}}
             </a>
-    	 </div>
+         </div>
         
 <div class="col-sm-12 col-md-12">
             <div class="table-responsive">
@@ -70,14 +70,7 @@ trans('others.header_list_label'))
                   <tr>
                     <td>{{$j++}}</td>
                     <td>
-                        @if($page->header_type == 11)
-                        Company 
-
-                        @elseif($page->header_type == 12)
-                        Booking 
-                        @else
-
-                        @endif
+                        {{ucwords($page->header_type)}}
                     </td>  
                     <td>{{$page->header_title}}</td>
                     <!-- <td>{{$page->header_fontsize}}</td>

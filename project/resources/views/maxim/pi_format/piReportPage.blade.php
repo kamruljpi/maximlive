@@ -126,11 +126,11 @@
 <table class="table table-bordered">
 	<thead>
 	    <tr>
-	    	<th>Job No</th>
-	    	<th>PO/Cat No. </th>
+	    	<th width="5%">Serial No</th>
+	    	<th width="16%" id="poCatNo">PO/Cat No. </th>
 	    	<th>OOS No. </th>
 	    	<th width="10%">Item code</th>
-	    	<th width="18%">ERP Code</th>
+	    	<th width="18%" id="erp_code">ERP Code</th>
 	    	<!-- <th>GMTS / Item Color</th> -->
 	        <th>Item Descreption</th>
 	        <th>Style</th>

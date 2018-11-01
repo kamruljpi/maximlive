@@ -14,6 +14,7 @@ use Validator;
 use Auth;
 use DB;
 use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class MrfListController extends Controller
 {
@@ -31,7 +32,7 @@ class MrfListController extends Controller
                         ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
                         ->where('mrf_id',$request->mid)
                         ->get();
-        $companyInfo = DB::table("mxp_header")->where('header_type',11)->get();
+        $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
         $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->bid)->first();
         $footerData =[];
         return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));

@@ -27,6 +27,7 @@ use App\Http\Controllers\Source\User\UserAccessBuyerList;
 use App\Http\Controllers\Message\ActionMessage;
 use Redirect;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Model\MxpItemDescription;
 use Carbon;
 use Session;
@@ -230,7 +231,7 @@ class BookingController extends Controller
         $itemQntyByChalan->gmts_color = $item_gmts_color[$i];
         $itemQntyByChalan->save();
 
-   		}
+      }
 
       $is_type = $request->is_type;
       return \Redirect::route('refresh_booking_view', ['booking_id' => $customid,'is_type' => $request->is_type]);
@@ -238,7 +239,7 @@ class BookingController extends Controller
 
     public function redirectBookingReport(Request $request,BookingListController $BookingListController){
       $is_type = $request->is_type;
-      $companyInfo = DB::table('mxp_header')->where('header_type',11)->get();
+      $companyInfo = DB::table('mxp_header')->where('header_type',HeaderType::COMPANY)->get();
       $bookingReport = $BookingListController->getBookingDetailsValue($request->booking_id);
       $bookingBuyer = $BookingListController->getBookingBuyerDetails($request->booking_id);
       $footerData = DB::select("select * from mxp_reportfooter");

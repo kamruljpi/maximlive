@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use Validator;
 use Auth;
 use DB;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class ChallanController extends Controller
 {
@@ -336,7 +337,7 @@ class ChallanController extends Controller
             }
         }
 
-        $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
+        $headerValue = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
         $multipleChallan = DB::select(" select * from mxp_multiplechallan where challan_id ='".$MultipleChallanUniqueID."'");
         $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$booking_order_id)->get();
 //        $footerData = DB::select("select * from mxp_reportfooter");

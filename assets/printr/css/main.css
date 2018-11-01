@@ -2,32 +2,32 @@ ul li {
   list-style-type: none;
 }
 .header-bottom{
-	padding-top: 10px;
+  padding-top: 10px;
 }
 .header-bottom .header-bottom-b{
-	padding:5px 0px 5px 0px;
-	text-align: center;
-	background-color: black !important;
+  padding:5px 0px 5px 0px;
+  text-align: center;
+  background-color: black !important;
 }
 .header-bottom-b span{
-	font-size: 25px;
-	font-weight: bold;
-	color:#FFF !important;
+  font-size: 25px;
+  font-weight: bold;
+  color:#FFF !important;
 }
 .body-top{
-	padding-top: 5px;
-	padding-left: 0px;
+  padding-top: 5px;
+  padding-left: 0px;
 }
 .body-top .body-list{
-	padding-left: 0px;
+  padding-left: 0px;
 }
 .body-top .body-list ul{
-	list-style-type: none;
-	font-size: 16px;
-	margin-left: -27px;
+  list-style-type: none;
+  font-size: 16px;
+  margin-left: -27px;
 }
 .idid{
-	padding-left: 300px;
+  padding-left: 300px;
 }
 
 .colspan-td table {
@@ -117,7 +117,10 @@ ul li {
         color: white !important;
     }
 
-    table thead tr #erp_code{
-      width: 20%;
+    table th#poCatNo {
+      min-width: 180px !important;
+    }
+    table th#erp_code {
+      min-width: 190px !important;
     }
 }

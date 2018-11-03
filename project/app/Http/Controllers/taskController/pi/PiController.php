@@ -105,12 +105,18 @@ class PiController extends Controller
 	public function redirectPiReport(Request $request){
 		$companyInfo = DB::table('mxp_header')->where('header_type',HeaderType::PI)->get();
 		$bookingDetails = MxpPi::where([
-				['p_id',$request->p_id],
-				['is_type',$request->is_type],
-			])
-			->select('*',DB::Raw('sum(item_quantity) as item_quantity'))
-			->groupBy('item_code')
-			->get();
+					['p_id',$request->p_id],
+					['is_type',$request->is_type],
+				])
+				->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
+					DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
+					DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
+					DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
+				->groupBy('item_code')
+				->groupBy('poCatNo')
+				->orderBy('poCatNo')
+				->get();
+			
         $footerData = DB::table('mxp_reportfooter')->where('status', 1)->get();
 		$buyerDetails = DB::table('mxp_bookingbuyer_details')
 	    	->where('booking_order_id',$bookingDetails[0]->booking_order_id)

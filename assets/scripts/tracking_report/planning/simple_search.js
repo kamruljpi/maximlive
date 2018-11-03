@@ -52,7 +52,7 @@ function addPlanningReportRow(results, start){
 
             var idstrcount = (8 - itemLists[ij].job_number.toString().length);
             var jobnumber = zeroc.repeat(idstrcount)+''+itemLists[ij].job_number;
-            // total_qty += itemLists[ij].item_quantity;
+            total_qty += itemLists[ij].item_quantity;
 
             book_html += '<tr class="booking_list_table">';
             book_html += '<td><input type="hidden" name="job_id[]" value="'+jobnumber+'">'+jobnumber+'</td>';
@@ -61,7 +61,7 @@ function addPlanningReportRow(results, start){
             book_html += '<td><input type="hidden" name="attention_invoice[]" value="'+rows[i].attention_invoice+'">'+rows[i].attention_invoice+'</td>';
             book_html += '<td><input type="hidden" name="booking_order_id[]" value="'+rows[i].booking_order_id+'">'+rows[i].booking_order_id+'</td>';
             book_html += '<td><input type="hidden" name="po_cat_no[]" value="'+itemLists[ij].poCatNo+'">'+itemLists[ij].poCatNo+'</td>';
-            // book_html += '<td><input type="hidden" name="p_ids[]" value="'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'">'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
+            book_html += '<td><input type="hidden" name="p_ids[]" value="'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'">'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
             book_html += '<td><input type="hidden" name="challan_ids[]" value="'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'">'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
             book_html += '<td><input type="hidden" name="ipo_ids[]" value="'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'">'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
             book_html += '<td><input type="hidden" name="mrf_ids[]" value="'+((itemLists[ij].mrf.length != 0)? itemLists[ij].mrf[0].mrf_ids : '')+'">'+((itemLists[ij].mrf.length != 0)? itemLists[ij].mrf[0].mrf_ids : '')+'</td>';
@@ -71,13 +71,14 @@ function addPlanningReportRow(results, start){
             book_html += '<td><input type="hidden" name="erp_code[]" value="'+itemLists[ij].erp_code+'">'+itemLists[ij].erp_code+'</td>';
             book_html += '<td><input type="hidden" name="item_size[]" value="'+itemLists[ij].item_size+'">'+itemLists[ij].item_size+'</td>';
             book_html += '<td><input type="hidden" name="item_description[]" value="'+itemLists[ij].item_description+'">'+itemLists[ij].item_description+'</td>';
+            book_html += '<td><input type="hidden" name="sku[]" value="'+itemLists[ij].sku+'">'+itemLists[ij].sku+'</td>';
             book_html += '<td><input type="hidden" name="item_quantity[]" value="'+itemLists[ij].item_quantity+'">'+itemLists[ij].item_quantity+'</td>';
             book_html += '</tr>';
         }
         sl++;
     }
     book_html += '<tr>';
-    book_html += '<td colspan="13"></td>';
+    book_html += '<td colspan="15"></td>';
     book_html += '<td colspan="2"><strong>Total Qty:</strong></td>';
     book_html += '<td><strong><input type="hidden" name="total_qty[]" value="'+total_qty+'">'+total_qty+'</strong></td>';
     book_html += '</tr>';

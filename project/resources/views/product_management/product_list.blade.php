@@ -24,7 +24,7 @@
   </div>
   <div class="col-sm-6">
       <div class="form-group custom-search-form">
-        <input type="text" class="form-control" id="search" name="search" placeholder="Item Code"></input>
+        <input type="text" class="form-control keyup_preloder" id="search" name="search" placeholder="Item Code"></input>
       </div>
   </div>
 

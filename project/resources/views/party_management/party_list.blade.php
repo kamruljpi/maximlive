@@ -30,7 +30,7 @@ trans('others.party_list_label'))
 
 <div class="col-sm-8">
     <div class="form-group custom-search-form">
-        <input type="text" name="searchFld" class="form-control" placeholder="Vendor Name" id="vendor_search">
+        <input type="text" name="searchFld" class="form-control keyup_preloder" placeholder="Vendor Name" id="vendor_search">
     </div>
 </div>
 

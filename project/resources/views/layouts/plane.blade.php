@@ -90,11 +90,25 @@
                 $('.status').attr('id', 'status');
             }
           $('#status').fadeOut(); 
-          $('#preloader2').delay(1000).fadeOut('slow'); 
-          $('body').delay(1000).css({'overflow':'visible'});
+          $('#preloader2').delay(10000).fadeOut('slow'); 
+          $('body').delay(10000).css({'overflow':'visible'});
           $('.status').removeAttr('style',' '); 
           $('.preloader2').removeAttr('style',' '); 
         });
+
+        $('.keyup_preloder').on('keyup', function() {
+            var parentClass = $('.abc').parent().parent().attr('id');
+            if(typeof(parentClass) =="undefined"){
+                $('.preloader2').attr('id', 'preloader2');
+                $('.status').attr('id', 'status');
+            }
+          $('#status').fadeOut(); 
+          $('#preloader2').delay(5000).fadeOut('slow'); 
+          $('body').delay(5000).css({'overflow':'visible'});
+          $('.status').removeAttr('style',' '); 
+          $('.preloader2').removeAttr('style',' '); 
+        });
+
 	</script>
 	@yield('LoadScript')
 </body>

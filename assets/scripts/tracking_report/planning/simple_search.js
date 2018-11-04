@@ -52,7 +52,7 @@ function addPlanningReportRow(results, start){
 
             var idstrcount = (8 - itemLists[ij].job_number.toString().length);
             var jobnumber = zeroc.repeat(idstrcount)+''+itemLists[ij].job_number;
-            total_qty += itemLists[ij].item_quantity;
+            total_qty += parseInt(itemLists[ij].item_quantity);
 
             book_html += '<tr class="booking_list_table">';
             book_html += '<td><input type="hidden" name="job_id[]" value="'+jobnumber+'">'+jobnumber+'</td>';

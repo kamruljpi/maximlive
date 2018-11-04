@@ -181,7 +181,7 @@
                             @endforeach
                         @endforeach
                         <tr>
-                            <td colspan="14"></td>
+                            <td colspan="15"></td>
                             <td colspan="2"><strong style="font-size: 12px;">Total Qty:</strong></td>
                             <td><strong><input name="total_qty" value="" type="hidden">{{$total_qty}}</strong></td>
                         </tr>

@@ -30,7 +30,7 @@ trans('others.Gmts_color_list_label'))
 		</div>
 		<div class="col-sm-9">
 		    <div class="form-group custom-search-form">
-		        <input type="text" name="searchFld" class="form-control" placeholder="search" id="user_search">
+		        <input type="text" name="searchFld" class="form-control keyup_preloder" placeholder="search" id="user_search">
 		        <button class="btn btn-default" type="button">
 		            <i class="fa fa-search"></i>
 		        </button>

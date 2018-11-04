@@ -114,7 +114,7 @@ $roleCheck = $object->getRole();
 					<th>Serial No.</th>
 					<th>Booking No.</th>
 					<th>Pi No.</th>
-					<th>Action</th>
+					<th width="15%">Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -141,7 +141,7 @@ $roleCheck = $object->getRole();
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" style="left:-45px !important;">
                                     <li>
                                         <a  type="button" class="submit_customdemo" href="{{ Route('pi_edit_action', $value->p_id) }}" >Delete</a>
                                     </li>

@@ -92,7 +92,7 @@
                             <th>Attention</th>
                             <th>Booking No.</th>
                             <th>PO/CAT No.</th>
-                            {{--<th>PI No.</th>--}}
+                            <th>PI No.</th>
                             <th>Challan No.</th>
                             <th>PO No.</th>
                             <th>MRF No.</th>
@@ -102,6 +102,7 @@
                             <th width="">ERP Code</th>
                             <th>Size</th>
                             <th>Item Description</th>
+                            <th>Sku</th>
                             <th>Quantity</th>
                         </tr>
                     </thead>
@@ -136,10 +137,10 @@
                                         <input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" type="hidden">
                                         {{$valuelist->poCatNo}}
                                     </td>
-                                    {{--<td>
+                                    <td>
                                         <input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" type="hidden">
                                         {{$valuelist->pi->p_ids}}
-                                    </td>--}}
+                                    </td>
                                     <td>
                                         <input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" type="hidden">{{$valuelist->challan->challan_ids}}
                                     </td>
@@ -171,6 +172,7 @@
                                     <td>
                                         <input name="item_description[]" value="{{$valuelist->item_description}}" type="hidden">{{$valuelist->item_description}}
                                     </td>
+                                    <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
                                     <td>
                                         <input name="item_quantity[]" value="{{$valuelist->item_quantity}}" type="hidden">
                                         {{$valuelist->item_quantity}}
@@ -179,7 +181,7 @@
                             @endforeach
                         @endforeach
                         <tr>
-                            <td colspan="13"></td>
+                            <td colspan="14"></td>
                             <td colspan="2"><strong style="font-size: 12px;">Total Qty:</strong></td>
                             <td><strong><input name="total_qty" value="" type="hidden">{{$total_qty}}</strong></td>
                         </tr>

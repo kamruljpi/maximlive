@@ -28,13 +28,18 @@ class PiListController extends Controller
 	    	->first();
 
 		$bookingDetails = MxpPi::where([
-				['p_id',$request->pid],
-				['is_type',$is_type],
-			])
-			->select('*',DB::Raw('sum(item_quantity) as item_quantity'),DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as poCatNo'))
-			->groupBy('item_code')
-			->get();
-			
+					['p_id',$request->pid],
+					['is_type',$is_type],
+				])
+				->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
+					DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
+					DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
+					DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
+				->groupBy('item_code')
+				->groupBy('poCatNo')
+				->orderBy('poCatNo')
+				->get();
+				
 		$companyInfo = DB::table('mxp_header')->where('header_type', HeaderType::PI)->get();
 		$footerData = DB::select("select * from mxp_reportfooter");
 		$getUserDetails = PiController::getUserDetails($bookingDetails[0]->user_id);

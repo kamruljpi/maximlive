@@ -103,9 +103,10 @@
                         <th width="">ERP Code</th>
                         <th>Size</th>
                         <th>Item Description</th>
+                        <th>Sku</th>
                         <th>Quantity</th>
                         <th>Price/Pcs.</th>
-                        <th>Value</th>
+                        <th>Total Price</th>
                     </tr>
                     </thead>
                     <?php
@@ -142,6 +143,8 @@
                                     <td><input name="erp_code[]" value="{{$valuelist->erp_code}}" hidden>{{$valuelist->erp_code}}</td>
                                     <td><input name="item_size[]" value="{{$valuelist->item_size}}" hidden>{{$valuelist->item_size}}</td>
                                     <td><input name="item_description[]" value="{{$valuelist->item_description}}" hidden>{{$valuelist->item_description}}</td>
+
+                                    <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
                                     <td><input name="item_quantity[]" value="{{$valuelist->item_quantity}}" hidden>{{$valuelist->item_quantity}}</td>
                                     <td><input name="item_price[]" value="{{$valuelist->item_price}}" hidden>${{$valuelist->item_price}}</td>
                                     <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$valuelist->item_price }}" hidden>${{ $valuelist->item_quantity*$valuelist->item_price }}</td>
@@ -149,7 +152,7 @@
                             @endforeach
                         @endforeach
                         <tr>
-                            <td colspan="16"></td>
+                            <td colspan="17"></td>
                             <td colspan="2"><strong style="font-size: 12px;">Total Price:</strong></td>
                             <td><strong><input name="total" value="{{ round($fullTotalAmount,2) }}" hidden>${{ round($fullTotalAmount,2) }}</strong></td>
                         </tr>

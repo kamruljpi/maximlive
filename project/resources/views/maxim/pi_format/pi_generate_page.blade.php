@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading', 'Proforma Invoice')
+@section('page_heading', ($is_type == 'fsc')?'FSC Proforma Invoice':' Proforma Invoice')
 @section('section')
 <?php
 	// print_r("<pre>");
@@ -20,7 +20,7 @@
 					<th>PO/Cat No</th>
 					<th>Item OOS</th>
 					<th>Item Code</th>
-					<th>ERP Code</th>
+					<th width="20%">ERP Code</th>
 					<th>Item Description</th>
 					<th>GMTS / item Color</th>
 					<th>Item Size</th>
@@ -88,9 +88,9 @@
 				</tbody>
 			</table>
 			<div class="form-group ">
-				<div class="col-md-2 pull-right">
+				<div class="col-md-2 pull-right" style="margin-bottom: 30px;">
 					{{--id="rbutton"--}}
-					<button type="submit" class="btn btn-primary" >
+					<button type="submit" class="btn btn-primary form-control" >
 						Generate
 					</button>
 				</div>

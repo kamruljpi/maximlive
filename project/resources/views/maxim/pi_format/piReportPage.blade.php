@@ -127,8 +127,8 @@
 	<thead>
 	    <tr>
 	    	<th width="5%">Serial No</th>
-	    	<th width="16%" id="poCatNo">PO/Cat No. </th>
-	    	<th>OOS No. </th>
+	    	<th width="" id="poCatNo">PO/Cat No. </th>
+	    	<th width="8%">OOS No. </th>
 	    	<th width="10%">Item code</th>
 	    	<th width="18%" id="erp_code">ERP Code</th>
 	    	<!-- <th>GMTS / Item Color</th> -->

@@ -96,8 +96,8 @@
     <thead>
         <tr>
         	<th>Job No.</th>
-        	<th width="15%">ERP Code</th>
-        	<th width="20%">Item / Code No.</th>
+        	<th width="30%">ERP Code</th>
+        	<th width="">Item / Code No.</th>
         	<th width="5%">Season Code</th>
         	<th>OOS No.</th>
         	<th>Style</th>

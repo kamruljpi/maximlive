@@ -170,7 +170,7 @@
 </script>
 
   <div class="table-responsive" style="height: 400px;">
-    <table class="table-striped " id="filed_increment">
+    <table class="table-striped " style="overflow-y: scroll;" id="filed_increment">
       <thead>
         <tr>
           <th width="10%">PO/Cat No</th>

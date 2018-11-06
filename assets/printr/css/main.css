@@ -102,19 +102,21 @@ ul li {
     margin-top: 30px;
   }
   .report-header{
-      background-color: black !important;
+    margin-top: -25px;
+    margin-bottom: -20px;
+    background-color: white !important;
    }
    .report-header h3{
-      color: white !important;
+      color: black !important;
    }
 @media print {
     .report-header {
-        background-color: black !important;
+        background-color: white !important;
         -webkit-print-color-adjust: exact;
     }
 
     .report-header h3 {
-        color: white !important;
+        color: black !important;
     }
 
     /*table th#poCatNo {

@@ -1,11 +1,11 @@
 @extends('layouts.dashboard')
-@section('page_heading', trans("others.mxp_menu_mrf_list") )
+@section('page_heading','PO List')
 @section('section')
 
 	<button class="btn btn-warning" type="button" id="mrf_reset_btn">Reset</button>
 	<div id="mrf_simple_search_form">
 		<div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
-			<input type="text" name="mrfIdSearchFld" class="form-control" placeholder="MRF Id search" id="mrf_id_search">
+			<input type="text" name="mrfIdSearchFld" class="form-control" placeholder="PO No Search" id="mrf_id_search">
 			<button class="btn btn-info" type="button" id="mrf_simple_search">
 				Search{{--<i class="fa fa-search"></i>--}}
 			</button>
@@ -58,25 +58,26 @@
 	<div class="row">
 		<div class="col-md-12 col-md-offset-0">
 			<table class="table table-bordered">
-				<tr>
-					<thead>
-					<th>Serial no</th>
-					<th>booking No.</th>
-					<th>MRF No.</th>
-					<th>Order Qty</th>
-					<th>MRF Create Date</th>
-					<th>MRF Shipment Date</th>
-					<th>Action</th>
-					</thead>
-				</tr>
+				<thead>
+					<tr>
+						<th>Serial no</th>
+						<th>Booking No.</th>
+						<th>MRF No.</th>
+						<th>PO No.</th>
+						<th>Order Date</th>
+						<th>Requested Shipment Date</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+
 				@php($j=1 + $bookingList->perPage() * ($bookingList->currentPage() - 1))
 				<tbody id="mrf_list_tbody">
 				@foreach($bookingList as $value)
 					<tr id="mrf_list_table">
 						<td>{{$j++}}</td>
 						<td>{{$value->booking_order_id}}</td>
+						<td>{{$value->booking_order_id}}</td>
 						<td>{{$value->mrf_id}}</td>
-						<td>{{$value->mrf_quantity}}</td>
 						<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
 						<td>{{$value->shipmentDate}}</td>
 						<td>

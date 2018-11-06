@@ -256,19 +256,19 @@
 			<li>1. Shipment: BY COURIER/ CARGO</li>		
 			<li>2. Packing: MAXIM STANDARD PACKING</li>
 			<li>3. Beneficiary Details:</li>
-			<li> <b>i) Beneficiary Bank: EBL Bangladesh</b></li>				
-			<li> <b>ii) Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh</b></li>	 		
-			<li> <b> iii) Telephone : (880 2) 9553053-6(Direct), 7113711-2, 7113714-8 Ext: 149-162</b></li>							
-			<li> <b>iv) Beneficiary:MAXIM LABEL & PACKAGING (BD) PVT., LTD</b></li>						 
-			<li> <b>v) Account Number: 1041060234447</b></li>								 
+			<li><b>i) Beneficiary Bank: EASTERN BANK LTD.</b></li>				
+			<li><b>ii) Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh</b></li>	 		
+			<li><b> iii) Telephone : (880 2) 9553053-6(Direct), 7113711-2, 7113714-8 Ext: 149-162</b></li>							
+			<li><b>iv) Beneficiary:MAXIM LABEL & PACKAGING (BD) PVT., LTD</b></li>						 
+			<li><b>v) Account Number: 1041060234447</b></li>								 
 			<li><b>vi) SWIFT:   EBLDBDDH</b></li>					
 			<li><b>vii) Origin : BANGLADESH</b></li>							
 			<li><b>viii) VAT Registration: 17011037475</b></li>
 			<li><b>ix) E-BIN NO: 000412786</b> </li>
-			<li>4. Payment Terms：BBLC/ CHAQUE/ CASH BEFORE SHIPMENT</li>
+			<li>4. Payment Terms：BBLC/ CHAQUE/ CASH/ FDD BEFORE SHIPMENT</li>
 			<li>i) Payment : By Irrevocable Letter of Credit (L/C) to be opened in our favor to be Advised through " Eastern bank Ltd, Bangladesh ,Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh  and Original L/C must be received to Our Bank. SWIFT CODE : EBLDBDDH </li>
 			<li>ii) Bill of Exchange will be Signed by the Applicant before Submitting to the Applicant's Bank.</li>
-			<li>iii) Payment to be made in US Dollar within 90/60/45/30 days or Sight from the Date of Delivery not Acceptance .</li>
+			<li>iii) Payment to be made in US Dollar within 90/60/45/30 days from the Date of Delivery not Acceptance or At Sight .</li>
 			<li>iv) Payment reimbursement proceeds through FDD/Cheque in Foreign Currency (US Dollar) Drawn on Bangladesh Bank.	</li>								
 			<li style="text-decoration: underline;">v) Overdue interest to be paid for delayed period at 15% p@ from the date of Maturity .</li>		
 			<li style="text-decoration: underline;">vi) All charge (Swift,Payment ,Reimbursement,Handling fee,etc) will bear by applicant.</li>							

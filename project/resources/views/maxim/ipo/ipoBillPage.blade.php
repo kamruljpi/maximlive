@@ -136,16 +136,16 @@
         <tr>
             <thead>
 	            <th>Job No.</th>
-	        	<th width="15%">ERP Code</th>
-	        	<th width="20%">Item / Code No.</th>
-	        	<!-- <th width="5%">Season Code</th> -->
-	        	<!-- <th>OOS No.</th> -->
-	        	<!-- <th>Style</th> -->
-	        	<!-- <th>PO/Cat No.</th> -->
+	        	<th width="25%" id="erp_code">ERP Code</th>
+	        	<th width="15%">Item / Code No.</th>
+	        	<th width="5%">Season Code</th>
+	        	<th>OOS No.</th>
+	        	<th>Style</th>
+	        	<th>PO/Cat No.</th>
 	        	<th>Description</th>
 	        	<th>GMTS Color</th>
 	        	<th width="15%">Size</th>
-	        	<!-- <th>Sku</th> -->
+	        	<th>Sku</th>
 	        	<th>Order Qty</th>
 				<th>Increase percentage</th>
 				<th>Increase Qty</th>
@@ -161,33 +161,30 @@
 	        	<?php 
 	        		$TotalBookingQty += $details->item_quantity; 
 	        		$jobId = (8 - strlen($details->job_id));
+	        		$p = (($details->item_quantity * $details->initial_increase)/100) + $details->item_quantity;
+	        		$totalIncrease += $p;
 	        	?>
 	        	<tr>
-	        		<td>{{ str_repeat('0',$jobId) }}{{ $details->id }}</td>
+	        		<td>{{ str_repeat('0',$jobId) }}{{ $details->job_id }}</td>
 			    	<td width="20%">{{$details->erp_code}}</td>
                 	<td width="10%">{{$details->item_code}}</td>
-			    	<!-- <td width="5%">{{$details->season_code}}</td> -->
-			    	<!-- <td width="5%">{{$details->oos_number}}</td> -->
-			    	<!-- <td width="5%">{{$details->style}}</td> -->
-			    	<!-- <td>{{$details->poCatNo}}</td> -->
+			    	<td width="5%">{{$details->season_code}}</td>
+			        <td width="5%">{{$details->oos_number}}</td>
+			    	<td width="5%">{{$details->style}}</td>
+			    	<td>{{$details->poCatNo}}</td>
 			    	<td>{{$details->item_description}}</td>
 			    	<td width="17%">{{$details->gmts_color}}</td>
 			    	<td width="17%">{{$details->item_size}}</td>
-			        <!-- <td>{{$details->sku}}</td> -->
+			        <td>{{$details->sku}}</td>
 			        <td>{{$details->item_quantity}}</td>
 					<td>{{ !empty($details->initial_increase)? $details->initial_increase.'%' : '' }}</td>
-					<td><?php
-							$p = ( ($details->item_quantity * $details->initial_increase)/100) + $details->item_quantity;
-							echo round($p); 
-							$totalIncrease += $p;
-						?>
-					</td>
+					<td>{{round($p)}}</td>
 			        <td>PCS</td>
 			        <td></td>
 	        	</tr>
         	@endforeach
         	<tr style="height: 30px;">
-        		<td colspan="6"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
+        		<td colspan="11"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
         		<td> {{$TotalBookingQty}}</td>
 				<td></td>
         		<td><?= floor($totalIncrease); ?></td>

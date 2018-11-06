@@ -16,6 +16,7 @@ use DB;
 use Illuminate\Http\Request;
 use Validator;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class TaskController extends Controller {
 	CONST CREATE_IPO = "create";
@@ -277,7 +278,7 @@ class TaskController extends Controller {
 		} else if($taskType === 'bill'){
 
 			$conversion_rate = $request->conversion_rate;
-			$companyInfo = DB::table('mxp_header')->where('header_type', 11)->get();
+			$companyInfo = DB::table('mxp_header')->where('header_type', HeaderType::COMPANY)->get();
 			$bookingDetails = DB::select('call getBookinAndBuyerDeatils("' . $request->bookingId . '")');
 			if (empty($bookingDetails)) {
 				StatusMessage::create('empty_booking_data', 'This booking Id doesnot show any result . Please check booking Id !');

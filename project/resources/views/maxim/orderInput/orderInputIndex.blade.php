@@ -163,11 +163,14 @@
     </div>
 
 
-  <div style="padding-top: 20px;"></div>
-
+  <div style="padding-top: 40px;"></div>
+<script type="text/javascript">
+  $(document).ready(function(){
+  });
+</script>
 
   <div class="table-responsive" style="height: 400px;">
-    <table class="table-striped " style="overflow-y: scroll;" id="filed_increment">
+    <table class="table-striped " id="filed_increment">
       <thead>
         <tr>
           <th width="10%">PO/Cat No</th>
@@ -187,11 +190,10 @@
       <tbody class="idclone" >
         <tr class="tr_clone">
             <input type="hidden" name="others_color[]" class="others_color" id="others_color" value="">
-
           <!-- PO/Cat No -->
           <td>
             <div class="form-group">
-                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO Cat No" title ="PO Cat No" id="item_po_cat_no" required>
+                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO/Cat No." title ="PO/Cat No." id="item_po_cat_no" required>
               </div>
           </td>
           <!-- end -->
@@ -206,13 +208,13 @@
 
           <td width="15%" style="padding-top: 15px;">
             <div class="form-group item_codemxp_parent">
-              <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code[]"  id="item_codemxp" data-parent="tr_clone" required>
+              <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code[]"  id="item_codemxp" data-parent="tr_clone" required placeholder="Item Code">
 
             </div>
           </td>
           <td>
             <div class="form-group" style="    width: 200px !important;">
-              <input type="text" name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true" >
+              <input type="text" name="erp[]" class="form-control erpNo" id="erpNo" placeholder="ERP code" readonly = "true" >
               <!-- <select name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true"> -->
               </select>
             </div>
@@ -221,14 +223,16 @@
           <!-- description -->
           <td>
             <div class="form-group">
-              <input type="text" name="item_description[]" class="item_description form-control" id="item_description" value="" readonly required>
+              <input type="text" name="item_description[]" class="item_description form-control" id="item_description" placeholder="Description" readonly required>
             </div>
           </td>
           <!--end -->
 
           <td>
             <div class="form-group" style="    width: 145px !important;">
-              <select name="item_gmts_color[]" class="form-control itemGmtsColor" id="itemGmtsColor" readonly="true"></select>
+              <select name="item_gmts_color[]" class="form-control itemGmtsColor" id="itemGmtsColor" disabled="true" >
+              <option value=" ">GMT/Color</option>
+              </select>
             </div>
           </td>
           <td>
@@ -236,6 +240,7 @@
               {{--<input type="text" name="item_size[]" class="form-control">--}}
 
               <select name="item_size[]" class="form-control itemSize" id="itemSize" disabled = "true" required>
+                <option value=" ">Item Size</option>
               </select>
             </div>
           </td>
@@ -244,26 +249,26 @@
           <!-- Style -->
           <td>
             <div class="form-group">
-              <input type="text" name="style[]" class="form-control item_style" id="item_style" required>
+              <input type="text" name="style[]" class="form-control item_style" id="item_style" placeholder="Style" required>
             </div>
           </td>
           <!-- end -->
 
           <td>
             <div class="form-group">
-              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" required>
+              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" placeholder="Sku" required>
             </div>
           </td>
 
           <td>
             <div class="form-group">
-              <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" required>
+              <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" placeholder="Quantity" required>
             </div>
           </td>
 
           <td>
             <div class="form-group">
-              <input type="text" name="item_price[]" class="form-control item_price" readonly="true" required>
+              <input type="text" name="item_price[]" class="form-control item_price" readonly="true" placeholder="Price" required>
               <!-- readonly -->
             </div>
           </td>
@@ -275,7 +280,7 @@
 
 
 
-    <div class="form-group button_add pull-left" style="margin-top: 10px ">
+    <div class="form-group button_add pull-left" style="margin-top: 20px;margin-bottom: 20px; ">
       <button type="submit" class="btn btn-success" id="add"><i class="fa fa-copy" style="padding-right: 5px;"></i>Copy Item</button>
       <button type="submit" class="btn btn-success" id="order_copy"><i class="fa fa-plus" style="padding-right: 5px;"></i>Add New Item</button>
       <button type="submit" class="btn btn-primary">Submit</button>

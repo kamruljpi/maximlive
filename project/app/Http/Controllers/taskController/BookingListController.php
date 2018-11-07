@@ -407,10 +407,20 @@ class BookingListController extends Controller
                             ->first();
 
         $bookingDetails->party_id_ = DB::table('mxp_party')->select('id as party_id_')->where('name',$bookingDetails->Company_name)->first();
+
+        $count = 0;
+        foreach ($bookingDetails->bookings_challan_table as $value){
+            if ( !empty($value->ipo_quantity) || !empty($value->mrf_quantity)){
+                $count++;
+            }
+        }
+        $leftBook = count($bookingDetails->bookings_challan_table) - $count;
+
         return view('maxim.booking_list.booking_View_Details',
                     [
                         'booking_id' => $request->booking_id, 
-                        'bookingDetails' => $bookingDetails
+                        'bookingDetails' => $bookingDetails,
+                        'leftBooking' => $leftBook
                     ]);
     }
 

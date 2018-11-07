@@ -6,6 +6,7 @@ use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\MxpMrf;
+use App\User;
 use Auth;
 use DB;
 
@@ -37,6 +38,13 @@ class MrfListController extends Controller
                         ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name')
                         ->where('mxp_mrf_table.mrf_id',$request->mid)
                         ->get();
+        if(isset($mrfDetails) && !empty($mrfDetails)){
+            foreach ($mrfDetails as &$value) {
+                $value->accpeted = User::where('user_id',$value->accepted_user_id)
+                                    ->select('first_name','last_name')
+                                    ->first();
+            }
+        }
         // $this->print_me($mrfDetails);
         return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails'));
     }

@@ -7,6 +7,7 @@
     // print_r(session('data'));
     // print_r("</pre>");
     use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+    use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 
     use App\Http\Controllers\taskController\Flugs\Role\PlaningFlugs;
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
@@ -32,7 +33,7 @@
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" style="left:-142px !important;">
-                    <li><a href="#">Cencel</a></li>
+                    <li><a href="{{Route('os_cancel_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}">Cencel</a></li>
                 </ul>
             </div>
         </div>
@@ -57,27 +58,27 @@
     </div>
 @endif
         
-{{-- @if($shipmentDate[0]->booking_status == BookingFulgs::BOOKED_FLUG) --}}
+ @if($mrfDetails[0]->mrf_status == MrfFlugs::OPEN_MRF)
     <div class="row">
         <div class="col-md-12">
-            <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
+            <center><div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
                 z-index: 999;">
-              <center><strong>Accept!</strong> this Order and go to proccessing. <a href="#" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accept</a></center>
-            </div>
+              <strong>Accept!</strong> this Order and go to proccessing. <a href="{{Route('os_accepted_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accept</a>
+            </div></center>
         </div>
     </div>
+@endif
 
-    @if(session('data') == BookingFulgs::BOOKING_PROCESS_FLUG)
+    @if(session('data'))
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-success" id="normal-btn-success">
                     <button type="button" class="close">×</button>
-                    Booking Accepted.
+                    Booking {{session('data')}}.
                 </div>
             </div>
         </div>        
     @endif
-{{-- @endif --}}
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -89,7 +90,7 @@
             <label>Vendor Name : {{ $mrfDetails[0]->buyer_name }}</label><br>
             <label>Prepared By : {{$mrfDetails[0]->first_name}} {{$mrfDetails[0]->last_name}}</label><br>
             <label>Order Date : {{ $mrfDetails[0]->orderDate }}</label><br>
-            <label>Accepted : </label><br>
+            <label>Accepted : <span style="color:red;">{{ $mrfDetails[0]->accpeted->first_name }} {{ $mrfDetails[0]->accpeted->last_name }}</span></label><br>
         </div>
         <div class="panel panel-default col-sm-5">
             <br>
@@ -142,7 +143,7 @@
                         <td>{{$values->sku}}</td>
                         <td>{{$values->mrf_quantity}}</td>
                         <td>
-                            <a href="#" class="btn btn-primary" style="z-index:999;"> Open</a>
+                            <a href="#" class="btn btn-primary" style="z-index:999;">{{$values->job_id_current_status}}</a>
                         </td>
                     </tr>
                     @endforeach

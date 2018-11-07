@@ -271,6 +271,7 @@ class MrfController extends Controller
             // $insertMrfValue->status = $bookingChallanValue->status;
             $insertMrfValue->action = self::CREATE_MRF;
             $insertMrfValue->mrf_status = self::OPEN_MRF;
+            $insertMrfValue->job_id_current_status = self::OPEN_MRF;
             $insertMrfValue->save();
         }
       }

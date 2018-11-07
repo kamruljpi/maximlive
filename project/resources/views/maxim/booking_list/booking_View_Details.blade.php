@@ -92,125 +92,130 @@
             @endif
         </div>
 
-            <table class="table table-bordered vi_table" id="b_table">
-                <thead>
-                    <tr>
-                        @if($roleCheck == 'p')
-                        <th>#</th>
-                        @endif
-                        <th>Job No.</th>
-                        <th width="15%">ERP Code</th>
-                        <th width="20%">Item Code</th>
-                        <th width="5%">Season Code</th>
-                        <th>OOS No.</th>
-                        <th>Style</th>
-                        <th>PO/Cat No.</th>
-                        <th>GMTS Color</th>
-                        <th>Description</th>
-                        <th width="15%">Size</th>
-                        <th>Sku</th>
-                        <th>Order Qty</th>
-                        @if($roleCheck != 'p')
-                        <th width="25%">Action</th>
-                        @endif
-                        @if($roleCheck == 'p')
-                        <th>IPO QTY</th>
-                        <th>MRF QTY</th>
-                        @endif
-                    </tr>
-                </thead>
+        <div class="panel panel-default col-sm-12" style="background-color: #000a12; color: #ffffff; text-align: center">
+            <h4>Available Booking: {{ $leftBooking }}</h4>
+        </div>
 
-                @if($roleCheck == 'empty')
-                    <tbody>
-                        @foreach($bookingDetails->bookings as $bookedItem)
-                        <?php $jobId = (8 - strlen($bookedItem->id)); ?>
-                        <tr style="">
-                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
-                            <td>{{$bookedItem->erp_code}}</td>
-                            <td>{{$bookedItem->item_code}}</td>
-                            <td>{{$bookedItem->season_code}}</td>
-                            <td>{{$bookedItem->oos_number}}</td>
-                            <td>{{$bookedItem->style}}</td>
-                            <td>{{$bookedItem->poCatNo}}</td>
-                            <td>{{$bookedItem->gmts_color }}</td>
-                            <td>{{$bookedItem->item_description }}</td>
-                            <td>{{$bookedItem->item_size}}</td>
-                            <td>{{$bookedItem->sku}}</td>
-                            <td>{{$bookedItem->item_quantity}}</td>
-                            <td>
-                                <div style="float: left;width: 46%;">
-                                <form method="POST" action="{{route('booking_details_update_view')}}" >
-                                    {{csrf_field()}}
-                                    <input type="hidden" name="job_id" value="{{$bookedItem->id}}">
-                                    <input type="hidden" name="party_id" value="{{$bookingDetails->party_id_->party_id_}}">
-                                    <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>
-                                </form>
-                                </div>
-                                <div style="float: right; width: 52%;">
-                                <a href="{{Route('booking_job_id_delete_action')}}/{{$bookedItem->id}}" class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</a>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                @elseif($roleCheck == 'p')
-                <form action="{{route('ipo_mrf_define')}}">
-           {{csrf_field()}}
-           <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
-                    <tbody>
-                        @foreach($bookingDetails->bookings_challan_table as $bookedItem)
-                        <?php $jobId = (8 - strlen($bookedItem->id)); ?>
-                        <tr style="" class="{{ (!empty($bookedItem->ipo_quantity))? 'impomrf' :  (!empty($bookedItem->mrf_quantity))? 'impomrf' : '' }} ">
-                            <label for="job_id">
-                            <td width="3.5%">
-                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
-                            </td>
-                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
-                            <td>{{$bookedItem->erp_code}}</td>
-                            <td>{{$bookedItem->item_code}}</td>
-                            <td>{{$bookedItem->season_code}}</td>
-                            <td>{{$bookedItem->oos_number}}</td>
-                            <td>{{$bookedItem->style}}</td>
-                            <td>{{$bookedItem->poCatNo}}</td>
-                            <td>{{$bookedItem->gmts_color }}</td>
-                            <td>{{$bookedItem->item_description }}</td>
-                            <td>{{$bookedItem->item_size}}</td>
-                            <td>{{$bookedItem->sku}}</td>
-                            <td>{{$bookedItem->left_mrf_ipo_quantity + $bookedItem->ipo_quantity + $bookedItem->mrf_quantity}}</td>
-                            <td>{{$bookedItem->ipo_quantity}}</td>
-                            <td>{{$bookedItem->mrf_quantity}}</td>
-                            </label>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                @endif
-            </table>
-            @if($roleCheck == 'p')
-            <div class="row">
-                <div class="col-md-6"></div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <input type="text" name="increase_value" class="form-control increase_field hidden" placeholder="Increase Value">
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group pull-right">
-                        <label class="radio-inline">
-                            <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>IPO
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>MRF
-                        </label>
-                        <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </div>
-            @endif
-        </form>
     </div>
 </div>
+
+<table class="table table-bordered vi_table" id="b_table">
+    <thead>
+    <tr>
+        @if($roleCheck == 'p')
+            <th>#</th>
+        @endif
+        <th>Job No.</th>
+        <th width="15%">ERP Code</th>
+        <th width="20%">Item Code</th>
+        <th width="5%">Season Code</th>
+        <th>OOS No.</th>
+        <th>Style</th>
+        <th>PO/Cat No.</th>
+        <th>GMTS Color</th>
+        <th>Description</th>
+        <th width="15%">Size</th>
+        <th>Sku</th>
+        <th>Order Qty</th>
+        @if($roleCheck != 'p')
+            <th width="25%">Action</th>
+        @endif
+        @if($roleCheck == 'p')
+            <th>IPO QTY</th>
+            <th>MRF QTY</th>
+        @endif
+    </tr>
+    </thead>
+
+    @if($roleCheck == 'empty')
+        <tbody>
+        @foreach($bookingDetails->bookings as $bookedItem)
+            <?php $jobId = (8 - strlen($bookedItem->id)); ?>
+            <tr style="">
+                <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
+                <td>{{$bookedItem->erp_code}}</td>
+                <td>{{$bookedItem->item_code}}</td>
+                <td>{{$bookedItem->season_code}}</td>
+                <td>{{$bookedItem->oos_number}}</td>
+                <td>{{$bookedItem->style}}</td>
+                <td>{{$bookedItem->poCatNo}}</td>
+                <td>{{$bookedItem->gmts_color }}</td>
+                <td>{{$bookedItem->item_description }}</td>
+                <td>{{$bookedItem->item_size}}</td>
+                <td>{{$bookedItem->sku}}</td>
+                <td>{{$bookedItem->item_quantity}}</td>
+                <td>
+                    <div style="float: left;width: 46%;">
+                        <form method="POST" action="{{route('booking_details_update_view')}}" >
+                            {{csrf_field()}}
+                            <input type="hidden" name="job_id" value="{{$bookedItem->id}}">
+                            <input type="hidden" name="party_id" value="{{$bookingDetails->party_id_->party_id_}}">
+                            <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>
+                        </form>
+                    </div>
+                    <div style="float: right; width: 52%;">
+                        <a href="{{Route('booking_job_id_delete_action')}}/{{$bookedItem->id}}" class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</a>
+                    </div>
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    @elseif($roleCheck == 'p')
+        <form action="{{route('ipo_mrf_define')}}">
+            {{csrf_field()}}
+            <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
+            <tbody>
+            @foreach($bookingDetails->bookings_challan_table as $bookedItem)
+                <?php $jobId = (8 - strlen($bookedItem->id)); ?>
+                <tr style="" class="{{ (!empty($bookedItem->ipo_quantity))? 'impomrf' :  (!empty($bookedItem->mrf_quantity))? 'impomrf' : '' }} ">
+                    <label for="job_id">
+                        <td width="3.5%">
+                            <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
+                        </td>
+                        <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
+                        <td>{{$bookedItem->erp_code}}</td>
+                        <td>{{$bookedItem->item_code}}</td>
+                        <td>{{$bookedItem->season_code}}</td>
+                        <td>{{$bookedItem->oos_number}}</td>
+                        <td>{{$bookedItem->style}}</td>
+                        <td>{{$bookedItem->poCatNo}}</td>
+                        <td>{{$bookedItem->gmts_color }}</td>
+                        <td>{{$bookedItem->item_description }}</td>
+                        <td>{{$bookedItem->item_size}}</td>
+                        <td>{{$bookedItem->sku}}</td>
+                        <td>{{$bookedItem->left_mrf_ipo_quantity + $bookedItem->ipo_quantity + $bookedItem->mrf_quantity}}</td>
+                        <td>{{$bookedItem->ipo_quantity}}</td>
+                        <td>{{$bookedItem->mrf_quantity}}</td>
+                    </label>
+                </tr>
+            @endforeach
+            </tbody>
+    @endif
+</table>
+@if($roleCheck == 'p')
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <input type="text" name="increase_value" class="form-control increase_field hidden" placeholder="Increase Value">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group pull-right">
+                <label class="radio-inline">
+                    <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>IPO
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>MRF
+                </label>
+                <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+    </form>
 
     @if($roleCheck == 'p')
     <div class="panel panel-default">

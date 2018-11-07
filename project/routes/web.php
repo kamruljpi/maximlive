@@ -1055,6 +1055,8 @@ include('task.php');
 include('refresh.php');
 include('tracking.php');
 include('search.php');
+include('mrf.php');
+include('ipo.php');
 
 
 //INSERT INTO `maxpronewerp`.`mxp_menu` (`name`, `route_name`, `description`, `parent_id`, `is_active`, `order_id`) VALUES ('Purchase Order', 'generate_purchase_order', 'purchase order list', '97', '1', '3');

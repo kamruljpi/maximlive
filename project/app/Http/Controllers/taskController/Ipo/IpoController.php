@@ -5,13 +5,14 @@ namespace App\Http\Controllers\taskController\Ipo;
 use App\Http\Controllers\Message\ActionMessage;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Model\MxpBookingChallan;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\MxpIpo;
 use Validator;
 use Auth;
 use DB;
+use Carbon;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 
@@ -343,5 +344,25 @@ class IpoController extends Controller
         $errors = '';
       }
       return $errors;
+    }
+
+    public function cancelIpo( $id ){
+
+        $ipo = MxpIpo::where('job_id', $id)->first();
+        $bc= MxpBookingChallan::where('job_id', $id)->first();
+
+        $bc->ipo_quantity = ($bc->ipo_quantity - $ipo->ipo_quantity == 0)? '': ($bc->ipo_quantity - $ipo->ipo_quantity) ;
+        $bc->left_mrf_ipo_quantity = $bc->item_quantity;
+
+        $bc->save();
+
+        MxpIpo::where('job_id', $id)->update([
+            'is_deleted' => BookingFulgs::IS_DELETED,
+            'deleted_user_id' => Auth::User()->user_id,
+            'deleted_date_at' =>  Carbon\Carbon::now(),
+            'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
+        ]);
+
+        return redirect()->back();
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @section('page_heading', trans("others.mxp_menu_booking_view_details") )
 @section('section')
-<?php 
+<?php
     // print_r("<pre>");
     // print_r($bookingDetails->bookings_challan_table);
     // print_r(session('data'));
@@ -11,6 +11,11 @@
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
 ?>
+<style type="text/css">
+    .impomrf{
+        background-color: gainsboro;
+    }
+</style>
 <div class="row">
     <div class="col-sm-2">
         <div class="form-group "> {{--URL::previous()--}}
@@ -37,7 +42,7 @@
         </ul>
     </div>
 @endif
-        
+
 @if($roleCheck == 'p')
     @if($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)
         <div class="row">
@@ -58,7 +63,7 @@
                     Booking Accepted.
                 </div>
             </div>
-        </div>        
+        </div>
     @endif
 @endif
 
@@ -86,8 +91,8 @@
                @endif
             @endif
         </div>
-        
-            <table class="table table-bordered vi_table">
+
+            <table class="table table-bordered vi_table" id="b_table">
                 <thead>
                     <tr>
                         @if($roleCheck == 'p')
@@ -101,6 +106,7 @@
                         <th>Style</th>
                         <th>PO/Cat No.</th>
                         <th>GMTS Color</th>
+                        <th>Description</th>
                         <th width="15%">Size</th>
                         <th>Sku</th>
                         <th>Order Qty</th>
@@ -113,13 +119,13 @@
                         @endif
                     </tr>
                 </thead>
-                
+
                 @if($roleCheck == 'empty')
                     <tbody>
                         @foreach($bookingDetails->bookings as $bookedItem)
                         <?php $jobId = (8 - strlen($bookedItem->id)); ?>
                         <tr style="">
-                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>                
+                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
                             <td>{{$bookedItem->erp_code}}</td>
                             <td>{{$bookedItem->item_code}}</td>
                             <td>{{$bookedItem->season_code}}</td>
@@ -127,9 +133,10 @@
                             <td>{{$bookedItem->style}}</td>
                             <td>{{$bookedItem->poCatNo}}</td>
                             <td>{{$bookedItem->gmts_color }}</td>
+                            <td>{{$bookedItem->item_description }}</td>
                             <td>{{$bookedItem->item_size}}</td>
                             <td>{{$bookedItem->sku}}</td>
-                            <td>{{$bookedItem->item_quantity}}</td>                         
+                            <td>{{$bookedItem->item_quantity}}</td>
                             <td>
                                 <div style="float: left;width: 46%;">
                                 <form method="POST" action="{{route('booking_details_update_view')}}" >
@@ -142,23 +149,23 @@
                                 <div style="float: right; width: 52%;">
                                 <a href="{{Route('booking_job_id_delete_action')}}/{{$bookedItem->id}}" class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</a>
                                 </div>
-                            </td>                    
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
-                @elseif($roleCheck == 'p')                        
+                @elseif($roleCheck == 'p')
                 <form action="{{route('ipo_mrf_define')}}">
            {{csrf_field()}}
            <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
-                    <tbody>              
+                    <tbody>
                         @foreach($bookingDetails->bookings_challan_table as $bookedItem)
                         <?php $jobId = (8 - strlen($bookedItem->id)); ?>
-                        <tr style="">
+                        <tr style="" class="{{ (!empty($bookedItem->ipo_quantity))? 'impomrf' :  (!empty($bookedItem->mrf_quantity))? 'impomrf' : '' }} ">
                             <label for="job_id">
                             <td width="3.5%">
                                 <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
                             </td>
-                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>           
+                            <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
                             <td>{{$bookedItem->erp_code}}</td>
                             <td>{{$bookedItem->item_code}}</td>
                             <td>{{$bookedItem->season_code}}</td>
@@ -166,6 +173,7 @@
                             <td>{{$bookedItem->style}}</td>
                             <td>{{$bookedItem->poCatNo}}</td>
                             <td>{{$bookedItem->gmts_color }}</td>
+                            <td>{{$bookedItem->item_description }}</td>
                             <td>{{$bookedItem->item_size}}</td>
                             <td>{{$bookedItem->sku}}</td>
                             <td>{{$bookedItem->left_mrf_ipo_quantity + $bookedItem->ipo_quantity + $bookedItem->mrf_quantity}}</td>
@@ -173,9 +181,9 @@
                             <td>{{$bookedItem->mrf_quantity}}</td>
                             </label>
                         </tr>
-                        @endforeach                        
+                        @endforeach
                     </tbody>
-                @endif               
+                @endif
             </table>
             @if($roleCheck == 'p')
             <div class="row">
@@ -198,7 +206,7 @@
                         </button>
                     </div>
                 </div>
-            </div>                    
+            </div>
             @endif
         </form>
     </div>
@@ -215,17 +223,17 @@
                         <th width="17%">MRF No.</th>
                         <th>Item Code</th>
                         <th>GMTS Color</th>
-                        <th width="8%">Item Size</th>
+                        <th>Item Size</th>
                         <th>Quantity</th>
                         <th>Delivered Quantity</th>
-                        <th>Shipment Date</th>
+                        <th>Requested Shipment Date</th>
                         <th>Status</th>
                         <th>Action</th>
                     </thead>
                 </tr>
                 <tbody>
                 @foreach($bookingDetails->mrf as $value)
-                <?php 
+                <?php
                     $idstrcount = (8 - strlen($value->job_id));
                     // $gmts_color = explode(',', $value->gmts_color);
                     // $itemsize = explode(',', $value->item_size);
@@ -235,20 +243,20 @@
                     <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->mrf_id}}</td>
                     <td>{{$value->item_code}}</td>
-                    <td>{{$value->gmts_color}}</td>                    
-                    <td width="18%">{{$value->item_size}}</td>
+                    <td>{{$value->gmts_color}}</td>
+                    <td>{{$value->item_size}}</td>
                     <td>{{$value->mrf_quantity}}</td>
-                    <td>Delivered Quantity</td>
+                    <td>{{$value->mrf_quantity}}</td>
                     <td>{{$value->shipmentDate}}</td>
                     <td>{{$value->mrf_status}}</td>
-                    <td>Action</td>
+                    <td><a class="btn btn-danger deleteButton" href="{{ Route('mrf_details_cancel_action', $value->job_id) }}" >Cancel</a></td>
                 </tr>
                 @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-    
+
     <div class="panel panel-default">
         <div class="panel-heading" style="font-size: 120%">IPO Details</div>
         <div class="panel-body aaa">
@@ -262,7 +270,7 @@
                         <th>Item Size</th>
                         <th>Quantity</th>
                         <th>Delivered Quantity</th>
-                        <th>Shipment Date</th>
+                        <th>Requested Shipment Date</th>
                         <th>Status</th>
                         <th>Action</th>
                     </thead>
@@ -281,13 +289,13 @@
                     <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->ipo_id}}</td>
                     <td>{{$value->item_code}}</td>
-                    <td>{{$value->gmts_color}}</td>                    
-                    <td width="18%">{{$value->item_size}}</td>
+                    <td>{{$value->gmts_color}}</td>
+                    <td>{{$value->item_size}}</td>
                     <td>{{$value->ipo_quantity}}</td>
-                    <td>Delivered Quantity</td>
+                    <td>{{$value->ipo_quantity}}</td>
                     <td>{{$value->shipmentDate}}</td>
                     <td>{{$value->ipo_status}}</td>
-                    <td>Action</td>
+                    <td><a class="btn btn-danger deleteButton" href="{{ Route('ipo_details_cancel_action', $value->job_id) }}" >Cancel</a></td>
                     <!-- <td>{{Carbon\Carbon::parse($value->created_at)}}</td> -->
                 </tr>
                 @endforeach

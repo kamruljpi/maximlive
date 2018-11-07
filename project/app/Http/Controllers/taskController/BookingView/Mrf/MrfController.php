@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\taskController\BookingView\Mrf;
 
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Model\MxpMrf;
 use App\Model\MxpBookingChallan;
+use Illuminate\Support\Facades\Auth;
+use Carbon;
+use Session;
 
 class MrfController
 {
@@ -26,4 +30,23 @@ class MrfController
 
 		return (!empty($pi_details)) ? $pi_details : '';
 	}
+	public function cancelMrf( $id ){
+
+	    $mrf = MxpMrf::where('job_id', $id)->first();
+        $bc= MxpBookingChallan::where('job_id', $id)->first();
+
+        $bc->mrf_quantity = ($bc->mrf_quantity - $mrf->mrf_quantity == 0)? '': ($bc->mrf_quantity - $mrf->mrf_quantity) ;
+        $bc->left_mrf_ipo_quantity = $bc->item_quantity;
+
+        $bc->save();
+
+        MxpMrf::where('job_id', $id)->update([
+            'is_deleted' => BookingFulgs::IS_DELETED,
+            'deleted_user_id' => Auth::User()->user_id,
+            'deleted_date_at' =>  Carbon\Carbon::now(),
+            'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
+        ]);
+
+	    return redirect()->back();
+    }
 }

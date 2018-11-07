@@ -1055,6 +1055,8 @@ include('task.php');
 include('refresh.php');
 include('tracking.php');
 include('search.php');
+include('mrf.php');
+include('ipo.php');
 include('os/os_route.php');
 
 

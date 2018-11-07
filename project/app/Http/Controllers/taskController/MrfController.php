@@ -239,7 +239,8 @@ class MrfController extends Controller
         $challanMinusValueInsert->update();
       }
 
-      $cc = MxpMrf::count();
+      $cc = MxpMrf::select('mrf_id')->groupBy('mrf_id')->get();
+      $cc = count($cc);
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
       $id = "MRF"."-";
       $date = date('dmY') ;
@@ -263,7 +264,7 @@ class MrfController extends Controller
             $insertMrfValue->item_price = $bookingChallanValue->item_price;
             $insertMrfValue->matarial = $bookingChallanValue->matarial;
             $insertMrfValue->gmts_color = $bookingChallanValue->gmts_color;
-            $insertMrfValue->orderDate = $bookingChallanValue->orderDate;
+            $insertMrfValue->orderDate = Carbon::now()->format('d-m-Y');
             $insertMrfValue->orderNo = $bookingChallanValue->orderNo;
             $insertMrfValue->shipmentDate = $request->mrf_shipment_date;
             $insertMrfValue->poCatNo = $bookingChallanValue->poCatNo;

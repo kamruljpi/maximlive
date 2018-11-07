@@ -275,7 +275,7 @@ class IpoController extends Controller
             $createIpo->matarial         = $bookingChallanValue->matarial;
             $createIpo->gmts_color       = $bookingChallanValue->gmts_color;
             $createIpo->others_color     = $bookingChallanValue->others_color;
-            $createIpo->orderDate        = $bookingChallanValue->orderDate;
+            $createIpo->orderDate        = Carbon::now()->format('d-m-Y');
             $createIpo->orderNo          = $bookingChallanValue->orderNo;
             $createIpo->shipmentDate     = $bookingChallanValue->shipmentDate;
             $createIpo->poCatNo          = $bookingChallanValue->poCatNo;

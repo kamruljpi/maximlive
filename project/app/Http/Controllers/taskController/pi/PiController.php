@@ -17,6 +17,7 @@ use App\User;
 use Carbon;
 use Session;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 
 class PiController extends Controller
 {
@@ -138,10 +139,15 @@ class PiController extends Controller
 
         if(isset($pi_value) && !empty($pi_value)){
             foreach ($pi_value as $value) {
-                $value->is_deleted = 1;
+                $value->is_deleted = BookingFulgs::IS_DELETED;
                 $value->deleted_user_id = Auth::User()->user_id;
                 $value->deleted_date_at = Carbon\Carbon::now();
                 $value->save();
+                
+                $booking = MxpBooking::find($value->job_no);
+                $booking->is_pi_type = BookingFulgs::IS_PI_UNSTAGE_TYPE;
+                $booking->save();
+                
                 $msg = "Pi ".$p_id." deleted successfully.";
             }
 

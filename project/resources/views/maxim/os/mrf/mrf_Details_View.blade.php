@@ -3,11 +3,14 @@
 @section('section')
 <?php 
     // print_r("<pre>");
-    // print_r($bookingDetails->bookings_challan_table);
+    // print_r($shipmentDate);
     // print_r(session('data'));
     // print_r("</pre>");
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+
     use App\Http\Controllers\taskController\Flugs\Role\PlaningFlugs;
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
 ?>
@@ -54,7 +57,7 @@
     </div>
 @endif
         
-{{-- @if($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) --}}
+{{-- @if($shipmentDate[0]->booking_status == BookingFulgs::BOOKED_FLUG) --}}
     <div class="row">
         <div class="col-md-12">
             <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
@@ -83,17 +86,17 @@
     <div class="panel-body">
         <div class="panel panel-default col-sm-7">
             <br>
-            <label>Vendor Name : {{ $bookingDetails->buyer_name }}</label><br>
-            <label>Prepared By : {{ $bookingDetails->buyer_name }}</label><br>
-            <label>Order Date : {{ $bookingDetails->buyer_name }}</label><br>
-            <label>Accepted : {{ $bookingDetails->buyer_name }}</label><br>
+            <label>Vendor Name : {{ $mrfDetails[0]->buyer_name }}</label><br>
+            <label>Prepared By : {{$mrfDetails[0]->first_name}} {{$mrfDetails[0]->last_name}}</label><br>
+            <label>Order Date : {{ $mrfDetails[0]->orderDate }}</label><br>
+            <label>Accepted : </label><br>
         </div>
         <div class="panel panel-default col-sm-5">
             <br>
-            <label>MRF No. :{{ $bookingDetails->booking_order_id }}</label><br>
-            <label>Booking No. :{{ $bookingDetails->booking_order_id }}</label><br>
-            <label>Requested Shipment Date :{{ $bookingDetails->booking_order_id }}</label><br>
-            <label>MRF : <span style="color:red;">Processing </span></label><br>
+            <label>MRF No : {{ $mrfDetails[0]->mrf_id }}</label><br>
+            <label>Booking No : {{ $mrfDetails[0]->booking_order_id }}</label><br>
+            <label>Requested Shipment Date : {{ $mrfDetails[0]->shipmentDate }}</label><br>
+            <label>MRF : <span style="color:red;">{{ ucwords($mrfDetails[0]->mrf_status) }}</span></label><br>
         </div>
 
         <form action="{{Route('os_po_genarate_view')}}" method="POST">
@@ -108,7 +111,7 @@
                         <th width="">Item Code</th>
                         <th width="">ERP Code</th>
                         <th>Description</th>
-                        <th width="">Season Code</th>
+                        {{-- <th width="">Season Code</th> --}}
                         <th>GMTS Color</th>
                         <th width="">Size</th>
                         <th>Style</th>
@@ -118,26 +121,31 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($mrfDetails as $values)
+                    <?php 
+                        $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($values->job_id));
+                    ?>
                     <tr>
                         <td width="4%">
-                            <input type="checkbox" name="job_id" value="" class="form-control">
+                            <input type="checkbox" name="job_id" value="" class="form-control" value="{{$values->job_id}}">
                         </td>
-                        <td>001</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
+                        <td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$idstrcount) }}{{$values->job_id}}</td>
+                        <td>{{$values->oos_number}}</td>
+                        <td>{{$values->poCatNo}}</td>
+                        <td>{{$values->item_code}}</td>
+                        <td>{{$values->erp_code}}</td>
+                        <td>{{$values->item_description}}</td>
+                        {{-- <td>{{$values->season_code}}</td> --}}
+                        <td>{{$values->gmts_color}}</td>
+                        <td>{{$values->item_size}}</td>
+                        <td>{{$values->style}}</td>
+                        <td>{{$values->sku}}</td>
+                        <td>{{$values->mrf_quantity}}</td>
                         <td>
-                            <a href="#" class="btn btn-primary"> Accept</a>
+                            <a href="#" class="btn btn-primary" style="z-index:999;"> Open</a>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>         
             </table>
 

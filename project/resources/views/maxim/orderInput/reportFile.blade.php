@@ -46,7 +46,7 @@
 @endforeach
 <div class="row">
 	<div class="report-header">
-		<h3 align="center" style=" padding:8px; font-weight: bold;">BOOKING FORM</h3>
+		<h2 align="center" style=" padding:8px; font-weight: bold;">BOOKING FORM</h2>
 	</div>
 
 	<div style="padding-top: 10px;">

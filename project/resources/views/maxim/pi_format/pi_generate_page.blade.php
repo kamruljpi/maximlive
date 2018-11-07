@@ -1,5 +1,6 @@
 @extends('layouts.dashboard')
 @section('page_heading', ($is_type == 'fsc')?'FSC Proforma Invoice':' Proforma Invoice')
+@section('page_heading_right',  Carbon\Carbon::now()->format('d-m-Y'))
 @section('section')
 <?php
 	// print_r("<pre>");

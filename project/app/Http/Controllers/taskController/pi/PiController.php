@@ -24,10 +24,10 @@ class PiController extends Controller
 	public function piGenerate(Request $request){
 		$data = $request->all();
 
-		if($request->is_type === 'non_fsc'){
-			$is_type = 'non_fsc';
-		}else if($request->is_type === 'fsc'){
-			$is_type = 'fsc';
+		if($request->is_type === BookingFulgs::IS_PI_NON_FSC_TYPE){
+			$is_type = BookingFulgs::IS_PI_NON_FSC_TYPE;
+		}else if($request->is_type === BookingFulgs::IS_PI_FSC_TYPE){
+			$is_type = BookingFulgs::IS_PI_FSC_TYPE;
 		}
 
 		if (empty($data)) {
@@ -65,7 +65,7 @@ class PiController extends Controller
 		$count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
 		$date = date('dmY') ;
 
-		if($request->is_type === 'fsc'){
+		if($request->is_type === BookingFulgs::IS_PI_FSC_TYPE){
 			$customid = "fsc-".$date.$count;
 		}else{
 			$customid = $date.$count;

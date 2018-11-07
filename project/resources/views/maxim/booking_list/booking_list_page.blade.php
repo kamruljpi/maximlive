@@ -21,6 +21,16 @@
         .btn-group .btn-group + .btn-group {
             margin-left: -5px;
         }
+        button{
+            background-color: white;
+            border: transparent !important;
+            border-color: transparent;
+        }
+        button:focus,button:hover, button:active{
+            background-color: white;
+            border: transparent !important;
+            border-color: transparent;
+        }
         .popoverOption:hover{
             text-decoration: underline;
         }
@@ -105,7 +115,7 @@
     <br>
 
     <div class="row">
-        <div class="col-md-12 col-md-offset-0">
+        <div class="col-md-xs col-md-offset-0">
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -137,7 +147,7 @@
                         <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
                         <td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
                         <td>
-                            <a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">{{$value->booking_status}}</a>
+                            <button id="popoverOption" class=" popoverOption"   rel="popover" data-placement="top" data-original-title="" style="color:black;">{{$value->booking_status}}</button>
 
                             <div class="popper-content hide">
                                 <label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{Carbon\Carbon::parse($value->created_at)->format('d-m-Y H:i:s')}})</label><br>
@@ -199,7 +209,7 @@
 @section('LoadScript')
     <script type="text/javascript">
         $('.popoverOption').popover({
-            trigger: "hover",
+            trigger: "toggle",
             container: 'body',
             html: true,
             content: function () {

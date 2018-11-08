@@ -108,7 +108,7 @@
                     <div class="form-group">
                         <label class="col-sm-12 label-control">Suppliers</label>
                         <div class="col-sm-12">
-                            <select class="form-control" name="supplier_id">
+                            <select class="form-control" name="supplier_id" required="true">
                                 <option value="">Choose a Option</option>
                                 @foreach($suppliers as $supplier)
                                     <option value="{{$supplier->supplier_id}}">{{$supplier->name}}</option>

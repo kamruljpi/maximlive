@@ -27,7 +27,8 @@ class SupplierController extends Controller
 
         $inputErrorMsg = [
             'name.required' => 'Name is required',
-            'phone.required' => 'Contact is required',
+            'person_name.required' => 'Person Name is required',
+            'email.required' => 'Email is required',
             'address.required' => 'Address is required',
             'status.required' => 'Please select status'
         ];
@@ -36,7 +37,8 @@ class SupplierController extends Controller
             $req->all(),
             [
                 'name' => 'required',
-                'phone' => 'required',
+                'person_name' => 'required',
+                'email' => 'required',
                 'address' => 'required',
                 'status' => 'required'
             ],
@@ -46,7 +48,6 @@ class SupplierController extends Controller
         if($validate->fails()){
             return redirect()->back()->withInput($req->input())->withErrors($validate->messages());
         }
-
 
         $supplierId = Supplier::create($req->all())->supplier_id;
 
@@ -66,7 +67,8 @@ class SupplierController extends Controller
         Supplier::where('supplier_id', $req->supplier_id)
             ->update([
                 'name' => $req->name,
-                'phone'=> $req->phone,
+                'person_name'=> $req->person_name,
+                'email'=> $req->email,
                 'address'=>$req->address,
                 'status' =>$req->status
             ]);

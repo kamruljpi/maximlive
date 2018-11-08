@@ -35,21 +35,34 @@
                                 <div class="form-group">
                                     <label class="col-md-4 col-sm-4 control-label">Supplier Name</label>
                                     <div class="col-md-6 col-sm-6">
-                                        <input type="text" class="form-control  input_required" name="name" value="{{ old('name') }}">
+                                        <input type="text" class="form-control  input_required" name="name" value="{{ old('name') }}" placeholder="Supplier">
+                                    </div>
+                                </div>
+
+                                {{--<div class="form-group">--}}
+                                    {{--<label class="col-md-4 col-sm-4 control-label">Contact</label>--}}
+                                    {{--<div class="col-md-6 col-sm-6">--}}
+                                        {{--<input type="text" class="form-control  input_required" name="phone" value="{{ old('phone') }}">--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                                <div class="form-group">
+                                    <label class="col-md-4 col-sm-4 control-label">Person Name</label>
+                                    <div class="col-md-6 col-sm-6">
+                                        <input type="text" class="form-control  input_required" name="person_name" value="{{ old('person_name') }}" placeholder="Peter San">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-md-4 col-sm-4 control-label">Contact</label>
+                                    <label class="col-md-4 col-sm-4 control-label">Email Address</label>
                                     <div class="col-md-6 col-sm-6">
-                                        <input type="text" class="form-control  input_required" name="phone" value="{{ old('phone') }}">
+                                        <input type="text" class="form-control  input_required" name="email" value="{{ old('email') }}" placeholder="supplier@maxim.com">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label class="col-md-4 col-sm-4 control-label">Address</label>
                                     <div class="col-md-6 col-sm-6">
-                                        <input type="text" class="form-control  input_required" name="address" value="{{ old('address') }}">
+                                        <input type="text" class="form-control  input_required" name="address" value="{{ old('address') }}" placeholder="Dhaka">
                                     </div>
                                 </div>
 

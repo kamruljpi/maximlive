@@ -39,10 +39,24 @@
                                     </div>
                                 </div>
 
+                                {{--<div class="form-group">--}}
+                                    {{--<label class="col-md-4 col-sm-4 control-label">Contact</label>--}}
+                                    {{--<div class="col-md-6 col-sm-6">--}}
+                                        {{--<input type="text" class="form-control  input_required" name="phone" value="{{ $supplier->phone }}">--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+
                                 <div class="form-group">
-                                    <label class="col-md-4 col-sm-4 control-label">Contact</label>
+                                    <label class="col-md-4 col-sm-4 control-label">Person Name</label>
                                     <div class="col-md-6 col-sm-6">
-                                        <input type="text" class="form-control  input_required" name="phone" value="{{ $supplier->phone }}">
+                                        <input type="text" class="form-control  input_required" name="person_name" value="{{ $supplier->person_name }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 col-sm-4 control-label">Email</label>
+                                    <div class="col-md-6 col-sm-6">
+                                        <input type="text" class="form-control  input_required" name="email" value="{{ $supplier->email }}">
                                     </div>
                                 </div>
 

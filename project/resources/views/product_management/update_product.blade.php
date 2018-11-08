@@ -204,7 +204,7 @@ trans('others.update_product_label'))
                                                 <small style="float: left; padding-top: 4px;">
                                                     Vendor Price
                                                 </small>
-
+                                                
                                                 <a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addSupplierPrice">
                                                     <i class="material-icons">
                                                         add_circle_outline

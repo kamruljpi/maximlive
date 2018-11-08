@@ -1,10 +1,12 @@
 @extends('layouts.dashboard')
-@section('page_heading','New PO Genarate')
+@section('page_heading','New Purchase Order Genarate')
 @section('section')
 <?php 
-	// print_r("<pre>");
-	// print_r($bookingDetails[0]->booking_order_id);
-	// print_r("</pre>");
+	//print_r("<pre>");
+   	//print_r($jobid_values[0]);
+    //print_r("</pre>");
+
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
 ?>
 <div class="container-fluid">
 	<div class="row">
@@ -49,13 +51,7 @@
 							<div class="form-group">
 								<label class="col-sm-12 label-control">Supplier</label>
 								<div class="col-sm-12">
-									<select class="form-control" name="supplier_id" required>
-										<option value="">Choose a Option</option>
-										<option value="d">Choose a Option</option>
-										@foreach($suppliers as $supplier)
-											<option value="{{$supplier->supplier_id}}">{{$supplier->name}}</option>
-										@endforeach
-									</select>
+									<input type="text" class="form-control" value="{{$supplier->name}}" readonly="true">
 								</div>
 							</div>
 						</div>
@@ -83,33 +79,34 @@
 									<th width="">GMTS Color</th>
 									<th width="">Size</th>
 									<th width="">Quantity</th>
-									<th width="">Price</th>
+									<th width="">Supplier Price</th>
 									<th width="20%">Material</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>0001
-										<input type="hidden" name="job_id[]" value="">
-									</td>
-									<td>0001</td>
-									<td>0001</td>
-									<td>0001</td>
-									<td>0001</td>
-									{{-- <td>0001</td> --}}
-									{{-- <td>0001</td> --}}
-									{{-- <td>0001</td> --}}
-									<td>0001</td>
-									<td>0001</td>
-									<td>0001</td>
-									<td>0001</td>
-									<td>
-										<input type="text" name="supplier_price[]" class="form-control" value="" readonly="true">
-									</td>
-									<td>
-										<input id="material" class="form-control " type="text" name="material[]" placeholder="Material">
-									</td>
-								</tr>
+								@foreach($jobid_values as $values)
+								<?php 
+								    $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($values->job_id));
+								?>
+								<input type="hidden" name="job_id[]" value="{{$values->job_id}}">
+									<tr>
+										<td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$idstrcount) }}{{$values->job_id}}</td>
+										<td>{{$values->oos_number}}</td>
+										<td>{{$values->poCatNo}}</td>
+										<td>{{$values->item_code}}</td>
+										<td>{{$values->erp_code}}</td>
+										<td>{{$values->item_description}}</td>
+										<td>{{$values->gmts_color}}</td>
+										<td>{{$values->item_size}}</td>
+										<td>{{$values->mrf_quantity}}</td>
+										<td>
+											<input type="text" name="supplier_price[]" class="form-control" value="{{$values->item_price->supplier_price}}" readonly="true">
+										</td>
+										<td>
+											<input id="material" class="form-control " type="text" name="material[]" placeholder="Material">
+										</td>
+									</tr>
+								@endforeach
 							</tbody>
 						</table>
 						<div class="form-group ">

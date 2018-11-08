@@ -206,14 +206,14 @@ trans('others.update_product_label'))
                                                 </small>
 
 
-                                                <!-- <a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addSupplierPrice">
+                                                <a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addSupplierPrice">
                                                     <i class="material-icons">
                                                         add_circle_outline
                                                     </i>
                                                 </a>
                                                 <small style="float: left; padding-top: 4px;">
                                                     Supplier Price
-                                                </small> -->
+                                                </small>
 
                                                 <a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addCostPrice">
                                                     <i class="material-icons">

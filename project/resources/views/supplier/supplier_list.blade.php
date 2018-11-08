@@ -54,7 +54,8 @@
                     <tr>
                         <th class="">Sl</th>
                         <th class="">Supplier Name</th>
-                        <th class="">Contact</th>
+                        <th class="">Email Address</th>
+                        <th class="">Person Name</th>
                         <th class="">Address</th>
                         <th class="">Status</th>
                         <th class="">Action</th>
@@ -65,7 +66,8 @@
                   <tr>
                     <td>{{$key+1}}</td>
                     <td>{{$supplier->name}}</td>
-                    <td>{{$supplier->phone}}</td>
+                    <td>{{$supplier->email}}</td>
+                    <td>{{$supplier->person_name}}</td>
                     <td>{{$supplier->address}}</td>
 
                     <td>

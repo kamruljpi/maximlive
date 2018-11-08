@@ -8,12 +8,6 @@
     // print_r("</pre>");
     use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
     use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
-
-    use App\Http\Controllers\taskController\Flugs\Role\PlaningFlugs;
-    use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-
-    $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
-    $roleCheck = $object->getRole();
 ?>
 <div class="row">
     <div class="col-sm-2">
@@ -128,7 +122,7 @@
                     ?>
                     <tr>
                         <td width="4%">
-                            <input type="checkbox" name="job_id" value="" class="form-control" value="{{$values->job_id}}">
+                            <input type="checkbox" name="job_id" value="" class="form-control" value="{{$values->job_id}}" {{($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_OPEN) ? '' :''}}>
                         </td>
                         <td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$idstrcount) }}{{$values->job_id}}</td>
                         <td>{{$values->oos_number}}</td>
@@ -152,12 +146,29 @@
 
             <div class="form-group">
                 <div class="col-sm-2 pull-right">
-                    <button class="btn btn-success form-control"> Submit</button>
+                    <button class="btn btn-success form-control abc"> Submit</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $('.abc').on('click',function(){
+        $('.modal').show();
+        return false;
+    });
+</script>
 
 <div class="panel panel-default">
     <div class="panel-heading">

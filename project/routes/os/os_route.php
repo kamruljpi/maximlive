@@ -4,9 +4,9 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], functi
 	Route::get('os/mrf/list', 'Mrf\MrfListController@mrfListView')->name('os_mrf_list_view');
 	Route::get('os/mrf/report', 'Mrf\MrfListController@showMrfReport')->name('os_mrf_list_report_view');
 	Route::get('os/mrf/report/{mid?}', 'Mrf\MrfListController@detailsViewForm')->name('os_mrf_details_view');
-	Route::post('os/po/genarate', 'PO\PoController@poGenarateView')->name('os_po_genarate_view');
-	Route::post('os/po/genarate/action', 'PO\PoController@storeOsPo')->name('os_po_genarate_report_action');
-	Route::get('os/po/list', 'PO\PoListController@opListView')->name('os_po_list_view');
+	Route::post('os/po/genarate', 'Po\PoController@poGenarateView')->name('os_po_genarate_view');
+	Route::post('os/po/genarate/action', 'Po\PoController@storeOsPo')->name('os_po_genarate_report_action');
+	Route::get('os/po/list', 'Po\PoListController@opListView')->name('os_po_list_view');
 	Route::get('os/accepted/mrf/{mid?}', 'AcceptMrf')->name('os_accepted_mrf_action');
 	Route::get('os/cencel/mrf/{mid?}', 'CancelMrf')->name('os_cancel_mrf_action');
 });

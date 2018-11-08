@@ -13,7 +13,8 @@
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('erro_challan') ))
 	@endif
 	<div class="row">
-		<form action="{{ route('pi_generate_action') }}">
+		<form action="{{ Route('pi_generate_action') }}" method="POST">
+			{{csrf_field()}}
 			<table class="table table-bordered vi_table">
 				<thead>
 					<th>#</th>

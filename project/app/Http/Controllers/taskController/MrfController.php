@@ -15,6 +15,7 @@ use Auth;
 use DB;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 
 class MrfController extends Controller
 {
@@ -270,8 +271,8 @@ class MrfController extends Controller
             $insertMrfValue->poCatNo = $bookingChallanValue->poCatNo;
             // $insertMrfValue->status = $bookingChallanValue->status;
             $insertMrfValue->action = self::CREATE_MRF;
-            $insertMrfValue->mrf_status = self::OPEN_MRF;
-            $insertMrfValue->job_id_current_status = self::OPEN_MRF;
+            $insertMrfValue->mrf_status = MrfFlugs::OPEN_MRF;
+            $insertMrfValue->job_id_current_status = MrfFlugs::JOBID_CURRENT_STATUS_OPEN;
             $insertMrfValue->save();
         }
       }

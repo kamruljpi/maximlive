@@ -6,6 +6,7 @@ use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\MxpMrf;
+use App\Supplier;
 use App\User;
 use Auth;
 use DB;
@@ -40,12 +41,16 @@ class MrfListController extends Controller
                         ->get();
         if(isset($mrfDetails) && !empty($mrfDetails)){
             foreach ($mrfDetails as &$value) {
-                $value->accpeted = User::where('user_id',$value->accepted_user_id)
+                $value->mrf_accpeted = User::where('user_id',$value->accepted_user_id)
+                                    ->select('first_name','last_name')
+                                    ->first();
+                $value->jobid_accpeted = User::where('user_id',$value->current_status_accepted_user_id)
                                     ->select('first_name','last_name')
                                     ->first();
             }
         }
+        $suppliers = Supplier::where('status', 1)->where('is_delete', 0)->get();
         // $this->print_me($mrfDetails);
-        return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails'));
+        return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails','suppliers'));
     }
 }

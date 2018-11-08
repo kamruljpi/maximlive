@@ -109,6 +109,9 @@
           $('.preloader2').removeAttr('style',' '); 
         });
 
+        $('.close__').on('click',function(){
+            $('.modal').hide();
+        });
 	</script>
 	@yield('LoadScript')
 </body>

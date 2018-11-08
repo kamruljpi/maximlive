@@ -10,6 +10,6 @@ class MrfFlugs
 	const CANCEL_MAESSAGE = 'Cancel';
 	const ACCEPTED_MAESSAGE = 'Accepted';
 
-	const JOBID_CURRENT_STATUS_OPEN = 'Open';
+	const JOBID_CURRENT_STATUS_OPEN = 'open';
 	const JOBID_CURRENT_STATUS_ACCEPT = 'proccess';
 }

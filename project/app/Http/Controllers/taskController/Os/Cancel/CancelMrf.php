@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\taskController\Os;
+namespace App\Http\Controllers\taskController\Os\Cancel;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;

@@ -68,7 +68,7 @@
             <div class="col-md-12">
                 <div class="alert alert-success" id="normal-btn-success">
                     <button type="button" class="close">×</button>
-                    Booking {{session('data')}}.
+                    {{session('data')}}.
                 </div>
             </div>
         </div>        
@@ -79,12 +79,13 @@
         <div style="font-size: 120%">MRF Details</div>
     </div>
     <div class="panel-body">
+
         <div class="panel panel-default col-sm-7">
             <br>
             <label>Vendor Name : {{ $mrfDetails[0]->buyer_name }}</label><br>
-            <label>Prepared By : {{$mrfDetails[0]->first_name}} {{$mrfDetails[0]->last_name}}</label><br>
+            <label>Prepared By : {{ ucwords($mrfDetails[0]->first_name)}} {{ ucwords($mrfDetails[0]->last_name)}}</label><br>
             <label>Order Date : {{ $mrfDetails[0]->orderDate }}</label><br>
-            <label>Accepted : <span style="color:red;">{{ $mrfDetails[0]->accpeted->first_name }} {{ $mrfDetails[0]->accpeted->last_name }}</span></label><br>
+            <label>Accepted : <span style="color:red;">{{ ucwords($mrfDetails[0]->mrf_accpeted->first_name) }} {{ ucwords($mrfDetails[0]->mrf_accpeted->last_name) }}</span></label><br>
         </div>
         <div class="panel panel-default col-sm-5">
             <br>
@@ -94,8 +95,30 @@
             <label>MRF : <span style="color:red;">{{ ucwords($mrfDetails[0]->mrf_status) }}</span></label><br>
         </div>
 
-        <form action="{{Route('os_po_genarate_view')}}" method="POST">
+            <form action="{{Route('os_po_genarate_view')}}" method="POST">
             {{csrf_field()}}
+
+            <div class="row">
+                <div class="col-sm-8">
+                    <div>
+                        {{-- <span>Remaining</span> --}}
+                    </div>
+                </div>
+                <div class="col-sm-4 pull-right">
+                    <div class="form-group">
+                        <label class="col-sm-12 label-control">Suppliers</label>
+                        <div class="col-sm-12">
+                            <select class="form-control" name="supplier_id" required="true">
+                                <option value="">Choose a Option</option>
+                                @foreach($suppliers as $supplier)
+                                    <option value="{{$supplier->supplier_id}}">{{$supplier->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <table class="table table-bordered vi_table">
                 <thead>
                     <tr>
@@ -116,13 +139,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($mrfDetails as $values)
+                    @foreach($mrfDetails as $keys => $values)
                     <?php 
                         $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($values->job_id));
                     ?>
                     <tr>
                         <td width="4%">
-                            <input type="checkbox" name="job_id" value="" class="form-control" value="{{$values->job_id}}" {{($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_OPEN) ? '' :''}}>
+                            <input type="checkbox" name="job_id[]" class="form-control" value="{{$values->job_id}}" {{($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id != $values->current_status_accepted_user_id) ? 'disabled' :''}}>
                         </td>
                         <td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$idstrcount) }}{{$values->job_id}}</td>
                         <td>{{$values->oos_number}}</td>
@@ -137,7 +160,20 @@
                         <td>{{$values->sku}}</td>
                         <td>{{$values->mrf_quantity}}</td>
                         <td>
-                            <a href="#" class="btn btn-primary" style="z-index:999;">{{$values->job_id_current_status}}</a>
+                            @if($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id == $values->current_status_accepted_user_id)
+                                <a href="{{Route('os_mrf_jobid_cancel')}}/{{$values->job_id}}" class="btn btn-primary">
+                                    {{-- {{ucwords($values->job_id_current_status)}} --}}
+                                    Cancel
+                                </a>
+                            @elseif($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT)
+                                <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">{{ ucwords($values->jobid_accpeted->first_name) }} {{ ucwords($values->jobid_accpeted->last_name) }}</label>
+                            @else
+                                <div style="z-index: 9999;">
+                                    <a href="{{Route('os_mrf_jobid_accept')}}/{{$values->job_id}}" class="btn btn-primary">
+                                        {{ucwords($values->job_id_current_status)}}
+                                    </a>
+                                </div>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -153,22 +189,21 @@
     </div>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog">
+<div class="modal" tabindex="-1" role="dialog" style="margin-top: 150px;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
+        <div class="modal-body">
+            <div style="text-align: center;">
+                <i class="fa fa-warning" style="font-size:100px;color:red"></i><br>
+                <label style="font-size: 25px;">Please accept selected item.</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary close__" data-dismiss="modal">Close</button>
+        </div>
     </div>
   </div>
 </div>
-
-<script type="text/javascript">
-    $('.abc').on('click',function(){
-        $('.modal').show();
-        return false;
-    });
-</script>
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -190,11 +225,21 @@
             </thead>
             <tbody>
                 <tr>
-
+                    <td>011</td>
+                    <td>011</td>
+                    <td>011</td>
+                    <td>011</td>
+                    <td>011</td>
+                    <td>011</td>
+                    <td>011</td>
+                    <td>011</td>
                 </tr>
             </tbody>         
         </table>
     </div>
 </div>
 
+<script type="text/javascript">
+    $('{{session('datas')}}').show();
+</script>
 @endsection

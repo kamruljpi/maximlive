@@ -232,7 +232,7 @@
                         <th>Quantity</th>
                         <th>Delivered Quantity</th>
                         <th>Requested Shipment Date</th>
-                        <th>Status</th>
+                        <th>Current Status</th>
                         <th>Action</th>
                     </thead>
                 </tr>
@@ -251,9 +251,9 @@
                     <td>{{$value->gmts_color}}</td>
                     <td>{{$value->item_size}}</td>
                     <td>{{$value->mrf_quantity}}</td>
-                    <td>{{$value->mrf_quantity}}</td>
+                    <td></td>
                     <td>{{$value->shipmentDate}}</td>
-                    <td>{{$value->mrf_status}}</td>
+                    <td>{{$value->job_id_current_status}}</td>
                     <td><a class="btn btn-danger deleteButton" href="{{ Route('mrf_details_cancel_action', $value->job_id) }}" >Cancel</a></td>
                 </tr>
                 @endforeach

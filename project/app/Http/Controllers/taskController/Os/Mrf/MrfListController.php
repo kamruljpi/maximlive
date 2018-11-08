@@ -6,6 +6,7 @@ use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\MxpMrf;
+use App\User;
 use Auth;
 use DB;
 
@@ -31,15 +32,20 @@ class MrfListController extends Controller
     }
 
     public function detailsViewForm(Request $request){
-
-        $bookingDetails = MxpBookingBuyerDetails::with('bookings', 'ipo', 'mrf')
-                            ->leftjoin('mxp_users as mu','mu.user_id','accepted_user_id')
-                            ->select('mxp_bookingbuyer_details.*','mu.first_name','mu.last_name')
-                            ->where('booking_order_id', $request->booking_id)
-                            ->first();
-
-        $bookingDetails->party_id_ = DB::table('mxp_party')->select('id as party_id_')->where('name',$bookingDetails->Company_name)->first();
-        $booking_id = $request->booking_id;
-        return view('maxim.os.mrf.mrf_Details_View', compact('booking_id','bookingDetails'));
+        $mrfDetails = MxpMrf::join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mxp_mrf_table.booking_order_id')
+                        ->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
+                        ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
+                        ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name')
+                        ->where('mxp_mrf_table.mrf_id',$request->mid)
+                        ->get();
+        if(isset($mrfDetails) && !empty($mrfDetails)){
+            foreach ($mrfDetails as &$value) {
+                $value->accpeted = User::where('user_id',$value->accepted_user_id)
+                                    ->select('first_name','last_name')
+                                    ->first();
+            }
+        }
+        // $this->print_me($mrfDetails);
+        return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails'));
     }
 }

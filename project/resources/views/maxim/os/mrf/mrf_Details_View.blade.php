@@ -3,13 +3,11 @@
 @section('section')
 <?php 
     // print_r("<pre>");
-    // print_r($bookingDetails->bookings_challan_table);
+    // print_r($shipmentDate);
     // print_r(session('data'));
     // print_r("</pre>");
-    use App\Http\Controllers\taskController\Flugs\Role\PlaningFlugs;
-    use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-    $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
-    $roleCheck = $object->getRole();
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+    use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 ?>
 <div class="row">
     <div class="col-sm-2">
@@ -29,7 +27,7 @@
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" style="left:-142px !important;">
-                    <li><a href="#">Cencel</a></li>
+                    <li><a href="{{Route('os_cancel_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}">Cencel</a></li>
                 </ul>
             </div>
         </div>
@@ -54,27 +52,27 @@
     </div>
 @endif
         
-{{-- @if($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) --}}
+ @if($mrfDetails[0]->mrf_status == MrfFlugs::OPEN_MRF)
     <div class="row">
         <div class="col-md-12">
-            <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
+            <center><div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
                 z-index: 999;">
-              <center><strong>Accept!</strong> this Order and go to proccessing. <a href="#" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accept</a></center>
-            </div>
+              <strong>Accept!</strong> this Order and go to proccessing. <a href="{{Route('os_accepted_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accept</a>
+            </div></center>
         </div>
     </div>
+@endif
 
-    @if(session('data') == BookingFulgs::BOOKING_PROCESS_FLUG)
+    @if(session('data'))
         <div class="row">
             <div class="col-md-12">
                 <div class="alert alert-success" id="normal-btn-success">
                     <button type="button" class="close">×</button>
-                    Booking Accepted.
+                    Booking {{session('data')}}.
                 </div>
             </div>
         </div>        
     @endif
-{{-- @endif --}}
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -83,17 +81,17 @@
     <div class="panel-body">
         <div class="panel panel-default col-sm-7">
             <br>
-            <label>Vendor Name : {{ $bookingDetails->buyer_name }}</label><br>
-            <label>Prepared By : {{ $bookingDetails->buyer_name }}</label><br>
-            <label>Order Date : {{ $bookingDetails->buyer_name }}</label><br>
-            <label>Accepted : {{ $bookingDetails->buyer_name }}</label><br>
+            <label>Vendor Name : {{ $mrfDetails[0]->buyer_name }}</label><br>
+            <label>Prepared By : {{$mrfDetails[0]->first_name}} {{$mrfDetails[0]->last_name}}</label><br>
+            <label>Order Date : {{ $mrfDetails[0]->orderDate }}</label><br>
+            <label>Accepted : <span style="color:red;">{{ $mrfDetails[0]->accpeted->first_name }} {{ $mrfDetails[0]->accpeted->last_name }}</span></label><br>
         </div>
         <div class="panel panel-default col-sm-5">
             <br>
-            <label>MRF No. :{{ $bookingDetails->booking_order_id }}</label><br>
-            <label>Booking No. :{{ $bookingDetails->booking_order_id }}</label><br>
-            <label>Requested Shipment Date :{{ $bookingDetails->booking_order_id }}</label><br>
-            <label>MRF : <span style="color:red;">Processing </span></label><br>
+            <label>MRF No : {{ $mrfDetails[0]->mrf_id }}</label><br>
+            <label>Booking No : {{ $mrfDetails[0]->booking_order_id }}</label><br>
+            <label>Requested Shipment Date : {{ $mrfDetails[0]->shipmentDate }}</label><br>
+            <label>MRF : <span style="color:red;">{{ ucwords($mrfDetails[0]->mrf_status) }}</span></label><br>
         </div>
 
         <form action="{{Route('os_po_genarate_view')}}" method="POST">
@@ -108,7 +106,7 @@
                         <th width="">Item Code</th>
                         <th width="">ERP Code</th>
                         <th>Description</th>
-                        <th width="">Season Code</th>
+                        {{-- <th width="">Season Code</th> --}}
                         <th>GMTS Color</th>
                         <th width="">Size</th>
                         <th>Style</th>
@@ -118,37 +116,59 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($mrfDetails as $values)
+                    <?php 
+                        $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($values->job_id));
+                    ?>
                     <tr>
                         <td width="4%">
-                            <input type="checkbox" name="job_id" value="" class="form-control">
+                            <input type="checkbox" name="job_id" value="" class="form-control" value="{{$values->job_id}}" {{($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_OPEN) ? '' :''}}>
                         </td>
-                        <td>001</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
-                        <td>dsd</td>
+                        <td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$idstrcount) }}{{$values->job_id}}</td>
+                        <td>{{$values->oos_number}}</td>
+                        <td>{{$values->poCatNo}}</td>
+                        <td>{{$values->item_code}}</td>
+                        <td>{{$values->erp_code}}</td>
+                        <td>{{$values->item_description}}</td>
+                        {{-- <td>{{$values->season_code}}</td> --}}
+                        <td>{{$values->gmts_color}}</td>
+                        <td>{{$values->item_size}}</td>
+                        <td>{{$values->style}}</td>
+                        <td>{{$values->sku}}</td>
+                        <td>{{$values->mrf_quantity}}</td>
                         <td>
-                            <a href="#" class="btn btn-primary"> Accept</a>
+                            <a href="#" class="btn btn-primary" style="z-index:999;">{{$values->job_id_current_status}}</a>
                         </td>
                     </tr>
+                    @endforeach
                 </tbody>         
             </table>
 
             <div class="form-group">
                 <div class="col-sm-2 pull-right">
-                    <button class="btn btn-success form-control"> Submit</button>
+                    <button class="btn btn-success form-control abc"> Submit</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $('.abc').on('click',function(){
+        $('.modal').show();
+        return false;
+    });
+</script>
 
 <div class="panel panel-default">
     <div class="panel-heading">

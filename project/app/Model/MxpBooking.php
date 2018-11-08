@@ -28,7 +28,9 @@ class MxpBooking extends Model
     			'orderNo',
                 'shipmentDate',
     			'sku',
-    			'poCatNo'];
+    			'poCatNo',
+                'oos_number',
+                'season_code'];
 
     function buyer_details(){
         return $this->hasOne(MxpBookingBuyerDetails::class, 'booking_order_id','booking_order_id')->where('is_deleted',BookingFulgs::IS_NOT_DELETED);

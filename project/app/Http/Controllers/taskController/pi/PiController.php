@@ -17,21 +17,22 @@ use App\User;
 use Carbon;
 use Session;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 
 class PiController extends Controller
 {
 	public function piGenerate(Request $request){
 		$data = $request->all();
-
-		if($request->is_type === 'non_fsc'){
-			$is_type = 'non_fsc';
-		}else if($request->is_type === 'fsc'){
-			$is_type = 'fsc';
+		// $this->print_me($data['job_id']);
+		if($request->is_type === BookingFulgs::IS_PI_NON_FSC_TYPE){
+			$is_type = BookingFulgs::IS_PI_NON_FSC_TYPE;
+		}else if($request->is_type === BookingFulgs::IS_PI_FSC_TYPE){
+			$is_type = BookingFulgs::IS_PI_FSC_TYPE;
 		}
 
-		if (empty($data)) {
+		if (empty($data['job_id'])) {
 			StatusMessage::create('empty_booking_data', 'Have not checked any Item !');
-			return \Redirect()->Route('dashboard_view');
+			return \Redirect()->Route('task_dashboard_view');
 		}
 
 		$getDbValue = [];
@@ -64,7 +65,7 @@ class PiController extends Controller
 		$count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
 		$date = date('dmY') ;
 
-		if($request->is_type === 'fsc'){
+		if($request->is_type === BookingFulgs::IS_PI_FSC_TYPE){
 			$customid = "fsc-".$date.$count;
 		}else{
 			$customid = $date.$count;
@@ -107,6 +108,7 @@ class PiController extends Controller
 		$bookingDetails = MxpPi::where([
 					['p_id',$request->p_id],
 					['is_type',$request->is_type],
+					['is_deleted',BookingFulgs::IS_NOT_DELETED]
 				])
 				->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
 					DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
@@ -138,10 +140,15 @@ class PiController extends Controller
 
         if(isset($pi_value) && !empty($pi_value)){
             foreach ($pi_value as $value) {
-                $value->is_deleted = 1;
+                $value->is_deleted = BookingFulgs::IS_DELETED;
                 $value->deleted_user_id = Auth::User()->user_id;
                 $value->deleted_date_at = Carbon\Carbon::now();
                 $value->save();
+                
+                $booking = MxpBooking::find($value->job_no);
+                $booking->is_pi_type = BookingFulgs::IS_PI_UNSTAGE_TYPE;
+                $booking->save();
+                
                 $msg = "Pi ".$p_id." deleted successfully.";
             }
 

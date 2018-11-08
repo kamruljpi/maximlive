@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading','PO List')
+@section('page_heading','Purchase Order List')
 @section('section')
 
 	<button class="btn btn-warning" type="button" id="mrf_reset_btn">Reset</button>

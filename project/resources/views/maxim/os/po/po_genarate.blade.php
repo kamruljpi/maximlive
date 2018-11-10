@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading','New Purchase Order Genarate')
+@section('page_heading','New PO Genarate')
 @section('section')
 <?php 
 	//print_r("<pre>");
@@ -37,7 +37,8 @@
 					<form class="form-horizontal" role="form" method="POST" action="{{ Route('os_po_genarate_report_action') }}">
 						{{ csrf_field() }}
 
-						<input type="hidden" name="mrf_id" value="">
+						<input type="hidden" name="mrf_id" value="{{$jobid_values[0]->mrf_id}}">
+						<input type="hidden" name="supplier_id" value="{{$supplier->supplier_id}}">
 
 						<div class="col-sm-4">
 							<div class="form-group">
@@ -59,7 +60,7 @@
 							<div class="form-group">
 								<label class="col-sm-12 label-control">Requested Shipment Date</label>
 								<div class="col-sm-12">
-									<input id="datePickerDate" class="form-control" type="Date" name="mrf_shipment_date" required>
+									<input id="datePickerDate" class="form-control" type="Date" name="shipment_date" required>
 								</div>
 							</div>
 						</div>						

@@ -27,10 +27,14 @@ class PoController extends Controller
 		if(isset($request->job_id) && !empty($request->job_id)){
 			$check_open = '';
 			foreach ($request->job_id as $key_value) {
-				$jobid_value = MxpMrf::where('job_id',$key_value)->select('job_id_current_status')->first();
+				$jobid_value = MxpMrf::where('job_id',$key_value)->select('job_id_current_status','mrf_status')->first();
 				if ($jobid_value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_OPEN) {
 					$check_open = MrfFlugs::JOBID_CURRENT_STATUS_OPEN;
 				}
+			}
+
+			if($jobid_value->mrf_status == MrfFlugs::OPEN_MRF){
+				return redirect()->back()->with('data','Please accpet this order.');
 			}
 			if(!empty($check_open)){
 				return redirect()->back()->with('datas','.modal');
@@ -51,7 +55,7 @@ class PoController extends Controller
 			}
 		}
 
-		if(isset($jobid_values->job_id) && !empty($jobid_values->job_id) && !empty($request->supplier_id)){
+		if(isset($jobid_values[0]->job_id) && !empty($jobid_values[0]->job_id) && !empty($request->supplier_id)){
 			foreach ($jobid_values as &$item_price) {
 				$item_price->item_price = DB::table('mxp_supplier_prices')
 					->where([
@@ -120,12 +124,12 @@ class PoController extends Controller
 		return \Redirect::route('refresh_os_po_view',['pid' => $po_id]);
 	}
 
-	public function getOsPoValues($po_id,$order_by = null){
+	public static function getOsPoValues($po_id,$order_by = null){
 		$datas = MxpOsPo::join('mxp_mrf_table as mrf','mrf.job_id','mxp_os_po.job_id')
-						->join('mxp_booking as mp','mp.id','mxp_os_po.job_id')
+						->join('mxp_booking as mb','mb.id','mxp_os_po.job_id')
+						->join('mxp_product as mp','mp.product_code','mrf.item_code')
 						->Leftjoin('suppliers as s','s.supplier_id','mxp_os_po.supplier_id')
-						->select('mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code',
-							'mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mp.sku','mp.season_code','mp.oos_number','mp.style','mp.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name'
+						->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty'
 						)
 						->where([
 							['mxp_os_po.po_id',$po_id]],
@@ -148,11 +152,9 @@ class PoController extends Controller
 
 	public function redirectOsPoReport(Request $request){
 		$poDetails = $this->getOsPoValues($request->pid);
-		$this->print_me($poDetails);
-
 		$companyInfo  = DB::table("mxp_header")
 			->where('header_type',HeaderType::COMPANY)
 			->get();
-		return view('maxim.os.po.po_report',compact('companyInfo'));
+		return view('maxim.os.po.po_report',compact('companyInfo','poDetails'));
 	}
 }

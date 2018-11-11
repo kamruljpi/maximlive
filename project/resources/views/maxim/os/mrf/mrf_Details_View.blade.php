@@ -27,7 +27,7 @@
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" style="left:-142px !important;">
-                    <li><a href="{{Route('os_cancel_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}">Cencel</a></li>
+                    <li><a href="{{Route('os_cancel_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}" class="deleteButton" style=" {{($mrfDetails[0]->mrf_status == MrfFlugs::OPEN_MRF)?'pointer-events: none':''}};">Cencel</a></li>
                 </ul>
             </div>
         </div>
@@ -135,7 +135,7 @@
                         <th>Style</th>
                         <th>Sku</th>
                         <th>Order Qty</th>
-                        <th width="">Action</th>
+                        <th width="20%">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -160,13 +160,15 @@
                         <td>{{$values->sku}}</td>
                         <td>{{$values->mrf_quantity}}</td>
                         <td>
-                            @if($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id == $values->current_status_accepted_user_id)
+                            @if($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS)
+                             <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">Request sent ({{ucwords($values->jobid_accpeted->first_name)}}) </label>
+                            @elseif($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id == $values->current_status_accepted_user_id)
                                 <a href="{{Route('os_mrf_jobid_cancel')}}/{{$values->job_id}}" class="btn btn-primary">
                                     {{-- {{ucwords($values->job_id_current_status)}} --}}
                                     Cancel
                                 </a>
                             @elseif($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT)
-                                <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">{{ ucwords($values->jobid_accpeted->first_name) }} {{ ucwords($values->jobid_accpeted->last_name) }}</label>
+                                <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">{{ ucwords($values->jobid_accpeted->first_name) }} {{ ucwords($values->jobid_accpeted->last_name) }} (Accpeted)</label>
                             @else
                                 <div style="z-index: 9999;">
                                     <a href="{{Route('os_mrf_jobid_accept')}}/{{$values->job_id}}" class="btn btn-primary">
@@ -227,8 +229,11 @@
             <tbody>
                 @foreach($mrfDetails as $poValues)
                     @if($poValues->po_details->job_id)
+                        <?php 
+                            $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($poValues->po_details->job_id));
+                        ?>
                         <tr>
-                            <td>{{$poValues->po_details->job_id}}</td>
+                            <td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$jobId) }}{{$poValues->po_details->job_id}}</td>
                             <td>{{$poValues->po_details->name}}</td>
                             <td>{{$poValues->po_details->person_name}}</td>
                             <td>{{$poValues->po_details->item_code}}</td>

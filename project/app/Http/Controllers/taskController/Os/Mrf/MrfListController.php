@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\taskController\Os\Mrf;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
 use App\Model\MxpBookingBuyerDetails;
@@ -55,7 +56,10 @@ class MrfListController extends Controller
                                     ->select('mxp_os_po.job_id','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code',
                                         'mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mp.sku','mp.season_code','mp.oos_number','mp.style','mp.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','mrf.job_id_current_status'
                                     )
-                                    ->where('mxp_os_po.job_id',$value->job_id)
+                                    ->where([
+                                        ['mxp_os_po.job_id',$value->job_id],
+                                        ['mxp_os_po.is_deleted',BookingFulgs::IS_NOT_DELETED]
+                                    ])
                                     ->first();
             }
         }

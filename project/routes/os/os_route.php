@@ -16,4 +16,5 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], functi
     Route::post('os/export','OsTrackingController@exportReport')->name('os_export');
     Route::get('os/po/report/view','Po\PoListController@getPoReport')->name('os_po_report_view');
 });
+    Route::get('/os_tracking_report/','Po\PoController@getOsMrfValues')->name('get_ospo_by_id');
 });

@@ -140,6 +140,16 @@ class PoController extends Controller
 		return $datas;
 	}
 
+	public function getOsMrfValues(Request $request, $order_by = null){
+	    $mrfvalues = MxpMrf::where([
+	                            ['mrf_id', $request->mrf_id],
+                                ['is_deleted', BookingFulgs::IS_NOT_DELETED ]
+                            ])
+                            ->orderBy('job_id',$order_by)
+                            ->get();
+	    return $mrfvalues;
+    }
+
 	public function redirectOsPoReport(Request $request){
 		$poDetails = $this->getOsPoValues($request->pid);
 		$companyInfo  = DB::table("mxp_header")

@@ -24,7 +24,7 @@
     <button class="btn btn-warning" type="button" id="booking_reset_btn">Reset</button>
     <div id="booking_simple_search_form">
         <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
-            <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking No." id="booking_id_search">
+            <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking No." id="os_id_search">
             <button class="btn btn-info click_preloder" type="button" id="os_simple_search">
                 Search
             </button>

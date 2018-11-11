@@ -17,8 +17,8 @@ class CreateOsPoTable extends Migration
             $table->increments('id');
             $table->string('po_id');
             $table->integer('user_id');
+            $table->integer('job_id');
             $table->string('mrf_id');
-            $table->integer('mrf_job_id');
             $table->integer('supplier_id');
             $table->string('supplier_price');
             $table->string('material')->nullable();

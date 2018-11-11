@@ -214,26 +214,32 @@
             <thead>
                 <tr>
                     <th>Job No.</th>
-                    <th>Order Date</th>
-                    <th>Shipment date</th>
-                    <th width="">Item Code</th>
-                    <th>ERP</th>
-                    <th>Order Qty</th>
                     <th>Supplier Name</th>
+                    <th>Person Name</th>
+                    <th width="">Item Code</th>
+                    <th>Size</th>
+                    <th>Order Qty</th>
+                    <th>Material</th>
+                    <th>Shipment date</th>
                     <th width="">Current Status</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                </tr>
+                @foreach($mrfDetails as $poValues)
+                    @if($poValues->po_details->job_id)
+                        <tr>
+                            <td>{{$poValues->po_details->job_id}}</td>
+                            <td>{{$poValues->po_details->name}}</td>
+                            <td>{{$poValues->po_details->person_name}}</td>
+                            <td>{{$poValues->po_details->item_code}}</td>
+                            <td>{{$poValues->po_details->item_size_width_height}}</td>
+                            <td>{{$poValues->po_details->mrf_quantity}}</td>
+                            <td>{{$poValues->po_details->material}}</td>
+                            <td>{{$poValues->po_details->shipment_date}}</td>
+                            <td>{{ucfirst(str_replace('_',' ',$poValues->po_details->job_id_current_status))}}</td>
+                        </tr>
+                    @endif
+                @endforeach
             </tbody>         
         </table>
     </div>

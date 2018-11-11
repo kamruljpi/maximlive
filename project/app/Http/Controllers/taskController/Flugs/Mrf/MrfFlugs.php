@@ -12,4 +12,5 @@ class MrfFlugs
 
 	const JOBID_CURRENT_STATUS_OPEN = 'open';
 	const JOBID_CURRENT_STATUS_ACCEPT = 'proccess';
+	const JOBID_CURRENT_STATUS_WAITING_FOR_GOODS = 'waiting_for_goods';
 }

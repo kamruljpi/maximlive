@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class MxpOsPo extends Model
 {
-	protected $primaryKey = 'po_id';
     protected $table = "mxp_os_po";
 
-    protected $fillable = ['user_id',
+    protected $fillable = ['po_id',
+    					'user_id',
 						'mrf_id',
-						'mrf_job_id',
+						'job_id',
 						'supplier_id',
 						'supplier_price',
 						'material',
@@ -21,4 +21,5 @@ class MxpOsPo extends Model
 						'shipment_date',
 						'last_action_at'
 						];
+	protected $hidden = ['id'];
 }

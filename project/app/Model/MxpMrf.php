@@ -38,4 +38,6 @@ class MxpMrf extends Model
     public function mrf_ids(){
         return $this->hasMany(MxpBooking::class, 'id','job_id');
     }
+
+    protected $hidden = ['id'];
 }

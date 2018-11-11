@@ -2,6 +2,23 @@
 @section('page_heading', trans("others.mxp_menu_mrf_list") )
 @section('section')
 
+<style type="text/css">
+	.b1{
+	    border-bottom-left-radius: 4px;
+	    border-top-right-radius: 0px;
+	}
+	.b2{
+	    border-bottom-left-radius: 0px;
+	    border-top-right-radius: 4px;
+	}
+	.btn-group .btn + .btn,
+	.btn-group .btn + .btn-group,
+	.btn-group .btn-group + .btn,
+	.btn-group .btn-group + .btn-group {
+	    margin-left: -5px;
+	}
+</style>
+
 	<button class="btn btn-warning" type="button" id="mrf_reset_btn">Reset</button>
 	<div id="mrf_simple_search_form">
 		<div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
@@ -66,7 +83,7 @@
 					<th>Order Qty</th>
 					<th>MRF Create Date</th>
 					<th>MRF Shipment Date</th>
-					<th>Action</th>
+					<th width="12%">Action</th>
 					</thead>
 				</tr>
 				@php($j=1 + $bookingList->perPage() * ($bookingList->currentPage() - 1))
@@ -79,13 +96,33 @@
 						<td>{{$value->mrf_quantity}}</td>
 						<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
 						<td>{{$value->shipmentDate}}</td>
-						<td>
+						{{-- <td>
 							<form action="{{Route('mrf_list_action_task') }}" role="form" target="_blank">
 								<input type="hidden" name="mid" value="{{$value->mrf_id}}">
 								<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
 								<button class="btn btn-success" target="_blank">Report</button>
 							</form>
-						</td>
+						</td> --}}
+						<td width="12%">
+                        <div class="btn-group">
+                            <form action="{{ Route('mrf_list_action_task') }}" target="_blank">
+                                <input type="hidden" name="mid" value="{{$value->mrf_id}}">
+                                <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+                                <button class="btn btn-success" target="_blank">Report</button>
+
+                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+
+                                <ul class="dropdown-menu" style="left:-45px !important;">
+                                    <li>
+                                        <a href="{{ Route('os_mrf_details_view', $value->mrf_id) }}">Views</a>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                    </td>
 					</tr>
 				@endforeach
 				</tbody>

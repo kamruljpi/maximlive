@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-sm-2">
         <div class="form-group "> {{--URL::previous()--}}
-            <a href="{{ Route('os_mrf_list_view') }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
+            <a href="{{ Route('mrf_list_view') }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
             <i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
@@ -214,26 +214,32 @@
             <thead>
                 <tr>
                     <th>Job No.</th>
-                    <th>Order Date</th>
-                    <th>Shipment date</th>
-                    <th width="">Item Code</th>
-                    <th>ERP</th>
-                    <th>Order Qty</th>
                     <th>Supplier Name</th>
+                    <th>Person Name</th>
+                    <th width="">Item Code</th>
+                    <th>Size</th>
+                    <th>Order Qty</th>
+                    <th>Material</th>
+                    <th>Shipment date</th>
                     <th width="">Current Status</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                    <td>011</td>
-                </tr>
+                @foreach($mrfDetails as $poValues)
+                    @if($poValues->po_details->job_id)
+                        <tr>
+                            <td>{{$poValues->po_details->job_id}}</td>
+                            <td>{{$poValues->po_details->name}}</td>
+                            <td>{{$poValues->po_details->person_name}}</td>
+                            <td>{{$poValues->po_details->item_code}}</td>
+                            <td>{{$poValues->po_details->item_size_width_height}}</td>
+                            <td>{{$poValues->po_details->mrf_quantity}}</td>
+                            <td>{{$poValues->po_details->material}}</td>
+                            <td>{{$poValues->po_details->shipment_date}}</td>
+                            <td>{{ucfirst(str_replace('_',' ',$poValues->po_details->job_id_current_status))}}</td>
+                        </tr>
+                    @endif
+                @endforeach
             </tbody>         
         </table>
     </div>

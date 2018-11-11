@@ -1,8 +1,9 @@
 <?php
 
 Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], function () {
-	Route::get('os/mrf/list', 'Mrf\MrfListController@mrfListView')->name('os_mrf_list_view');
-	Route::get('os/mrf/report', 'Mrf\MrfListController@showMrfReport')->name('os_mrf_list_report_view');
+	Route::group(['middleware' => 'routeAccess'], function () {
+	// Route::get('os/mrf/list', 'Mrf\MrfListController@mrfListView')->name('os_mrf_list_view');
+	// Route::get('os/mrf/report', 'Mrf\MrfListController@showMrfReport')->name('os_mrf_list_report_view');
 	Route::get('os/mrf/report/{mid?}', 'Mrf\MrfListController@detailsViewForm')->name('os_mrf_details_view');
 	Route::post('os/po/genarate', 'Po\PoController@poGenarateView')->name('os_po_genarate_view');
 	Route::post('os/po/genarate/action', 'Po\PoController@storeOsPo')->name('os_po_genarate_report_action');
@@ -13,4 +14,6 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], functi
 	Route::get('os/cencel/jobid/{job_id?}', 'Cancel\CancelJobidByMrf')->name('os_mrf_jobid_cancel');
     Route::get('os/tracking/report', 'OsTrackingController@trackingReportView')->name('os_tracking_list');
     Route::post('os/export','OsTrackingController@exportReport')->name('os_export');
+    Route::get('os/po/report/view','Po\PoListController@getPoReport')->name('os_po_report_view');
+});
 });

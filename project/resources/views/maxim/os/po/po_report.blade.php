@@ -1,7 +1,9 @@
 @extends('maxim.layouts.layouts')
 @section('title','Production Order')
 @section('print-body')
-
+<?php 
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+?>
     <style type="text/css">
         .body-top .body-list label{
             font-size: 16px;
@@ -106,11 +108,11 @@
 <div class="row body-top">
 	<div class="col-md-8 col-sm-8 col-xs-7 body-list">
 		<ul>
-			<li>Date : </li>
-			<li>Company Name : </li>
-			<li>Company Address : </li>
-			<li>Company Person : </li>
-			<li>Delivery Address : </li>
+			<li>Date : {{Carbon\Carbon::now()->format('d-m-Y')}}</li>
+			<li>Company Name : {{$poDetails[0]->name}}</li>
+			<li>Company Address : {{$poDetails[0]->address}}</li>
+			<li>Company Person : {{$poDetails[0]->person_name}}</li>
+			<li>Delivery Address : {{$companyInfo[0]->address1}} {{$companyInfo[0]->address2}} {{$companyInfo[0]->address3}}</li>
 		</ul>
 	</div>
 	
@@ -119,14 +121,21 @@
 			<tr>
 				<td colspan="2">
 					<div class="pull-right">
-						<p>PO No : </p>
+						<p>PO No : {{$poDetails[0]->po_id}}</p>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
 					<div class="pull-right">
-						<p>Requested Shipment Date : </p>
+						<p>Checking No : {{$poDetails[0]->mrf_id}}</p>
+					</div>
+				</td>
+			</tr>			
+			<tr>
+				<td colspan="2">
+					<div class="pull-right">
+						<p>Requested Shipment Date : {{Carbon\Carbon::parse($poDetails[0]->shipment_date)->format('d-m-Y')}} </p>
 					</div>
 				</td>
 			</tr>
@@ -143,7 +152,7 @@
 	        	<th>OOS No.</th>
 	        	<th width="15%">Item / Code No.</th>
 	        	<th width="25%" id="erp_code">ERP Code</th>
-	        	<th width="5%">Season Code</th>
+	        	{{-- <th width="5%">Season Code</th> --}}
 	        	<th>Description</th>
 	        	<th>Style</th>
 	        	<th>Sku</th>
@@ -157,48 +166,71 @@
             </thead>
         </tr>
 
-        <?php $TotalBookingQty = 0; ?>
+        <?php $TotalPoQty = 0; $TotalPoPrice = 0;?>
         
         <tbody>
-        	@foreach($ipoDetails as $details)
+        	@foreach($poDetails as $details)
 	        	<?php 
-	        		$TotalBookingQty += $details->item_quantity; 
-	        		$jobId = (8 - strlen($details->job_id));
-	        		$p = (($details->item_quantity * $details->initial_increase)/100) + $details->item_quantity;
-	        		$totalIncrease += $p;
+	        		$TotalPoQty += $details->mrf_quantity; 
+	        		$jobId = (JobIdFlugs::JOBID_LENGTH - strlen($details->job_id));
+	        		$p = ($details->mrf_quantity * $details->supplier_price);
+	        		$TotalPoPrice += $p;
 	        	?>
 	        	<tr>
-	        		<td>{{ str_repeat('0',$jobId) }}{{ $details->job_id }}</td>
-			    	<td width="20%">{{$details->erp_code}}</td>
-                	<td width="10%">{{$details->item_code}}</td>
-			    	<td width="5%">{{$details->season_code}}</td>
-			        <td width="5%">{{$details->oos_number}}</td>
-			    	<td width="5%">{{$details->style}}</td>
+	        		<td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $details->job_id }}</td>
 			    	<td>{{$details->poCatNo}}</td>
+			        <td>{{$details->oos_number}}</td>
+                	<td>{{$details->item_code}}</td>
+			    	<td>{{$details->erp_code}}</td>
+			    	{{-- <td width="5%">{{$details->season_code}}</td> --}}
 			    	<td>{{$details->item_description}}</td>
-			    	<td width="17%">{{$details->gmts_color}}</td>
-			    	<td width="17%">{{$details->item_size}}</td>
+			    	<td>{{$details->style}}</td>
 			        <td>{{$details->sku}}</td>
-			        <td>{{$details->item_quantity}}</td>
-					<td>{{ !empty($details->initial_increase)? $details->initial_increase.'%' : '' }}</td>
-					<td>{{round($p)}}</td>
-			        <td>PCS</td>
-			        <td></td>
+			    	<td>{{$details->gmts_color}}</td>
+			    	<td width="17%">{{$details->item_size_width_height}}</td>
+					<td>{{$details->material}}</td>
+					<td>{{(!empty($details->weight_qty))?$details->weight_qty:'PSC'}} </td>
+			        <td>{{$details->mrf_quantity}}</td>
+			        <td>{{(!empty($details->supplier_price))?'$'.$details->supplier_price:''}}</td>
+			        <td>{{(!empty($details->mrf_quantity*$details->supplier_price))?'$'.$details->mrf_quantity*$details->supplier_price:''}}</td>
 	        	</tr>
         	@endforeach
         	<tr style="height: 30px;">
-        		<td colspan="11"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
-        		<td> {{$TotalBookingQty}}</td>
-				<td></td>
-        		<td><?= floor($totalIncrease); ?></td>
-        		<td></td>
-        		<td></td>
+        		<td colspan="12"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
+        		<td> {{$TotalPoQty}}</td>
+        		<td>US</td>
+        		<td>{{(!empty($TotalPoPrice))?'$'.$TotalPoPrice:''}}</td>
         	</tr>
         </tbody>
     </table>
 </div>
 
-<div class="row body-top">
+<div class="row body-list">
+	<div class="col-sm-10">
+		<ul>
+			<li>
+			1. All the products must be passed OEKO-TEX testing grade I, color fastness to washing staining required grade 4-5. Dimensional stability should be controlled into - 3% to + 1%</li>
+			<li>2. Please ensure the color is matching with the sample, label size before and after folding must follow the sample, ensure the cutting edge is straight.</li>
+			<li>3. Please follow the lead time and offer more 1%-2% as the spare.</li>
+			<li>4. Please ensure the maximum packing no more than 500pcs/bag,</li>
+		</ul>
+	</div>
+	<div class="col-sm-2">
+		<table>
+			<tr>
+				<td>Tax Rate :</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					SALES No :
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="row body-top hidden">
 	<div class="col-md-9 col-sm-9 col-xs-9 body-list">
 		<label >Special Requirements/Notes:</label>
 		<ul>
@@ -229,39 +261,7 @@
 	</div>
 </div>
 
-<div class="row body-top" style="margin-top: 35px;margin-bottom: 20px;">
-	<div class="col-md-3 col-sm-3 col-xs-3">
-		<span style="font-weight: bold;">CS:
-			<div style="border-bottom: 2px solid black; "></div>
-		</span>
-	</div>
-	<div class="col-md-3 col-sm-3 col-xs-3">
-		<span style="font-weight: bold;">CS Team Leader:
-			<div style="border-bottom: 2px solid black; "></div>
-		</span>
-	</div>
-	<div class="col-md-3 col-sm-3 col-xs-3">
-		<span style="font-weight: bold;">CS Manager:
-			<div style="border-bottom: 2px solid black; "></div>
-		</span>
-	</div>
-	<div class="col-md-3 col-sm-3 col-xs-3">
-		<span style="font-weight: bold;">Planing Team：
-			<div style="border-bottom: 2px solid black;"></div>
-		</span>
-	</div>	
-</div>
 
-<div class="row body-top" style="margin-top: 25px;margin-bottom: 20px;">
-	<div class="col-md-3 col-sm-3 col-xs-3"></div>
-	<div class="col-md-3 col-sm-3 col-xs-3"></div>
-	<div class="col-md-3 col-sm-3 col-xs-3"></div>
-	<div class="col-md-3 col-sm-3 col-xs-3">
-		<span style="font-weight: bold;">Order receiving Date：
-			<div style="border-bottom: 2px solid black;"></div>
-		</span>
-	</div>
-</div>
 <script type="text/javascript">
     function myFunction() {
 

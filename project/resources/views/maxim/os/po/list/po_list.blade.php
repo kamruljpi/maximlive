@@ -61,7 +61,7 @@
 				<thead>
 					<tr>
 						<th>Serial no</th>
-						<th>Booking No.</th>
+						{{-- <th>Booking No.</th> --}}
 						<th>MRF No.</th>
 						<th>PO No.</th>
 						<th>Order Date</th>
@@ -70,20 +70,20 @@
 					</tr>
 				</thead>
 
-				@php($j=1 + $bookingList->perPage() * ($bookingList->currentPage() - 1))
+				@php($j=1 + $poList->perPage() * ($poList->currentPage() - 1))
 				<tbody id="mrf_list_tbody">
-				@foreach($bookingList as $value)
+				@foreach($poList as $value)
 					<tr id="mrf_list_table">
 						<td>{{$j++}}</td>
-						<td>{{$value->booking_order_id}}</td>
-						<td>{{$value->booking_order_id}}</td>
+						{{-- <td>{{$value->booking_order_id}}</td> --}}
 						<td>{{$value->mrf_id}}</td>
+						<td>{{$value->po_id}}</td>
 						<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
-						<td>{{$value->shipmentDate}}</td>
+						<td>{{$value->shipment_date}}</td>
 						<td>
-							<form action="{{Route('mrf_list_action_task') }}" role="form" target="_blank">
-								<input type="hidden" name="mid" value="{{$value->mrf_id}}">
-								<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+							<form action="{{Route('os_po_report_view') }}" role="form" target="_blank">
+								{{-- <input type="hidden" name="mid" value="{{$value->mrf_id}}"> --}}
+								<input type="hidden" name="poid" value="{{$value->po_id}}">
 								<button class="btn btn-success" target="_blank">Report</button>
 							</form>
 						</td>
@@ -91,7 +91,7 @@
 				@endforeach
 				</tbody>
 			</table>
-			<div id="mrf_list_pagination">{{$bookingList->links()}}</div>
+			<div id="mrf_list_pagination">{{$poList->links()}}</div>
 			<div class="pagination-container">
 				<nav>
 					<ul class="pagination"></ul>

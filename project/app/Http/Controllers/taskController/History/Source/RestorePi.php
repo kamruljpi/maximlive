@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\taskController\History\Source;
 
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\Flugs\LastActionFlugs;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\MxpBooking;
@@ -39,6 +40,7 @@ Class RestorePi extends Controller
 	                $value->is_deleted = BookingFulgs::IS_NOT_DELETED;
 	                $value->deleted_user_id = Auth::User()->user_id;
 	                $value->deleted_date_at = Carbon\Carbon::now();
+	                $value->last_action_at = LastActionFlugs::RESTORED_ACTION;
 	                $value->save();
 	                
 	                $booking = MxpBooking::find($value->job_no);

@@ -1,5 +1,6 @@
 @extends('layouts.dashboard')
 @section('page_heading','PI List' )
+@section('page_heading_right',  Carbon\Carbon::now()->format('d-m-Y'))
 @section('section')
 <?php
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
@@ -143,7 +144,7 @@ $roleCheck = $object->getRole();
 
                                 <ul class="dropdown-menu" style="left:-45px !important;">
                                     <li>
-                                        <a  type="button" class="submit_customdemo" href="{{ Route('pi_edit_action', $value->p_id) }}" >Delete</a>
+                                        <a  type="button" class="deleteButton" href="{{ Route('pi_edit_action', $value->p_id) }}" >Delete</a>
                                     </li>
                                 </ul>
                             </form>
@@ -162,18 +163,3 @@ $roleCheck = $object->getRole();
 	</div>
 </div>
 @endsection
-@section('LoadScript')
-
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $(".submit_customdemo").on("click",function(e){
-                e.preventDefault();
-                if(confirm("Are you sure want to delete") == true){
-                    document.location.href="{{ Route('pi_edit_action', $value->p_id) }}";
-                }else {
-                    console.log('false');
-                }
-            });
-        });
-    </script>
-@stop

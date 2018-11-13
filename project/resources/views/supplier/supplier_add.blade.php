@@ -70,7 +70,6 @@
                                   <label class="col-md-4 col-sm-4 control-label">{{ trans('others.header_status_label') }}</label>
                                   <div class="col-md-6 col-sm-6">
                                       <select class="form-control" id="sel1" name="status">
-                                        <option value="{{old('')}}"></option>
                                         <option value="1">Active</option>
                                         <option value="0">Inactive</option>
                                       </select>
@@ -78,18 +77,13 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
                         <div class="form-group">
-                                <div class="col-sm-6 col-sm-offset-5 col-xs-offset-8">
-                                    <button type="submit" class="btn btn-primary" style="margin-right: 15px;">
-                                        {{ trans('others.save_button') }}
-                                    </button>
-                                </div>
-                        </div>
-                        
+                            <div class="col-sm-6 col-sm-offset-5 col-xs-offset-8">
+                                <button type="submit" class="btn btn-primary form-control" style="margin-right: 15px;">
+                                    {{ trans('others.save_button') }}
+                                </button>
+                            </div>
+                        </div>                        
                     </form>
                 </div>
             </div>

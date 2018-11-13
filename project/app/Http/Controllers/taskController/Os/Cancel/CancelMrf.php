@@ -18,7 +18,7 @@ class CancelMrf extends Controller
 		try {
 			MxpMrf::where('mrf_id',$mrf_id)->update([
 				'mrf_status' => MrfFlugs::OPEN_MRF,
-				'user_id' => Auth::user()->user_id,
+				// 'user_id' => Auth::user()->user_id,
 				'accepted_user_id' => null,
 				'accepted_date_at' => Carbon::today(),
 				'job_id_current_status' => MrfFlugs::JOBID_CURRENT_STATUS_OPEN,

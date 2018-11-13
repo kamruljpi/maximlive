@@ -15,12 +15,14 @@ use Auth;
 use DB;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 
 class MrfListController extends Controller
 {
     public function mrfListView(){
         $bookingList = DB::table('mxp_mrf_table')
             ->select('*',DB::Raw('sum(mrf_quantity) as mrf_quantity'))
+            ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
             ->groupBy('mrf_id')
             ->orderBy('id','DESC')
             ->paginate(15);
@@ -30,7 +32,10 @@ class MrfListController extends Controller
     public function showMrfReport(Request $request){
         $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
                         ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
-                        ->where('mrf_id',$request->mid)
+                        ->where([
+                            ['mrf_id',$request->mid],
+                            ['mxp_mrf_table.is_deleted',BookingFulgs::IS_NOT_DELETED]
+                        ])
                         ->get();
         $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
         $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->bid)->first();
@@ -41,7 +46,10 @@ class MrfListController extends Controller
     public function getMrfListByMrfId(Request $request){
 
         $mrfList = DB::table('mxp_mrf_table')
-            ->where('mrf_id', 'like', '%'.$request->mrf_id.'%')
+            ->where([
+                ['mrf_id', 'like', '%'.$request->mrf_id.'%'],
+                ['mxp_mrf_table.is_deleted',BookingFulgs::IS_NOT_DELETED]
+            ])
             ->groupBy('mrf_id')
             ->orderBy('id','DESC')
             ->get();

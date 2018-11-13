@@ -11,13 +11,11 @@ use App\Http\Controllers\Controller;
 class SupplierController extends Controller
 {
     public function supplierList(){
-
-        $suppliers = Supplier::where('is_delete', 0)->get();
-
+        $suppliers = Supplier::where('is_delete', 0)
+                    ->orderBy('supplier_id','DESC')
+                    ->paginate(20);
         return view('supplier.supplier_list', compact('suppliers'));
     }
-
-
 
     public function supplierAdd(){
         return view('supplier.supplier_add');
@@ -37,9 +35,9 @@ class SupplierController extends Controller
             $req->all(),
             [
                 'name' => 'required',
-                'person_name' => 'required',
-                'email' => 'required',
-                'address' => 'required',
+                // 'person_name' => 'required',
+                // 'email' => 'required',
+                // 'address' => 'required',
                 'status' => 'required'
             ],
             $inputErrorMsg
@@ -50,10 +48,8 @@ class SupplierController extends Controller
         }
 
         $supplierId = Supplier::create($req->all())->supplier_id;
-
         return redirect()->route('supplier_list_view');
     }
-
 
     public function supplierUpdate(Request $req){
 
@@ -61,9 +57,6 @@ class SupplierController extends Controller
         return view('supplier.supplier_update', compact('supplier'));
     }
     public function supplierUpdateAction(Request $req){
-
-//        return $req->all();
-
         Supplier::where('supplier_id', $req->supplier_id)
             ->update([
                 'name' => $req->name,
@@ -75,7 +68,6 @@ class SupplierController extends Controller
         return redirect()->route('supplier_list_view');
     }
     public function supplierDeleteAction(Request $req){
-
         Supplier::where('supplier_id', $req->supplier_id)
             ->update([
                 'is_delete' => 1
@@ -85,7 +77,6 @@ class SupplierController extends Controller
     }
 
     public static function saveSupplierProductPrice(Request $req, $productId){
-
         for($i=0; $i<count($req->supplier_id); $i++){
             $sPrice = new MxpSupplierPrice;
             $sPrice->supplier_id = $req->supplier_id[$i];
@@ -93,15 +84,11 @@ class SupplierController extends Controller
             $sPrice->supplier_price = $req->supplier_price[$i];
             $sPrice->save();
         }
-
         return $req->all();
     }
 
     public static function updateProductPrice(Request $request){
-
-
         for($i=0; $i<count($request->supplier_id); $i++){
-
             if(count(MxpSupplierPrice::find($request->supplie_price_id[$i])) > 0){
                 $sPrice = MxpSupplierPrice::find($request->supplie_price_id[$i]);
             }else{
@@ -112,7 +99,6 @@ class SupplierController extends Controller
             $sPrice->product_id = $request->product_id;
             $sPrice->supplier_price = $request->supplier_price[$i];
             $sPrice->save();
-
         }
 
         return true;

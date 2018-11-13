@@ -31,6 +31,7 @@ use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Model\MxpItemDescription;
 use Carbon;
 use Session;
+use App\Model\Os\MxpOsPo;
 
 class BookingController extends Controller
 { 
@@ -373,48 +374,68 @@ class BookingController extends Controller
           $msg = "Booking ".$id." canceled"; 
         }
 
-          $challan = MxpBookingChallan::where('booking_order_id', $id)->get();
+        $challan = MxpBookingChallan::where('booking_order_id', $id)->get();
 
-          if(isset($challan) && !empty($challan)){
-              foreach ($challan as $value) {
-                  $value->is_deleted = BookingFulgs::IS_DELETED;
-                  $value->deleted_user_id = Auth::User()->user_id;
-                  $value->deleted_date_at = Carbon\Carbon::now();
-                  $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-                  $value->save();
-                  $msg = "Booking ".$id." canceled";
-              }
+        if(isset($challan) && !empty($challan)){
+            foreach ($challan as $value) {
+                $value->is_deleted = BookingFulgs::IS_DELETED;
+                $value->deleted_user_id = Auth::User()->user_id;
+                $value->deleted_date_at = Carbon\Carbon::now();
+                $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+                $value->save();
+                $msg = "Booking ".$id." canceled";
+            }
 
-          }else{
-              $error = "Something went wrong on Booking Challan Table please try again later";
+        }else{
+            $error = "Something went wrong on Booking Challan Table please try again later";
+        }
+
+        $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
+
+        if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
+            foreach ($InserBuyerDetails as $value) {
+                $value->is_deleted = BookingFulgs::IS_DELETED;
+                $value->deleted_user_id = Auth::User()->user_id;
+                $value->deleted_date_at = Carbon\Carbon::now();
+                $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+                $value->save();
+                $msg = "Booking ".$id." canceled";
+            }
+
+        }else{
+            $error = "Something went wrong on Buyer Details table please try again later";
+        }
+
+        $pi_value = MxpPi::where('booking_order_id', $id)->get();
+
+        if(isset($pi_value) && !empty($pi_value)) {
+          foreach ($pi_value as $value) {
+            $value->is_deleted = BookingFulgs::IS_DELETED;
+            $value->deleted_user_id = Auth::User()->user_id;
+            $value->deleted_date_at = Carbon\Carbon::now();
+            $value->save();
           }
+        }
 
-          $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
+        $mrf_value = MxpMrf::where('booking_order_id', $id)->get();
 
-          if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
-              foreach ($InserBuyerDetails as $value) {
-                  $value->is_deleted = BookingFulgs::IS_DELETED;
-                  $value->deleted_user_id = Auth::User()->user_id;
-                  $value->deleted_date_at = Carbon\Carbon::now();
-                  $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-                  $value->save();
-                  $msg = "Booking ".$id." canceled";
-              }
-
-          }else{
-              $error = "Something went wrong on Buyer Details table please try again later";
+         if(isset($mrf_value) && !empty($mrf_value[0]->mrf_id)) {
+          foreach ($mrf_value as $mrfvalue) {
+            $mrfvalue->is_deleted = BookingFulgs::IS_DELETED;
+            $mrfvalue->deleted_user_id = Auth::User()->user_id;
+            $mrfvalue->deleted_date_at = Carbon\Carbon::now();
+            $mrfvalue->save();
           }
+        $os_po_value = MxpOsPo::where('mrf_id', $mrf_value[0]->mrf_id)->get();
+        }
 
-          $pi_value = MxpPi::where('booking_order_id', $id)->get();
-
-          if(isset($pi_value) && !empty($pi_value)) {
-              foreach ($pi_value as $value) {
-                  $value->is_deleted = 1;
-                  $value->deleted_user_id = Auth::User()->user_id;
-                  $value->deleted_date_at = Carbon\Carbon::now();
-                  $value->save();
-              }
+        if(isset($os_po_value) && !empty($os_po_value[0]->mrf_id)) {
+          foreach ($os_po_value as $osPoValue) {
+            $osPoValue->is_deleted = BookingFulgs::IS_DELETED;
+            $osPoValue->deleted_user_id = Auth::User()->user_id;
+            $osPoValue->save();
           }
+        }
         
       }else{
         $error = "Something went wrong please on booking table try again later ";

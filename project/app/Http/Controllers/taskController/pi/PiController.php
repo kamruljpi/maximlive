@@ -38,7 +38,7 @@ class PiController extends Controller
 		$getDbValue = [];
 		foreach ($data as $key => $dataValue) {
 			foreach ($dataValue as $values) {
-				$getDbValue[] = DB::table('mxp_booking')->where('id',$values)->get();
+				$getDbValue[] = DB::table('mxp_booking')->where([['id',$values],['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE]])->get();
 			}
 		}
 		$pi_details = [];
@@ -46,6 +46,10 @@ class PiController extends Controller
 			foreach ($aaavalue as $key => $bbbvalue) {
 				$pi_details[] =  $bbbvalue;
 			}
+		}
+		if (empty($pi_details)) {
+			StatusMessage::create('empty_booking_data', 'Are you sure, Someone not created This Order PI!');
+			return \Redirect()->Route('task_dashboard_view');
 		}
 
 		foreach ($data as $key => $dataValue) {

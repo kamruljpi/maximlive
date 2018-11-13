@@ -153,6 +153,7 @@
 			$totalQtyAmt = $detailsValue->item_quantity * (is_numeric($detailsValue->item_price)?$detailsValue->item_price:'');
 			$totalUsdAmount += $totalQtyAmt;
 			$totalAllqnty += $detailsValue->item_quantity;
+			$item_price = number_format($detailsValue->item_price, 5, '.', '');
 		?>
 		<tr>
 			<!-- <td>{{ str_repeat('0',$jobId) }}{{ $detailsValue->job_no}}</td> -->
@@ -187,7 +188,7 @@
 			</td>
 			<!-- <td>{{ $detailsValue->item_size }}</td> -->
 			<td>{{ $detailsValue->item_quantity}}</td>
-			<td>{{(!empty($detailsValue->item_price)?((is_numeric($detailsValue->item_price))?'$':'').$detailsValue->item_price: '')}}</td>
+			<td>{{(!empty($item_price)?((is_numeric($item_price))?'$':'').$item_price: '')}}</td>
 			<td>{{(!empty($detailsValue->item_quantity)? '$'. $totalQtyAmt: '')}}</td>
 		</tr>
 			<?php $itemcodestatus = $detailsValue->item_code; ?>
@@ -198,12 +199,17 @@
 				</td>
 				<td>{{$totalAllqnty}}</td>
 				<td></td>
+				<?php 
+				    $totalUsdAmount = number_format($totalUsdAmount, 2, '.', '');
+				?>
 				<td>{{(!empty($totalUsdAmount)? '$'.$totalUsdAmount: '')}}</td>
 			</tr>
 	
 	</tbody>
 </table>
 	<?php
+	   //  $totalUsdAmount = floor($totalUsdAmount);
+	     
 		 $fractionUSD = explode('.', $totalUsdAmount);
 		 $amountInWordUsd = $objectConvertController->convertNumberToWord($fractionUSD[0]);
 		 if(sizeof($fractionUSD) > 1){

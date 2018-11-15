@@ -53,13 +53,12 @@ class RestoreData extends Controller
 				input name must be `filter_type` and valid values (booking,pi,challan,ipo,mrf,challan)";
 			}
 		}
-		Session::flash('message','');
+		Session::flash('message','Your request type empty.');
 		return redirect()->back();
 	}
 
 	protected function piRestoreRequest(Request $request){
-		$this->print_me($request->type);
-		return Resource::piRestoreRequest($id);
+		return (new Restore())->undo($request);
 	}
 
 	protected function sentFindRequest(Request $request){

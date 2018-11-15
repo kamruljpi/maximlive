@@ -74,15 +74,15 @@
     <div class="panel-body aaa">
         <div class="panel panel-default col-sm-7">
             <br>
-            <p >Buyer name:<b> {{ $bookingDetails->buyer_name }}</b></p>
-            <p >Company name:<b> {{ $bookingDetails->Company_name }}</b></p>
-            <p >Buyer address:<b> {{ $bookingDetails->address_part1_invoice }}{{ $bookingDetails->address_part2_invoice }}</p>
-            <p >Mobile num:<b> {{ $bookingDetails->mobile_invoice }}</b></p>
+            <p >Buyer Name:<b> {{ $bookingDetails->buyer_name }}</b></p>
+            <p >Company Name:<b> {{ $bookingDetails->Company_name }}</b></p>
+            <p >Buyer Address:<b> {{ $bookingDetails->address_part1_invoice }}{{ $bookingDetails->address_part2_invoice }}</b></p>
+            <p >Mobile No:<b> {{ $bookingDetails->mobile_invoice }}</b></p>
         </div>
         <div class="panel panel-default col-sm-5">
             <br>
-            <p >Booking Id:<b> {{ $bookingDetails->booking_order_id }}</b></p>
-            <p >Booking status:<b> {{ $bookingDetails->booking_status }}</b></p>
+            <p >Booking No:<b> {{ $bookingDetails->booking_order_id }}</b></p>
+            <p >Booking Status:<b> {{ $bookingDetails->booking_status }}</b></p>
             <p >Oreder Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
             <p >Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
             @if($roleCheck == 'p')
@@ -92,9 +92,11 @@
             @endif
         </div>
 
-        <div class="panel panel-default col-sm-12" style="background-color: #000a12; color: #ffffff; text-align: center">
-            <h4>Available Booking: {{ $leftBooking }}</h4>
-        </div>
+        @if($roleCheck == 'p')
+            <div class="panel panel-default col-sm-12" style="background-color: #000a12; color: #ffffff; text-align: center">
+                <h4>Available Booking: {{ $leftBooking }}</h4>
+            </div>
+        @endif
 
     </div>
 </div>

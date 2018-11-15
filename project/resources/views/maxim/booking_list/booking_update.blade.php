@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading',$taskType)
+@section('page_heading','Update Booking')
 @section('section')
     <style type="text/css">
         .top-div{
@@ -33,10 +33,20 @@
         }
     </style>
 
+<?php $jobId = (8 - strlen($mxpBooking->id)); ?>
+
 <input type="hidden" name="companyIdForBookingOrder" value="{{$party_id}}">
 <input type="hidden" name="check_item_size" value="{{$mxpBooking->item_size}}">
 <input type="hidden" name="check_gmts_color" value="{{$mxpBooking->gmts_color}}">
 
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        @if(!empty($pi_value->p_id))
+            <h3><label>Did you know ? Job Id <span style="color:red;">{{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</span> already make a PI. PI id is <span style="color:red;">{{$pi_value->p_id}}</span>. If you update it's not changing your PI. You need to create new PI.</label>
+                </h3>
+        @endif
+    </div>
+</div>
 <div class="col-md-12">
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -51,13 +61,13 @@
     @if(Session::has('error_code'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ))
     @endif
-    <?php $jobId = (8 - strlen($mxpBooking->id)); ?>
+    
     <div class="row">
         <div class="col-md-12">
             <a href="{{ Route('booking_list_details_view', $mxpBooking->booking_order_id) }}" class="btn btn-primary" style="width: 15%; margin: 10px 0px 5px 0px;">Back</a>
         </div>
         <div class="col-md-12">
-            <h3>Update booking: Job ID {{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</h3>
+            <h3>Update booking: Job ID {{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }} </h3>
         </div>
     </div>
     <div style="padding-top: 20px;"></div>
@@ -65,7 +75,7 @@
     <form action="{{route('booking_details_update_action')}}" method="POST">
             {{csrf_field()}}
         <input type="hidden" name="booking_id" value="{{ $mxpBooking->id }}">
-        <div class="table-responsive" style="height: 300px;">
+        <div class="table-responsive" style="height: 120px;">
             <table class="table-striped " style="overflow-y: scroll;" id="filed_increment">
                 <thead>
                 <tr>
@@ -175,9 +185,9 @@
             </table>
 
         </div>
-        <div class="form-group">
+        <div class="form-group" style="margin-top: 20px;">
             <div class="col-sm-2 col-md-2 pull-right">
-                <button type="submit" class="btn btn-primary deleteButton" style="margin-right: 15px; width: 100%;">
+                <button type="submit" class="btn btn-primary deleteButton form-control" style="margin-right: 15px; width: 100%;">
                     {{ trans('others.update_button') }}
                 </button>
             </div>

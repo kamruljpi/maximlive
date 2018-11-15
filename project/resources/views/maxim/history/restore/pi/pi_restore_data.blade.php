@@ -27,31 +27,11 @@
     </div>
 @endif
 
-@include('maxim.history.restore_menu')
+@include('maxim.history.restore.menu')
 
 <div class="row" style="background-color: #F1F1F1">
 
-	<div class="col-sm-8 col-sm-offset-2">
-		<div class="col-sm-3">
-			<span>
-				<h3>Pi Details</h3>
-			</span>
-		</div>
-		<form action="{{Route('restore_find_request')}}" method="post">
-			{{csrf_field()}}
-			<input type="hidden" name="filter_type" value="pi">
-			<div class="col-sm-7">
-				<div class="form-group" style="margin-top: 15px;">
-					<input type="text" name="filter_value" class="form-control" placeholder="Find Deleted PI">
-				</div>
-			</div>
-			<div class="col-sm-2">
-				<div class="form-group" style="margin-top: 15px;">
-					<button class="form-control" type="submit"> Search</button>
-				</div>
-			</div>
-		</form>
-	</div>
+	@include('maxim.history.restore.find')
 
 	<div class="col-md-12 col-md-offset-0">
 		<table class="table table-bordered">
@@ -60,6 +40,7 @@
 					<th>Serial No.</th>
 					<th>Booking No.</th>
 					<th>Pi No.</th>
+					<th width="14%">Created Date</th>
 					<th width="15%">Action</th>
 				</tr>
 			</thead>
@@ -73,8 +54,9 @@
 					<td>{{$j++}}</td>
 					<td>{{$value->booking_order_id}}</td>
 					<td>{{$value->p_id}}</td>
+					<td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
 					<td>
-                        <a href="{{Route('pi_restore_request')}}/{{$value->p_id}}" class="btn btn-primary deleteButton"> Restore</a>
+                        <a href="{{Route('restore_request',[Session::get('type'),$value->p_id])}}" class="btn btn-primary deleteButton"> Restore</a>
                     </td>
 				</tr>
 			@endforeach

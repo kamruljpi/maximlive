@@ -32,6 +32,7 @@ use App\Model\MxpItemDescription;
 use Carbon;
 use Session;
 use App\Model\Os\MxpOsPo;
+use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
 
 class BookingController extends Controller
 { 
@@ -309,14 +310,26 @@ class BookingController extends Controller
 
   public function updateBookingView(Request $request){
     $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
-    $mxpBooking = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED],['id',$request->job_id]])->first();
+    if(isset($request->job_id) && !empty($request->job_id)){
+      $mxpBooking = MxpBooking::where([
+                  ['is_deleted',BookingFulgs::IS_NOT_DELETED],
+                  ['id',$request->job_id]
+                ])
+                ->first();
+
+      $pi_value = MxpPi::where('job_no',$request->job_id)
+              ->select('p_id','booking_order_id','item_code','item_quantity','item_size','item_price')
+              ->first();
+    }
     $party_id = $request->party_id;
-    return view('maxim.booking_list.booking_update',compact('description','mxpBooking','party_id'));
+
+    // $this->print_me($pi_value);
+    return view('maxim.booking_list.booking_update',compact('description','mxpBooking','party_id','pi_value'));
   }
 
   public function updateBooking(Request $request){
-    $idstrcount = (8 - strlen($request->booking_id));
-    $job_id_id = str_repeat('0',$idstrcount).$request->booking_id;
+    $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($request->booking_id));
+    $job_id_id = str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount).$request->booking_id;
 
     $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
       

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\taskController\History\Source;
+namespace App\Http\Controllers\taskController\History\Restore\Source;
 
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-use App\Http\Controllers\taskController\History\Source\RestorePi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\MxpBooking;
@@ -15,6 +14,7 @@ use DB;
 
 class FindRestore extends Controller
 {
+	protected $type;
 	protected $value;
 	protected $filed_name;
 	protected $model;
@@ -27,7 +27,8 @@ class FindRestore extends Controller
 		@pram $path which view file need to show
 	**/
 
-	public function __construct($filter_value,$filed_name,$model,$path){
+	public function __construct($type,$filter_value,$filed_name,$model,$path){
+		$this->type = $type;
 		$this->value = $filter_value;
 		$this->model = $model;
 		$this->filed_name = $filed_name;
@@ -35,6 +36,7 @@ class FindRestore extends Controller
 	}
 
 	public function search(){
+		Session::flash('type',$this->type);
 		$data = $this->model->where([
 			[$this->filed_name,$this->value],
 			['is_deleted',BookingFulgs::IS_DELETED]
@@ -43,6 +45,6 @@ class FindRestore extends Controller
 			->groupBy($this->filed_name)
 			->paginate(2);
 
-		return view('maxim.history.'.$this->path,compact('data'));
+		return view('maxim.history.restore.'.$this->path,compact('data'));
 	}
 }

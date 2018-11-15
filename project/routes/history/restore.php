@@ -1,10 +1,10 @@
 <?php
 
-Route::group(['middleware' => 'auth','namespace' => 'taskController\History'], function () {
+Route::group(['middleware' => 'auth','namespace' => 'taskController\History\Restore'], function () {
 	Route::group(['middleware' => 'routeAccess'], function () {
 		Route::get('restore','RestoreData@index')->name('restore');
-		Route::get('restore/pi','RestoreData@getPiDeletedValue')->name('pi_deleted_data');
-		Route::get('pi/restore/request/{id?}','RestoreData@piRestoreRequest')->name('pi_restore_request');
-		Route::post('restore/find/request','RestoreData@restoreFindRequest')->name('restore_find_request');
+		Route::get('restore/{type?}','RestoreData@sentListRequest')->name('sent_list_request');
+		Route::get('restore/{type?}/{id?}','RestoreData@piRestoreRequest')->name('restore_request');
+		Route::post('restore/find','RestoreData@sentFindRequest')->name('sent_find_request');
 	});
 });

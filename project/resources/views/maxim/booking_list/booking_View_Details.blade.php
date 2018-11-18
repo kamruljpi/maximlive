@@ -45,6 +45,7 @@
     @endif
 </div>
 
+<div class="row">
 @if(Session::has('empty_message'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_message') ))
 @endif
@@ -64,6 +65,15 @@
         </ul>
     </div>
 @endif
+@if(Session::has('datas'))
+    <div class="col-md-12 view_page">
+        <div class="alert alert-success" id="normal-btn-success">
+            <button type="button" class="close __close">×</button>
+            {{ Session::get('message') }}
+        </div>
+    </div>
+@endif
+</div>
 
 @if($roleCheck == 'p')
     @if($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)
@@ -278,7 +288,11 @@
                     <td></td>
                     <td>{{$value->shipmentDate}}</td>
                     <td>{{$value->job_id_current_status}}</td>
-                    <td><a class="btn btn-danger deleteButton" href="{{ Route('mrf_details_cancel_action', $value->job_id) }}" {{($value->mrf_quantity == MrfFlugs::ACCEPT_MRF)?'disabled': ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT)?'disabled' :'' }} >Cancel</a></td>
+                    <td>
+                        <a class="btn btn-danger deleteButton" href="{{ Route('mrf_details_cancel_action', $value->job_id) }}" {{($value->mrf_status != MrfFlugs::OPEN_MRF)?'disabled': ($value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN)?'disabled' :'' }} >
+                        {{($value->mrf_status != MrfFlugs::OPEN_MRF)?'Cancel': ($value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN)?'Processing' :'Cancel' }}
+                        </a>
+                    </td>
                 </tr>
                 @endforeach
                 </tbody>

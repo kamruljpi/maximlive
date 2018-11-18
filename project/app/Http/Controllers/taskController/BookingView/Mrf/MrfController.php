@@ -115,7 +115,7 @@ class MrfController extends Controller
 			Session::flash('message','You can\'t cancel the booking. Because some job id is running to processing. ');			
 		}
 
-		return redirect()->back()->with('message', MrfFlugs::CANCEL_MAESSAGE);
+		return redirect()->back()->with('datas', MrfFlugs::CANCEL_MAESSAGE);
 	}
 
 	public function cancelMrfById( $id ){

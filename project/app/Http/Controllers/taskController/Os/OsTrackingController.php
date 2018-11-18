@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\taskController\Os;
 
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-use App\Model\MxpMrf;
+use App\Http\Controllers\taskController\BookingListController;
+use App\Http\Controllers\Controller;
 use App\Model\MxpMultipleChallan;
+use Maatwebsite\Excel\Excel;
+use Illuminate\Http\Request;
+use App\Model\Os\MxpOsPo;
+use App\Model\MxpMrf;
 use App\Model\MxpPi;
 use App\MxpIpo;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\taskController\BookingListController;
-use Maatwebsite\Excel\Excel;
 use Carbon;
+use Auth;
+use DB;
 
 class OsTrackingController extends Controller
 {
@@ -21,9 +23,32 @@ class OsTrackingController extends Controller
     }
 
     public function trackingReportView(){
-        $bookingList = DB::table('mxp_mrf_table')->where('is_deleted', '0')->orderBy('id','DESC')->paginate(150);
+        $bookingList = MxpMrf::where('mxp_mrf_table.is_deleted', BookingFulgs::IS_NOT_DELETED)
+                ->select($this->mrf())
+                ->orderBy('mxp_mrf_table.job_id','DESC')
+                ->paginate(100);
+        if (!empty($bookingList[0]->job_id)) {
+            foreach ($bookingList as &$bookingList_value) {
+                $bookingList_value->booking_values = DB::table('mxp_booking')
+                    ->where([
+                        ['is_deleted', BookingFulgs::IS_NOT_DELETED],
+                        ['id',$bookingList_value->job_id]
+                    ])
+                    ->select('sku','item_size_width_height')
+                    ->first();
 
-        return view('maxim.booking_list.os_tracking_report',compact('bookingList'));
+                $bookingList_value->os_po = DB::table('mxp_os_po')
+                    ->join('suppliers', 'suppliers.supplier_id', 'mxp_os_po.supplier_id')
+                    ->where([
+                        ['is_deleted', BookingFulgs::IS_NOT_DELETED],
+                        ['job_id',$bookingList_value->job_id]
+                    ])
+                    ->select('mxp_os_po.po_id','mxp_os_po.supplier_id','mxp_os_po.supplier_price','mxp_os_po.order_date','mxp_os_po.shipment_date','mxp_os_po.material','suppliers.name','suppliers.person_name')
+                    ->first();
+            }
+        }
+            // $this->print_me($bookingList);
+        return view('maxim.os.os_tracking_report',compact('bookingList'));
     }
 
     public function exportReport(Request $request){
@@ -52,6 +77,24 @@ class OsTrackingController extends Controller
             });
         })->download('xlsx');
         return redirect()->back();
+    }
+
+    public function mrf(){
+        return [
+            'mxp_mrf_table.job_id','mxp_mrf_table.mrf_id','mxp_mrf_table.booking_order_id','mxp_mrf_table.erp_code','mxp_mrf_table.item_code','mxp_mrf_table.item_size','mxp_mrf_table.item_description','mxp_mrf_table.mrf_quantity','mxp_mrf_table.mrf_quantity','mxp_mrf_table.gmts_color','mxp_mrf_table.poCatNo','mxp_mrf_table.orderDate','mxp_mrf_table.shipmentDate'
+        ];
+    }
+
+    public function os_po(){
+        return [
+            'mxp_os_po.po_id','mxp_os_po.supplier_id','mxp_os_po.supplier_price','mxp_os_po.order_date','mxp_os_po.shipment_date','mxp_os_po.material'
+        ];
+    }
+
+    public function suppliers(){
+        return [
+            'suppliers.name','suppliers.person_name'
+        ];
     }
 
 }

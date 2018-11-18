@@ -6,6 +6,8 @@
     // print_r($bookingDetails->bookings_challan_table);
     // print_r(session('data'));
     // print_r("</pre>");
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+    use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
     use App\Http\Controllers\taskController\Flugs\Role\PlaningFlugs;
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
@@ -23,22 +25,42 @@
             <i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
+    @if($roleCheck == 'p')
+        <div class="col-sm-8"></div>
+        <div class="col-sm-2">
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button type="button" class="dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #fff; border:0;">
+                        <span style="font-size: 25px;">
+                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                        </span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" style="left:-142px !important;">
+                        <li><a href="{{Route('planning_cancel_booking_action')}}/{{$bookingDetails->booking_order_id}}" class="deleteButton" style=" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)?'pointer-events: none':''}};">Cencel</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 @if(Session::has('empty_message'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_message') ))
 @endif
 @if(Session::has('message'))
-    <div class="alert alert-success">
-        <ul>
+    <div class="col-md-12 view_page">
+        <div class="alert alert-success" id="normal-btn-success">
+            <button type="button" class="close __close">×</button>
             {{ Session::get('message') }}
-        </ul>
+        </div>
     </div>
 @endif
 @if(Session::has('error-m'))
-    <div class="alert alert-danger">
+    <div class="alert alert-danger ">
         <ul>
-            {{ Session::get('error-m') }}
+            <li>{{ Session::get('error-m') }}</li>
+            <li> <button type="button" class="close __close">×</button></li>
         </ul>
     </div>
 @endif
@@ -57,9 +79,9 @@
 
     @if(session('data') == BookingFulgs::BOOKING_PROCESS_FLUG)
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 view_page">
                 <div class="alert alert-success" id="normal-btn-success">
-                    <button type="button" class="close">×</button>
+                    <button type="button" class="close __close">×</button>
                     Booking Accepted.
                 </div>
             </div>
@@ -132,9 +154,9 @@
     @if($roleCheck == 'empty')
         <tbody>
         @foreach($bookingDetails->bookings as $bookedItem)
-            <?php $jobId = (8 - strlen($bookedItem->id)); ?>
+            <?php $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($bookedItem->id)); ?>
             <tr style="">
-                <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
+                <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $bookedItem->id }}</td>
                 <td>{{$bookedItem->erp_code}}</td>
                 <td>{{$bookedItem->item_code}}</td>
                 <td>{{$bookedItem->season_code}}</td>
@@ -168,13 +190,13 @@
             <input type="hidden" name="booking_order_id" value="{{$bookingDetails->booking_order_id}}">
             <tbody>
             @foreach($bookingDetails->bookings_challan_table as $bookedItem)
-                <?php $jobId = (8 - strlen($bookedItem->id)); ?>
+                <?php $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($bookedItem->id)); ?>
                 <tr style="" class="{{ (!empty($bookedItem->ipo_quantity))? 'impomrf' :  (!empty($bookedItem->mrf_quantity))? 'impomrf' : '' }} ">
                     <label for="job_id">
                         <td width="3.5%">
                             <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
                         </td>
-                        <td>{{ str_repeat('0',$jobId) }}{{ $bookedItem->id }}</td>
+                        <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $bookedItem->id }}</td>
                         <td>{{$bookedItem->erp_code}}</td>
                         <td>{{$bookedItem->item_code}}</td>
                         <td>{{$bookedItem->season_code}}</td>
@@ -241,13 +263,13 @@
                 <tbody>
                 @foreach($bookingDetails->mrf as $value)
                 <?php
-                    $idstrcount = (8 - strlen($value->job_id));
+                    $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($value->job_id));
                     // $gmts_color = explode(',', $value->gmts_color);
                     // $itemsize = explode(',', $value->item_size);
                     // $mrf_quantity = explode(',', $value->mrf_quantity);
                 ?>
                 <tr>
-                    <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
+                    <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->mrf_id}}</td>
                     <td>{{$value->item_code}}</td>
                     <td>{{$value->gmts_color}}</td>
@@ -256,7 +278,7 @@
                     <td></td>
                     <td>{{$value->shipmentDate}}</td>
                     <td>{{$value->job_id_current_status}}</td>
-                    <td><a class="btn btn-danger deleteButton" href="{{ Route('mrf_details_cancel_action', $value->job_id) }}" >Cancel</a></td>
+                    <td><a class="btn btn-danger deleteButton" href="{{ Route('mrf_details_cancel_action', $value->job_id) }}" {{($value->mrf_quantity == MrfFlugs::ACCEPT_MRF)?'disabled': ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT)?'disabled' :'' }} >Cancel</a></td>
                 </tr>
                 @endforeach
                 </tbody>
@@ -287,13 +309,13 @@
 
                 @foreach($bookingDetails->ipo as $value)
                 <?php
-                    $idstrcount = (8 - strlen($value->job_id));
+                    $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($value->job_id));
                     // $gmts_color = explode(',', $value->gmts_color);
                     // $itemsize = explode(',', $value->item_size);
                     // $ipo_quantity = explode(',', $value->ipo_quantity);
                 ?>
                 <tr>
-                    <td>{{ str_repeat('0',$idstrcount) }}{{$value->job_id}}</td>
+                    <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{$value->job_id}}</td>
                     <td>{{$value->ipo_id}}</td>
                     <td>{{$value->item_code}}</td>
                     <td>{{$value->gmts_color}}</td>

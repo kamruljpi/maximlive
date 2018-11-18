@@ -14,14 +14,17 @@ use Auth;
 use DB;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 
 class IpoListController extends Controller
 {
 
 	public function getIpoValue(){
 		$ipoDetails = MxpIpo::select('*',DB::Raw('sum(ipo_quantity) as ipo_quantity'))
-            ->orderBy('ipo_id','DESC')->groupBy('ipo_id')
-			->paginate(20);
+            	->orderBy('ipo_id','DESC')
+            	->groupBy('ipo_id')
+            	->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+				->paginate(20);
 
 		return view('maxim.ipo.list.ipo_list',compact('ipoDetails'));
 	}

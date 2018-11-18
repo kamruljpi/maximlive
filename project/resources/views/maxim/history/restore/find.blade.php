@@ -9,7 +9,7 @@
         <input type="hidden" name="filter_type" value="{{Session::get('type')}}">
         <div class="col-sm-7">
             <div class="form-group" style="margin-top: 15px;">
-                <input type="text" name="filter_value" class="form-control" placeholder="Find" value="{{old('filter_value')}}">
+                <input type="text" name="filter_value" class="form-control" placeholder="Find">
             </div>
         </div>
         <div class="col-sm-2">

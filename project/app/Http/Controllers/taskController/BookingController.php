@@ -387,15 +387,15 @@ class BookingController extends Controller
           $msg = "Booking ".$id." canceled"; 
         }
 
-        $challan = MxpBookingChallan::where('booking_order_id', $id)->get();
+        $booking_challan = MxpBookingChallan::where('booking_order_id', $id)->get();
 
-        if(isset($challan) && !empty($challan)){
-            foreach ($challan as $value) {
-                $value->is_deleted = BookingFulgs::IS_DELETED;
-                $value->deleted_user_id = Auth::User()->user_id;
-                $value->deleted_date_at = Carbon\Carbon::now();
-                $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-                $value->save();
+        if(isset($booking_challan) && !empty($booking_challan[0]->booking_order_id)){
+            foreach ($booking_challan as $booking_challan_value) {
+                $booking_challan_value->is_deleted = BookingFulgs::IS_DELETED;
+                $booking_challan_value->deleted_user_id = Auth::User()->user_id;
+                $booking_challan_value->deleted_date_at = Carbon\Carbon::now();
+                $booking_challan_value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+                $booking_challan_value->save();
                 $msg = "Booking ".$id." canceled";
             }
 
@@ -430,25 +430,36 @@ class BookingController extends Controller
           }
         }
 
-        $mrf_value = MxpMrf::where('booking_order_id', $id)->get();
+        // $ipo = MxpIpo::where('booking_order_id', $id)->get();
 
-         if(isset($mrf_value) && !empty($mrf_value[0]->mrf_id)) {
-          foreach ($mrf_value as $mrfvalue) {
-            $mrfvalue->is_deleted = BookingFulgs::IS_DELETED;
-            $mrfvalue->deleted_user_id = Auth::User()->user_id;
-            $mrfvalue->deleted_date_at = Carbon\Carbon::now();
-            $mrfvalue->save();
-          }
-        $os_po_value = MxpOsPo::where('mrf_id', $mrf_value[0]->mrf_id)->get();
-        }
+        // if(isset($ipo) && !empty($ipo[0]->ipo_id)) {
+        //   foreach ($ipo as $ipovalue) {
+        //     $ipovalue->is_deleted = BookingFulgs::IS_DELETED;
+        //     $ipovalue->deleted_user_id = Auth::User()->user_id;
+        //     $ipovalue->deleted_date_at = Carbon\Carbon::now();
+        //     $ipovalue->save();
+        //   }
+        // }
 
-        if(isset($os_po_value) && !empty($os_po_value[0]->mrf_id)) {
-          foreach ($os_po_value as $osPoValue) {
-            $osPoValue->is_deleted = BookingFulgs::IS_DELETED;
-            $osPoValue->deleted_user_id = Auth::User()->user_id;
-            $osPoValue->save();
-          }
-        }
+        // $mrf_value = MxpMrf::where('booking_order_id', $id)->get();
+
+        //  if(isset($mrf_value) && !empty($mrf_value[0]->mrf_id)) {
+        //   foreach ($mrf_value as $mrfvalue) {
+        //     $mrfvalue->is_deleted = BookingFulgs::IS_DELETED;
+        //     $mrfvalue->deleted_user_id = Auth::User()->user_id;
+        //     $mrfvalue->deleted_date_at = Carbon\Carbon::now();
+        //     $mrfvalue->save();
+        //   }
+        // $os_po_value = MxpOsPo::where('mrf_id', $mrf_value[0]->mrf_id)->get();
+        // }
+
+        // if(isset($os_po_value) && !empty($os_po_value[0]->mrf_id)) {
+        //   foreach ($os_po_value as $osPoValue) {
+        //     $osPoValue->is_deleted = BookingFulgs::IS_DELETED;
+        //     $osPoValue->deleted_user_id = Auth::User()->user_id;
+        //     $osPoValue->save();
+        //   }
+        // }
         
       }else{
         $error = "Something went wrong please on booking table try again later ";

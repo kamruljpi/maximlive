@@ -126,7 +126,7 @@
                                 <tr id="booking_list_table">
                                     <td><input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" hidden> {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}</td>
                                     <td><input name="buyer_name[]" value="{{$value->buyer_name}}" hidden>{{$value->buyer_name}}</td>
-                                    <td><input name="company_name[]" value="{{$value->Company_name}}" hidden><{{$value->Company_name}}</td>
+                                    <td><input name="company_name[]" value="{{$value->Company_name}}" hidden>{{$value->Company_name}}</td>
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
                                     <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
                                     <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>

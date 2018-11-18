@@ -25,22 +25,42 @@
             <i class="fa fa-arrow-left"></i> Back</a>
         </div>
     </div>
+    @if($roleCheck == 'p')
+        <div class="col-sm-8"></div>
+        <div class="col-sm-2">
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button type="button" class="dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #fff; border:0;">
+                        <span style="font-size: 25px;">
+                            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                        </span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" style="left:-142px !important;">
+                        <li><a href="{{Route('planning_cancel_booking_action')}}/{{$bookingDetails->booking_order_id}}" class="deleteButton" style=" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)?'pointer-events: none':''}};">Cencel</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 @if(Session::has('empty_message'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_message') ))
 @endif
 @if(Session::has('message'))
-    <div class="alert alert-success">
-        <ul>
+    <div class="col-md-12 view_page">
+        <div class="alert alert-success" id="normal-btn-success">
+            <button type="button" class="close __close">×</button>
             {{ Session::get('message') }}
-        </ul>
+        </div>
     </div>
 @endif
 @if(Session::has('error-m'))
-    <div class="alert alert-danger">
+    <div class="alert alert-danger ">
         <ul>
-            {{ Session::get('error-m') }}
+            <li>{{ Session::get('error-m') }}</li>
+            <li> <button type="button" class="close __close">×</button></li>
         </ul>
     </div>
 @endif
@@ -59,9 +79,9 @@
 
     @if(session('data') == BookingFulgs::BOOKING_PROCESS_FLUG)
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 view_page">
                 <div class="alert alert-success" id="normal-btn-success">
-                    <button type="button" class="close">×</button>
+                    <button type="button" class="close __close">×</button>
                     Booking Accepted.
                 </div>
             </div>

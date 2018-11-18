@@ -112,6 +112,10 @@
         $('.close__').on('click',function(){
             $('.modal').hide();
         });
+
+        $('.__close').on('click',function(){
+            $('.view_page').hide();
+        });
 	</script>
 	@yield('LoadScript')
 </body>

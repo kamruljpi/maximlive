@@ -46,7 +46,7 @@ class IpoListController extends Controller
 
 		$ipoDetails = MxpIpo::join('mxp_booking as mp','mp.id','job_id')
 	                ->select('mxp_ipo.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
-	                ->where([['ipo_id',$request->ipoid],['is_deleted',BookingFulgs::IS_NOT_DELETED]])
+	                ->where([['mxp_ipo.ipo_id',$request->ipoid],['mxp_ipo.is_deleted',BookingFulgs::IS_NOT_DELETED]])
 	                ->get();
 		$ipoIncrease = $ipoDetails[0]->initial_increase;
 

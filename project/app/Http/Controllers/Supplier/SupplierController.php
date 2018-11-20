@@ -7,6 +7,7 @@ use App\Supplier;
 use Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Message\StatusMessage;
 
 class SupplierController extends Controller
 {
@@ -48,6 +49,8 @@ class SupplierController extends Controller
         }
 
         $supplierId = Supplier::create($req->all())->supplier_id;
+
+        StatusMessage::create('add', $req->name .' New Supplier Created Successfully');
         return redirect()->route('supplier_list_view');
     }
 
@@ -65,13 +68,16 @@ class SupplierController extends Controller
                 'address'=>$req->address,
                 'status' =>$req->status
             ]);
+            StatusMessage::create('update', $req->name .' Supplier Updated Successfully');
         return redirect()->route('supplier_list_view');
     }
     public function supplierDeleteAction(Request $req){
+        $supplier = Supplier::where('supplier_id', $req->supplier_id)->select('name')->first();
         Supplier::where('supplier_id', $req->supplier_id)
             ->update([
                 'is_delete' => 1
             ]);
+        StatusMessage::create('delete', $supplier->name . ' Supplier Delete Successfully');
 
         return redirect()->route('supplier_list_view');
     }

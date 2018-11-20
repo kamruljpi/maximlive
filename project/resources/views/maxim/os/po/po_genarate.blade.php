@@ -80,8 +80,8 @@
 									<th width="">GMTS Color</th>
 									<th width="">Size</th>
 									<th width="">Quantity</th>
-									<th width="">Supplier Price</th>
-									<th width="20%">Material</th>
+									<th width="30%">Supplier Price</th>
+									<th width="40%">Material</th>
 								</tr>
 							</thead>
 							<tbody>

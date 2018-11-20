@@ -15,6 +15,11 @@ use Carbon;
 
 class MrfController extends Controller
 {
+
+	/**
+     * @return array
+     */
+
 	public function getBookingValue($id){
 		$getDbValue = [];
 		if(is_array($id) && !empty($id)){
@@ -34,6 +39,10 @@ class MrfController extends Controller
 
 		return (!empty($pi_details)) ? $pi_details : '';
 	}
+
+	/**
+     * @return string
+     */
 
 	public function cancelBookingByPlanning($b_id){
 		$mrf_details = MxpMrf::where([
@@ -66,7 +75,7 @@ class MrfController extends Controller
 			}
 		}
 
-		if(is_array($check_1) && empty($check_1) && empty($check_2)){
+		if(is_array($check_1) && is_array($check_2) && empty($check_1) && empty($check_2)){
 			MxpBookingBuyerDetails::where([
 					['booking_order_id',$b_id],
 					['is_deleted', BookingFulgs::IS_NOT_DELETED]
@@ -113,11 +122,16 @@ class MrfController extends Controller
 
 		}else{
 			Session::flash('message','You can\'t cancel the booking. Because some job id is running to processing. ');			
+			return redirect()->back();
 		}
 
-		return redirect()->back()->with('datas', MrfFlugs::CANCEL_MAESSAGE);
+		return redirect()->back()->with('datas', MrfFlugs::CANCEL_MAESSAGE. ' Booking');
 	}
 
+	/**
+	 * @return string
+	 */
+	
 	public function cancelMrfById( $id ){
 
 	    $mrf = MxpMrf::where('job_id', $id)->first();
@@ -134,6 +148,8 @@ class MrfController extends Controller
             'deleted_date_at' =>  Carbon\Carbon::now(),
             'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
         ]);
+
+        Session::flash('message','Cancel Mrf item. ');
 
 	    return redirect()->back();
     }

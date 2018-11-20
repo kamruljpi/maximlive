@@ -91,7 +91,7 @@
             <br>
             <label>MRF No : {{ $mrfDetails[0]->mrf_id }}</label><br>
             <label>Booking No : {{ $mrfDetails[0]->booking_order_id }}</label><br>
-            <label>Requested Shipment Date : {{ $mrfDetails[0]->shipmentDate }}</label><br>
+            <label>Requested Shipment Date : {{ Carbon\Carbon::Parse($mrfDetails[0]->shipmentDate)->format('d-m-Y') }}</label><br>
             <label>MRF : <span style="color:red;">{{ ucwords($mrfDetails[0]->mrf_status) }}</span></label><br>
         </div>
 
@@ -216,6 +216,7 @@
             <thead>
                 <tr>
                     <th>Job No.</th>
+                    <th width="15%">PO No.</th>
                     <th>Supplier Name</th>
                     <th>Person Name</th>
                     <th width="">Item Code</th>
@@ -234,13 +235,14 @@
                         ?>
                         <tr>
                             <td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$jobId) }}{{$poValues->po_details->job_id}}</td>
+                            <td>{{$poValues->po_details->po_id}}</td>
                             <td>{{$poValues->po_details->name}}</td>
                             <td>{{$poValues->po_details->person_name}}</td>
                             <td>{{$poValues->po_details->item_code}}</td>
                             <td>{{$poValues->po_details->item_size_width_height}}</td>
                             <td>{{$poValues->po_details->mrf_quantity}}</td>
                             <td>{{$poValues->po_details->material}}</td>
-                            <td>{{$poValues->po_details->shipment_date}}</td>
+                            <td>{{Carbon\Carbon::Parse($poValues->po_details->shipment_date)->format('d-m-Y')}}</td>
                             <td>{{ucfirst(str_replace('_',' ',$poValues->po_details->job_id_current_status))}}</td>
                         </tr>
                     @endif

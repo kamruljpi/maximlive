@@ -26,7 +26,7 @@ class MrfListController extends Controller
     public function showMrfReport(Request $request){
         $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
                         ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
-                        ->where('mrf_id',$request->mid)
+                        ->where([['mxp_mrf_table.mrf_id',$request->mid],['mxp_mrf_table.is_deleted',BookingFulgs::IS_NOT_DELETED]])
                         ->get();
         $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
         $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->bid)->first();
@@ -53,7 +53,7 @@ class MrfListController extends Controller
                                     ->join('mxp_mrf_table as mrf','mrf.job_id','mxp_os_po.job_id')
                                     ->join('mxp_booking as mp','mp.id','mxp_os_po.job_id')
                                     ->Leftjoin('suppliers as s','s.supplier_id','mxp_os_po.supplier_id')
-                                    ->select('mxp_os_po.job_id','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code',
+                                    ->select('mxp_os_po.po_id','mxp_os_po.job_id','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code',
                                         'mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mp.sku','mp.season_code','mp.oos_number','mp.style','mp.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','mrf.job_id_current_status'
                                     )
                                     ->where([

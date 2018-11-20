@@ -41,6 +41,9 @@ class ProductController extends Controller
                 $productValue->description = MxpItemDescription::where('id',$productValue->item_description_id)->first();
             }
         }
+        if(empty($products)){
+            $products = MxpProduct::where('product_id',0)->paginate(20);
+        }
     	return view('product_management.product_list',compact('products'));
     }
 

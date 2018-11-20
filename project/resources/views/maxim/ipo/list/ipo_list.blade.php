@@ -65,24 +65,25 @@
 					<th>Booking No.</th>
 					<th>Ipo No.</th>
 					<th>Total QTY</th>
-					<th>Total Increased QTY</th>
+					{{-- <th>Total Increased QTY</th> --}}
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
 			@php($j=1 + $ipoDetails->perPage() * ($ipoDetails->currentPage() - 1))
+			<?php $increase_total_qnty = 0 ?>
 			@foreach($ipoDetails as $value)
 				<tr id="mrf_list_table">
 					<td>{{$j++}}</td>
 					<td>{{$value->booking_order_id}}</td>
 					<td>{{$value->ipo_id}}</td>
 					<td>{{ $value->ipo_quantity }}</td>
-					<td>
+					{{-- <td> --}}
                         <?php
-                            $p = ( ($value->ipo_quantity * $value->initial_increase)/100) + $value->ipo_quantity;
-                            echo floor($p);
+                            //$p = ( ($value->ipo_quantity * $value->initial_increase)/100) + $value->ipo_quantity;
+                          //  echo floor($p);
                         ?>
-                    </td>
+                    {{-- </td> --}}
 					<td>
 						<form action="{{ Route('ipo_list_report_view') }}" role="form" target="_blank">
 							{{ csrf_field() }}

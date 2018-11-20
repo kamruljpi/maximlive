@@ -190,12 +190,10 @@
                                                     <small class="price_icon">Vendor Price</small>
                                                 @endif
 
-                                                @if($define_role == 'os')
-                                                    <a class="hand-cursor float_left_padding" data-toggle="modal" data-target="#addSupplierPrice">
-                                                        <i class="material-icons">add_circle_outline</i>
-                                                    </a>
-                                                    <small class="price_icon">Supplier Price</small>
-                                                @endif
+                                                <a class="hand-cursor float_left_padding" data-toggle="modal" data-target="#addSupplierPrice">
+                                                    <i class="material-icons">add_circle_outline</i>
+                                                </a>
+                                                <small class="price_icon">Supplier Price</small>
 
                                                 @if($define_role != 'os')
                                                     <a class="hand-cursor float_left_padding" data-toggle="modal" data-target="#addCostPrice">

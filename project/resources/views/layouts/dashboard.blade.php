@@ -1,8 +1,9 @@
 @extends('layouts.plane')
 @section('body')
 <?php 
-    $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
-    $roleCheck = $object->getRole();
+    use App\Http\Controllers\Source\User\RoleDefine;
+    $object = new RoleDefine();
+    $csRoleCheck = $object->getRole('Customer');
 ?>
  <div id="wrapper">
         <!-- Navigation -->
@@ -261,13 +262,20 @@
              <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        @if($roleCheck != 'p')
+                        @if($csRoleCheck == 'customer')
                          <li {{ (Request::is('*dashboard') ? 'class="active"' : '') }}>
                             <a href="{{ Route ('task_dashboard_view') }}">
                                 <i class="fa fa-dashboard fa-fw"></i>
                                 {{ trans('others.task_label') }}
                             </a>
                         </li>
+                        @elseif(session::get('user_type') == "super_admin")
+                            <li {{ (Request::is('*dashboard') ? 'class="active"' : '') }}>
+                                <a href="{{ Route ('task_dashboard_view') }}">
+                                    <i class="fa fa-dashboard fa-fw"></i>
+                                    {{ trans('others.task_label') }}
+                                </a>
+                            </li>
                         @endif
 
                         @if(!is_array(session()->get('UserMenus')) || is_object(session()->get('UserMenus')) )

@@ -1,16 +1,28 @@
 @extends('layouts.dashboard')
-@section('page_heading',
-trans('others.update_product_label'))
+@section('page_heading',trans('others.update_product_label'))
 @section('section')
-<?php 
-    // print_r("<pre>");
-    // print_r($vendorCompanyListPrice);
-    // print_r("</pre>");
-    // die();
-?>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+@extends('product_management.product_modal')
 
-    @extends('product_management.product_modal')
+<?php 
+    use App\Http\Controllers\Source\User\RoleDefine;
+    $object = new RoleDefine();
+    $define_role = $object->getRole('OS');
+?>
+<style type="text/css">
+    .price_icon{
+        float: left;
+        padding-top: 4px;
+    }
+    .float_left{
+        float:left;
+    }
+
+    .float_left_padding{
+        float: left;
+        padding-left:5px;
+    }
+</style>
 
 <div class="container-fluid">
     <div class="row">
@@ -21,24 +33,22 @@ trans('others.update_product_label'))
             </div>
         </div>
     </div>
-        <div class="row">
-             <div class="col-md-12 ">   <!--col-md-offset-2 -->
-            	@if(count($errors) > 0)
-                    <div class="alert alert-danger" role="alert">
-                        @foreach($errors->all() as $error)
-                          <li><span>{{ $error }}</span></li>
-                        @endforeach
-                    </div>
-                @endif
+    <div class="row">
+         <div class="col-md-12 ">   <!--col-md-offset-2 -->
+        	@if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    @foreach($errors->all() as $error)
+                      <li><span>{{ $error }}</span></li>
+                    @endforeach
+                </div>
+            @endif
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">{{ trans('others.update_product_label') }}</div>
-                    <div class="panel-body">
-                        @foreach($product as $data)
-                
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ trans('others.update_product_label') }}</div>
+                <div class="panel-body">
+                    @foreach($product as $data)            
                         <form class="form-horizontal" action="{{ Route('update_product_action') }}/{{$data->product_id}}" method="POST" autocomplete="off">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     {{--<div class="form-group">--}}
@@ -57,9 +67,12 @@ trans('others.update_product_label'))
                                         <div class="col-md-6">
                                             <select class ="form-control" name="id_buyer" id="id_buyer">
                                                 @foreach($buyers as $buyer)
-                                                    <option @if($buyer->id_mxp_buyer == $data->id_buyer)
+                                                    <option 
+                                                        @if($buyer->id_mxp_buyer == $data->id_buyer)
                                                             selected="selected"
-                                                            @endif data-id="{{ $buyer->id_mxp_buyer }}" value="{{ $buyer->id_mxp_buyer }}">{{ $buyer->buyer_name }}</option>
+                                                        @endif data-id="{{ $buyer->id_mxp_buyer }}" 
+                                                        value="{{ $buyer->id_mxp_buyer }}">{{ $buyer->buyer_name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -73,34 +86,26 @@ trans('others.update_product_label'))
 
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_description_label') }}</label>
-
                                         <div class="col-md-6">
                                             <select class="form-control " name="p_description" required value="">
-
-                                                    @foreach($itemList as $item)
-
-                                                        <option value="{{$item->id}}" {{ ( $item->id == $data->item_description_id) ? 'selected' : '' }}>{{$item->name}}</option>
-                                                    @endforeach
+                                                @foreach($itemList as $item)
+                                                    <option value="{{$item->id}}" {{ ( $item->id == $data->item_description_id) ? 'selected' : '' }}>{{$item->name}}</option>
+                                                @endforeach
                                             </select>
-
-                                            </div>
                                         </div>
+                                    </div>                                     
 
-                                        
-
-{{--Add Color MultiSelect Box--}}
+                                        {{--Add Color MultiSelect Box--}}
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">Color</label>
                                         <div class="col-md-6">
                                             <div class="product-brand-list" style="width:80%; float: left;">
-
                                                 <select class="select-color-list" name="colors[]" multiple="multiple">
                                                     <option value="">Choose Color</option>
                                                     @foreach($colors as $color)
                                                         <option value="{{$color->id}},{{$color->color_name}}" >{{$color->color_name}}</option>
                                                     @endforeach
                                                 </select>
-
                                             </div>
                                             <div class="add-color-btn" style="width:20%; float: left; padding-top: 5px;">
                                                 <a class="hand-cursor"  data-toggle="modal" data-target="#addColorModal">
@@ -113,13 +118,11 @@ trans('others.update_product_label'))
                                     </div>
                                     {{--End Add Color MultiSelect Box--}}
 
-
                                     {{--Add Size MultiSelect Box--}}
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">Size Range</label>
                                         <div class="col-md-6">
                                             <div class="product-size-list" style="width:80%; float: left;">
-
                                                 <select class="select-size-list" name="sizes[]" multiple="multiple">
                                                     <option value="">Choose Size Range</option>
                                                     @foreach($sizes as $size)
@@ -139,49 +142,33 @@ trans('others.update_product_label'))
                                     {{--End Add Size MultiSelect Box--}}
 
                                     {{--Item  Size  Box--}}
-                                    <?php 
-                                        $valuess = explode('-', $data->item_size_width_height);
-                                    ?>
+                                    <?php $valuess = explode('-', $data->item_size_width_height); ?>
                                     <div class="itemSize">
                                         <label class="col-md-4 control-label">Item Size</label>
-                                        
-                                            <div class="col-md-3">
-                                                <div id="custom-search-input">
-                                                    <div class="input-group col-md-3">
-                                                        <input type="text" class="form-control input-sm" name="item_size_width" placeholder="width" style="width: 60px !important;" value="{{$valuess[0]}}" />
-                                                        <span class="input-group-btn" style=" color: #555;font-size: 18px; padding: 0px 5px; border: 1px solid #ddd; border-left:none ;" >
-                                                            mm
-                                                        </span>
-                                                    </div>
+                                        <div class="col-md-3">
+                                            <div id="custom-search-input">
+                                                <div class="input-group col-md-3">
+                                                    <input type="text" class="form-control input-sm" name="item_size_width" placeholder="width" style="width: 60px !important;" value="{{$valuess[0]}}" />
+                                                    <span class="input-group-btn" style=" color: #555;font-size: 18px; padding: 0px 5px; border: 1px solid #ddd; border-left:none ;" >
+                                                        mm
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
-                                                <div id="custom-search-input">
-                                                    
-                                                    <div class="input-group col-md-3">
-                                                        <input type="text" class="form-control input-sm" name="item_size_height" placeholder="height" style="width: 60px !important;" value="{{$valuess[1]}}"/>
-                                                        <span class="input-group-btn" style="color: #555;font-size: 18px;padding: 0px 5px; border: 1px solid #ddd; border-left:none ;">
-                                                            mm
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                    </div>
-
-                                 
-
-                                    <!-- <div class="form-group">
-                                        <label class="col-md-4 control-label">{{ trans('others.others_color_label') }}</label>
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" name="others_color" value="{{$data->others_color}}">
                                         </div>
-                                    </div> -->
-
+                                        <div class="col-md-3">
+                                            <div id="custom-search-input">                
+                                                <div class="input-group col-md-3">
+                                                    <input type="text" class="form-control input-sm" name="item_size_height" placeholder="height" style="width: 60px !important;" value="{{$valuess[1]}}"/>
+                                                    <span class="input-group-btn" style="color: #555;font-size: 18px;padding: 0px 5px; border: 1px solid #ddd; border-left:none ;">
+                                                        mm
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-
                                 <div class="col-md-6 col-sm-12">
-
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_erp_code_label') }}</label>
                                         <div class="col-md-6">
@@ -192,36 +179,30 @@ trans('others.update_product_label'))
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_unit_price_label') }}</label>
                                         <div class="col-md-6">
-                                            <div style="width:100%; float: left;">
+                                            <div>
                                                 <input type="text" class="form-control " name="p_unit_price" value="{{ $data->unit_price}}">
                                             </div>
-                                            <div class="add-vendor-com-price-btn" style=" width:100%; float: left; padding-top: 5px;">
-                                                <a style="float:left;" class="hand-cursor" data-toggle="modal" data-target="#addVendorComPrice">
-                                                    <i class="material-icons">
-                                                        add_circle_outline
-                                                    </i>
-                                                </a>
-                                                <small style="float: left; padding-top: 4px;">
-                                                    Vendor Price
-                                                </small>
-                                                
-                                                <a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addSupplierPrice">
-                                                    <i class="material-icons">
-                                                        add_circle_outline
-                                                    </i>
-                                                </a>
-                                                <small style="float: left; padding-top: 4px;">
-                                                    Supplier Price
-                                                </small>
+                                            <div class="add-vendor-com-price-btn">
+                                                @if($define_role != 'os')
+                                                    <a class="hand-cursor float_left" data-toggle="modal" data-target="#addVendorComPrice">
+                                                        <i class="material-icons">add_circle_outline</i>
+                                                    </a>
+                                                    <small class="price_icon">Vendor Price</small>
+                                                @endif
 
-                                                <a style=" padding-left:5px; float: left;" class="hand-cursor" data-toggle="modal" data-target="#addCostPrice">
-                                                    <i class="material-icons">
-                                                        add_circle_outline
-                                                    </i>
-                                                </a>
-                                                <small style="float: left; padding-top: 4px;">
-                                                    Cost Price
-                                                </small>
+                                                @if($define_role == 'os')
+                                                    <a class="hand-cursor float_left_padding" data-toggle="modal" data-target="#addSupplierPrice">
+                                                        <i class="material-icons">add_circle_outline</i>
+                                                    </a>
+                                                    <small class="price_icon">Supplier Price</small>
+                                                @endif
+
+                                                @if($define_role != 'os')
+                                                    <a class="hand-cursor float_left_padding" data-toggle="modal" data-target="#addCostPrice">
+                                                        <i class="material-icons">add_circle_outline </i>
+                                                    </a>
+                                                    <small class="price_icon">Cost Price</small>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -282,8 +263,6 @@ trans('others.update_product_label'))
                                         </div>
                                     </div>
 
-
-
                                     <div class="form-group">
                                         <label class="col-md-4">Product Status</label>
                                         <div class="col-md-6">
@@ -302,56 +281,49 @@ trans('others.update_product_label'))
                                 </div>
                             </div>
 
-
-
                             <!-- Add Vendor Company Price-->
-							<div class="modal fade" id="addVendorComPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-body">
-											<div class="panel panel-default">
-												<div class="panel-heading">Vendor Company Price
-													<button type="button" class="close" data-dismiss="addVendorComPrice" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
-												</div>
+    						<div class="modal fade" id="addVendorComPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    							<div class="modal-dialog" role="document">
+    								<div class="modal-content">
+    									<div class="modal-body">
+    										<div class="panel panel-default">
+    											<div class="panel-heading">Vendor Company Price
+    												<button type="button" class="close" data-dismiss="addVendorComPrice" aria-label="Close">
+    													<span aria-hidden="true">&times;</span>
+    												</button>
+    											</div>
 
-												<div class="panel-body">
+    											<div class="panel-body">
+    												{{--<form class="form-horizontal vendor-price" role="form" method="POST" action="{{ Route('create_brand_action') }}">--}}
 
+    												@if ($errors->any())
+    													<div class="alert alert-danger">
+    														<ul>
+    															@foreach ($errors->all() as $error)
+    																<li>{{ $error }}</li>
+    															@endforeach
+    														</ul>
+    													</div>
+    												@endif
 
-													{{--<form class="form-horizontal vendor-price" role="form" method="POST" action="{{ Route('create_brand_action') }}">--}}
-
-
-
-													@if ($errors->any())
-														<div class="alert alert-danger">
-															<ul>
-																@foreach ($errors->all() as $error)
-																	<li>{{ $error }}</li>
-																@endforeach
-															</ul>
-														</div>
-													@endif
-
-
-													@foreach($vendorCompanyListPrice as $vCom)
-														<input type="hidden" name="price_id[]" value="{{ $vCom->price_id  }}" >
+    												@foreach($vendorCompanyListPrice as $vCom)
+    													<input type="hidden" name="price_id[]" value="{{ $vCom->price_id  }}" >
                                                         <input type="hidden" name="party_table_id[]" value="{{ $vCom->party_table_id  }}" >
 
-														<div class="col-md-4">
-															{{--<label class="control-label">Size Name</label>--}}
-															<input type="text" class="form-control" value="{{ $vCom->party->name_buyer  }}" disabled>
-														</div>
+    													<div class="col-md-4">
+    														{{--<label class="control-label">Size Name</label>--}}
+    														<input type="text" class="form-control" value="{{ $vCom->party->name_buyer  }}" disabled>
+    													</div>
 
-														<div class="col-md-5">
-															{{--<label class="control-label col-md-12">Size Name</label>--}}
-															<input type="text" class="form-control" value="{{ $vCom->party->name  }}" disabled>
-														</div>
+    													<div class="col-md-5">
+    														{{--<label class="control-label col-md-12">Size Name</label>--}}
+    														<input type="text" class="form-control" value="{{ $vCom->party->name  }}" disabled>
+    													</div>
 
-														<div class="col-md-3">
-															{{--<label class="control-label">Size Name</label>--}}
-															<input type="text" class="form-control v_com_price" name="v_com_price[]" value="{{$vCom->vendor_com_price}}" placeholder="Enter Price">
-														</div>
+    													<div class="col-md-3">
+    														{{--<label class="control-label">Size Name</label>--}}
+    														<input type="text" class="form-control v_com_price" name="v_com_price[]" value="{{$vCom->vendor_com_price}}" placeholder="Enter Price">
+    													</div>
 
                                                     @endforeach
 
@@ -394,24 +366,22 @@ trans('others.update_product_label'))
                                                         </div>
                                                     @endforeach
 
-													{{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
+    												{{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
 
-														<div class="form-group">
-															<div class="col-md-2 col-md-offset-10">
-																<button class="btn btn-primary vendor-price-btn" style="margin-right: 15px;">
-																	Next
-																</button>
-															</div>
-														</div>
-													{{--</form>--}}
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-
+    													<div class="form-group">
+    														<div class="col-md-2 col-md-offset-10">
+    															<button class="btn btn-primary vendor-price-btn" style="margin-right: 15px;">
+    																Next
+    															</button>
+    														</div>
+    													</div>
+    												{{--</form>--}}
+    											</div>
+    										</div>
+    									</div>
+    								</div>
+    							</div>
+    						</div>
 
                             <!-- Add Supplier Price-->
                             <div class="modal fade" id="addSupplierPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -424,9 +394,7 @@ trans('others.update_product_label'))
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
-
                                                 <div class="panel-body">
-
                                                     @if ($errors->any())
                                                         <div class="alert alert-danger">
                                                             <ul>
@@ -497,7 +465,6 @@ trans('others.update_product_label'))
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label class="label-control col-md-12">Price 2</label>
@@ -522,33 +489,32 @@ trans('others.update_product_label'))
                             </div>
                             
                             <div class="form-group">
-	                            <div class="col-md-offset-10">
+                                <div class="col-md-offset-10">
                                     <button type="submit" class="btn btn-primary" style="margin-right: 15px;">
                                         {{ trans('others.update_button') }}
                                 	</button>
                                 </div>
                             </div>
                         </form>
-
-                        @endforeach
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script type="text/javascript">
-        $(".selections").select2();
-        // $(".select-color-list").select2();
-        // $(".select-size-list").select2();
+<script type="text/javascript">
+    $(".selections").select2();
+    // $(".select-color-list").select2();
+    // $(".select-size-list").select2();
 
-        var selectedColors = $(".select-color-list").select2();
-        var selectedSizes = $(".select-size-list").select2();
+    var selectedColors = $(".select-color-list").select2();
+    var selectedSizes = $(".select-size-list").select2();
 
-       var colors = {!! json_encode($colorsJs) !!};
-        var sizes = {!! json_encode($sizesJs) !!};
+   var colors = {!! json_encode($colorsJs) !!};
+    var sizes = {!! json_encode($sizesJs) !!};
 
-        selectedColors.val(colors).trigger("change");
-        selectedSizes.val(sizes).trigger("change");
-    </script>
+    selectedColors.val(colors).trigger("change");
+    selectedSizes.val(sizes).trigger("change");
+</script>
 @endsection

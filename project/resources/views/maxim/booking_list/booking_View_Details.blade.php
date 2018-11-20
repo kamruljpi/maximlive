@@ -69,7 +69,7 @@
     <div class="col-md-12 view_page">
         <div class="alert alert-success" id="normal-btn-success">
             <button type="button" class="close __close">×</button>
-            {{ Session::get('message') }}
+            {{ Session::get('datas') }}
         </div>
     </div>
 @endif

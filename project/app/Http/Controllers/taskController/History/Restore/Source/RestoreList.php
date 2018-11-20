@@ -28,11 +28,11 @@ class RestoreList extends Controller
 	protected $path;
 
 	/**
-		@pram $type which type active now.
-		@pram $filed search field name	
-		@pram $model which table need to search
-		@pram $path which view file need to show
-	**/
+	 *	@pram $type which type active now.
+	 *	@pram $filed search field name	
+	 *	@pram $model which table need to search
+	 *	@pram $path which view file need to show
+	 */
 
 	public function __construct($type,$filed,$model,$path){
 		$this->type = $type;

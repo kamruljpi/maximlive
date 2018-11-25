@@ -115,7 +115,7 @@
     <br>
 
     <div class="row">
-        <div class="col-md-xs col-md-offset-0">
+        <div class="col-md-12">
             <table class="table table-bordered">
                 <thead>
                 <tr>

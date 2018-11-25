@@ -106,13 +106,14 @@
 	        	<th>Job No.</th>
 	        	<th width="15%" id="erp_code">ERP Code</th>
 	        	<th width="20%">Item / Code No.</th>
+	        	<th id="item_size" width="20%">Item Size</th>
 	        	<th width="5%">Season Code</th>
 	        	<th>OOS No.</th>
 	        	<th>Style</th>
 	        	<th>PO/Cat No.</th>
 	        	<th>Description</th>
 	        	<th>GMTS Color</th>
-	        	<th width="15%">Size</th>
+	        	<th width="15%">Size Range</th>
 	        	<th>Sku</th>
 	        	<th>Order Qty</th>
 	        	<th>Unit</th>
@@ -132,6 +133,7 @@
 			    	<td>{{ str_repeat('0',$jobId) }}{{ $details->id }}</td>
 			    	<td width="20%">{{$details->erp_code}}</td>
                 	<td width="10%">{{$details->item_code}}</td>
+                	<td >{{ ($details->item_size_width_height != '')? '('. $details->item_size_width_height .')mm' : 'N/A' }}</td>
 			    	<td width="5%">{{$details->season_code}}</td>
 			    	<td width="5%">{{$details->oos_number}}</td>
 			    	<td width="5%">{{$details->style}}</td>

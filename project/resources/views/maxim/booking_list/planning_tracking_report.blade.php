@@ -147,11 +147,11 @@
                                     </td>
                                     <td>
                                         <input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" type="hidden">
-                                        {{$valuelist->ipo->ipo_ids}}
+                                        {{ ($valuelist->ipo->ipo_ids != '')? $valuelist->ipo->ipo_ids : 'N/A' }}
                                     </td>
                                     <td>
                                         <input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" type="hidden">
-                                        {{$valuelist->mrf->mrf_ids}}
+                                        {{ ($valuelist->mrf->mrf_ids != '')? $valuelist->mrf->mrf_ids : 'N/A' }}
                                     </td>
                                     <td>
                                         <input name="order_date[]" value="{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}" type="hidden">

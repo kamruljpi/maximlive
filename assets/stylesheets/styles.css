@@ -9208,4 +9208,7 @@ span.challan_list_rmv:hover {
       font-size: 27px !important;
     
   }
+}
+ table th#item_size {
+    min-width: 140px !important;
 } 

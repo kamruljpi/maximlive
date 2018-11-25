@@ -84,11 +84,11 @@
 <div class="booking_report_details_view" id="booking_report_details_view"></div>
 
 <div class="row">
-    <div class="col-md-12 col-md-offset-0">
+    <div class="col-md-12" >
         <form method="post" action="{{ URL('tracking/export') }}" enctype="multipart/form-data" >
             <input type="hidden" name="_token" value="{!! csrf_token() !!}">
-            <div class="table-responsive" style="max-width: 100%;max-height: 500px;overflow: auto;">
-                <table class="table table-bordered" style="min-width: 600px;" >
+            <div class="table-responsive os_table" style="overflow: auto;">
+                <table class="table table-bordered" >
                     <thead>
                     <tr>
                         <th>Job No.</th>
@@ -99,9 +99,10 @@
                         <th>PO No.</th>
                         <th>PO/CAT No.</th>
                         <th>Item Code</th>
+                        <th id="item_size">Item Size</th>
                         <th>ERP Code</th>
-                        <th>Size Range</th>
-                        <th width="15%" style="min-width:15%;">Item Size</th>
+                        <th >Size Range</th>
+                        
                         <th>Description</th>
                         <th>Material</th>
                         <th width="10%">Order Date</th>
@@ -136,14 +137,15 @@
 
                             <td><input name="po_cat_no[]" value="{{$value->poCatNo}}" type="hidden">{{$value->poCatNo}}</td>
 
-                            <td><input name="item_code[]" value="{{$value->item_code}}" type="hidden">{{$value->item_code}}</td>
-
+                            <td><input name="item_code[]" value="{{$value->item_code}}" type="hidden"></td>
+                            <td><input name="item_size[]" value="{{$value->booking_values->item_size_width_height}}" type="hidden">
+                            {{ ($value->booking_values->item_size_width_height!= '')? '('. $value->booking_values->item_size_width_height .')mm': 'N/A' }}
+                            </td>
                             <td><input name="erp_code[]" value="{{$value->erp_code}}" type="hidden">{{$value->erp_code}}</td>
 
                             <td><input name="size_range[]" value="{{$value->item_size}}" type="hidden">{{$value->item_size}}</td>
 
-                            <td><input name="item_size[]" value="{{$value->booking_values->item_size_width_height}}" type="hidden">{{$value->booking_values->item_size_width_height}}</td>
-
+                            
                             <td><input name="item_description[]" value="{{$value->item_description}}" type="hidden">{{$value->item_description}}</td>
 
                             <td><input name="matarial[]" value="{{$value->os_po->material}}" type="hidden">{{$value->os_po->material}}</td>

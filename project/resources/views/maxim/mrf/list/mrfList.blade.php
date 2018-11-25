@@ -78,7 +78,7 @@
 				<tr>
 					<thead>
 					<th>Serial no</th>
-					<th>booking No.</th>
+					<th>Booking No.</th>
 					<th>MRF No.</th>
 					<th>Order Qty</th>
 					<th>MRF Create Date</th>

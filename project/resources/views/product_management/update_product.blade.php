@@ -66,6 +66,7 @@
                                         <label class="col-md-4 control-label">Brand</label>
                                         <div class="col-md-6">
                                             <select class ="form-control" name="id_buyer" id="id_buyer">
+                                                <option value="">Choose a buyer</option>
                                                 @foreach($buyers as $buyer)
                                                     <option 
                                                         @if($buyer->id_mxp_buyer == $data->id_buyer)
@@ -487,8 +488,8 @@
                             </div>
                             
                             <div class="form-group">
-                                <div class="col-md-offset-10">
-                                    <button type="submit" class="btn btn-primary" style="margin-right: 15px;">
+                                <div class="col-sm-2 col-sm-offset-8">
+                                    <button type="submit" class="btn btn-primary form-control" style="margin-right: 15px;">
                                         {{ trans('others.update_button') }}
                                 	</button>
                                 </div>

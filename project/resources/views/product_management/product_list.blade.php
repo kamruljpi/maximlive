@@ -49,7 +49,7 @@
       </thead>
       <tbody>
            @foreach($products as $product)
-              <tr>
+              <tr {{ (Session::get('item_id') == $product->product_id) ? 'style=background-color:#DAF6D7' : ''}}>
                 <td>{{$product->product_id}}</td>
                 <td>{{$product->brand}}</td>
                 <td>{{$product->product_code}}</td>

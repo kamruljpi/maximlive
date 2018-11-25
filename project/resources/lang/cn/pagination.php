@@ -22,7 +22,9 @@ return [
 'add_buyer_label' => 'Add Brand',
 'buyer_name_label' => 'Brand Name',
 'update_buyer_label' => 'Update buyer',
-'mxp_menu_booking_list' => '',
-'mxp_menu_planning_tracking_report' => '',
+'mxp_menu_os_mrf_list_view' => 'OS MRF list',
+'mxp_menu_os_po_list_view' => 'OS Purchase Order List',
+'mxp_menu_planning_tracking_report' => 'Planning Tracking List',
+'mxp_menu_os_tracking_list' => 'OS Tracking List',
 
 ];

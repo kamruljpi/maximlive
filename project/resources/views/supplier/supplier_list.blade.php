@@ -1,4 +1,5 @@
 @extends('layouts.dashboard')
+{{--@section('page_heading', trans('others.party_list_label'))--}}
 @section('page_heading', 'Supplier List')
 @section('section')
 <style type="text/css">
@@ -9,23 +10,26 @@
         padding-left: 15px;
     }
 </style>
+
+
 <!-- <div class="row"> -->
-@if(Session::has('add'))
-  @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('add') ))
-@endif
+  @if(Session::has('party_added'))
+          @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('party_added') ))
+  @endif
 
-@if(Session::has('delete'))
-  @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('delete') ))
-@endif
+  @if(Session::has('party_delete'))
+          @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('party_delete') ))
+  @endif
 
-@if(Session::has('update'))
-  @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('update') ))
-@endif
+  @if(Session::has('party_updated'))
+          @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('party_updated') ))
+  @endif
 
-<div class="col-sm-3 top-btn-pro">
- 	<a href="{{ Route('supplier_add_view') }}" class="btn btn-success form-control">Add Supplier</a>
-</div>
-
+ <div class="col-sm-3 top-btn-pro">
+ 	<a href="{{ Route('supplier_add_view') }}" class="btn btn-success form-control">
+        Add Supplier
+    </a>
+ </div>
 <div class="col-sm-6">
     <div class="form-group custom-search-form">
         <input type="text" name="searchFld" class="form-control keyup_preloder" placeholder="search" id="user_search">
@@ -34,13 +38,12 @@
         </button>
     </div>
 </div>
-
 <div class="col-sm-12 col-md-12">
   <div class="table-responsive">
-    <table class="table table-bordered" id="tblSearch">
+      <table class="table table-bordered" id="tblSearch">
       <thead>
           <tr>
-              <th class="">#</th>
+              <th class="">Sl</th>
               <th class="">Supplier Name</th>
               <th class="">Email Address</th>
               <th class="">Person Name</th>
@@ -68,8 +71,8 @@
           </tr>
         @endforeach           
       </tbody>
-    </table>
-    {{$suppliers->links()}}
+  </table>
+  {{$suppliers->links()}}
   </div> 
 </div>
 @stop

@@ -20,19 +20,25 @@
                     @endforeach
                 </div>
             @endif
+
             <div class="panel panel-default">
-                <div class="panel-heading">Add Supplier</div>
-                <div class="panel-body">               
+                <div class="panel-heading">{{ trans('others.add_party_label') }}</div>
+                <div class="panel-body">
+
+               
                     <form class="form-horizontal" action="{{ Route('supplier_add_action') }}" role="form" method="POST" >
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">                     
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        
                         <div class="row">
                             <div style="" class="col-md-12 col-sm-12 ">
+
                                 <div class="form-group">
                                     <label class="col-md-4 col-sm-4 control-label">Supplier Name</label>
                                     <div class="col-md-6 col-sm-6">
                                         <input type="text" class="form-control  input_required" name="name" value="{{ old('name') }}" placeholder="Supplier">
                                     </div>
                                 </div>
+
                                 {{--<div class="form-group">--}}
                                     {{--<label class="col-md-4 col-sm-4 control-label">Contact</label>--}}
                                     {{--<div class="col-md-6 col-sm-6">--}}
@@ -42,21 +48,24 @@
                                 <div class="form-group">
                                     <label class="col-md-4 col-sm-4 control-label">Person Name</label>
                                     <div class="col-md-6 col-sm-6">
-                                        <input type="text" class="form-control  input_required" name="person_name" value="{{ old('person_name') }}" placeholder="Person Name">
+                                        <input type="text" class="form-control  input_required" name="person_name" value="{{ old('person_name') }}" placeholder="Peter San">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label class="col-md-4 col-sm-4 control-label">Email Address</label>
                                     <div class="col-md-6 col-sm-6">
                                         <input type="text" class="form-control  input_required" name="email" value="{{ old('email') }}" placeholder="supplier@maxim.com">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label class="col-md-4 col-sm-4 control-label">Address</label>
                                     <div class="col-md-6 col-sm-6">
                                         <input type="text" class="form-control  input_required" name="address" value="{{ old('address') }}" placeholder="Dhaka">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                   <label class="col-md-4 col-sm-4 control-label">{{ trans('others.header_status_label') }}</label>
                                   <div class="col-md-6 col-sm-6">
@@ -69,7 +78,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3 col-sm-offset-5 col-xs-offset-8">
+                            <div class="col-sm-6 col-sm-offset-5 col-xs-offset-8">
                                 <button type="submit" class="btn btn-primary form-control" style="margin-right: 15px;">
                                     {{ trans('others.save_button') }}
                                 </button>

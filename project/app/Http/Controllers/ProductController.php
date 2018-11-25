@@ -25,6 +25,7 @@ use App\Http\Controllers\Supplier\SupplierController;
 use App\userbuyer;
 use App\Http\Controllers\Source\User\UserAccessBuyerList;
 use App\Model\Product\ItemCostPrice;
+use Session;
 
 class ProductController extends Controller
 {
@@ -200,6 +201,7 @@ class ProductController extends Controller
             'p_weight_qty.integer' => 'Weight Qty field is required.',
             'p_weight_amt.required' => 'Weight Amt field is required.',
             'p_weight_amt.integer' => 'Weight Amt field is required.',
+            'id_buyer.required' => 'Brand field is required.',
             // 'p_brand.required' => 'Brand field is required.'
             ];
         $datas = $request->all();
@@ -207,6 +209,7 @@ class ProductController extends Controller
             [
     			'p_code' => 'required|unique:mxp_product,product_code',
     			'p_erp_code' => 'required',
+    			'id_buyer' => 'required'
     			// 'p_brand' => 'required'
 		    ],
             $validMessages
@@ -277,7 +280,8 @@ class ProductController extends Controller
             'last_action'   => self::CREATE_PRODUCT
         ]);
 
-		StatusMessage::create('new_product_create', 'New product Created Successfully');
+		StatusMessage::create('new_product_create', $request->p_code .' New product Created Successfully');
+		Session::flash('item_id', $lastProId);
 		return \Redirect()->Route('product_list_view');    	
     }
 
@@ -387,6 +391,8 @@ class ProductController extends Controller
         }        
 
 		StatusMessage::create('update_product_create', 'Item No ( '.$lastProductID .' ) Successfully update');
+		
+		Session::flash('item_id', $lastProductID);
 
 		return \Redirect()->Route('product_list_view');
     }

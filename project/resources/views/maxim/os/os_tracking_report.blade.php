@@ -101,71 +101,70 @@
                         <th>Item Code</th>
                         <th>ERP Code</th>
                         <th>Size Range</th>
-                        <th width="15%">Size</th>
+                        <th width="15%" style="min-width:15%;">Item Size</th>
                         <th>Description</th>
                         <th>Material</th>
                         <th width="10%">Order Date</th>
-                        <th>Shipment Date</th>
+                        <th>Requested Shipment Date</th>
                         <th>Quantity</th>
                         <th>Supplier Price</th>
                         <th>Total Price</th>
                     </tr>
                     </thead>
                     <tbody id="booking_list_tbody">
-                        <?php $total_qty = 0;$total_price = 0; ?>
-                        @foreach($bookingList as $value)
-                            <?php
-                                $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($value->job_id));
-                                $total_qty += $value->mrf_quantity;
-                                $price = $value->mrf_quantity * $value->os_po->supplier_price;
-                                $total_price += $price;
-                            ?>
-                            <tr id="booking_list_table">
-                                <td>
-                                    <input name="job_id[]" value="{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $valuelist->job_id }}" type="hidden">
-                                    {{ str_repeat('0',$idstrcount) }}{{ $value->job_id }}
-                                </td>
-                                <td><input type="hidden" name="supplier_name[]" value="{{$value->os_po->name}}">{{$value->os_po->name}}</td>
-                                <td><input type="hidden" name="contact_person[]" value="{{$value->os_po->person_name}}">{{$value->os_po->person_name}}</td>
+                    <?php $total_qty = 0;$total_price = 0; ?>
+                    @foreach($bookingList as $value)
+                        <?php
+                            $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($value->job_id));
+                            $total_qty += $value->mrf_quantity;
+                            $price = $value->mrf_quantity * $value->os_po->supplier_price;
+                            $total_price += $price;
+                        ?>
+                        <tr id="booking_list_table">
+                            <td>
+                                <input name="job_id[]" value="{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $valuelist->job_id }}" type="hidden">
+                                {{ str_repeat('0',$idstrcount) }}{{ $value->job_id }}
+                            </td>
+                            <td><input type="hidden" name="supplier_name[]" value="{{$value->os_po->name}}">{{$value->os_po->name}}</td>
+                            <td><input type="hidden" name="contact_person[]" value="{{$value->os_po->person_name}}">{{$value->os_po->person_name}}</td>
 
-                                <td><input name="booking_no[]" value="{{$value->booking_order_id}}" type="hidden">{{$value->booking_order_id}}</td>
+                            <td><input name="booking_no[]" value="{{$value->booking_order_id}}" type="hidden">{{$value->booking_order_id}}</td>
 
-                                <td><input name="mrf_no[]" value="{{$value->mrf_id}}" type="hidden">{{$value->mrf_id}}</td>
+                            <td><input name="mrf_no[]" value="{{$value->mrf_id}}" type="hidden">{{$value->mrf_id}}</td>
 
-                                <td><input name="po_no[]" value="{{$value->os_po->po_id}}" type="hidden">{{$value->os_po->po_id}}</td>
+                            <td><input name="po_no[]" value="{{$value->os_po->po_id}}" type="hidden">{{$value->os_po->po_id}}</td>
 
-                                <td><input name="po_cat_no[]" value="{{$value->poCatNo}}" type="hidden">{{$value->poCatNo}}</td>
+                            <td><input name="po_cat_no[]" value="{{$value->poCatNo}}" type="hidden">{{$value->poCatNo}}</td>
 
-                                <td><input name="item_code[]" value="{{$value->item_code}}" type="hidden">{{$value->item_code}}</td>
+                            <td><input name="item_code[]" value="{{$value->item_code}}" type="hidden">{{$value->item_code}}</td>
 
-                                <td><input name="erp_code[]" value="{{$value->erp_code}}" type="hidden">{{$value->erp_code}}</td>
+                            <td><input name="erp_code[]" value="{{$value->erp_code}}" type="hidden">{{$value->erp_code}}</td>
 
-                                <td><input name="size_range[]" value="{{$value->item_size}}" type="hidden">{{$value->item_size}}</td>
+                            <td><input name="size_range[]" value="{{$value->item_size}}" type="hidden">{{$value->item_size}}</td>
 
-                                <td><input name="item_size[]" value="{{$value->booking_values->item_size_width_height}}" type="hidden">{{$value->booking_values->item_size_width_height}}</td>
+                            <td><input name="item_size[]" value="{{$value->booking_values->item_size_width_height}}" type="hidden">{{$value->booking_values->item_size_width_height}}</td>
 
-                                <td><input name="item_description[]" value="{{$value->item_description}}" type="hidden">{{$value->item_description}}</td>
+                            <td><input name="item_description[]" value="{{$value->item_description}}" type="hidden">{{$value->item_description}}</td>
 
-                                <td><input name="matarial[]" value="{{$value->os_po->material}}" type="hidden">{{$value->os_po->material}}</td>
+                            <td><input name="matarial[]" value="{{$value->os_po->material}}" type="hidden">{{$value->os_po->material}}</td>
 
-                                <td><input name="shipmentDate[]" value="{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}</td>
+                            <td><input name="shipmentDate[]" value="{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}</td>
 
-                                <td><input name="shipmentDate[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
+                            <td><input name="shipmentDate[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
 
-                                <td><input name="mrf_quantity[]" value="{{$value->mrf_quantity}}" type="hidden">{{$value->mrf_quantity}}</td>
+                            <td><input name="mrf_quantity[]" value="{{$value->mrf_quantity}}" type="hidden">{{$value->mrf_quantity}}</td>
 
-                                <td><input name="supplier_price[]" value="{{$value->os_po->supplier_price}}" type="hidden">{{($value->os_po->supplier_price != '')?'$'.$value->os_po->supplier_price : ''}}</td>
-
-                                <td><input name="total_price[]" value="{{$price}}" type="hidden">{{($price != 0)?'$'.$price : ''}}</td>
-                            </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="15"><strong style="font-size: 16px; float: right;"> All Total</strong></td>
-                            {{-- <td colspan="2"></strong></td> --}}
-                            <td><strong><input name="total_qty" value="" type="hidden"><strong style="">Qty:{{$total_qty}}</strong></td>
-
-                            <td colspan="2"><strong><input name="total_price" value="" type="hidden">Price: {{($total_price != 0)?'$'.$total_price : ''}}</strong></td>
+                            <td><input name="supplier_price[]" value="{{$value->os_po->supplier_price}}" type="hidden">{{($value->os_po->supplier_price != '')?'$'.$value->os_po->supplier_price : ''}}</td>
+                            <td><input name="total_price[]" value="{{$price}}" type="hidden">{{($price != 0)?'$'.$price : ''}}</td>
                         </tr>
+                    @endforeach
+                    <tr>
+                        <td colspan="15"><strong style="font-size: 16px; float: right;"> All Total</strong></td>
+                        {{-- <td colspan="2"></strong></td> --}}
+                        <td><strong><input name="total_qty" value="" type="hidden"><strong style="">Qty:{{$total_qty}}</strong></td>
+
+                        <td colspan="2"><strong><input name="total_price" value="" type="hidden">Price: {{($total_price != 0)?'$'.$total_price : ''}}</strong></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

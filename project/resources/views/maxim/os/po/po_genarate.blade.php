@@ -81,7 +81,7 @@
 									<th width="">Size</th>
 									<th width="">Quantity</th>
 									<th width="30%">Supplier Price</th>
-									<th width="40%">Material</th>
+									<th width="50%">Material</th>
 								</tr>
 							</thead>
 							<tbody>

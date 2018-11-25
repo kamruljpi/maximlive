@@ -28,7 +28,6 @@ Class Resource extends Controller
 			->paginate(20);
 		return $data;
 	}
-	
 	public static function getDeletedPiValue($model,$field){
 		$data = $model->orderBy('id','DESC')
 			->select('*',DB::Raw('GROUP_CONCAT(DISTINCT booking_order_id SEPARATOR ", ") as booking_order_id'))
@@ -39,71 +38,83 @@ Class Resource extends Controller
 	}
 
 	public function restorebooking($id){
-		$booking = MxpBooking::where([
-					['booking_order_id', $id],
-					['is_deleted',BookingFulgs::IS_DELETED]
-				])
-				->get();
+		try {
+			$booking = MxpBooking::where([
+						['booking_order_id', $id],
+						['is_deleted',BookingFulgs::IS_DELETED]
+					])
+					->get();
 
-		if(isset($booking) && !empty($booking[0]->booking_order_id)){
-            foreach ($booking as $bookvalue) {
-                $bookvalue->is_deleted = BookingFulgs::IS_NOT_DELETED;
-                $bookvalue->deleted_user_id = Auth::User()->user_id;
-                $bookvalue->deleted_date_at = Carbon\Carbon::now();
-                $bookvalue->last_action_at = LastActionFlugs::RESTORED_ACTION;
-                $bookvalue->save();
-                
-                // self::print_me($value->id);
-                MxpBookingChallan::where('job_id',$value->id)->update([
+			if(isset($booking) && !empty($booking[0]->booking_order_id)){
+	            foreach ($booking as $bookvalue) {
+	                $bookvalue->is_deleted = BookingFulgs::IS_NOT_DELETED;
+	                $bookvalue->deleted_user_id = Auth::User()->user_id;
+	                $bookvalue->deleted_date_at = Carbon\Carbon::now();
+	                $bookvalue->last_action_at = LastActionFlugs::RESTORED_ACTION;
+	                $bookvalue->save();
+	                
+	                // self::print_me($value->id);
+	                MxpBookingChallan::where('job_id',$value->id)->update([
+	                	'is_deleted' => BookingFulgs::IS_NOT_DELETED,
+	                	'deleted_user_id' => Auth::User()->user_id,
+	                	'deleted_date_at' => Carbon\Carbon::now(),
+	                	'last_action_at' => LastActionFlugs::RESTORED_ACTION
+	                ]);               
+	                
+	                $msg = "Booking  ".$id." Restore successfully.";
+	            }
+
+	            MxpBookingBuyerDetails::where('booking_order_id',$booking[0]->booking_order_id)->update([
                 	'is_deleted' => BookingFulgs::IS_NOT_DELETED,
                 	'deleted_user_id' => Auth::User()->user_id,
                 	'deleted_date_at' => Carbon\Carbon::now(),
                 	'last_action_at' => LastActionFlugs::RESTORED_ACTION
-                ]);               
-                
-                $msg = "Booking  ".$id." Restore successfully.";
-            }
+                ]);
+	        }else{
+	            $error = "Something went wrong please try again later";
+	        }
+	        Session::flash('message', $msg);
+	        Session::flash('error-m', $error);
+			return redirect()->back();
 
-            MxpBookingBuyerDetails::where('booking_order_id',$booking[0]->booking_order_id)->update([
-            	'is_deleted' => BookingFulgs::IS_NOT_DELETED,
-            	'deleted_user_id' => Auth::User()->user_id,
-            	'deleted_date_at' => Carbon\Carbon::now(),
-            	'last_action_at' => LastActionFlugs::RESTORED_ACTION
-            ]);
-        }else{
-            $error = "Something went wrong please try again later";
-        }
-        Session::flash('message', $msg);
-        Session::flash('error-m', $error);
-		return redirect()->back();
+		} catch (Exception $e) {
+			report($e);
+        	return false;
+		}
 	}
 	public function restorePi($id){
-		$pi_value = MxpPi::where([
-					['p_id', $id],
-					['is_deleted',BookingFulgs::IS_DELETED]
-				])
-				->get();
+		try {
+			$pi_value = MxpPi::where([
+						['p_id', $id],
+						['is_deleted',BookingFulgs::IS_DELETED]
+					])
+					->get();
 
-		if(isset($pi_value) && !empty($pi_value[0]->p_id)){
-            foreach ($pi_value as $pivalue) {
-                $pivalue->is_deleted = BookingFulgs::IS_NOT_DELETED;
-                $pivalue->deleted_user_id = Auth::User()->user_id;
-                $pivalue->deleted_date_at = Carbon\Carbon::now();
-                $pivalue->last_action_at = LastActionFlugs::RESTORED_ACTION;
-                $pivalue->save();
-                
-                $bookingss = MxpBooking::find($value->job_no);
-                $bookingss->is_pi_type = $value->is_type;
-                $bookingss->save();
-                
-                $msg = "Pi ".$id." Restore successfully.";
-            }
-        }else{
-            $error = "Something went wrong please try again later";
-        }
-        Session::flash('message', $msg);
-        Session::flash('error-m', $error);
-		return redirect()->back();
+			if(isset($pi_value) && !empty($pi_value[0]->p_id)){
+	            foreach ($pi_value as $pivalue) {
+	                $pivalue->is_deleted = BookingFulgs::IS_NOT_DELETED;
+	                $pivalue->deleted_user_id = Auth::User()->user_id;
+	                $pivalue->deleted_date_at = Carbon\Carbon::now();
+	                $pivalue->last_action_at = LastActionFlugs::RESTORED_ACTION;
+	                $pivalue->save();
+	                
+	                $bookingss = MxpBooking::find($value->job_no);
+	                $bookingss->is_pi_type = $value->is_type;
+	                $bookingss->save();
+	                
+	                $msg = "Pi ".$id." Restore successfully.";
+	            }
+	        }else{
+	            $error = "Something went wrong please try again later";
+	        }
+	        Session::flash('message', $msg);
+	        Session::flash('error-m', $error);
+			return redirect()->back();
+
+		} catch (Exception $e) {
+			report($e);
+        	return false;
+		}
 	}
 
 	public function restoreIpo($id){

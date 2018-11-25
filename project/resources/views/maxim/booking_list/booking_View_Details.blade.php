@@ -307,7 +307,7 @@
                 <tr>
                     <thead>
                         <th>Job No.</th>
-                        <th>IPO No.</th>
+                        <th width="17%">IPO No.</th>
                         <th>Item Code</th>
                         <th>Color</th>
                         <th>Item Size</th>

@@ -7,7 +7,7 @@
 <?php 
     use App\Http\Controllers\Source\User\RoleDefine;
     $object = new RoleDefine();
-    $define_role = $object->getRole('OS');
+    $os_define_role = $object->getRole('OS');
 ?>
 <style type="text/css">
     .price_icon{
@@ -22,7 +22,7 @@
         float: left;
         padding-left:5px;
     }
-</style>
+</style> 
 
 <div class="container-fluid">
     <div class="row">
@@ -65,8 +65,8 @@
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">Brand</label>
                                         <div class="col-md-6">
-                                            <select class ="form-control" name="id_buyer" id="id_buyer">
-                                                <option value="">Choose a buyer</option>
+                                            <select class ="form-control" name="id_buyer" id="id_buyer" style="{{($os_define_role == 'os')?'pointer-events: none; background-color: #ddd;':''}}">
+                                                <option value="">Choose a option</option>
                                                 @foreach($buyers as $buyer)
                                                     <option 
                                                         @if($buyer->id_mxp_buyer == $data->id_buyer)
@@ -81,14 +81,14 @@
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_code_label') }}</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control  input_required" name="p_code" value="{{$data->product_code}}">
+                                            <input type="text" class="form-control  input_required" name="p_code" value="{{$data->product_code}}" {{($os_define_role == 'os')?'readonly':''}}>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_description_label') }}</label>
                                         <div class="col-md-6">
-                                            <select class="form-control " name="p_description" required value="">
+                                            <select class="form-control " name="p_description" required style="{{($os_define_role == 'os')?'pointer-events: none; background-color: #ddd;':''}}">
                                                 <option value="">Choose a option</option>
                                                 @foreach($itemList as $item)
                                                     <option value="{{$item->id}}" {{ ( $item->id == $data->item_description_id) ? 'selected' : '' }}>{{$item->name}}</option>
@@ -101,14 +101,16 @@
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">Color</label>
                                         <div class="col-md-6">
-                                            <div class="product-brand-list" style="width:80%; float: left;">
-                                                <select class="select-color-list" name="colors[]" multiple="multiple">
+                                            <div class="product-brand-list" style="width:80%; float: left; {{($os_define_role == 'os')?' pointer-events: none;':''}}">
+                                                <select class="select-color-list" name="colors[]" multiple="multiple" {{($os_define_role == 'os')?'readonly':''}}>
                                                     <option value="">Choose Color</option>
                                                     @foreach($colors as $color)
                                                         <option value="{{$color->id}},{{$color->color_name}}" >{{$color->color_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
+
+                                            @if($os_define_role != 'os')
                                             <div class="add-color-btn" style="width:20%; float: left; padding-top: 5px;">
                                                 <a class="hand-cursor"  data-toggle="modal" data-target="#addColorModal">
                                                     <i class="material-icons">
@@ -116,6 +118,7 @@
                                                     </i>
                                                 </a>
                                             </div>
+                                            @endif
                                         </div>
                                     </div>
                                     {{--End Add Color MultiSelect Box--}}
@@ -124,7 +127,7 @@
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">Size Range</label>
                                         <div class="col-md-6">
-                                            <div class="product-size-list" style="width:80%; float: left;">
+                                            <div class="product-size-list" style="width:80%; float: left;{{($os_define_role == 'os')?' pointer-events: none;':''}}">
                                                 <select class="select-size-list" name="sizes[]" multiple="multiple">
                                                     <option value="">Choose Size Range</option>
                                                     @foreach($sizes as $size)
@@ -132,6 +135,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            @if($os_define_role != 'os')
                                             <div class="add-brand-btn" style="width:20%; float: left; padding-top: 5px;">
                                                 <a class="hand-cursor" data-toggle="modal" data-target="#addSizeModal">
                                                     <i class="material-icons">
@@ -139,6 +143,7 @@
                                                     </i>
                                                 </a>
                                             </div>
+                                            @endif
                                         </div>
                                     </div>
                                     {{--End Add Size MultiSelect Box--}}
@@ -150,7 +155,7 @@
                                         <div class="col-md-3">
                                             <div id="custom-search-input">
                                                 <div class="input-group col-md-3">
-                                                    <input type="text" class="form-control input-sm" name="item_size_width" placeholder="width" style="width: 60px !important;" value="{{$valuess[0]}}" />
+                                                    <input type="text" class="form-control input-sm" name="item_size_width" placeholder="width" style="width: 60px !important;" value="{{$valuess[0]}}" {{($os_define_role == 'os')?'readonly':''}}/>
                                                     <span class="input-group-btn" style=" color: #555;font-size: 18px; padding: 0px 5px; border: 1px solid #ddd; border-left:none ;" >
                                                         mm
                                                     </span>
@@ -160,7 +165,7 @@
                                         <div class="col-md-3">
                                             <div id="custom-search-input">                
                                                 <div class="input-group col-md-3">
-                                                    <input type="text" class="form-control input-sm" name="item_size_height" placeholder="height" style="width: 60px !important;" value="{{$valuess[1]}}"/>
+                                                    <input type="text" class="form-control input-sm" name="item_size_height" placeholder="height" style="width: 60px !important;" value="{{$valuess[1]}}" {{($os_define_role == 'os')?'readonly':''}}/>
                                                     <span class="input-group-btn" style="color: #555;font-size: 18px;padding: 0px 5px; border: 1px solid #ddd; border-left:none ;">
                                                         mm
                                                     </span>
@@ -174,7 +179,7 @@
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_erp_code_label') }}</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control  input_required" name="p_erp_code" value="{{$data->erp_code}}">
+                                            <input type="text" class="form-control  input_required" name="p_erp_code" value="{{$data->erp_code}}" {{($os_define_role == 'os')?'readonly':''}}>
                                         </div>
                                     </div>
 
@@ -182,10 +187,10 @@
                                         <label class="col-md-4 control-label">{{ trans('others.product_unit_price_label') }}</label>
                                         <div class="col-md-6">
                                             <div>
-                                                <input type="text" class="form-control " name="p_unit_price" value="{{ $data->unit_price}}">
+                                                <input type="text" class="form-control " name="p_unit_price" value="{{ $data->unit_price}}" {{($os_define_role == 'os')?'readonly':''}}>
                                             </div>
                                             <div class="add-vendor-com-price-btn">
-                                                @if($define_role != 'os')
+                                                @if($os_define_role != 'os')
                                                     <a class="hand-cursor float_left" data-toggle="modal" data-target="#addVendorComPrice">
                                                         <i class="material-icons">add_circle_outline</i>
                                                     </a>
@@ -197,7 +202,7 @@
                                                 </a>
                                                 <small class="price_icon">Supplier Price</small>
 
-                                                @if($define_role != 'os')
+                                                @if($os_define_role != 'os')
                                                     <a class="hand-cursor float_left_padding" data-toggle="modal" data-target="#addCostPrice">
                                                         <i class="material-icons">add_circle_outline </i>
                                                     </a>
@@ -210,14 +215,14 @@
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_weight_qty_label') }}</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="p_weight_qty" value="{{$data->weight_qty}}">
+                                            <input type="text" class="form-control" name="p_weight_qty" value="{{$data->weight_qty}}" {{($os_define_role == 'os')?'readonly':''}}>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="col-md-4 control-label">{{ trans('others.product_weight_amt_label') }}</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="p_weight_amt" value="{{$data->weight_amt}}">
+                                            <input type="text" class="form-control" name="p_weight_amt" value="{{$data->weight_amt}}" {{($os_define_role == 'os')?'readonly':''}}>
                                         </div>
                                     </div>
 
@@ -259,7 +264,7 @@
                                     <div class="form-group ipo_increase_percentage" style="display: none;">
                                         <label class="col-md-4 control-label">{{ trans('others.ipo_increase_percentage') }}</label>
                                         <div class="col-md-6">
-                                            <input type="text" class="form-control" name="item_inc_percentage" value="{{ $data->item_inc_percentage }}">
+                                            <input type="text" class="form-control" name="item_inc_percentage" value="{{ $data->item_inc_percentage }}" {{($os_define_role == 'os')?'readonly':''}}>
                                         </div>
                                     </div>
 
@@ -267,7 +272,7 @@
                                         <label class="col-md-4">Product Status</label>
                                         <div class="col-md-6">
                                             <div class="select">
-                                                <select class="form-control" type="select" name="is_active" >
+                                                <select class="form-control" type="select" name="is_active" style="{{($os_define_role == 'os')?'pointer-events: none; background-color: #ddd;':''}}">
                                                     <option value="{{$data->status}}">
                                                         {{($data->status == 1) ? "Active" : "Inactive"}}
                                                     </option>
@@ -312,12 +317,12 @@
 
     													<div class="col-md-4">
     														{{--<label class="control-label">Size Name</label>--}}
-    														<input type="text" class="form-control" value="{{ $vCom->party->name_buyer  }}" disabled>
+    														<input type="text" class="form-control" value="{{ $vCom->party->name_buyer  }}" readonly>
     													</div>
 
     													<div class="col-md-5">
     														{{--<label class="control-label col-md-12">Size Name</label>--}}
-    														<input type="text" class="form-control" value="{{ $vCom->party->name  }}" disabled>
+    														<input type="text" class="form-control" value="{{ $vCom->party->name  }}" readonly>
     													</div>
 
     													<div class="col-md-3">
@@ -334,11 +339,11 @@
                                                         <input type="hidden" name="party_table_id[]" value="{{ $missing_party->id  }}" >
 
                                                         <div class="col-md-4">
-                                                            <input type="text" class="form-control" value="{{ $missing_party->name_buyer  }}" disabled>
+                                                            <input type="text" class="form-control" value="{{ $missing_party->name_buyer  }}" readonly>
                                                         </div>
 
                                                         <div class="col-md-5">
-                                                            <input type="text" class="form-control" value="{{ $missing_party->name  }}" disabled>
+                                                            <input type="text" class="form-control" value="{{ $missing_party->name  }}" readonly>
                                                         </div>
 
                                                         <div class="col-md-3">
@@ -352,12 +357,12 @@
 
                                                         <div class="col-md-4">
                                                             {{--<label class="control-label">Size Name</label>--}}
-                                                            <input type="text" class="form-control" value="{{ $vCom->name_buyer  }}" disabled>
+                                                            <input type="text" class="form-control" value="{{ $vCom->name_buyer  }}" readonly>
                                                         </div>
 
                                                         <div class="col-md-5">
                                                             {{--<label class="control-label col-md-12">Size Name</label>--}}
-                                                            <input type="text" class="form-control" value="{{ $vCom->name  }}" disabled>
+                                                            <input type="text" class="form-control" value="{{ $vCom->name  }}" readonly>
                                                         </div>
 
                                                         <div class="col-md-3">
@@ -411,7 +416,7 @@
                                                         <input type="hidden" name="price_id[]" value="{{ $supplierPrice->price_id  }}" >
 
                                                         <div class="col-md-5 col-md-offset-2">
-                                                            <input type="text" class="form-control" value="{{ $supplierPrice->supplier->name  }}" disabled>
+                                                            <input type="text" class="form-control" value="{{ $supplierPrice->supplier->name  }}" readonly>
                                                         </div>
 
                                                         <div class="col-md-4">
@@ -423,7 +428,7 @@
                                                         <input type="hidden" name="supplier_id[]" value="{{ $supplier->supplier_id  }}" >
 
                                                         <div class="col-md-5 col-md-offset-2">
-                                                            <input type="text" class="form-control" value="{{ $supplier->name  }}" disabled>
+                                                            <input type="text" class="form-control" value="{{ $supplier->name  }}" readonly>
                                                         </div>
 
                                                         <div class="col-md-4">

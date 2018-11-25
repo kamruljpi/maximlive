@@ -123,7 +123,7 @@
                     <th>Buyer Name</th>
                     <th>Company Name</th>
                     <th>Attention</th>
-                    <th>booking No.</th>
+                    <th>Booking No.</th>
                     <th>PO No.</th>
                     <th>PO/CAT No.</th>
                     <th width="10%">Order Date</th>

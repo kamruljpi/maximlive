@@ -230,7 +230,7 @@
 
           <td>
             <div class="form-group" style="    width: 145px !important;">
-              <select name="item_gmts_color[]" class="form-control itemGmtsColor" id="itemGmtsColor" disabled="true" >
+              <select name="item_gmts_color[]" class="form-control itemGmtsColor" id="itemGmtsColor">
               <option value=" ">GMT/Color</option>
               </select>
             </div>

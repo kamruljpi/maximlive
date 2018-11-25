@@ -58,7 +58,7 @@
 @endif
 
 <!-- <form action="{{ Route('task_action') }}" method="POST"> -->
-<form action="{{ Route('task_ipo_action') }}">
+<form action="{{ Route('task_ipo_action') }}" target="_blank">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<input type="hidden" name="booking_order_id" value="{{$sentBillId[0]->booking_order_id}}">
 	<table class="table table-bordered mainBody">

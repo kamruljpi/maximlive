@@ -454,8 +454,8 @@
                             
 
                             <div class="form-group">
-	                            <div class="col-sm-offset-10 col-xs-offset-8">
-                                    <button type="submit" class="btn btn-primary" style="margin-right: 15px;">
+	                            <div class="col-sm-2 col-sm-offset-8 col-xs-offset-8">
+                                    <button type="submit" class="btn btn-primary form-control" style="margin-right: 15px;">
                                         {{ trans('others.save_button') }}
                                 	</button>
                                 </div>

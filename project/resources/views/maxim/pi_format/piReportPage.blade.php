@@ -151,6 +151,7 @@
 			$jobId = (8 - strlen($detailsValue->job_no));
 
 			$totalQtyAmt = $detailsValue->item_quantity * (is_numeric($detailsValue->item_price)?$detailsValue->item_price:'');
+			$totalQtyAmt = number_format($totalQtyAmt, 2, '.', '');
 			$totalUsdAmount += $totalQtyAmt;
 			$totalAllqnty += $detailsValue->item_quantity;
 			$item_price = number_format($detailsValue->item_price, 5, '.', '');

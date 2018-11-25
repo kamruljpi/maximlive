@@ -205,7 +205,66 @@
     </table>
 </div>
 
-<div class="row body-list">
+<div class="row " id="pfooter">
+	<div class="col-md-12 header">
+		<h4>Quality Requirements:</h4>
+	</div>
+	<div class="col-md-9 left">
+		<p>
+			1. All the products must be passed OEKO-TEX testing grade I, color fastness to washing staining required grade 4-5. Dimensional stability should be controlled into - 3% to + 1%
+		</p>
+		<p>
+			2. Please ensure the color is matching with the sample, label size before and after folding must follow the sample, ensure the cutting edge is straight.
+		</p>
+		<p>
+			3. Please follow the lead time and offer more 1%-2% as the spare.
+		</p>
+		<p>
+			4. Please ensure the maximum packing no more than 500pcs/bag.
+		</p>
+	</div>
+	<div class="col-md-3 right">
+		<p><b>Tax rate:</b></p>
+		<p><b>SALES NO:</b></p>
+	</div>
+</div>
+<div class="row " id="pfooter">
+	<div class="col-md-8 left">
+		<p>1. Maxim Label & Packaging (BD) Pvt., Ltd hereto referred to as (Buyer) and (Seller) agree on the following payment terms: Seller needs to notify Buyer before delivery with Invoice, Packing list. Order number, Product name and quantitiy needs to be shown on Carton Box. Once buyer receive the goods from seller and have completed total QC insepection, Payment will be made within 3 months. </p>
+		<p>
+			2. Seller is responsible and confirm understanding of Buyers order form to make sure that all information is correct.  Seller must follow Buyers order form and production specifications. If there are any changes, Buyer needs to notify the seller by way of writing.  
+		</p>
+		<p>
+			3. Quality: Seller must guarantee quality, quantity and lead time to Seller in accordance to the Sellers requirements. If there are any issues with quality, quantity and lead time, causing damages to Buyer, Seller is responsible for full payment of damages to Buyer.  
+		</p>
+		<p>
+			4. Seller must consider all information, sample, artwork etc.  given by Buyer as confidential information. 
+		</p>
+		<p>
+			5. This orders will commence from date of signing from both Buyer and Seller. Original contract will be kept by Buyer. Contract of Place at Buyers office. 
+		</p>
+		<p>
+			6. If there are any disputes risen, the laws applicable will be law of the place the contract was concluded. Bangladesh law will apply. 
+		</p>
+		<p>
+			7. This sales contract is valid for 3 days by return. 
+		</p>
+	</div>
+	<div class="col-md-4 right">
+		<div class="pull-left">
+			<p style="margin-top: 70px"><b>Buyer (Stamp)</b></p>
+			<p style="margin-bottom: 100px;"><b>Authorised signatory</b></p>
+			<p><b>Date:</b></p>
+		</div>
+		<div class="pull-right">
+			<p style="margin-top: 70px"	><b>Seller(Stamp)</b></p>
+			<p style="margin-bottom: 100px;"><b>Authorised signatory</b></p>
+			<p><b>Date:</b></p>
+		</div>
+	</div>
+</div>
+
+{{-- <div class="row body-list">
 	<div class="col-sm-10">
 		<ul>
 			<li>
@@ -228,7 +287,7 @@
 			</tr>
 		</table>
 	</div>
-</div>
+</div> --}}
 
 <div class="row body-top hidden">
 	<div class="col-md-9 col-sm-9 col-xs-9 body-list">

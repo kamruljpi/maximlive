@@ -126,3 +126,13 @@ ul li {
       min-width: 190px !important;
     }
 }
+#pfooter {
+  border: 1px solid #6d6d6d;
+  margin-bottom: 5px;
+}
+#pfooter .left{
+  border-right: 1px solid #6d6d6d;
+}
+#pfooter .header{
+  border-bottom: 1px solid #6d6d6d;
+}

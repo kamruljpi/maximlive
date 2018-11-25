@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\File;
 use App\User;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\Source\source;
 
 class BookingListController extends Controller
 {   
@@ -402,7 +403,6 @@ class BookingListController extends Controller
 
     public function detailsViewForm(Request $request)
     {
-
         $bookingDetails = MxpBookingBuyerDetails::with('bookings', 'ipo', 'mrf')
                             ->leftjoin('mxp_users as mu','mu.user_id','accepted_user_id')
                             ->select('mxp_bookingbuyer_details.*','mu.first_name','mu.last_name')
@@ -418,6 +418,8 @@ class BookingListController extends Controller
             }
         }
         $leftBook = count($bookingDetails->bookings_challan_table) - $count;
+        $booking_objects = new source();
+        $bookingDetails->prepared_by = $booking_objects->getUserDetails($request->booking_id);
 
         return view('maxim.booking_list.booking_View_Details',
                     [

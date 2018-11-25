@@ -118,6 +118,15 @@
 	
 	<div class="col-md-4 col-sm-4 col-xs-5 valueGenarate">
 		<table class="tables table-bordered" style="width: 100%;">
+			@if($poDetails[0]->booking_category)
+				<tr>
+					<td colspan="2">
+						<div style="text-align: right;">
+							<p style="padding-left :5px;">Category : {{ucfirst(str_replace('_',' ',$poDetails[0]->booking_category))}}</p>
+						</div>
+					</td>
+				</tr>
+			@endif
 			<tr>
 				<td colspan="2">
 					<div class="pull-right">
@@ -129,6 +138,13 @@
 				<td colspan="2">
 					<div class="pull-right">
 						<p>Checking No : {{$poDetails[0]->mrf_id}}</p>
+					</div>
+				</td>
+			</tr>	
+			<tr>
+				<td colspan="2">
+					<div class="pull-right">
+						<p>Booking No : {{$poDetails[0]->booking_order_id}}</p>
 					</div>
 				</td>
 			</tr>			

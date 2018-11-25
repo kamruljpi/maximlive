@@ -60,26 +60,36 @@
 			@php ($i=0)
 			@foreach ($mrfDeatils as $billdata)
 				@for($i;$i <= 0;$i++)
-				<table class="tables table-bordered" style="width: 100%;">
-					<tr>
-						<td colspan="2">
-							<div style="text-align: right;">
-								<p style="padding-left :5px;"> MRF No : {{$billdata->mrf_id}}</p>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<div style="text-align: right;">
-								<p style="padding-left :5px;">Booking No : {{$billdata->booking_order_id}}  </p>
+					<table class="tables table-bordered" style="width: 100%;">
+						@if($buyerDetails->booking_category)
+							<tr>
+								<td colspan="2">
+									<div style="text-align: right;">
+										<p style="padding-left :5px;">Category : {{ucfirst(str_replace('_',' ',$buyerDetails->booking_category))}}</p>
+									</div>
+								</td>
+							</tr>
+						@endif
 
-								<!-- {{Carbon\Carbon::parse($billdata->created_at)->format('dmY')}}: -->
-							</div>
-						</td>
-					</tr>
-					</div>
-				</table>
-			@endfor
+						<tr>
+							<td colspan="2">
+								<div style="text-align: right;">
+									<p style="padding-left :5px;"> MRF No : {{$billdata->mrf_id}}</p>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div style="text-align: right;">
+									<p style="padding-left :5px;">Booking No : {{$billdata->booking_order_id}}  </p>
+
+									<!-- {{Carbon\Carbon::parse($billdata->created_at)->format('dmY')}}: -->
+								</div>
+							</td>
+						</tr>
+						</div>
+					</table>
+				@endfor
 			@endforeach
 
 		</div>

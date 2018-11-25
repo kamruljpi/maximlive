@@ -120,10 +120,19 @@
 	
 	<div class="col-md-4 col-sm-4 col-xs-5 valueGenarate">
 		<table class="tables table-bordered" style="width: 100%;">
+			@if($buyerDetails->booking_category)
 			<tr>
 				<td colspan="2">
 					<div style="text-align: right;">
-						<p style="padding-left :5px;">Booking ID: {{ $ipoDetails[0]->booking_order_id }}</p>
+						<p style="padding-left :5px;">Category: {{ucfirst(str_replace('_',' ',$buyerDetails->booking_category))}}</p>
+					</div>
+				</td>
+			</tr>
+			@endif
+			<tr>
+				<td colspan="2">
+					<div style="text-align: right;">
+						<p style="padding-left :5px;">Booking No: {{ $ipoDetails[0]->booking_order_id }}</p>
 					</div>
 				</td>
 			</tr>

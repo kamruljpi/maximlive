@@ -1,6 +1,10 @@
 @extends('layouts.dashboard')
 @section('page_heading',$taskType)
 @section('section')
+  <?php 
+    $general = 'Create Booking';
+    $fsc     = 'Create FSC Booking'
+  ?>
   <style type="text/css">
     .top-div{
       background-color: #f9f9f9;
@@ -32,11 +36,6 @@
       width: 130px !important;
     }
   </style>
-
-<?php 
-    $general = 'Create Booking';
-    $fsc     = 'Create FSC Booking'
-?>
 <div class="col-md-12">
   @if ($errors->any())
       <div class="alert alert-danger">
@@ -47,7 +46,6 @@
           </ul>
       </div>
   @endif
-
   @if(Session::has('error_code'))
       @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ))
   @endif
@@ -74,102 +72,76 @@
     </div>
 
     <div class="top-div">
-      <?php
-        $buyerName = '';
-        $CompanyName = '';
-      ?>
-      @foreach ($buyerDetails as $buyer)
-        <?php
-          $buyerName = $buyer->name_buyer;
-          $CompanyName = $buyer->name;
-          $companyId = $buyer->id;
-        ?>
-      @endforeach
       <div class="row">
-        <div class="col-md-6 col-xs-6">
+        <div class="col-md-4 col-xs-4">
           <div class="form-group">
-            <label class="col-md-4">Buyer name</label>
-
-            <div class="">
-              <input type="text" name="buyerName" class="form-control" readonly="true" value="{{$buyerName}}" title="Buyer Name">
+            <label class="col-md-12">Buyer name</label>
+            <div class="col-md-12">
+              <input type="text" name="buyerName" class="form-control" readonly="true" value="{{$buyerDetails[0]->name_buyer}}" title="Buyer Name">
             </div>
           </div>
         </div>
 
-        <div class="col-md-6 col-xs-6">
+        <div class="col-md-4 col-xs-4">
           <div class="form-group " >
-            <label class="col-md-4">Vendor name</label>
+            <label class="col-md-12">Vendor name</label>
+            <div class="col-md-12">
+              <input type="text" name="CompanyName" class="form-control" readonly="true" value="{{$buyerDetails[0]->name}}" title="Company Name">
+              <input type="hidden" name="companyIdForBookingOrder" value="{{$buyerDetails[0]->id}}">
+            </div>
+          </div>
+        </div>
 
-            <div class="" >
-              <input type="text" name="CompanyName" class="form-control" readonly="true" value="{{$CompanyName}}" title="Company Name">
-              <input type="hidden" name="companyIdForBookingOrder" value="{{$companyId}}">
+        <div class="col-md-4 col-xs-4">
+          <div class="form-group " >
+            <label class="col-md-12">Category</label>
+            <div class="col-md-12">
+              <select name="booking_category" class="form-control" required="true">
+                <option value="">Choose a option</option>
+                <option value="normal_order">Normal order</option>
+                <option value="urgent_order">Urgent order</option>
+                <option value="top_urgent_order">Top Urgent order</option>
+                <option value="top_urgent_order">Top Urgent order</option>
+                <option value="export_goods">Export goods</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
 
-      <div style="padding-top: 10px;"></div>
-      <table class="table-striped" width="100%">
-        <thead>
-          <tr>
-            <td>Order Date</td>
-            <!-- <td>OOS Number</td> -->
-            <!-- Shipment Date repalce to Request Date-->
-            <td>Requested Delivery Date</td>
-            <!-- <td>PO/Cat NO</td> -->
-            <td>Season Code</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="form-group">
-                <input type="text" name="orderDate" class="form-control" placeholder="Order Date" title="Order Date" value="{{carbon\carbon::today()->format('d-m-Y')}}" readonly>
-              </div>
-            </td>
+      <div class="row">
+        <div class="col-md-4 col-xs-4">
+          <div class="form-group">
+            <label class="col-md-12">Order Date</label>
+            <div class="col-md-12">
+              <input type="text" name="orderDate" class="form-control" placeholder="Order Date" title="Order Date" value="{{carbon\carbon::today()->format('d-m-Y')}}" readonly>
+            </div>
+          </div>
+        </div>
 
-            <!-- <td>
-              <div class="form-group">
-                <input type="text" name="orderNo" class="form-control" placeholder="orderNo" title="orderNo">
-              </div>
-            </td> -->
+        <div class="col-md-4 col-xs-4">
+          <div class="form-group " >
+            <label class="col-md-12">Requested Delivery Date</label>
+            <div class="col-md-12">
+              <input type="date" id="datePickerDate" name="shipmentDate" class="form-control" placeholder="Request Date" title="Request Date" required>
+            </div>
+          </div>
+        </div>
 
-            <!-- <td>
-              <div class="form-group">
-                <input type="text" name="oos_number" class="form-control" placeholder="OOS Number" title="OOS Number">
-              </div>
-            </td> -->
-
-            <td>
-              <div class="form-group">
-                <input type="date" id="datePickerDate" name="shipmentDate" class="form-control" placeholder="Request Date" title="Request Date" required>
-              </div>
-            </td>
-
-            <!-- <td>
-              <div class="form-group">
-                <input type="text" name="poCatNo" class="form-control" placeholder="PO Cat No" title ="PO Cat No">
-              </div>
-            </td> -->
-
-            <td>
-              <div class="form-group">
-                <input type="text" name="season_code" class="form-control" placeholder="Season Code" title ="Season Code">
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="col-md-4 col-xs-4">
+          <div class="form-group " >
+            <label class="col-md-12">Season Code</label>
+            <div class="col-md-12">
+              <input type="text" name="season_code" class="form-control" placeholder="Season Code" title ="Season Code">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <div style="padding-top: 20px;"></div>
 
-  <div style="padding-top: 40px;"></div>
-<script type="text/javascript">
-  $(document).ready(function(){
-  });
-</script>
-
-  <div class="table-responsive" style="height: 400px;">
+    <div class="table-responsive" style="height: 400px;">
     <table class="table-striped " style="overflow-y: scroll;" id="filed_increment">
       <thead>
         <tr>
@@ -278,14 +250,11 @@
     </table>
    </div>
 
-
-
     <div class="form-group button_add pull-left" style="margin-top: 20px;margin-bottom: 20px; ">
       <button type="submit" class="btn btn-success" id="add"><i class="fa fa-copy" style="padding-right: 5px;"></i>Copy Item</button>
       <button type="submit" class="btn btn-success" id="order_copy"><i class="fa fa-plus" style="padding-right: 5px;"></i>Add New Item</button>
       <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-
   </form>
 </div>
 @endsection

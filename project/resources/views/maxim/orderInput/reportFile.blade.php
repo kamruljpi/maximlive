@@ -11,11 +11,11 @@
 		$Company_name = $details->Company_name;
 	}
 ?>
-	<center>
-		<div class="topPreviews">
-			<a href="#" onclick="myFunction()"  class="print" id="print">Print & Preview</a>
-		</div>
-	</center>
+<center>
+	<div class="topPreviews">
+		<a href="#" onclick="myFunction()"  class="print" id="print">Print & Preview</a>
+	</div>
+</center>
 @foreach($companyInfo as $value)
 	<div class="row">
 		<div class="col-md-2 col-sm-2 col-xs-2">
@@ -60,6 +60,11 @@
 			<div class="col-xs-6 col-md-6">
 				<div class="pull-right">
 					<ul>
+						@if($bookingBuyer[0]->booking_category)
+							<li>
+								<label>Category: {{ucfirst(str_replace('_',' ',$bookingBuyer[0]->booking_category))}}</label>
+							</li>
+						@endif
 						<li>Booking No: {{$details->booking_order_id}}</li>
 						<li>Requested Delivery Date: {{Carbon\Carbon::parse($details->shipmentDate)->format('d-m-Y')}}</li>
 					</ul>
@@ -75,7 +80,7 @@
 				@endif
                     <ul>
                         <li>
-                            <span>Prepared By: {{ $getBookingUserDetails[0]->first_name }} {{ $getBookingUserDetails[0]->last_name }} </span>
+                            <span>Prepared By: {{ ucwords($getBookingUserDetails->first_name) }} {{ ucwords($getBookingUserDetails->last_name) }} </span>
                         </li>
                     </ul>
 				</div>

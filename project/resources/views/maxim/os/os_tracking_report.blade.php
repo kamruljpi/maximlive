@@ -154,7 +154,8 @@
 
                                 <td><input name="mrf_quantity[]" value="{{$value->mrf_quantity}}" type="hidden">{{$value->mrf_quantity}}</td>
 
-                                <td><input name="supplier_price[]" value="{{$value->os_po->supplier_price}}" type="hidden">{{$value->os_po->supplier_price}}</td>
+                                <td><input name="supplier_price[]" value="{{$value->os_po->supplier_price}}" type="hidden">{{($value->os_po->supplier_price != '')?'$'.$value->os_po->supplier_price : ''}}</td>
+
                                 <td><input name="total_price[]" value="{{$price}}" type="hidden">{{($price != 0)?'$'.$price : ''}}</td>
                             </tr>
                         @endforeach

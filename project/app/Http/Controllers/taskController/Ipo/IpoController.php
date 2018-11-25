@@ -15,6 +15,7 @@ use DB;
 use Carbon;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 
 class IpoController extends Controller
 {
@@ -282,6 +283,7 @@ class IpoController extends Controller
             $createIpo->ipo_quantity     = $value['item_quantity'];
             $createIpo->sku              = $bookingChallanValue->sku;
             $createIpo->status           = ActionMessage::CREATE;
+            $createIpo->job_id_current_status  = MrfFlugs::OPEN_MRF;
             $createIpo->save();
         }
       }

@@ -186,7 +186,7 @@ $(document).ready(function(){
                   if (myObj[i].size === null) {
                       $('.'+item_parent_class+' .itemSize').html($('<option>', {
                       value: "",
-                      text : "empty Size"
+                      text : "Empty Size"
                       }));
 
                   }else{

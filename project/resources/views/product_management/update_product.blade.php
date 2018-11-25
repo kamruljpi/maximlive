@@ -89,6 +89,7 @@
                                         <label class="col-md-4 control-label">{{ trans('others.product_description_label') }}</label>
                                         <div class="col-md-6">
                                             <select class="form-control " name="p_description" required value="">
+                                                <option value="">Choose a option</option>
                                                 @foreach($itemList as $item)
                                                     <option value="{{$item->id}}" {{ ( $item->id == $data->item_description_id) ? 'selected' : '' }}>{{$item->name}}</option>
                                                 @endforeach

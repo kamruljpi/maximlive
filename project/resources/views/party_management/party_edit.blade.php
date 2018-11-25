@@ -11,51 +11,44 @@ trans('others.update_party_label'))
             </div>
         </div>
     </div>
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                @if(count($errors) > 0)
-                    <div class="alert alert-danger" role="alert">
-                        @foreach($errors->all() as $error)
-                          <li><span>{{ $error }}</span></li>
-                        @endforeach
-                    </div>
-                @endif
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">{{ trans('others.update_party_label') }}</div>
-                    <div class="panel-body">
-
-                        @foreach($party_edits as $party_edit)
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            @if(count($errors) > 0)
+                <div class="alert alert-danger" role="alert">
+                    @foreach($errors->all() as $error)
+                      <li><span>{{ $error }}</span></li>
+                    @endforeach
+                </div>
+            @endif
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ trans('others.update_party_label') }}</div>
+                <div class="panel-body">
+                    @foreach($party_edits as $party_edit)
                         <form class="form-horizontal" action="{{ Route('party_edit_action') }}/{{$party_edit->id}}" role="form" method="POST" >
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
                             <div class="row">
-                                <div style="" class="col-md-12 col-sm-12 ">
+                                <div class="col-md-12 col-sm-12 ">
                                     <div class="form-group">
                                         <label class="col-md-5 col-sm-5 control-label">{{ trans('others.party_id_label') }}</label>
                                         <div class="col-md-6 col-sm-6">
                                             <input type="text" class="form-control" name="party_id" value="{{ $party_edit->party_id }}" readonly="true">
                                         </div>
                                     </div>
-
                                     <div class="form-group">
                                         <label class="col-sm-5 control-label">{{ trans('others.party_name_label') }}</label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control  input_required" name="name" value="{{ $party_edit->name }}">
                                         </div>
                                     </div>
-
                                     <div class="form-group">
                                         <label class="col-sm-5 control-label">{{ trans('others.sort_name_label') }}</label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control  input_required" name="sort_name" value="{{ $party_edit->sort_name }}">
                                         </div>
                                     </div>
-
                                     <div class="form-group">
                                         <label class="col-sm-5 control-label">{{ trans('others.name_buyer_label') }}</label>
                                         <div class="col-sm-6">
-                                            {{-- <input type="text" class="form-control  input_required" name="name_buyer" value="{{ $party_edit->name_buyer }}"> --}}
                                             <select class ="form-control" name="name_buyer" id="name_buyer">
                                                 <option value="">Choose a Option</option>
                                                 @foreach($buyers as $buyer)   
@@ -78,8 +71,8 @@ trans('others.update_party_label'))
                                           </select>
                                       </div>
                                     </div>
+                                </div>
                             </div>
-                        </div>
 
                             <div class="row">
                                 <div class="col-md-12 col-sm-12">
@@ -88,7 +81,6 @@ trans('others.update_party_label'))
                                             <div class="panel-heading">
                                                 {{trans('others.invoice_label')}}
                                             </div>
-
                                             <div class="panel-body">
 
                                                 <div class="form-group">
@@ -97,42 +89,36 @@ trans('others.update_party_label'))
                                                         <input type="text" class="form-control" name="address_part_1_invoice" value="{{ $party_edit->address_part1_invoice }}">
                                                     </div>
                                                 </div>
-
                                                 <div class="form-group">
                                                     <label class="col-md-5 col-sm-5 control-label">{{ trans('others.address_part_2_invoice_label') }}</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         <input type="text" class="form-control" name="address_part_2_invoice" value="{{ $party_edit->address_part2_invoice }}">
                                                     </div>
                                                 </div>
-
                                                 <div class="form-group">
                                                     <label class="col-md-5 col-sm-5 control-label">{{ trans('others.attention_invoice_label') }}</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         <input type="text" class="form-control" name="attention_invoice" value="{{ $party_edit->attention_invoice }}">
                                                     </div>
                                                 </div>
-
                                                 <div class="form-group">
                                                     <label class="col-md-5 col-sm-5 control-label">{{ trans('others.mobile_invoice_label') }}</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         <input type="text" class="form-control" name="mobile_invoice" value="{{ $party_edit->mobile_invoice }}">
                                                     </div>
                                                 </div>
-
                                                  <div class="form-group">
                                                     <label class="col-md-5 col-sm-5 control-label">{{ trans('others.telephone_invoice_label') }}</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         <input type="text" class="form-control" name="telephone_invoice" value="{{ $party_edit->telephone_invoice }}">
                                                     </div>
                                                 </div>
-
                                                  <div class="form-group">
                                                     <label class="col-md-5 col-sm-5 control-label">{{ trans('others.fax_invoice_label') }}</label>
                                                     <div class="col-md-6 col-sm-6">
                                                         <input type="text" class="form-control" name="fax_invoice" value="{{ $party_edit->fax_invoice }}">
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
@@ -190,24 +176,22 @@ trans('others.update_party_label'))
                                     </div>
                                 </div>
                             </div>
-
                             <div class="form-group">
-                                <div class="col-sm-6 col-sm-offset-8 col-xs-offset-8">
-                                    <button type="submit" class="btn btn-primary" style="margin-right: 15px;">
+                                <div class="col-sm-3 col-sm-offset-8">
+                                    <button type="submit" class="btn btn-primary form-control" style="margin-right: 15px;">
                                         {{ trans('others.update_button') }}
                                     </button>
                                 </div>
-                            </div>
-                            
+                            </div>                        
                         </form>
-                        @endforeach
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script type="text/javascript">
-        $(".selections").select2();
-    </script>
+<script type="text/javascript">
+    $(".selections").select2();
+</script>
 @endsection

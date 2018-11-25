@@ -127,9 +127,10 @@ class PoController extends Controller
 	public static function getOsPoValues($po_id,$order_by = null){
 		$datas = MxpOsPo::join('mxp_mrf_table as mrf','mrf.job_id','mxp_os_po.job_id')
 						->join('mxp_booking as mb','mb.id','mxp_os_po.job_id')
+						->join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mb.booking_order_id')
 						->join('mxp_product as mp','mp.product_code','mrf.item_code')
 						->Leftjoin('suppliers as s','s.supplier_id','mxp_os_po.supplier_id')
-						->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty'
+						->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty','mbd.booking_category'
 						)
 						->where([
 							['mxp_os_po.po_id',$po_id]],

@@ -3,7 +3,7 @@
 @section('section')
 <?php
     // print_r("<pre>");
-    // print_r($bookingDetails->bookings_challan_table);
+    // print_r($bookingDetails);
     // print_r(session('data'));
     // print_r("</pre>");
     use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
@@ -106,17 +106,21 @@
     <div class="panel-body aaa">
         <div class="panel panel-default col-sm-7">
             <br>
-            <p >Buyer Name:<b> {{ $bookingDetails->buyer_name }}</b></p>
-            <p >Company Name:<b> {{ $bookingDetails->Company_name }}</b></p>
-            <p >Buyer Address:<b> {{ $bookingDetails->address_part1_invoice }}{{ $bookingDetails->address_part2_invoice }}</b></p>
-            <p >Mobile No:<b> {{ $bookingDetails->mobile_invoice }}</b></p>
+            <p>Buyer Name:<b> {{ $bookingDetails->buyer_name }}</b></p>
+            <p>Company Name:<b> {{ $bookingDetails->Company_name }}</b></p>
+            <p>Buyer Address:<b> {{ $bookingDetails->address_part1_invoice }}{{ $bookingDetails->address_part2_invoice }}</b></p>
+            <p>Mobile No:<b> {{ $bookingDetails->mobile_invoice }}</b></p>
+            <p>Prepared By:<b> {{ ucwords($bookingDetails->prepared_by->first_name)}} {{ ucwords($bookingDetails->prepared_by->last_name)}}</b></p>
         </div>
         <div class="panel panel-default col-sm-5">
             <br>
-            <p >Booking No:<b> {{ $bookingDetails->booking_order_id }}</b></p>
-            <p >Booking Status:<b> {{ $bookingDetails->booking_status }}</b></p>
-            <p >Oreder Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
-            <p >Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
+            @if($bookingDetails->booking_category)
+            <p>Category: <b>{{ucfirst(str_replace('_',' ',$bookingDetails->booking_category))}}</b></p>
+            @endif
+            <p>Booking No:<b> {{ $bookingDetails->booking_order_id }}</b></p>
+            <p>Booking Status:<b> {{ $bookingDetails->booking_status }}</b></p>
+            <p>Oreder Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
+            <p>Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
             @if($roleCheck == 'p')
                 @if($bookingDetails->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG)
                     <p style="font-size: 15px;"><strong>Accepted by</strong> <span style="color:red;">{{$bookingDetails->first_name}}{{$bookingDetails->last_name}}</span></p>

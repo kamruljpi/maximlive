@@ -38,7 +38,7 @@ class MrfListController extends Controller
         $mrfDetails = MxpMrf::join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mxp_mrf_table.booking_order_id')
                         ->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
                         ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
-                        ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name')
+                        ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mbd.booking_category','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name')
                         ->where('mxp_mrf_table.mrf_id',$request->mid)
                         ->get();
         if(isset($mrfDetails) && !empty($mrfDetails)){

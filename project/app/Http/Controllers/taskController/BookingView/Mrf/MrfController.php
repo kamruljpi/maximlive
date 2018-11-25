@@ -58,19 +58,23 @@ class MrfController extends Controller
 		$check_1 = [];
 		if(!empty($mrf_details[0]->job_id)){
 			foreach ($mrf_details as $mrf_values) {
-				if($mrf_values->mrf_status != MrfFlugs::OPEN_MRF || $mrf_values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN){
+				if($mrf_values->mrf_status != '' || $mrf_values->job_id_current_status != ''){
+					if($mrf_values->mrf_status != MrfFlugs::OPEN_MRF || $mrf_values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN){
 
 					$check_1[]['job_id'] = $mrf_values->job_id;
-				}
+					}
+				}		
 			}
 		}
 
 		$check_2 = [];
 		if(!empty($ipo_details[0]->job_id)){
 			foreach ($ipo_details as $ipo_values) {
-				if($ipo_values->ipo_status != MrfFlugs::OPEN_MRF || $ipo_values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN){
+				if($ipo_values->ipo_status != '' ||$ipo_values->job_id_current_status != ''){
+					if($ipo_values->ipo_status != MrfFlugs::OPEN_MRF || $ipo_values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN){
 
-					$check_2[]['job_id'] = $ipo_values->job_id;
+						$check_2[]['job_id'] = $ipo_values->job_id;
+					}
 				}
 			}
 		}

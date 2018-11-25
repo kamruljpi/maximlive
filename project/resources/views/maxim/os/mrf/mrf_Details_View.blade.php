@@ -89,6 +89,9 @@
         </div>
         <div class="panel panel-default col-sm-5">
             <br>
+            @if($mrfDetails[0]->booking_category)
+            <label>Category: <b>{{ucfirst(str_replace('_',' ',$mrfDetails[0]->booking_category))}}</label><br>
+            @endif
             <label>MRF No : {{ $mrfDetails[0]->mrf_id }}</label><br>
             <label>Booking No : {{ $mrfDetails[0]->booking_order_id }}</label><br>
             <label>Requested Shipment Date : {{ Carbon\Carbon::Parse($mrfDetails[0]->shipmentDate)->format('d-m-Y') }}</label><br>

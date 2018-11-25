@@ -68,13 +68,13 @@ class BookingController extends Controller
       }
       print json_encode($results);
     }
+    
     public function getUserDetails( $bookingId ){
-
         $getBookingUserDetails = DB::table('mxp_booking as mb')
             ->join('mxp_users as ms','mb.user_id','=','ms.user_id')
-            ->select('ms.*')
+            ->select('ms.first_name','ms.middle_name','ms.last_name')
             ->where('mb.booking_order_id',$bookingId)
-            ->get();
+            ->first();
         return $getBookingUserDetails;
     }
 
@@ -145,6 +145,7 @@ class BookingController extends Controller
         $InserBuyerDetails->booking_status        = BookingFulgs::BOOKED_FLUG;
         $InserBuyerDetails->last_action_at        = BookingFulgs::LAST_ACTION_CREATE;
         $InserBuyerDetails->is_complete           = BookingFulgs::IS_COMPLETE;
+        $InserBuyerDetails->booking_category      = $request->booking_category;
         $InserBuyerDetails->save();
         $buyerId = $InserBuyerDetails->id;
       }
@@ -283,8 +284,9 @@ class BookingController extends Controller
       if(isset($buyerList) && !empty($buyerList)){
         $value = DB::table('mxp_product as mp')
           ->leftJoin('mxp_productsize as mps','mps.product_code', '=','mp.product_code')
-          ->leftJoin('mxp_gmts_color as mgs','mgs.item_code', '=', 'mps.product_code')
-          ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(mps.product_size) as size'),DB::raw('GROUP_CONCAT(mgs.color_name) as color'))
+          ->leftJoin('mxp_products_colors as mpc','mpc.product_id', '=', 'mp.product_id')
+          ->leftJoin('mxp_gmts_color as mgs','mgs.id', '=', 'mpc.color_id')
+          ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(DISTINCT mps.product_size) as size'),DB::raw('GROUP_CONCAT(DISTINCT mgs.color_name) as color'))
           ->where([
               ['mp.product_code',$item_size],
               ['mp.status',ActionMessage::ACTIVE]
@@ -294,9 +296,10 @@ class BookingController extends Controller
           
       }else if(Auth::user()->type == 'super_admin'){
         $value = DB::table('mxp_product as mp')
-          ->leftJoin('mxp_productsize as mps','mp.product_code','mps.product_code')
-          ->leftJoin('mxp_gmts_color as mgs','mp.product_code','mgs.item_code')
-          ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(mps.product_size) as size'),DB::raw('GROUP_CONCAT(mgs.color_name) as color'))
+          ->leftJoin('mxp_productsize as mps','mps.product_code', '=','mp.product_code')
+          ->leftJoin('mxp_products_colors as mpc','mpc.product_id', '=', 'mp.product_id')
+          ->leftJoin('mxp_gmts_color as mgs','mgs.id', '=', 'mpc.color_id')
+          ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(DISTINCT mps.product_size) as size'),DB::raw('GROUP_CONCAT(DISTINCT mgs.color_name) as color'))
           ->where([
               ['mp.product_code',$item_size],
               ['mp.status',ActionMessage::ACTIVE]

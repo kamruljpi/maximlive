@@ -99,8 +99,9 @@
                             <th>Order Date</th>
                             <th>Requested Date</th>
                             <th>Item Code</th>
+                            <th id="item_size">Item Size</th>
                             <th width="">ERP Code</th>
-                            <th>Size</th>
+                            <th>Size Range</th>
                             <th>Item Description</th>
                             <th>Sku</th>
                             <th>Quantity</th>
@@ -162,6 +163,10 @@
                                     </td>
                                     <td>
                                         <input name="item_code[]" value="{{$valuelist->item_code}}" type="hidden">{{$valuelist->item_code}}
+                                    </td>
+                                    <td>
+                                        <input name="item_code[]" value="{{$valuelist->item_size_width_height}}" type="hidden">
+                                        {{ ($valuelist->item_size_width_height!= '')? '('. $valuelist->item_size_width_height .')mm': 'N/A' }}
                                     </td>
                                     <td>
                                         <input name="erp_code[]" value="{{$valuelist->erp_code}}" type="hidden">{{$valuelist->erp_code}}

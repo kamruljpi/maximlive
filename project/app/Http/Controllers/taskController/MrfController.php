@@ -269,6 +269,7 @@ class MrfController extends Controller
             $insertMrfValue->orderNo = $bookingChallanValue->orderNo;
             $insertMrfValue->shipmentDate = $request->mrf_shipment_date;
             $insertMrfValue->poCatNo = $bookingChallanValue->poCatNo;
+            $insertMrfValue->item_description = $bookingChallanValue->item_description;
             // $insertMrfValue->status = $bookingChallanValue->status;
             $insertMrfValue->action = self::CREATE_MRF;
             $insertMrfValue->mrf_status = MrfFlugs::OPEN_MRF;

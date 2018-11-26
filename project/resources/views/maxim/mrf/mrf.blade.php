@@ -32,7 +32,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">{{trans('others.new_mrf_create_label')}}</div>
 				<div class="panel-body aaa">
-					<form class="form-horizontal" role="form" method="POST" action="{{ Route('mrf_action_task') }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ Route('mrf_action_task') }}" target="_blank">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<input type="hidden" name="booking_order_id" value="{{$bookingDetails[0]->booking_order_id}}">
 						<div class="col-sm-6">

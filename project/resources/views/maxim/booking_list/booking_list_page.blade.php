@@ -3,6 +3,7 @@
 @section('section')
 <?php
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+    use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
     $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
     $roleCheck = $object->getRole();
 ?>
@@ -115,7 +116,7 @@
     <br>
 
     <div class="row">
-        <div class="col-md-xs col-md-offset-0">
+        <div class="col-md-12">
             <table class="table table-bordered">
                 <thead>
                 <tr>
@@ -129,6 +130,7 @@
                     <th width="10%">Order Date</th>
                     <th width="10%">Requested Date</th>
                     <th>Status</th>
+                    <th>Order Status</th>
                     <th width="">Action</th>
                 </tr>
                 </thead>
@@ -162,6 +164,25 @@
 
                                 <label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} {{(!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y H:i:s').')':'')}}</label><br>
                             </div>
+                        </td>
+                        <td>
+
+                            @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
+                                {{ 'Booked' }}
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG ) && ($value->mrf->mrf_status == '') && ($value->ipo->ipo_status == ''))
+                                {{ 'Processing' }}
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->ipo->ipo_status == MrfFlugs::OPEN_MRF ) && ($value->mrf->mrf_status == MrfFlugs::OPEN_MRF))
+                                {{ 'Mrf Issued' }} {{ 'Ipo Issued' }}                                
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->mrf->mrf_status == MrfFlugs::OPEN_MRF))
+                                {{ 'Mrf Issued' }}
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->ipo->ipo_status == MrfFlugs::OPEN_MRF))
+                                {{ 'Ipo Issued' }}
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->mrf->mrf_status == MrfFlugs::ACCEPT_MRF))
+                                {{ 'Processed to supplier' }}    
+                             
+                            @else
+                                {{ 'N/A' }}    
+                            @endif
                         </td>
                         <td width="12%">
                             <div class="btn-group">

@@ -4,8 +4,7 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">
 
-@include('product_management.product_modal')
-@include('product_management.cost_price_model')
+
 
 <?php 
 	// print_r("<pre>");
@@ -38,6 +37,9 @@
                     <div class="panel-body">                  
                         <form class="form-horizontal" action="{{ Route('add_product_action') }}" method="POST" autocomplete="off">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                            @include('product_management.product_modal')
+							@include('product_management.cost_price_model')
 
                             <div class="row">
                             	<div class="col-sm-12 col-md-6">

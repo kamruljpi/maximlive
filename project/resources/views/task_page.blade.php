@@ -128,10 +128,10 @@ $buyerName = [];
 
                             <div class="form-group orderId hidden">
                                 <label class="col-md-4 control-label">
-                                    <span class="pull-right">Order Id</span>
+                                    <span class="pull-right">Order No</span>
                                 </label>
                                 <div class="col-md-6">
-                                    <input type="text" name="bookingId" class="form-control bookingId" disabled="true" id="bookingId" placeholder="Booking Id">
+                                    <input type="text" name="bookingId" class="form-control bookingId" disabled="true" id="bookingId" placeholder="Booking No">
                                     
                                     {{--<input type="hidden" class="form-control" id="hiddenBookingIdList" >--}}
 

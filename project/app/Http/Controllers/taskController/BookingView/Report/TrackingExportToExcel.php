@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\taskController\BookingView\Report;
 
+use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+use App\Http\Controllers\Source\source;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Excel;
 use Carbon;
 
@@ -14,7 +16,7 @@ class TrackingExportToExcel extends Controller
         $this->excel = $excel;
     }
 
-    public function exportReport(Request $request){
+    public function exportReport($request){
         $export = $request->all();
         $data = array();
         if(isset($export) && !empty($export)){
@@ -40,5 +42,35 @@ class TrackingExportToExcel extends Controller
             });
         })->download('xlsx');
         return redirect()->back();
+    }
+
+    public function exportRequest(Request $request) {
+        // if(isset($request['type']) && !empty($request['type'])) {
+        //     if('cs' == $request['type']){
+
+        //         $source = new source();
+        //         $cs_data = $source->getCsExportData();
+        //         $cs_export_data = array();
+
+        //         // if(!empty($cs_data[0]->booking_order_id)){
+        //             foreach ($cs_data as $cs_value) {
+        //                 $key_i = 0;
+        //                 foreach ($cs_value->itemLists as $key => $cs_data_value) {
+        //                     $cs_export_data[$key_i] = $cs_data_value;                            
+        //                     $key_i++;
+        //                 }
+        //             }
+        //         // }
+        //         $this->print_me($cs_export_data);
+        //         return $request->type;
+
+        //     }elseif('planning' == $request['type']) {
+
+        //     }elseif ('os' == $request['type']) {
+        //         # code...
+        //     }
+        //     return $request->type;
+        // }die();
+        return $this->exportReport($request);
     }
 }

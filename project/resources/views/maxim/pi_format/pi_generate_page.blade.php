@@ -84,7 +84,11 @@
 					@endforeach
 					@else
 						<tr>
-							<td colspan="12"><center>PI has been compelete.</center></td>
+							<td colspan="12">
+								<center>
+									<span style="font-size: 18px;">PI has been complete.</span>
+								</center>
+							</td>
 						</tr>
 					@endif
 				</tbody>

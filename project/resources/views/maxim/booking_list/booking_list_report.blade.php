@@ -165,6 +165,8 @@
                     <ul class="pagination"></ul>
                 </nav>
             </div>
+
+            <input type="hidden" name="type" value="cs">
             <button class="btn btn-primary pull-right">Export as Excel</button>
             <div class="col-md-12" style="margin-bottom: 50px;"></div>
         </form>

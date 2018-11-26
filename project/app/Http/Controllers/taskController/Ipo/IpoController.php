@@ -284,6 +284,7 @@ class IpoController extends Controller
             $createIpo->sku              = $bookingChallanValue->sku;
             $createIpo->status           = ActionMessage::CREATE;
             $createIpo->job_id_current_status  = MrfFlugs::OPEN_MRF;
+            $createIpo->ipo_status  = MrfFlugs::OPEN_MRF;
             $createIpo->save();
         }
       }

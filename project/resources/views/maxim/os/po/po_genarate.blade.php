@@ -34,7 +34,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">New PO Genarate</div>
 				<div class="panel-body aaa">
-					<form class="form-horizontal" role="form" method="POST" action="{{ Route('os_po_genarate_report_action') }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ Route('os_po_genarate_report_action') }}" target="_blank">
 						{{ csrf_field() }}
 
 						<input type="hidden" name="mrf_id" value="{{$jobid_values[0]->mrf_id}}">

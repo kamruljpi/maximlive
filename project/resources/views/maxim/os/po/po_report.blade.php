@@ -167,13 +167,14 @@
 	        	<th>PO/Cat No.</th>
 	        	<th>OOS No.</th>
 	        	<th width="15%">Item / Code No.</th>
+	        	<th width="20%">Item Size</th>
 	        	<th width="25%" id="erp_code">ERP Code</th>
 	        	{{-- <th width="5%">Season Code</th> --}}
 	        	<th>Description</th>
 	        	<th>Style</th>
 	        	<th>Sku</th>
 	        	<th>GMTS Color</th>
-	        	<th width="15%">Size</th>
+	      		<th>Size Range</th>
 	        	<th width="">Material</th>
 	        	<th>Unit</th>
 	        	<th>Order Qty</th>
@@ -197,13 +198,14 @@
 			    	<td>{{$details->poCatNo}}</td>
 			        <td>{{$details->oos_number}}</td>
                 	<td>{{$details->item_code}}</td>
+                	<td>{{ ($details->item_size_width_height != '')? '('. $details->item_size_width_height .')mm' : 'N/A' }}</td>
 			    	<td>{{$details->erp_code}}</td>
 			    	{{-- <td width="5%">{{$details->season_code}}</td> --}}
 			    	<td>{{$details->item_description}}</td>
 			    	<td>{{$details->style}}</td>
 			        <td>{{$details->sku}}</td>
 			    	<td>{{$details->gmts_color}}</td>
-			    	<td width="17%">{{$details->item_size_width_height}}</td>
+			    	<td width="17%">{{$details->item_size}}</td>
 					<td>{{$details->material}}</td>
 					<td>{{(!empty($details->weight_qty))?$details->weight_qty:'PSC'}} </td>
 			        <td>{{$details->mrf_quantity}}</td>

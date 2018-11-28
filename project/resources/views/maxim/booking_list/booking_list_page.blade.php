@@ -170,18 +170,28 @@
                         <td>
 
                             @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
+                                <input type="hidden" name="order_status[]" value="Booked" >
                                 {{ 'Booked' }}
-                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG ) && ($value->mrf->mrf_status == '') && ($value->ipo->ipo_status == ''))
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG ) && ($valuelist->mrf->mrf_status == '') && ($valuelist->ipo->ipo_status == ''))
+                                <input type="hidden" name="order_status[]" value="Processing" >  
                                 {{ 'Processing' }}
-                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->ipo->ipo_status == MrfFlugs::OPEN_MRF ) && ($value->mrf->mrf_status == MrfFlugs::OPEN_MRF))
-                                {{ 'Mrf Issued' }} {{ 'Ipo Issued' }}                                
-                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->mrf->mrf_status == MrfFlugs::OPEN_MRF))
+                                                              
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::OPEN_MRF))
+                                <input type="hidden" name="order_status[]" value="Mrf Issued" >
                                 {{ 'Mrf Issued' }}
-                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->ipo->ipo_status == MrfFlugs::OPEN_MRF))
+                                
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->ipo->ipo_status== MrfFlugs::OPEN_MRF))
+                                <input type="hidden" name="order_status[]" value="Ipo Issued" >
                                 {{ 'Ipo Issued' }}
-                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($value->mrf->mrf_status == MrfFlugs::ACCEPT_MRF))
-                                {{ 'Processed to supplier' }}    
-                             
+                                
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS) )
+                                <input type="hidden" name="order_status[]" value="Processed to supplier">
+                                {{ 'Processed to supplier' }}
+                                    
+                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) )
+                                <input type="hidden" name="order_status[]" value="Mrf Accepted" >
+                                {{ 'Mrf Accepted' }} 
+                        
                             @else
                                 {{ 'N/A' }}    
                             @endif

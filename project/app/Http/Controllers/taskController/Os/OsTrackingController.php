@@ -45,6 +45,13 @@ class OsTrackingController extends Controller
                     ])
                     ->select('mxp_os_po.po_id','mxp_os_po.supplier_id','mxp_os_po.supplier_price','mxp_os_po.order_date','mxp_os_po.shipment_date','mxp_os_po.material','suppliers.name','suppliers.person_name')
                     ->first();
+                $bookingList_value->booking_details = DB::table('mxp_bookingbuyer_details')
+                    ->where([
+                        ['is_deleted', BookingFulgs::IS_NOT_DELETED],
+                        ['booking_order_id', $bookingList_value->booking_order_id]
+                    ])
+                    ->select('booking_category')
+                    ->first();
             }
         }
             // $this->print_me($bookingList);
@@ -81,7 +88,7 @@ class OsTrackingController extends Controller
 
     public function mrf(){
         return [
-            'mxp_mrf_table.job_id','mxp_mrf_table.mrf_id','mxp_mrf_table.booking_order_id','mxp_mrf_table.erp_code','mxp_mrf_table.item_code','mxp_mrf_table.item_size','mxp_mrf_table.item_description','mxp_mrf_table.mrf_quantity','mxp_mrf_table.mrf_quantity','mxp_mrf_table.gmts_color','mxp_mrf_table.poCatNo','mxp_mrf_table.orderDate','mxp_mrf_table.shipmentDate'
+            'mxp_mrf_table.job_id','mxp_mrf_table.mrf_id','mxp_mrf_table.booking_order_id','mxp_mrf_table.erp_code','mxp_mrf_table.item_code','mxp_mrf_table.item_size','mxp_mrf_table.item_description','mxp_mrf_table.mrf_quantity','mxp_mrf_table.mrf_quantity','mxp_mrf_table.gmts_color','mxp_mrf_table.poCatNo','mxp_mrf_table.orderDate','mxp_mrf_table.shipmentDate','mxp_mrf_table.mrf_status','mxp_mrf_table.job_id_current_status'
         ];
     }
 

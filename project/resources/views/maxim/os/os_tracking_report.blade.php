@@ -3,6 +3,8 @@
 @section('section')
 <?php 
     use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+        use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+    use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 ?>
 <style type="text/css">
     .b1{
@@ -92,6 +94,8 @@
                     <thead>
                     <tr>
                         <th>Job No.</th>
+                        <th>Category</th>
+                        <th>Order Status</th>
                         <th>Supplier Name</th>
                         <th>Contact Person</th>
                         <th>Booking No.</th>
@@ -125,6 +129,27 @@
                             <td>
                                 <input name="job_id[]" value="{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $valuelist->job_id }}" type="hidden">
                                 {{ str_repeat('0',$idstrcount) }}{{ $value->job_id }}
+                            </td>
+                            <td>
+                                <input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}</td>
+                            </td>
+                            <td>
+                                @if( $value->mrf_status == MrfFlugs::OPEN_MRF )
+                                    {{ 'Available' }}
+                                    <input type="hidden" name="order_status[]" value="Available">
+                                @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT))
+                                    {{ 'Mrf Accepted' }}    
+                                    <input type="hidden" name="order_status[]" value="Mrf Accepted">                           
+                                @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) && ($value->job_id_current_status == MrfFlugs::OPEN_MRF))
+                                    {{ 'Mrf Issued' }}
+                                    <input type="hidden" name="order_status[]" value="Mrf Issued"> 
+                                @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT ) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS))
+                                    {{ 'Processed to supplier' }}    
+                                    <input type="hidden" name="order_status[]" value="Processed to supplier"> 
+                                @else
+                                    {{ 'N/A' }}
+                                    <input type="hidden" name="order_status[]" value="N/A">    
+                                @endif
                             </td>
                             <td><input type="hidden" name="supplier_name[]" value="{{$value->os_po->name}}">{{$value->os_po->name}}</td>
                             <td><input type="hidden" name="contact_person[]" value="{{$value->os_po->person_name}}">{{$value->os_po->person_name}}</td>
@@ -161,7 +186,7 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="15"><strong style="font-size: 16px; float: right;"> All Total</strong></td>
+                        <td colspan="17"><strong style="font-size: 16px; float: right;"> All Total</strong></td>
                         {{-- <td colspan="2"></strong></td> --}}
                         <td><strong><input name="total_qty" value="" type="hidden"><strong style="">Qty:{{$total_qty}}</strong></td>
 

@@ -108,7 +108,7 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-        	<th width="5%">SI No</th>
+        	<th width="5%">Job Id</th>
         	<th width="15%">Checking Id</th>
         	<th width="15%">Description</th>
         	<th width="15%">Item code</th>
@@ -143,9 +143,11 @@
     					$itemlength = sizeof($itemlengths);
     				}
     				$itemQtyValue = array_combine($itemsize, $qty);
+
+    				$jobId = (8 - strlen($item->id));
     			?>
 	    			<tr>
-	    				<td>{{$j++}}</td>
+	    				<td>{{ str_repeat('0',$jobId) }}{{$item->id}}</td>
 	    				<td rowspan="{{$itemlength}}">{{$item->checking_id}}</td>
 	    				<td rowspan="{{$itemlength}}">{{$item->erp_code}}</td>
 	    				<td rowspan="{{$itemlength}}">{{$item->item_code}}</td>

@@ -1,6 +1,10 @@
 @extends('layouts.dashboard')
 @section('page_heading', "Planning Tracking Report List")
 @section('section')
+<?php
+    use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+    use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
+?>
 <style type="text/css">
     .b1{
         border-bottom-left-radius: 4px;
@@ -88,6 +92,7 @@
                         <tr>
                             <th>Job No.</th>
                             <th>Category</th>
+                            <th>Order Status</th>
                             <th>Buyer Name</th>
                             <th style="width:50% !important;">Vendor Name</th>
                             <th>Attention</th>
@@ -121,7 +126,36 @@
                                         <input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" type="hidden">
                                         {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}
                                     </td>
-                                    <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
+                                    <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}
+                                    </td>
+                                    <td>
+                                        @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
+                                            <input type="hidden" name="order_status[]" value="Booked" >
+                                            {{ 'Booked' }}
+                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG ) && ($valuelist->mrf->mrf_status == '') && ($valuelist->ipo->ipo_status == ''))
+                                            <input type="hidden" name="order_status[]" value="Processing" >  
+                                            {{ 'Processing' }}
+                                                                          
+                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::OPEN_MRF))
+                                            <input type="hidden" name="order_status[]" value="Mrf Issued" >
+                                            {{ 'Mrf Issued' }}
+                                            
+                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->ipo->ipo_status== MrfFlugs::OPEN_MRF))
+                                            <input type="hidden" name="order_status[]" value="Ipo Issued" >
+                                            {{ 'Ipo Issued' }}
+                                            
+                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS) )
+                                            <input type="hidden" name="order_status[]" value="Processed to supplier">
+                                            {{ 'Processed to supplier' }}
+                                                
+                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) )
+                                            <input type="hidden" name="order_status[]" value="Mrf Accepted" >
+                                            {{ 'Mrf Accepted' }} 
+                                    
+                                        @else
+                                            {{ 'N/A' }}    
+                                        @endif
+                                    </td>
                                     <td>
                                         <input name="buyer_name[]" value="{{$value->buyer_name}}" type="hidden">
                                         {{$value->buyer_name}}

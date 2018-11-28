@@ -39,7 +39,8 @@
               {{--<th class="">Item Name</th>--}}
               <th class="">Description</th>
               <th class="">Unit Price</th>
-              <th class="">Sizes</th>
+              <th width="20%">Item Size</th>
+              <th>Size Range</th>
               <th class="">Colors</th>
               <!-- <th class="">Weight Qty</th> -->
               <!-- <th class="">Weight Amt</th> -->
@@ -58,6 +59,7 @@
                 <td>{{$product->description->name}}</td>
                 
                 <td>{{$product->unit_price}}</td>
+                <td>{{(!empty($product->item_size_width_height))?$product->item_size_width_height.' mm' :''}}</td>
                 <!-- <td>{{$product->weight_qty}}</td> -->
                 <!-- <td>{{$product->weight_amt}}</td> -->
                 <td>

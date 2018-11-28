@@ -15,7 +15,7 @@ use App\Http\Controllers\taskController\BookingListController;
 class PlanningTrackingController extends Controller
 {
     public function trackingReportView(){
-        $bookingList = DB::table('mxp_bookingbuyer_details')->where([['is_complete', BookingFulgs::IS_COMPLETE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(150);
+        $bookingList = DB::table('mxp_bookingbuyer_details')->where([['is_complete', BookingFulgs::IS_COMPLETE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(15);
 
         if(isset($bookingList) && !empty($bookingList)){
             foreach ($bookingList as &$booking) {

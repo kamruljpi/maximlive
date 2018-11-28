@@ -148,7 +148,7 @@
 		        <?php $itemcodestatus = $details->item_code; ?>
 		    @endforeach
 			    <tr>
-		    		<td colspan="12">
+		    		<td colspan="13">
 		    			<span class="pull-right" style="font-weight: bold; font-size:18px;">Total Booking Qty: {{$TotalBookingQty}}
 		    			</span>
 		    		</td>

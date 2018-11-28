@@ -214,7 +214,7 @@
 	        	</tr>
         	@endforeach
         	<tr style="height: 30px;">
-        		<td colspan="12"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
+        		<td colspan="13"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
         		<td> {{$TotalPoQty}}</td>
         		<td>US</td>
         		<td>{{(!empty($TotalPoPrice))?'$'.$TotalPoPrice:''}}</td>

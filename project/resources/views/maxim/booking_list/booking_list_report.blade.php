@@ -88,6 +88,7 @@
                     <thead>
                     <tr>
                         <th>Job No.</th>
+                        <th>Category</th>
                         <th>Buyer Name</th>
                         <th style="width:50% !important;">Vendor Name</th>
                         <th>Attention</th>
@@ -126,6 +127,7 @@
                                 ?>
                                 <tr id="booking_list_table">
                                     <td><input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" hidden> {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}</td>
+                                    <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
                                     <td><input name="buyer_name[]" value="{{$value->buyer_name}}" hidden>{{$value->buyer_name}}</td>
                                     <td><input name="company_name[]" value="{{$value->Company_name}}" hidden>{{$value->Company_name}}</td>
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>

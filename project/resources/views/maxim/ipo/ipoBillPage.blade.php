@@ -211,13 +211,13 @@
 		<label >Special Requirements/Notes:</label>
 		<ul>
 			<li>1. This order is:
-                <input id="normal" type="checkbox" name="normal" value="normal" disabled>
+                <input id="normal" type="checkbox" name="normal" value="normal" disabled {{($buyerDetails->booking_category == 'normal_order') ? 'checked' : ''}}>
                 <label for="normal">Normal order</label>
-                <input id="urgent" type="checkbox" name="urgent" value="urgent" disabled>
+                <input id="urgent" type="checkbox" name="urgent" value="urgent" disabled {{($buyerDetails->booking_category == 'urgent_order') ? 'checked' : ''}}>
                 <label for="urgent">Urgent order</label>
-                <input id="topurgent" type="checkbox" name="topurgent" value="topurgent" disabled>
+                <input id="topurgent" type="checkbox" name="topurgent" value="topurgent" disabled {{($buyerDetails->booking_category == 'top_urgent_order') ? 'checked' : ''}}>
                 <label for="topurgent">Top Urgent order</label>
-                <input id="exportgoods" type="checkbox" name="exportgoods" value="exportgoods" disabled>
+                <input id="exportgoods" type="checkbox" name="exportgoods" value="exportgoods" disabled {{($buyerDetails->booking_category == 'export_goods') ? 'checked' : ''}}>
                 <label for="exportgoods">Export goods</label>
             </li>
 			<li>2. Provide PPS PCS , Or provide production samples for sales _______PCS</li>
@@ -239,7 +239,7 @@
 
 <div class="row body-top" style="margin-top: 35px;margin-bottom: 20px;">
 	<div class="col-md-3 col-sm-3 col-xs-3">
-		<span style="font-weight: bold;">CS:
+		<span style="font-weight: bold;">CS: {{$prepared_by->first_name}} {{$prepared_by->last_name}}
 			<div style="border-bottom: 2px solid black; "></div>
 		</span>
 	</div>

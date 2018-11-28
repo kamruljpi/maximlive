@@ -16,6 +16,7 @@ use Carbon;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
+use App\Http\Controllers\Source\source;
 
 class IpoController extends Controller
 {
@@ -297,16 +298,19 @@ class IpoController extends Controller
       $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
       $footerData =[];
       $ipoDetails = MxpIpo::join('mxp_booking as mp','mp.id','job_id')
-                  ->select('mxp_ipo.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
+                  ->select('mxp_ipo.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku','mp.item_size_width_height')
                   ->where('ipo_id',$request->ipo_id)
                   ->get();
-                  
+    $object = new source();
+     $prepared_by = $object->getUserDetails($buyerDetails->booking_order_id);
+    //  $this->print_me($prepared_by);
       return view('maxim.ipo.ipoBillPage', [
           'companyInfo'  => $companyInfo,
           'initIncrease' => $request->ipoIncrease,
           'buyerDetails' => $buyerDetails,
           'ipoDetails'   => $ipoDetails,
-          'footerData'   => $footerData
+          'footerData'   => $footerData,
+          'prepared_by'   => $prepared_by
         ]
       );
     }

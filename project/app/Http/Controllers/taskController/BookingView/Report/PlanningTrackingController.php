@@ -27,9 +27,9 @@ class PlanningTrackingController extends Controller
 
                     $itemListssvalue->challan = MxpMultipleChallan::select('mxp_multiplechallan.*',DB::Raw('GROUP_CONCAT(challan_id) as challan_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
 
-                    $itemListssvalue->mrf = MxpMrf::select(DB::Raw('GROUP_CONCAT(mrf_id) as mrf_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
+                    $itemListssvalue->mrf = MxpMrf::select(DB::Raw('GROUP_CONCAT(mrf_id) as mrf_ids'),'mrf_status','job_id_current_status')->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
 
-                    $itemListssvalue->ipo = MxpIpo::select(DB::Raw('GROUP_CONCAT(ipo_id) as ipo_ids'))->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
+                    $itemListssvalue->ipo = MxpIpo::select(DB::Raw('GROUP_CONCAT(ipo_id) as ipo_ids'),'ipo_status')->where('job_id',$itemListssvalue->id)->groupBy('job_id')->first();
                 }
             }
         }

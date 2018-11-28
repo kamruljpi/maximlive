@@ -60,7 +60,7 @@
 									<table class="table table-bordered table-striped" >
 										<thead>
 											<tr>
-												<th>SerialNo</th>
+												<th>Job Id</th>
 												<th width="">ERP Code</th>
 												<th width="">Item Code</th>
 												<th width="">Item Size</th>
@@ -97,6 +97,7 @@
 //                                                $challanIdList = array_unique($booking_challan_ids);
 
 //                                                var_dump($challanIdList);
+                                                $jobId = (8 - strlen($item->booking_challan_id));
 							    			?>
 										<tbody>
 {{--                                            {{ var_dump($bookingIdList) }}--}}
@@ -104,19 +105,22 @@
 											@foreach ($itemsize as $key=>$value/* $size => $Qty*/)
 											<tr>
 												<td>
-													@if($itemcodestatus != $item->item_code)
+													{{-- @if($itemcodestatus != $item->item_code)
 														{{$i++}}
-													@endif
+													@endif --}}
+													{{ str_repeat('0',$jobId) }}{{ $item->booking_challan_id }}
 												</td>
 												<td>
-													@if($itemcodestatus != $item->item_code)
+													{{-- @if($itemcodestatus != $item->item_code)
 														{{$item->erp_code}}
-													@endif
+													@endif --}}
+													{{$item->erp_code}}
 												</td>
 												<td>
-													@if($itemcodestatus != $item->item_code)
+													{{-- @if($itemcodestatus != $item->item_code)
 														{{$item->item_code}}
-													@endif
+													@endif --}}
+													{{$item->item_code}}
 												</td>
 												{{-- <td colspan="2" class="colspan-td"> --}}
 								    				{{-- <table width="100%" id="sampleTbl"> --}}

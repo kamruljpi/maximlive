@@ -29,7 +29,7 @@ var booking_views_js = (function(){
 			        	$(this).css('background-color','');
 			        }
 		    	}else{
-		    		alert('Please Check the Booking and Job id Item Quentity.');
+		    		alert('Please check Booking and Job id Item Quantity or check the availability.');
 		    	}
 		    });
 

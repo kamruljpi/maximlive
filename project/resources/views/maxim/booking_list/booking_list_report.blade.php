@@ -88,6 +88,7 @@
                     <thead>
                     <tr>
                         <th>Job No.</th>
+                        <th>Category</th>
                         <th>Buyer Name</th>
                         <th style="width:50% !important;">Vendor Name</th>
                         <th>Attention</th>
@@ -100,8 +101,9 @@
                         <th>Order Date</th>
                         <th>Requested Date</th>
                         <th>Item Code</th>
+                         <th id="item_size">Item Size</th>
                         <th width="">ERP Code</th>
-                        <th>Size</th>
+                        <th>Size Range</th>
                         <th>Item Description</th>
                         <th>Sku</th>
                         <th>Quantity</th>
@@ -125,6 +127,7 @@
                                 ?>
                                 <tr id="booking_list_table">
                                     <td><input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" hidden> {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}</td>
+                                    <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
                                     <td><input name="buyer_name[]" value="{{$value->buyer_name}}" hidden>{{$value->buyer_name}}</td>
                                     <td><input name="company_name[]" value="{{$value->Company_name}}" hidden>{{$value->Company_name}}</td>
                                     <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
@@ -132,16 +135,35 @@
                                     <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
                                     <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
                                     <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
-                                    <td><input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" hidden>{{$valuelist->ipo->ipo_ids}}</td>
-                                    <td><input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" hidden>{{$valuelist->mrf->mrf_ids}}</td>
-                                    <td>
-                                        <input name="order_date[]" value="{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}" hidden>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
-                                    <td>
-                                        <input name="requested_date[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" hidden>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}
+                                   <td>
+                                        <input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" type="hidden">
+                                        {{ ($valuelist->ipo->ipo_ids != '')? $valuelist->ipo->ipo_ids : 'N/A' }}
                                     </td>
-                                    <td><input name="item_code[]" value="{{$valuelist->item_code}}" hidden>{{$valuelist->item_code}}</td>
-                                    <td><input name="erp_code[]" value="{{$valuelist->erp_code}}" hidden>{{$valuelist->erp_code}}</td>
-                                    <td><input name="item_size[]" value="{{$valuelist->item_size}}" hidden>{{$valuelist->item_size}}</td>
+                                    <td>
+                                        <input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" type="hidden">
+                                        {{ ($valuelist->mrf->mrf_ids != '')? $valuelist->mrf->mrf_ids : 'N/A' }}
+                                    </td>
+                                    <td>
+                                        <input name="order_date[]" value="{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}" type="hidden">
+                                        {{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}
+                                    </td>
+                                    <td>
+                                        <input name="requested_date[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" type="hidden">
+                                        {{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}
+                                    </td>
+                                    <td>
+                                        <input name="item_code[]" value="{{$valuelist->item_code}}" type="hidden">{{$valuelist->item_code}}
+                                    </td>
+                                    <td>
+                                        <input name="item_code[]" value="{{$valuelist->item_size_width_height}}" type="hidden">
+                                        {{ ($valuelist->item_size_width_height!= '')? '('. $valuelist->item_size_width_height .')mm': 'N/A' }}
+                                    </td>
+                                    <td>
+                                        <input name="erp_code[]" value="{{$valuelist->erp_code}}" type="hidden">{{$valuelist->erp_code}}
+                                    </td>
+                                    <td>
+                                        <input name="item_size[]" value="{{$valuelist->item_size}}" type="hidden">{{$valuelist->item_size}}
+                                    </td>
                                     <td><input name="item_description[]" value="{{$valuelist->item_description}}" hidden>{{$valuelist->item_description}}</td>
 
                                     <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>

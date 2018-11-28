@@ -269,9 +269,10 @@
 			<li><b>iv) Beneficiary:MAXIM LABEL & PACKAGING (BD) PVT., LTD</b></li>						 
 			<li><b>v) Account Number: 1041060234447</b></li>								 
 			<li><b>vi) SWIFT:   EBLDBDDH</b></li>					
-			<li><b>vii) Origin : BANGLADESH</b></li>							
-			<li><b>viii) VAT/ BTN Registration: 17011037475</b></li>
-			<li><b>ix) E-BIN/ VAT NO: 000412786</b> </li>
+			<li><b>vii) HS.Code: 4821.10.00</b></li>					
+			<li><b>viii) VAT/ BTN Registration: 17011037475</b></li>							
+			<li><b>ix) E-BIN/ VAT NO: 000412786</b></li>
+			<li><b>x) Origin : BANGLADESH</b> </li>
 			<li>4. Payment Terms：BBLC/ CHAQUE/ CASH/ FDD BEFORE SHIPMENT</li>
 			<li>i) Payment : By Irrevocable Letter of Credit (L/C) to be opened in our favor to be Advised through " Eastern bank Ltd, Bangladesh ,Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh  and Original L/C must be received to Our Bank. SWIFT CODE : EBLDBDDH </li>
 			<li>ii) Bill of Exchange will be Signed by the Applicant before Submitting to the Applicant's Bank.</li>

@@ -87,13 +87,14 @@
                     <thead>
                         <tr>
                             <th>Job No.</th>
+                            <th>Category</th>
                             <th>Buyer Name</th>
                             <th style="width:50% !important;">Vendor Name</th>
                             <th>Attention</th>
                             <th>Booking No.</th>
                             <th>PO/CAT No.</th>
-                            <th>PI No.</th>
-                            <th>Challan No.</th>
+                            <!--<th>PI No.</th>-->
+                            <!--<th>Challan No.</th>-->
                             <th>PO No.</th>
                             <th>MRF No.</th>
                             <th>Order Date</th>
@@ -120,6 +121,7 @@
                                         <input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" type="hidden">
                                         {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}
                                     </td>
+                                    <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
                                     <td>
                                         <input name="buyer_name[]" value="{{$value->buyer_name}}" type="hidden">
                                         {{$value->buyer_name}}
@@ -138,20 +140,20 @@
                                         <input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" type="hidden">
                                         {{$valuelist->poCatNo}}
                                     </td>
-                                    <td>
-                                        <input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" type="hidden">
-                                        {{$valuelist->pi->p_ids}}
-                                    </td>
-                                    <td>
-                                        <input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" type="hidden">{{$valuelist->challan->challan_ids}}
-                                    </td>
+                                    <!--<td>-->
+                                    <!--    <input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" type="hidden">-->
+                                    <!--    {{$valuelist->pi->p_ids}}-->
+                                    <!--</td>-->
+                                    <!--<td>-->
+                                    <!--    <input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" type="hidden">{{$valuelist->challan->challan_ids}}-->
+                                    <!--</td>-->
                                     <td>
                                         <input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" type="hidden">
-                                        {{$valuelist->ipo->ipo_ids}}
+                                        {{ ($valuelist->ipo->ipo_ids != '')? $valuelist->ipo->ipo_ids : 'N/A' }}
                                     </td>
                                     <td>
                                         <input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" type="hidden">
-                                        {{$valuelist->mrf->mrf_ids}}
+                                        {{ ($valuelist->mrf->mrf_ids != '')? $valuelist->mrf->mrf_ids : 'N/A' }}
                                     </td>
                                     <td>
                                         <input name="order_date[]" value="{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}" type="hidden">

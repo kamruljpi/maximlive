@@ -130,7 +130,7 @@
 
         @if($roleCheck == 'p')
             <div class="panel panel-default col-sm-12" style="background-color: #000a12; color: #ffffff; text-align: center">
-                <h4>Available Booking: {{ $leftBooking }}</h4>
+                <h4>Available Jobs: {{ $leftBooking }}</h4>
             </div>
         @endif
 

@@ -101,7 +101,6 @@
                 <option value="normal_order">Normal order</option>
                 <option value="urgent_order">Urgent order</option>
                 <option value="top_urgent_order">Top Urgent order</option>
-                <option value="top_urgent_order">Top Urgent order</option>
                 <option value="export_goods">Export goods</option>
               </select>
             </div>

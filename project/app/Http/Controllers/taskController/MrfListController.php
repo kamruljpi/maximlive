@@ -31,7 +31,7 @@ class MrfListController extends Controller
 
     public function showMrfReport(Request $request){
         $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
-                        ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
+                        ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku','mp.item_size_width_height')
                         ->where([
                             ['mrf_id',$request->mid],
                             ['mxp_mrf_table.is_deleted',BookingFulgs::IS_NOT_DELETED]

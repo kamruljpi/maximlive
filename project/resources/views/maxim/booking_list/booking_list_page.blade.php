@@ -121,6 +121,7 @@
                 <thead>
                 <tr>
                     <th>Serial no</th>
+                    <th width="15%"> Category</th>
                     <th>Buyer Name</th>
                     <th>Company Name</th>
                     <th>Attention</th>
@@ -131,7 +132,7 @@
                     <th width="10%">Requested Date</th>
                     <th>Status</th>
                     <th>Order Status</th>
-                    <th width="">Action</th>
+                    <th width="25%">Action</th>
                 </tr>
                 </thead>
 
@@ -140,6 +141,7 @@
                 @foreach($bookingList as $value)
                     <tr id="booking_list_table">
                         <td>{{$j++}}</td>
+                        <td>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
                         <td>{{$value->buyer_name}}</td>
                         <td>{{$value->Company_name}}</td>
                         <td>{{$value->attention_invoice}}</td>

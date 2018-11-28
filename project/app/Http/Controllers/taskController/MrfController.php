@@ -287,7 +287,7 @@ class MrfController extends Controller
       $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
       $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
       $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
-                      ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
+                      ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku','mp.item_size_width_height')
                       ->where('mrf_id',$request->mrf_id)
                       ->get();
       return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));

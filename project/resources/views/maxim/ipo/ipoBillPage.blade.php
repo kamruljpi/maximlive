@@ -147,13 +147,14 @@
 	            <th>Job No.</th>
 	        	<th width="25%" id="erp_code">ERP Code</th>
 	        	<th width="15%">Item / Code No.</th>
+	        	<th id="item_size" width="20%">Item Size</th>
 	        	<th width="5%">Season Code</th>
 	        	<th>OOS No.</th>
 	        	<th>Style</th>
 	        	<th>PO/Cat No.</th>
 	        	<th>Description</th>
 	        	<th>GMTS Color</th>
-	        	<th width="15%">Size</th>
+	        	<th width="15%">Size Range</th>
 	        	<th>Sku</th>
 	        	<th>Order Qty</th>
 				<th>Increase percentage</th>
@@ -177,6 +178,7 @@
 	        		<td>{{ str_repeat('0',$jobId) }}{{ $details->job_id }}</td>
 			    	<td width="20%">{{$details->erp_code}}</td>
                 	<td width="10%">{{$details->item_code}}</td>
+                	<td >{{ ($details->item_size_width_height != '')? '('. $details->item_size_width_height .')mm' : 'N/A' }}</td>
 			    	<td width="5%">{{$details->season_code}}</td>
 			        <td width="5%">{{$details->oos_number}}</td>
 			    	<td width="5%">{{$details->style}}</td>
@@ -209,13 +211,13 @@
 		<label >Special Requirements/Notes:</label>
 		<ul>
 			<li>1. This order is:
-                <input id="normal" type="checkbox" name="normal" value="normal" disabled>
+                <input id="normal" type="checkbox" name="normal" value="normal" disabled {{($buyerDetails->booking_category == 'normal_order') ? 'checked' : ''}}>
                 <label for="normal">Normal order</label>
-                <input id="urgent" type="checkbox" name="urgent" value="urgent" disabled>
+                <input id="urgent" type="checkbox" name="urgent" value="urgent" disabled {{($buyerDetails->booking_category == 'urgent_order') ? 'checked' : ''}}>
                 <label for="urgent">Urgent order</label>
-                <input id="topurgent" type="checkbox" name="topurgent" value="topurgent" disabled>
+                <input id="topurgent" type="checkbox" name="topurgent" value="topurgent" disabled {{($buyerDetails->booking_category == 'top_urgent_order') ? 'checked' : ''}}>
                 <label for="topurgent">Top Urgent order</label>
-                <input id="exportgoods" type="checkbox" name="exportgoods" value="exportgoods" disabled>
+                <input id="exportgoods" type="checkbox" name="exportgoods" value="exportgoods" disabled {{($buyerDetails->booking_category == 'export_goods') ? 'checked' : ''}}>
                 <label for="exportgoods">Export goods</label>
             </li>
 			<li>2. Provide PPS PCS , Or provide production samples for sales _______PCS</li>
@@ -237,7 +239,7 @@
 
 <div class="row body-top" style="margin-top: 35px;margin-bottom: 20px;">
 	<div class="col-md-3 col-sm-3 col-xs-3">
-		<span style="font-weight: bold;">CS:
+		<span style="font-weight: bold;">CS: {{$prepared_by->first_name}} {{$prepared_by->last_name}}
 			<div style="border-bottom: 2px solid black; "></div>
 		</span>
 	</div>

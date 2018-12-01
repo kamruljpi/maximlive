@@ -354,6 +354,7 @@ class ProductController extends Controller
                 $this->saveColor($color_name, $request->p_code);
             }
         }
+        
         MxpProductsSizes::where('product_id', $lastProductID)->delete();
         MxpProductSize::where('product_code', $request->p_code)->delete();
 
@@ -394,7 +395,10 @@ class ProductController extends Controller
 		
 		Session::flash('item_id', $lastProductID);
 
-		return \Redirect()->Route('product_list_view');
+        $url = $request->only('redirects_to');
+        return redirect()->to($url['redirects_to']);
+
+		// return \Redirect()->Route('product_list_view');
     }
 
     public function deleteProduct(Request $request) {

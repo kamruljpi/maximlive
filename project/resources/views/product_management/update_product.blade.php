@@ -49,6 +49,7 @@
                     @foreach($product as $data)            
                         <form class="form-horizontal" action="{{ Route('update_product_action') }}/{{$data->product_id}}" method="POST" autocomplete="off">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="redirects_to" value="{{ URL::previous() }}">
                             <div class="row">
                                 <div class="col-sm-12 col-md-6">
                                     {{--<div class="form-group">--}}

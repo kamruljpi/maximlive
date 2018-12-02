@@ -33,19 +33,19 @@
       <thead>
           <tr>
               <th>Item No</th>
-              <th class="">Brand</th>                        
-              <th class="">Item Code</th>
-              <th class="">ERP Code</th>
+              <th>Brand</th>                        
+              <th>Item Code</th>
+              <th>ERP Code</th>
               {{--<th class="">Item Name</th>--}}
-              <th class="">Description</th>
-              <th class="">Unit Price</th>
-              <th width="20%">Item Size</th>
+              <th>Description</th>
+              <th>Unit Price</th>
+              <th>Item Size</th>
               <th>Size Range</th>
-              <th class="">Colors</th>
+              <th>Colors</th>
               <!-- <th class="">Weight Qty</th> -->
               <!-- <th class="">Weight Amt</th> -->
-              <th class="">status</th>
-              <th class="">Action</th>                        
+              <th>status</th>
+              <th>Action</th>                        
           </tr>
       </thead>
       <tbody>

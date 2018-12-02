@@ -151,7 +151,7 @@
 
                                     {{--Item  Size  Box--}}
                                     <?php $valuess = explode('-', $data->item_size_width_height); ?>
-                                    <div class="itemSize">
+                                    <div class="form-group itemSize">
                                         <label class="col-md-4 control-label">Item Size</label>
                                         <div class="col-md-3">
                                             <div id="custom-search-input">
@@ -174,6 +174,15 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    @if($os_define_role == 'os' || session::get('user_type') == "super_admin")
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label">Item Color</label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" name="other_colors" value="{{ $data->other_colors }}" placeholder="Item Color">
+                                            </div>
+                                        </div>
+                                    @endif 
                                 </div>
 
                                 <div class="col-md-6 col-sm-12">
@@ -284,6 +293,15 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    @if($os_define_role == 'os' || session::get('user_type') == "super_admin")
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">Material</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" name="material" value="{{ $data->material }}" placeholder="Material">
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 

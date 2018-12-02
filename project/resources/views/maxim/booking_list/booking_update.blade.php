@@ -137,7 +137,7 @@
 
                     <td>
                         <div class="form-group" style="    width: 145px !important;">
-                            <select name="item_gmts_color" class="form-control itemGmtsColor" id="itemGmtsColor" placeholder="Empty color">
+                            <select name="gmts_color" class="form-control itemGmtsColor" id="itemGmtsColor" placeholder="Empty color">
                                  <option value="">Empty color</option>
                                 <option value="{{ $mxpBooking->gmts_color }}">{{ $mxpBooking->gmts_color }}</option>
                             </select>

@@ -121,7 +121,7 @@
                 <thead>
                 <tr>
                     <th>Serial no</th>
-                    <th width="15%"> Category</th>
+                    <th width=""> Category</th>
                     <th>Buyer Name</th>
                     <th>Company Name</th>
                     <th>Attention</th>
@@ -129,10 +129,10 @@
                     <th>PO No.</th>
                     <th>PO/CAT No.</th>
                     <th width="10%">Order Date</th>
-                    <th width="10%">Requested Date</th>
+                    <th width="10%">Requested Shipment Date</th>
                     <th>Status</th>
-                    <th>Order Status</th>
-                    <th width="25%">Action</th>
+                    {{-- <th>Order Status</th> --}}
+                    <th>Action</th>
                 </tr>
                 </thead>
 
@@ -149,7 +149,7 @@
                         <td>{{$value->po->ipo_id }}</td>
                         <td>{{$value->bookingDetails->po_cat }}</td>
                         <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
-                        <td>{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
+                        <td>{{Carbon\Carbon::parse($value->bookingDetails->shipmentDate)->format('d-m-Y')}}</td>
                         <td>
                             <button id="popoverOption" class=" popoverOption"   rel="popover" data-placement="top" data-original-title="" style="color:black;">{{$value->booking_status}}</button>
 
@@ -167,7 +167,7 @@
                                 <label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} {{(!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y H:i:s').')':'')}}</label><br>
                             </div>
                         </td>
-                        <td>
+                        {{-- <td>
 
                             @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
                                 <input type="hidden" name="order_status[]" value="Booked" >
@@ -195,7 +195,7 @@
                             @else
                                 {{ 'N/A' }}    
                             @endif
-                        </td>
+                        </td> --}}
                         <td width="12%">
                             <div class="btn-group">
                                 <form action="{{ Route('booking_list_action_task') }}" target="_blank">

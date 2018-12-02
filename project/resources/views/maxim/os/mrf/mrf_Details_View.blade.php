@@ -133,7 +133,7 @@
                         <th width="">ERP Code</th>
                         <th>Description</th>
                         {{-- <th width="">Season Code</th> --}}
-                        <th>GMTS Color</th>
+                        <th>Item Color</th>
                         <th width="">Size</th>
                         <th>Style</th>
                         <th>Sku</th>
@@ -157,7 +157,7 @@
                         <td>{{$values->erp_code}}</td>
                         <td>{{$values->item_description}}</td>
                         {{-- <td>{{$values->season_code}}</td> --}}
-                        <td>{{$values->gmts_color}}</td>
+                        <td>{{$values->other_colors}}</td>
                         <td>{{$values->item_size}}</td>
                         <td>{{$values->style}}</td>
                         <td>{{$values->sku}}</td>

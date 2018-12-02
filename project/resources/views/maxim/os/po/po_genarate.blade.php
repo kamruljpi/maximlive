@@ -77,7 +77,7 @@
 									{{-- <th width="">Season Code</th> --}}
 									{{-- <th width="">Style</th> --}}
 									{{-- <th width="">sku</th> --}}
-									<th width="">GMTS Color</th>
+									<th width="">Item Color</th>
 									<th width="">Size</th>
 									<th width="">Quantity</th>
 									<th width="30%">Supplier Price</th>
@@ -97,14 +97,14 @@
 										<td>{{$values->item_code}}</td>
 										<td>{{$values->erp_code}}</td>
 										<td>{{$values->item_description}}</td>
-										<td>{{$values->gmts_color}}</td>
+										<td>{{$values->other_colors}}</td>
 										<td>{{$values->item_size}}</td>
 										<td>{{$values->mrf_quantity}}</td>
 										<td>
 											<input type="text" name="supplier_price[]" class="form-control" value="{{$values->item_price->supplier_price}}" readonly="true">
 										</td>
 										<td>
-											<input id="material" class="form-control " type="text" name="material[]" placeholder="Material">
+											<input id="material" class="form-control " type="text" name="material[]" placeholder="Material" value="{{$values->material}}">
 										</td>
 									</tr>
 								@endforeach

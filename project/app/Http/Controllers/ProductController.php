@@ -188,7 +188,11 @@ class ProductController extends Controller
     }
 
     Public function addProduct(Request $request){
-        $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;
+        $item_size_width_height = '';
+        if(isset($request->item_size_width) && isset($request->item_size_height) && !empty($request->item_size_width) && !empty($request->item_size_height)){
+            $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;            
+        }
+
     	$roleManage = new RoleManagement();
 
         $validMessages = [
@@ -237,7 +241,8 @@ class ProductController extends Controller
         $createProduct->user_id = Auth::user()->user_id;
         $createProduct->status = $request->is_active;
         $createProduct->id_buyer = $request->id_buyer;
-        $createProduct->others_color = $request->others_color;
+        $createProduct->other_colors = isset($request->other_colors) ? $request->other_colors :'';
+        $createProduct->material = isset($request->material) ? $request->material :'';
         $createProduct->item_size_width_height = $item_size_width_height;
     	$createProduct->action = self::CREATE_PRODUCT;
     	$createProduct->save();
@@ -286,9 +291,15 @@ class ProductController extends Controller
     }
 
     public function updateProduct(Request $request){        
-        $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;
+        $item_size_width_height = '';
+        if(isset($request->item_size_width) && isset($request->item_size_height) && !empty($request->item_size_width) && !empty($request->item_size_height)){
+            $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;            
+        }
+
         $this->addVendorPrice($request, $request->product_id);
+
         SupplierController::updateProductPrice($request);
+        
     	$roleManage = new RoleManagement();
 
         $validMessages = [
@@ -332,7 +343,8 @@ class ProductController extends Controller
         $updateProduct->user_id = Auth::user()->user_id;
         $updateProduct->status = $request->is_active;
         $updateProduct->id_buyer = $request->id_buyer;
-        $updateProduct->others_color = $request->others_color;
+        $updateProduct->other_colors = isset($request->other_colors) ? $request->other_colors :'';
+        $updateProduct->material = isset($request->material) ? $request->material :'';
     	$updateProduct->item_size_width_height = $item_size_width_height;
         $updateProduct->action = self::UPDATE_PRODUCT;
     	$updateProduct->save();

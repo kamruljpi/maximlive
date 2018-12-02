@@ -30,6 +30,7 @@ class ItemSearchController extends Controller
                     '<td>' .$product->erp_code. '</td>' .
                     '<td>' .$product->product_description. '</td>' .
                     '<td>' .$product->unit_price. '</td>' .
+                    '<td>' .((!empty($product->item_size_width_height))?$product->item_size_width_height.' mm' :''). '</td>' .
                     '<td>' .$product->size. '</td>' .
                     '<td>' .$product->gmts_color. '</td>' .
                     '<td>' .(($product->status == 1)? 'Active' : 'Inactive').'</td>'.
@@ -41,7 +42,7 @@ class ItemSearchController extends Controller
                 }
             }else{
                 $output .= '<tr>' .
-                    '<td align="center" colspan="12">' .'No Item Found'. '</td>'.
+                    '<td align="center" colspan="13">' .'No Item Found'. '</td>'.
                     '</tr>';
             }
         }

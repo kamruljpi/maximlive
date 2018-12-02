@@ -49,7 +49,7 @@ class BookingListController extends Controller
             $booking->ipo = MxpIpo::where([['booking_order_id',$booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mxp_ipo.ipo_status','mu.first_name','mu.middle_name','mu.last_name')->first();
 
             $booking->po = MxpIpo::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
-            $booking->bookingDetails = MxpBooking::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'))->first();
+            $booking->bookingDetails = MxpBooking::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'),'shipmentDate')->first();
         }
         return view('maxim.booking_list.booking_list_page',compact('bookingList'));
     }
@@ -131,13 +131,13 @@ class BookingListController extends Controller
 
                 foreach ($booking->itemLists as &$itemListssvalue) {
 
-                    $itemListssvalue->pi = MxpPi::select(DB::Raw('GROUP_CONCAT(p_id) as p_ids'))->where([['job_no',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_no')->first();   
+                    $itemListssvalue->pi = MxpPi::select(DB::Raw('GROUP_CONCAT(DISTINCT p_id SEPARATOR ", ") as p_ids'))->where([['job_no',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_no')->first();   
 
-                    $itemListssvalue->challan = MxpMultipleChallan::select('mxp_multiplechallan.*',DB::Raw('GROUP_CONCAT(challan_id) as challan_ids'))->where([['job_id',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_id')->first();
+                    $itemListssvalue->challan = MxpMultipleChallan::select('mxp_multiplechallan.*',DB::Raw('GROUP_CONCAT(DISTINCT challan_id SEPARATOR ", ") as challan_ids'))->where([['job_id',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_id')->first();
 
-                    $itemListssvalue->mrf = MxpMrf::select(DB::Raw('GROUP_CONCAT(mrf_id) as mrf_ids'),'mrf_status','job_id_current_status')->where([['job_id',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_id')->first();
+                    $itemListssvalue->mrf = MxpMrf::select(DB::Raw('GROUP_CONCAT(DISTINCT mrf_id SEPARATOR ", ") as mrf_ids'),'mrf_status','job_id_current_status')->where([['job_id',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_id')->first();
 
-                    $itemListssvalue->ipo = MxpIpo::select(DB::Raw('GROUP_CONCAT(ipo_id) as ipo_ids'),'ipo_status')->where([['job_id',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_id')->first();
+                    $itemListssvalue->ipo = MxpIpo::select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_ids'),'ipo_status')->where([['job_id',$itemListssvalue->id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('job_id')->first();
                 }
             }
         }

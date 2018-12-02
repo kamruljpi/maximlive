@@ -46,7 +46,7 @@ class PoController extends Controller
 			foreach ($request->job_id as $keyvalues) {
 				$jobid_values[] = MxpMrf::join('mxp_product as mp','mp.product_code','mxp_mrf_table.item_code')
 						->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
-						->select('mxp_mrf_table.*','mp.product_id','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style')
+						->select('mxp_mrf_table.*','mp.product_id','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','other_colors','material')
 						->where([
 							['job_id',$keyvalues],
 							['job_id_current_status',MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT]

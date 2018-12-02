@@ -137,7 +137,7 @@
 			<tr>
 				<td colspan="2">
 					<div class="pull-right">
-						<p>Checking No : {{$poDetails[0]->mrf_id}}</p>
+						<p>MRF No : {{$poDetails[0]->mrf_id}}</p>
 					</div>
 				</td>
 			</tr>	

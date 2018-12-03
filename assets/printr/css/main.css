@@ -125,6 +125,7 @@ ul li {
     table th#erp_code {
       min-width: 190px !important;
     }
+     .fixed_footer {page-break-before: always;}
 }
 #pfooter {
   border: 1px solid #6d6d6d;

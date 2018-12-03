@@ -71,9 +71,9 @@
 	        	<th>Color</th>
 	        	<th width="10%">Size</th>
 	        	<th width="10%">TOTAL PCS/MTR</th>
-	        	<th width="10%">Initial Incrise(%)</th>
-	        	<th width="10%">Incrise(%) Qty</th>
-	        	<th>1ST DELIVERY</th>
+	        	<th width="10%">Initial Increase(%)</th>
+	        	<th width="10%">Increase(%) Qty</th>
+	        	<th>1st Delivery</th>
 	            <th >Request Date</th>
 	            <th>Confirmation Date</th>
 	        </tr>
@@ -99,7 +99,7 @@
 		    		<td>{{$items}}</td>
 		    		<td id="item_quantitys">
 		    			<?php 
-		    				$p = round((($left_qty[$keys] * $increase)/100) + $left_qty[$keys]);
+		    				$p = round((($left_qty[$keys] * $increase)/100) + $left_qty[$keys])+1;
 		    			?>
 		    			<input style="" type="text" class="form-control item_quantity" name="product_qty[]" value="{{$left_qty[$keys]}}" >
 		    		</td>

@@ -257,7 +257,7 @@
 	</div>
 </div>
 
-<div class="row body-top">
+<div class="row body-top fixed_footer">
 	<div class="col-md-12 col-xs-12 body-list">
 		<ul>
 			<li>1. Shipment: BY COURIER/ CARGO</li>		

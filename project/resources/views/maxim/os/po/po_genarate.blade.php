@@ -80,17 +80,19 @@
 									<th width="">Item Color</th>
 									<th width="">Size</th>
 									<th width="">Quantity</th>
+									<th width="">Initial Increase(%)</th>
+									<th style="min-width: 100px;">Increase Qty</th>
 									<th width="30%">Supplier Price</th>
 									<th width="50%">Material</th>
 								</tr>
 							</thead>
 							<tbody>
-								@foreach($jobid_values as $values)
+								@foreach($jobid_values as $key => $values)
 								<?php 
 								    $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($values->job_id));
 								?>
 								<input type="hidden" name="job_id[]" value="{{$values->job_id}}">
-									<tr>
+									<tr class="ipo_increase_percentagess_{{$key}}">
 										<td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$idstrcount) }}{{$values->job_id}}</td>
 										<td>{{$values->oos_number}}</td>
 										<td>{{$values->poCatNo}}</td>
@@ -99,7 +101,19 @@
 										<td>{{$values->item_description}}</td>
 										<td>{{$values->other_colors}}</td>
 										<td>{{$values->item_size}}</td>
-										<td>{{$values->mrf_quantity}}</td>
+										<td id="mrf_quantity">
+											<input style="" type="text" class="form-control mrf_quantity hidden" name="mrf_qty[]" value="{{ $values->mrf_quantity }}" >
+											{{ $values->mrf_quantity }}
+										</td>
+										<td>
+											<input type="text" name="po_increase_percentage[]" value="{{$increase_value}}" placeholder="Percentage" class="form-control" maxlength="3">
+										</td>
+										<td> 
+											<?php
+												$increase_qty = round((($values->mrf_quantity * $increase_value)/100) + $values->mrf_quantity)+1;
+											?>
+											<input type="text" name="increase_qtys[]" class="form-control " readonly="true" value="{{$increase_qty}}" >
+										</td>
 										<td>
 											<input type="text" name="supplier_price[]" class="form-control" value="{{$values->item_price->supplier_price}}" readonly="true">
 										</td>
@@ -137,4 +151,32 @@
 @section('LoadScript')
   <script type="text/javascript" src="{{ asset('assets/scripts/date_compare/custom.js') }}"></script>
   <script type="text/javascript" src="{{ asset('assets/scripts/date_compare/booking.js') }}"></script>
+
+  <script type="text/javascript">
+  	
+  	$('input[name="po_increase_percentage[]"]').on("keyup",function () {
+  		
+  		var qty = parseFloat($('input[name="mrf_qty[]"]').val());
+
+  		var increase = ($(this).val() != '')? $(this).val() : 0;
+
+  		if(increase != 0 &&!$.isNumeric(increase)){
+  			alert("Enter integer value.");
+  			return false;
+  		}
+  		if(increase >100){
+  			alert("you cann't enter over 100%.");
+  			$(this).val(" ");
+  			increase = ($(this).val() != '')? $(this).val() : 0;
+  		}
+  		var increase_qty = ((qty * increase)/100) + qty;
+  		increase_qty = Math.round((increase_qty));
+
+  		var parentClass = $(this).parent().parent().prop('className');
+  		$('.'+parentClass).find('input[name="increase_qtys[]"]').val(' ');
+  		$('.'+parentClass).find('input[name="increase_qtys[]"]').val(increase_qty);
+  	});
+
+  </script>
+
 @stop

@@ -65,8 +65,8 @@
                 <input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer Name" id="buyer_name_search">
             </div>
             <div class="col-sm-3">
-                <label class="col-sm-12 label-control">Vendor Name</label>
-                <input type="text" name="company_name_search" class="form-control" placeholder="Vendor Name" id="company_name_search">
+                <label class="col-sm-12 label-control">Supplier Name</label>
+                <input type="text" name="supplier_name_search" class="form-control" placeholder="Supplier Name" id="supplier_name_search">
             </div>
             <!-- <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Attention</label>

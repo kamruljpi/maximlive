@@ -186,6 +186,9 @@
             </table>
 
             <div class="form-group">
+                <div class="col-sm-2">
+                    <input type="text" name="po_increase" class="form-control po_increase_field" id="po_increase" placeholder="Increase value">
+                </div>
                 <div class="col-sm-2 pull-right">
                     <button class="btn btn-success form-control abc"> Submit</button>
                 </div>

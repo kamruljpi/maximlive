@@ -15,12 +15,12 @@ class PoListController extends controller
 {
 	public function opListView(){
 		$poList = MxpOsPo::join('mxp_mrf_table as mmt', 'mmt.mrf_id','mxp_os_po.mrf_id')
-			->select('mxp_os_po.*','mmt.booking_order_id')
+			->join('suppliers as sp', 'sp.supplier_id', 'mxp_os_po.supplier_id')
+			->select('mxp_os_po.*','mmt.booking_order_id','sp.name')
 			->where('mxp_os_po.is_deleted',BookingFulgs::IS_NOT_DELETED)
             ->orderBy('.mxp_os_po.po_id','DESC')
             ->groupBy('mxp_os_po.po_id')
-			->paginate(20);
-
+			->paginate(20);	
 		return view('maxim.os.po.list.po_list',compact('poList'));
 	}
 

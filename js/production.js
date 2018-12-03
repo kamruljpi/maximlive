@@ -1,11 +1,19 @@
 $('#booking_advanc_search').on('click',function (ev)
 {
-    displaySetup("#booking_simple_search_form", "#advance_search_form");
+    // displaySetup("#booking_simple_search_form", "#advance_search_form");
+    $('.advance_form').removeClass('hidden');
+    $('#booking_simple_search_btn').removeClass('hidden');
+    $('#booking_advanc_search').hide();
+    $('#booking_simple_search_form').hide();
 });
 
 $('#booking_simple_search_btn').on('click',function (ev)
 {
-    displaySetup("#advance_search_form", "#booking_simple_search_form");
+    // displaySetup("#advance_search_form", "#booking_simple_search_form");
+    $('.advance_form').addClass('hidden');
+    $('#booking_simple_search_btn').addClass('hidden');
+    $('#booking_advanc_search').show();
+    $('#booking_simple_search_form').show();
 });
 
 $("#booking_simple_search").click(function ()

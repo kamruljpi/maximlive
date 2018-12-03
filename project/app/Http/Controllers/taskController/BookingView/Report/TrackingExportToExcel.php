@@ -30,7 +30,7 @@ class TrackingExportToExcel extends Controller
             }
         }
         $today = Carbon\Carbon::today()->format('d-m-y');
-        $this->excel->create('Tracking Report- '.$today ,function($excel) use ($data){
+        $this->excel->create($today.'-Tracking Report' ,function($excel) use ($data){
             $excel->sheet('Sheet 1',function($sheet) use ($data){
                 $sheet->setColumnFormat(array(
                     'B' =>  \PHPExcel_Style_NumberFormat::FORMAT_TEXT,

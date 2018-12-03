@@ -60,6 +60,11 @@ Route::group(
         'uses'=>'taskController\BookingListController@getbookingListAdvanceSearch_'
     ));
 
+    Route::any('booking/advance/search/list', array(
+        'as'=>'booking_advance_search_list',
+        'uses'=>'taskController\BookingListController@getAdvanceSearchBookingList'
+    ));
+
     Route::get('/challan_list_by_challan_id/', array(
         'as'=>'challan_list_view_by_challan_id',
         'uses'=>'taskController\ChallanListController@getChallanListByChallanId'

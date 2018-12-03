@@ -3,7 +3,7 @@
 @section('section')
 <?php 
 //	 print_r("<pre>");
-//	 print_r($bookingList[0]->itemLists);
+//	 print_r($bookingList);
 //	 print_r("</pre>");
 ?>
 <?php
@@ -31,55 +31,60 @@
     @endif
     
 <button class="btn btn-warning" type="button" id="booking_reset_btn">Reset</button>
+    
 <div id="booking_simple_search_form">
-	<div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
-		<input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking No." id="booking_id_search">
-		<button class="btn btn-info click_preloder" type="button" id="booking_simple_search_report">Search</button>
-	</div>
-	<button class="btn btn-primary " type="button" id="booking_advanc_search">Advance Search</button>
+    <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
+        <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking No." id="booking_id_search">
+        <button class="btn btn-info click_preloder" type="button" id="booking_simple_search_report">Search</button>
+    </div>
+    <button class="btn btn-primary " type="button" id="booking_advanc_search">Advance Search</button>
 </div>
 <div>
-	<form id="advance_search_form"  style="display: none" method="post">
-		<input type="hidden" name="_token" value="{{ csrf_token() }}">
-		<div class="col-sm-12">
-			<div class="col-sm-3">
-				<label class="col-sm-12 label-control">Order Date From</label>
-				<input type="date" name="from_oder_date_search" class="form-control" id="from_oder_date_search">
-			</div>
-			<div class="col-sm-3">
-				<label class="col-sm-12 label-control">Order Date To</label>
-				<input type="date" name="to_oder_date_search" class="form-control" id="to_oder_date_search">
-			</div>
-			<div class="col-sm-3">
-				<label class="col-sm-12 label-control">Shipment Date From</label>
-				<input type="date" name="from_shipment_date_search" class="form-control" id="from_shipment_date_search">
-			</div>
-			<div class="col-sm-3">
-				<label class="col-sm-12 label-control">Shipment Date To</label>
-				<input type="date" name="to_shipment_date_search" class="form-control" id="to_shipment_date_search">
-			</div>
-		</div>
-		<div class="col-sm-12">
-			<div class="col-sm-3">
-				<label class="col-sm-12 label-control">Buyer Name</label>
-				<input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer Name" id="buyer_name_search">
-			</div>
-			<div class="col-sm-3">
-				<label class="col-sm-12 label-control">Vendor Name</label>
-				<input type="text" name="company_name_search" class="form-control" placeholder="Vendor Name" id="company_name_search">
-			</div>
-			<!-- <div class="col-sm-3">
-				<label class="col-sm-12 label-control">Attention</label>
-				<input type="text" name="attention_search" class="form-control" placeholder="Attention search" id="attention_search">
-			</div> -->
-			<br>
-			<div class="col-sm-3">
-				<input class="btn btn-info click_preloder" type="submit" value="Search" name="booking_advanceSearch_btn" id="booking_advanceSearch_btn">
-			</div>
-		</div>
-		<button class="btn btn-primary" type="button" id="booking_simple_search_btn">Simple Search</button>
-	</form>
+
+    <form action="{{Route('booking_advance_search_list')}}" method="POST" class="hidden advance_form">
+        {{csrf_field()}}
+
+        <div class="col-sm-12">
+            <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Order Date From</label>
+                <input type="date" name="from_oder_date_search" class="form-control" id="from_oder_date_search">
+            </div>
+            <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Order Date To</label>
+                <input type="date" name="to_oder_date_search" class="form-control" id="to_oder_date_search">
+            </div>
+            <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Shipment Date From</label>
+                <input type="date" name="from_shipment_date_search" class="form-control" id="from_shipment_date_search">
+            </div>
+            <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Shipment Date To</label>
+                <input type="date" name="to_shipment_date_search" class="form-control" id="to_shipment_date_search">
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Buyer Name</label>
+                <input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer Name" id="buyer_name_search">
+            </div>
+            <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Vendor Name</label>
+                <input type="text" name="company_name_search" class="form-control" placeholder="Vendor Name" id="company_name_search">
+            </div>
+            <!-- <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Attention</label>
+                <input type="text" name="attention_search" class="form-control" placeholder="Attention search" id="attention_search">
+            </div> -->
+            <br>
+            <div class="col-sm-3">
+                {{-- <input class="btn btn-info click_preloder" type="submit" value="Search" name="booking_advanceSearch_btn"> --}}
+                <button type="submit" class="btn btn-info form-control">Search</button>
+            </div>
+        </div>       
+    </form>
+        <button class="btn btn-primary hidden" type="button" id="booking_simple_search_btn">Simple Search</button>
 </div>
+
 <br>
 <div class="booking_report_details_view" id="booking_report_details_view"></div>
 
@@ -123,8 +128,14 @@
                     ?>
                     <tbody id="booking_list_tbody">
                         @foreach($bookingList as $value)
+
                             <?php $TotalAmount = 0; ?>
                             @foreach($value->itemLists as $valuelist)
+                            <?php 
+                                 //print_r("<pre>");
+                                 //print_r($valuelist);
+                                 //print_r("</pre>");
+                            ?>
                                 <?php
                                     $idstrcount = (8 - strlen($valuelist->id));
                                     $fullTotalAmount += $valuelist->item_quantity*$valuelist->item_price;
@@ -193,13 +204,13 @@
 
                                     <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
                                     <td><input name="item_quantity[]" value="{{$valuelist->item_quantity}}" hidden>{{$valuelist->item_quantity}}</td>
-                                    <td><input name="item_price[]" value="{{$valuelist->item_price}}" hidden>${{$valuelist->item_price}}</td>
+                                    <td><input name="item_price[]" value="{{$valuelist->item_price}}" hidden>{{(strtolower($valuelist->item_price) != 'n/a'? '$'.$valuelist->item_price : $valuelist->item_price)}}</td>
                                     <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$valuelist->item_price }}" hidden>${{ $valuelist->item_quantity*$valuelist->item_price }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
                         <tr>
-                            <td colspan="17"></td>
+                            <td colspan="20"></td>
                             <td colspan="2"><strong style="font-size: 12px;">Total Price:</strong></td>
                             <td><strong><input name="total" value="{{ round($fullTotalAmount,2) }}" hidden>${{ round($fullTotalAmount,2) }}</strong></td>
                         </tr>

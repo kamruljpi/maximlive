@@ -146,6 +146,8 @@ Route::group(
             'uses' => 'UserProfileController@profileUpdate',
         ]);
 
+        Route::get('/notifications', 'NotificationController@getAllNotificationView')->name('getNotification');
+
         Route::group(['middleware' => 'routeAccess'], function () {
             Route::group(['prefix' => 'super-admin'], function () {
 

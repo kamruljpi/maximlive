@@ -2,6 +2,7 @@
 @section('body')
 <?php 
     use App\Http\Controllers\Source\User\RoleDefine;
+    use App\Notification;
     $object = new RoleDefine();
     $csRoleCheck = $object->getRole('Customer');
 ?>
@@ -23,8 +24,8 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <div class="hidden">
-                <li class="dropdown ">
+                <div class="">
+                {{-- <li class="dropdown ">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
@@ -156,69 +157,78 @@
                         </li>
                     </ul>
                     <!-- /.dropdown-tasks -->
-                </li>
+                </li> --}}
                 <!-- /.dropdown -->
+                 <style type="text/css">
+                    .badge-notify{
+                       background:red;
+                       position:relative;
+                       top: -14px;
+                       left: -43px;
+                      }
+                </style>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
+                    <span class="badge badge-notify" id="badge"></span>
+                    
                     <ul class="dropdown-menu dropdown-alerts">
+               
+                        <?php
+                            $i=0;
+                            $k= 0;
+                            ?>
+                        @foreach($notification as $key => $nots)
+                            
+                            <li>
+
+                                @if($nots[$i])
+                                    <a href="
+                                        @if( $nots[$i]->type == Notification::CREATE_BOOKING )
+                                            {{ Route('booking_list_details_view',['booking_id' => $nots[$i]->type_id]) }}
+                                        @elseif($nots[$i]->type == Notification::CREATE_MRF )
+                                            {{ Route('os_mrf_details_view',['mid' => $nots[$i]->type_id]) }}
+                                        @elseif($nots[$i]->type == Notification::CREATE_SPO )
+                                             # 
+                                        @else 
+                                             # 
+                                        @endif
+                                    ">
+                                        <div style="font-size: 12px">
+                                            {{ $nots[$i]->type_id }} Created 
+                                            <span class="pull-right text-muted small">{{ $nots[$i]->created_at->diffForHumans() }}</span>
+                                        </div>
+                                    </a>
+                                    <?php $j=1; $k++;?>
+
+                                    @else
+                                        
+                                        <?php $j=0; ?>
+                                    @endif
+                            </li>
+                            
+                            <li class="divider"></li>
+                            <?php
+                            $i++;
+
+                            ?>
+                            
+                        @endforeach
+                            
+                        @if($j == 1)    
                         <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-comment fa-fw"></i> New Comment
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                    <span class="pull-right text-muted small">12 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-tasks fa-fw"></i> New Task
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
+                            <a class="text-center" href="{{ Route('getNotification') }}">
                                 <strong>See All Alerts</strong>
                                 <i class="fa fa-angle-right"></i>
+                                <input type="text" name="badge" value="{{ $k++ }}" hidden>
                             </a>
                         </li>
+                        @else
+                        @endif
                     </ul>
                     <!-- /.dropdown-alerts -->
                 </li>
-            </div>
-                <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -254,6 +264,9 @@
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
+            </div>
+                <!-- /.dropdown -->
+                
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
@@ -372,5 +385,12 @@
     </div>
 @stop
 
-
+@section('LoadScript')
+    <script>
+    $(document).ready(function() {
+        var b = $('input[name=badge]').val();
+        $('#badge').text(b);
+    });
+    </script>
+@stop
 

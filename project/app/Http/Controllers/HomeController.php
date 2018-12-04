@@ -6,6 +6,8 @@ use DB;
 use Auth;
 use App\MxpTaskRole;
 use App\userbuyer;
+use App\Http\Controllers\Source\User\RoleDefine;
+use App\Http\Controllers\NotificationController;
 
 class HomeController extends Controller {
 	/**
@@ -110,6 +112,9 @@ class HomeController extends Controller {
 		// 	$selectBuyer = [];
 		// }
 		$user = Auth::user();
-		return view('dashboard',compact('user'));
+
+		$notification = NotificationController::getAllNotification($status=0);
+
+		return view('dashboard',compact('user','notification'));
 	}
 }

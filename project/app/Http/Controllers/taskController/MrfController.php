@@ -6,6 +6,7 @@ use App\Http\Controllers\dataget\ListGetController;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RoleManagement;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use App\Model\MxpBookingChallan;
 use App\Model\MxpMrf;
@@ -13,6 +14,7 @@ use Carbon\Carbon;
 use Validator;
 use Auth;
 use DB;
+use App\Notification;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
@@ -277,6 +279,8 @@ class MrfController extends Controller
             $insertMrfValue->save();
         }
       }
+      
+      NotificationController::postNotification(Notification::CREATE_MRF, $mrf_id);  
 
       return \Redirect::route('refresh_mrf_view', ['mrf_id' => $mrf_id,'booking' => $booking_order_id]);
       

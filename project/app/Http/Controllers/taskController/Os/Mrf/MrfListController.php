@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NotificationController;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\Os\MxpOsPo;
 use App\Model\MxpMrf;
@@ -65,6 +66,8 @@ class MrfListController extends Controller
             }
         }
         $suppliers = Supplier::where('status', 1)->where('is_delete', 0)->get();
+
+        NotificationController::updateSeenStatus($request->mid, Auth::user()->user_id);
         // $this->print_me($mrfDetails['po_details']);
         return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails','suppliers'));
     }

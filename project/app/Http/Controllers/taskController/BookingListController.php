@@ -7,6 +7,7 @@ use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\taskController\BookingController;
 use App\Http\Controllers\RoleManagement;
+use App\Http\Controllers\NotificationController;
 use App\Model\BookingFile;
 use App\Model\MxpBooking;
 use App\Model\MxpMultipleChallan;
@@ -721,6 +722,9 @@ class BookingListController extends Controller
         $leftBook = count($bookingDetails->bookings_challan_table) - $count;
         $booking_objects = new source();
         $bookingDetails->prepared_by = $booking_objects->getUserDetails($request->booking_id);
+
+
+        NotificationController::updateSeenStatus($type_id = $request->booking_id, Auth::user()->user_id);
 
         return view('maxim.booking_list.booking_View_Details',
                     [

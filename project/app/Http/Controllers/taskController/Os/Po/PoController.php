@@ -7,12 +7,14 @@ use App\Http\Controllers\taskController\Flugs\LastActionFlugs;
 use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NotificationController;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\Os\MxpOsPo;
 use App\MxpSupplierPrice;
 use App\Model\MxpMrf;
 use Carbon\Carbon;
 use App\Supplier;
+use App\Notification;
 use Auth;
 use DB;
 
@@ -129,6 +131,9 @@ class PoController extends Controller
 				]);
 			}
 		}
+
+		$postNotification = NotificationController::postNotification(Notification::CREATE_SPO, $po_id);
+
 		return \Redirect::route('refresh_os_po_view',['pid' => $po_id]);
 	}
 

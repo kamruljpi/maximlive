@@ -370,6 +370,17 @@
             <!-- /#page-wrapper -->
         </div>
     </div>
+    <!-- Footer -->
+    <footer style="padding: 10px 0;background:#222d32;color:#fff;">
+
+          <!-- Copyright -->
+        <div class="text-center">Copyright© 2018,All Right Reserved – by <a href="#">MAXIM</a><br> 
+            Powered by <a href="http://maxproit.solutions/"> maxproIT.solutions</a>
+        </div>
+          <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
 @stop
 
 

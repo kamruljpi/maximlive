@@ -50,9 +50,15 @@ Route::group(
         'as'=>'booking_list_view_by_search',
         'uses'=>'taskController\BookingListController@getBookingListBySearch'
     ));
+    
     Route::post('/booking_list_book_search/', array(
         'as'=>'booking_list_view_book_search',
         'uses'=>'taskController\BookingListController@getBookingListbookSearch'
+    ));
+
+    Route::any('planning/advance/search/list', array(
+        'as'=>'planning_advance_search_list',
+        'uses'=>'taskController\BookingListController@getAdvanceSearchPlanningList'
     ));
 
     Route::post('/booking_list_advance_search_/', array(

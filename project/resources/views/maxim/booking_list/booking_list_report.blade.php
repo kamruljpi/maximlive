@@ -30,46 +30,48 @@
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_booking_data') ))
     @endif
     
-<button class="btn btn-warning" type="button" id="booking_reset_btn">Reset</button>
-    
 <div id="booking_simple_search_form">
     <div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
-        <input type="text" name="bookIdSearchFld" class="form-control" placeholder="Booking No." id="booking_id_search">
-        <button class="btn btn-info click_preloder" type="button" id="booking_simple_search_report">Search</button>
+        <form action="{{Route('booking_advance_search_list')}}" method="POST">
+            {{csrf_field()}}
+            <input type="text" name="booking_id" class="form-control" placeholder="Booking No." value="{{$inputArray['booking_id']}}">
+            <button class="btn btn-info " type="submit">Search</button>
+        </form>
     </div>
     <button class="btn btn-primary " type="button" id="booking_advanc_search">Advance Search</button>
+    <a href="{{Route('booking_list_report')}}" class="btn btn-warning">Reset</a>
 </div>
-<div>
 
+<div>
     <form action="{{Route('booking_advance_search_list')}}" method="POST" class="hidden advance_form">
         {{csrf_field()}}
 
         <div class="col-sm-12">
             <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Order Date From</label>
-                <input type="date" name="from_oder_date_search" class="form-control" id="from_oder_date_search">
+                <input type="date" name="from_oder_date_search" class="form-control" id="from_oder_date_search" value="{{$inputArray['from_oder_date']}}">
             </div>
             <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Order Date To</label>
-                <input type="date" name="to_oder_date_search" class="form-control" id="to_oder_date_search">
+                <input type="date" name="to_oder_date_search" class="form-control" id="to_oder_date_search" value="{{$inputArray['to_oder_date']}}">
             </div>
             <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Shipment Date From</label>
-                <input type="date" name="from_shipment_date_search" class="form-control" id="from_shipment_date_search">
+                <input type="date" name="from_shipment_date_search" class="form-control" id="from_shipment_date_search" value="{{$inputArray['from_shipment_date']}}">
             </div>
             <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Shipment Date To</label>
-                <input type="date" name="to_shipment_date_search" class="form-control" id="to_shipment_date_search">
+                <input type="date" name="to_shipment_date_search" class="form-control" id="to_shipment_date_search" value="{{$inputArray['to_shipment_date']}}">
             </div>
         </div>
         <div class="col-sm-12">
             <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Buyer Name</label>
-                <input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer Name" id="buyer_name_search">
+                <input type="text" name="buyer_name_search" class="form-control" placeholder="Buyer Name" id="buyer_name_search" value="{{$inputArray['buyer_name']}}">
             </div>
             <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Vendor Name</label>
-                <input type="text" name="company_name_search" class="form-control" placeholder="Vendor Name" id="company_name_search">
+                <input type="text" name="company_name_search" class="form-control" placeholder="Vendor Name" id="company_name_search" value="{{$inputArray['company_name']}}">
             </div>
             <!-- <div class="col-sm-3">
                 <label class="col-sm-12 label-control">Attention</label>
@@ -82,10 +84,16 @@
             </div>
         </div>       
     </form>
-        <button class="btn btn-primary hidden" type="button" id="booking_simple_search_btn">Simple Search</button>
+
+    <div class="hidden" id="booking_simple_search_btn">
+        <button class="btn btn-primary" type="button" id="">Simple Search</button>
+
+        <a href="{{Route('booking_list_report')}}" class="btn btn-warning">Reset</a>
+    </div>
 </div>
 
 <br>
+
 <div class="booking_report_details_view" id="booking_report_details_view"></div>
 
 <div class="row">
@@ -230,4 +238,17 @@
         </form>
     </div>
 </div>
+@endsection
+@section('LoadScript')
+
+    @if(!empty($inputArray['buyer_name'])  || !empty($inputArray['company_name']) || !empty($inputArray['from_oder_date']) || !empty($inputArray['to_oder_date']) || !empty($inputArray['from_shipment_date']) || !empty($inputArray['to_shipment_date']))
+
+        <script type="text/javascript">
+            $('.advance_form').removeClass('hidden');
+            $('#booking_simple_search_btn').removeClass('hidden');
+            $('#booking_advanc_search').hide();
+            $('#booking_simple_search_form').hide();    
+        </script>
+
+    @endif
 @endsection

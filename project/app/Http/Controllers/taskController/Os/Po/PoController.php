@@ -118,7 +118,9 @@ class PoController extends Controller
 					 	'initial_increase' => $datasValue['initial_increase'],
 					 	'order_date' => Carbon::today()->format('Y-m-d'),
 					 	'shipment_date' => $shipment_date,
-					 	'last_action_at' => LastActionFlugs::CREATE_ACTION
+					 	'last_action_at' => LastActionFlugs::CREATE_ACTION,
+					 	'created_at' => Carbon::today(),
+					 	'updated_at' => Carbon::today()
 				 	]
 				 );
 

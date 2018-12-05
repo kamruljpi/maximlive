@@ -1,5 +1,6 @@
 @extends('layouts.dashboard')
 @section('page_heading',$taskType)
+@section('page_heading_right',  Carbon\Carbon::now()->format('d-m-Y'))
 @section('section')
   <?php 
     $general = 'Create Booking';
@@ -10,6 +11,7 @@
       background-color: #f9f9f9;
       padding:5px 0px 5px 10px;
       border-radius: 7px;
+      clear: both;
     }
 
     .btn-file {

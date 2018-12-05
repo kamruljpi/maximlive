@@ -46,4 +46,41 @@ class PiListController extends Controller
 
 		return view('maxim.pi_format.piReportPage', compact('companyInfo', 'bookingDetails', 'footerData','buyerDetails','is_type','getUserDetails'));
 	}
+
+	/**
+	 *
+	 *	@return PI list view page
+	 */
+
+	public function piSearch(Request $request) {
+
+		$p_id = isset($request->p_id) ? $request->p_id : '' ;
+		$piDetails = $this->piSearchById($p_id);
+
+		return view('maxim.pi_format.list.pi_list',compact('piDetails'));
+	}
+
+	/**
+	 * @param p_id get a id
+	 *
+	 * @return array()
+	 */
+
+	public function piSearchById($p_id) {
+
+		$pi_value = [] ;
+
+		if(!empty($p_id)) {
+			$pi_value = MxpPi::orderBy('id','DESC')
+				->select('*',DB::Raw('GROUP_CONCAT(DISTINCT booking_order_id) as booking_order_id'))
+	            ->where([
+	            	['is_deleted','0'],
+	            	['p_id','like','%'.$p_id.'%'],
+	            ])
+				->groupBy('p_id')
+				->paginate(20);
+		}
+
+		return $pi_value;
+	}
 }

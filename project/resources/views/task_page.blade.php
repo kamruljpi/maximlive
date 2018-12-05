@@ -1,6 +1,4 @@
 @extends('layouts.dashboard')
-{{-- @section('page_heading',trans('others.task_label')) --}}
-@section('page_heading','')
 @section('section')
     @if(Session::has('empty_booking_data'))
         @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('empty_booking_data') ))

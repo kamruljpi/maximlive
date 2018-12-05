@@ -162,7 +162,8 @@ class BookingListController extends Controller
             'from_oder_date' => isset($request->from_oder_date_search) ? $request->from_oder_date_search : '',
             'to_oder_date' => isset($request->to_oder_date_search) ? $request->to_oder_date_search : '',
             'from_shipment_date' => isset($request->from_shipment_date_search) ? $request->from_shipment_date_search : '',
-            'to_shipment_date' => isset($request->to_shipment_date_search) ? $request->to_shipment_date_search : ''
+            'to_shipment_date' => isset($request->to_shipment_date_search) ? $request->to_shipment_date_search : '',
+            'po_cat_no' => isset($request->po_cat_no) ? $request->po_cat_no : ''
         ];
 
         $bookingList = $this->filterBookingAdvanceSearch ($request);
@@ -184,7 +185,8 @@ class BookingListController extends Controller
             'from_oder_date' => isset($request->from_oder_date_search) ? $request->from_oder_date_search : '',
             'to_oder_date' => isset($request->to_oder_date_search) ? $request->to_oder_date_search : '',
             'from_shipment_date' => isset($request->from_shipment_date_search) ? $request->from_shipment_date_search : '',
-            'to_shipment_date' => isset($request->to_shipment_date_search) ? $request->to_shipment_date_search : ''
+            'to_shipment_date' => isset($request->to_shipment_date_search) ? $request->to_shipment_date_search : '',
+            'po_cat_no' => isset($request->po_cat_no) ? $request->po_cat_no : ''
         ];
 
         $bookingList = $this->filterBookingAdvanceSearch ($request);
@@ -209,18 +211,19 @@ class BookingListController extends Controller
         $to_oder_date = isset($request->to_oder_date_search) ? $request->to_oder_date_search : '';
         $from_shipment_date = isset($request->from_shipment_date_search) ? $request->from_shipment_date_search : '';
         $to_shipment_date = isset($request->to_shipment_date_search) ? $request->to_shipment_date_search : '';
+        $po_cat_no = isset($request->po_cat_no) ? $request->po_cat_no : '';
 
         $bookingLists = DB::table('mxp_bookingbuyer_details')
                 ->where([
-                    ['is_complete', BookingFulgs::IS_COMPLETE],
-                    ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+                    ['mxp_bookingbuyer_details.is_complete', BookingFulgs::IS_COMPLETE],
+                    ['mxp_bookingbuyer_details.is_deleted',BookingFulgs::IS_NOT_DELETED]
                 ])
-                ->orderBy('id','DESC');
+                ->orderBy('mxp_bookingbuyer_details.id','DESC');
 
         $checkValidation = false;
 
         /* only booking_id input value*/
-        if (!empty($booking_id) && empty($buyer_name) && empty($company_name) && empty($attention) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date)) {
+        if (!empty($booking_id) && empty($buyer_name) && empty($company_name) && empty($attention) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -229,7 +232,7 @@ class BookingListController extends Controller
                 ->setPath('list?booking_id='.$booking_id);
 
         /* only buyer_name_search input value*/
-        } else if ($request->buyer_name_search != '' && empty($company_name) && empty($attention) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date)) {
+        } else if ($request->buyer_name_search != '' && empty($company_name) && empty($attention) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -238,7 +241,7 @@ class BookingListController extends Controller
                 ->setPath('list?buyer_name_search='.$request->buyer_name_search);
 
         /* only company_name_search input value */
-        } else if($request->company_name_search != '' && empty($buyer_name) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date)) {
+        } else if($request->company_name_search != '' && empty($buyer_name) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -246,8 +249,19 @@ class BookingListController extends Controller
                 ->paginate(20)
                 ->setPath('list?company_name_search='.$request->company_name_search);
 
+        /* only po_cat_no input value */
+        } else if(!empty($po_cat_no) && empty($buyer_name) && empty($company_name) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($attention)) {
+
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                ->where('mb.poCatNo',$po_cat_no)
+                ->orderBy('mb.id','ASC')
+                ->paginate(20)
+                ->setPath('list?po_cat_no='.$po_cat_no);
+
         /* only attention_search input value */
-        } else if($request->attention_search != '' && empty($buyer_name) && empty($company_name) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date)) {
+        } else if($request->attention_search != '' && empty($buyer_name) && empty($company_name) && empty($from_oder_date) && empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -256,7 +270,7 @@ class BookingListController extends Controller
                 ->setPath('list?attention_search='.$request->attention_search);
 
         /* only from_oder_date_search and to_oder_date_search input value */
-        } else if ($request->from_oder_date_search != '' && $request->to_oder_date_search != '' && empty($buyer_name) && empty($company_name) && empty($from_shipment_date) && empty($to_shipment_date)) {
+        } else if ($request->from_oder_date_search != '' && $request->to_oder_date_search != '' && empty($buyer_name) && empty($company_name) && empty($from_shipment_date) && empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -272,7 +286,7 @@ class BookingListController extends Controller
             }
 
         /* only buyer_name and company_name input value */
-        } else if (!empty($buyer_name) && !empty($company_name) && empty($from_shipment_date) && empty($to_shipment_date) && empty($from_oder_date) && empty($to_oder_date)) {
+        } else if (!empty($buyer_name) && !empty($company_name) && empty($from_shipment_date) && empty($to_shipment_date) && empty($from_oder_date) && empty($to_oder_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -283,7 +297,7 @@ class BookingListController extends Controller
                             .'&company_name_search='.$company_name);
 
         /* only from_shipment_date and from_shipment_date input value */
-        } else if (!empty($from_shipment_date) && !empty($to_shipment_date) && empty($buyer_name) && empty($company_name) && empty($from_oder_date) && empty($to_oder_date)) {
+        } else if (!empty($from_shipment_date) && !empty($to_shipment_date) && empty($buyer_name) && empty($company_name) && empty($from_oder_date) && empty($to_oder_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -302,7 +316,7 @@ class BookingListController extends Controller
             }
 
         /* only buyer_name, from_oder_date, and to_oder_date input value */
-        } else if (!empty($buyer_name) && !empty($from_oder_date) && !empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($company_name)) {
+        } else if (!empty($buyer_name) && !empty($from_oder_date) && !empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($company_name) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -314,8 +328,60 @@ class BookingListController extends Controller
                             .'&from_oder_date_search='.$from_oder_date
                             .'&to_oder_date_search='.$to_oder_date);
 
+        /* only po_cat_no, and buyer_name input value */
+        } else if (!empty($buyer_name) && empty($company_name) && !empty($po_cat_no) && empty($from_oder_date) && empty($to_oder_date) && empty($attention) && empty($from_shipment_date) && empty($to_shipment_date)) {
+            // $this->print_me("sss");
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->where('mxp_bookingbuyer_details.buyer_name','like','%'.$buyer_name.'%')
+                    ->paginate(20)
+                    ->setPath('list?po_cat_no='.$po_cat_no
+                            .'buyer_name_search='.$buyer_name);
+
+        /* only company_name, and po_cat_no input value */
+        } else if (empty($buyer_name) && !empty($company_name) && !empty($po_cat_no) && empty($from_oder_date) && empty($to_oder_date) && empty($attention) && empty($from_shipment_date) && empty($to_shipment_date)) {
+            
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->where('mxp_bookingbuyer_details.Company_name','like','%'.$company_name.'%')
+                    ->paginate(20)
+                    ->setPath('list?po_cat_no='.$po_cat_no
+                            .'company_name_search='.$company_name);
+
+        /* only buyer_name, company_name, and po_cat_no input value */
+        } else if (!empty($buyer_name) && !empty($company_name) && !empty($po_cat_no) && empty($from_oder_date) && empty($to_oder_date) && empty($attention) && empty($from_shipment_date) && empty($to_shipment_date)) {
+            
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->where('mxp_bookingbuyer_details.buyer_name','like','%'.$buyer_name.'%')
+                    ->where('mxp_bookingbuyer_details.Company_name','like','%'.$company_name.'%')
+                    ->paginate(20)
+                    ->setPath('list?po_cat_no='.$po_cat_no
+                            .'buyer_name_search='.$buyer_name
+                            .'company_name_search='.$company_name);
+
+        /* only po_cat_no, from_oder_date, and to_oder_date input value */
+        } else if (empty($buyer_name) && !empty($from_oder_date) && !empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($company_name) && !empty($po_cat_no)) {
+
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->whereDate('mxp_bookingbuyer_details.created_at','>=',$from_oder_date)
+                    ->whereDate('mxp_bookingbuyer_details.created_at','<=',$to_oder_date)
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->paginate(20)
+                    ->setPath('list?po_cat_no='.$po_cat_no
+                            .'&from_oder_date_search='.$from_oder_date
+                            .'&to_oder_date_search='.$to_oder_date);
+
         /* only company_name, from_oder_date, and to_oder_date input value */
-        } else if (empty($buyer_name) && !empty($from_oder_date) && !empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && !empty($company_name)) {
+        } else if (empty($buyer_name) && !empty($from_oder_date) && !empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && !empty($company_name) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -323,12 +389,12 @@ class BookingListController extends Controller
                     ->whereDate('created_at','<=',$to_oder_date)
                     ->where('Company_name','like','%'.$company_name.'%')
                     ->paginate(20)
-                    ->setPath('list?buyer_name_search='.$buyer_name
+                    ->setPath('list?company_name_search='.$company_name
                             .'&from_oder_date_search='.$from_oder_date
                             .'&to_oder_date_search='.$to_oder_date);
 
         /* only buyer_name, company_name, from_oder_date, and to_oder_date input value */
-        } else if (!empty($buyer_name) && !empty($company_name) && !empty($from_oder_date) && !empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date)) {
+        } else if (!empty($buyer_name) && !empty($company_name) && !empty($from_oder_date) && !empty($to_oder_date) && empty($from_shipment_date) && empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -342,8 +408,39 @@ class BookingListController extends Controller
                             .'&from_oder_date_search='.$from_oder_date
                             .'&to_oder_date_search='.$to_oder_date);
 
+        /* only po_cat_no, from_shipment_date, and to_shipment_date input value */
+        } else if (empty($buyer_name) && empty($company_name) && !empty($po_cat_no) && empty($from_oder_date) && empty($to_oder_date) && empty($attention) && !empty($from_shipment_date) && !empty($to_shipment_date)) {
+            
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->whereDate('mb.shipmentDate','>=',$from_shipment_date)
+                    ->whereDate('mb.shipmentDate','<=',$to_shipment_date)
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->paginate(20)
+                    ->setPath('list?po_cat_no='.$po_cat_no
+                            .'&from_shipment_date_search='.$from_shipment_date
+                            .'&to_shipment_date_search='.$to_shipment_date);
+        /* only po_cat_no, from_shipment_date, and to_shipment_date input value */
+        } else if (empty($buyer_name) && empty($company_name) && !empty($po_cat_no) && !empty($from_oder_date) && !empty($to_oder_date) && empty($attention) && !empty($from_shipment_date) && !empty($to_shipment_date)) {
+            // $this->print_me("sss");
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->whereDate('mb.created_at','>=',$from_oder_date)
+                    ->whereDate('mb.created_at','<=',$to_oder_date)
+                    ->whereDate('mb.shipmentDate','>=',$from_shipment_date)
+                    ->whereDate('mb.shipmentDate','<=',$to_shipment_date)
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->paginate(20)
+                    ->setPath('list?po_cat_no='.$po_cat_no
+                            .'&from_shipment_date_search='.$from_shipment_date
+                            .'&to_shipment_date_search='.$to_shipment_date
+                            .'&from_oder_date_search='.$from_oder_date
+                            .'&to_oder_date_search='.$to_oder_date);
+
         /* only buyer_name, from_shipment_date, and to_shipment_date input value */
-        } else if (!empty($buyer_name) && empty($company_name) && empty($from_oder_date) && empty($to_oder_date) && empty($attention) && !empty($from_shipment_date) && !empty($to_shipment_date)) {
+        } else if (!empty($buyer_name) && empty($company_name) && empty($from_oder_date) && empty($to_oder_date) && empty($attention) && !empty($from_shipment_date) && !empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -357,7 +454,7 @@ class BookingListController extends Controller
                             .'&to_shipment_date_search='.$to_shipment_date);
 
         /* only company_name, from_shipment_date, and to_shipment_date input value */
-        } else if (empty($buyer_name) && !empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && empty($from_oder_date) && empty($to_oder_date)) {
+        } else if (empty($buyer_name) && !empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && empty($from_oder_date) && empty($to_oder_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -370,7 +467,7 @@ class BookingListController extends Controller
                             .'&to_shipment_date_search='.$to_shipment_date);
 
         /* only buyer_name, company_name, from_shipment_date, and to_shipment_date input value */
-        } else if (!empty($buyer_name) && !empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && !empty($from_oder_date) && !empty($to_oder_date)) {
+        } else if (!empty($buyer_name) && !empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && !empty($from_oder_date) && !empty($to_oder_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -385,7 +482,7 @@ class BookingListController extends Controller
                             .'&to_shipment_date_search='.$to_shipment_date);
 
         /* only from_oder_date, to_oder_date, from_shipment_date, and to_shipment_date input value */
-        } else if (empty($buyer_name) && empty($company_name) && !empty($from_oder_date) && !empty($to_oder_date) && !empty($from_shipment_date) && !empty($to_shipment_date)) {
+        } else if (empty($buyer_name) && empty($company_name) && !empty($from_oder_date) && !empty($to_oder_date) && !empty($from_shipment_date) && !empty($to_shipment_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -399,8 +496,8 @@ class BookingListController extends Controller
                             .'&from_oder_date_search='.$from_oder_date
                             .'&to_oder_date_search='.$to_oder_date);
 
-        /* all input field value */
-        } else if (!empty($buyer_name) && !empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && !empty($from_oder_date) && !empty($to_oder_date)) {
+        /* only buyer_name, company_name, from_shipment_date, to_shipment_date, from_oder_date, and to_oder_date input field value */
+        } else if (!empty($buyer_name) && !empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && !empty($from_oder_date) && !empty($to_oder_date) && empty($po_cat_no)) {
 
             $checkValidation = true;
 
@@ -417,9 +514,61 @@ class BookingListController extends Controller
                             .'&to_shipment_date_search='.$to_shipment_date
                             .'&from_oder_date_search='.$from_oder_date
                             .'&to_oder_date_search='.$to_oder_date);
+
+        /* all input field value */
+        } else if (!empty($buyer_name) && empty($company_name) && empty($from_shipment_date) && empty($to_shipment_date) && !empty($from_oder_date) && !empty($to_oder_date) && !empty($po_cat_no)) {
+
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->whereDate('mb.created_at','>=',$from_oder_date)
+                    ->whereDate('mb.created_at','<=',$to_oder_date)
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->where('mxp_bookingbuyer_details.buyer_name','like','%'.$buyer_name.'%')
+                    ->paginate(20)
+                    ->setPath('list?buyer_name_search='.$buyer_name
+                            .'&po_cat_no='.$po_cat_no
+                            .'&from_oder_date_search='.$from_oder_date
+                            .'&to_oder_date_search='.$to_oder_date);
+
+        /* all input field value */
+        } else if (!empty($buyer_name) && empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && empty($from_oder_date) && empty($to_oder_date) && !empty($po_cat_no)) {
+
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->whereDate('mb.shipmentDate','>=',$from_shipment_date)
+                    ->whereDate('mb.shipmentDate','<=',$to_shipment_date)
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->where('mxp_bookingbuyer_details.buyer_name','like','%'.$buyer_name.'%')
+                    ->paginate(20)
+                    ->setPath('list?buyer_name_search='.$buyer_name
+                            .'&po_cat_no='.$po_cat_no
+                            .'&from_shipment_date_search='.$from_shipment_date
+                            .'&to_shipment_date_search='.$to_shipment_date);
+
+        /* all input field value */
+        } else if (!empty($buyer_name) && !empty($company_name) && !empty($from_shipment_date) && !empty($to_shipment_date) && !empty($from_oder_date) && !empty($to_oder_date) && !empty($po_cat_no)) {
+
+            $checkValidation = true;
+
+            $bookingList = $bookingLists->join('mxp_booking as mb','mb.booking_order_id','mxp_bookingbuyer_details.booking_order_id')
+                    ->whereDate('mb.shipmentDate','>=',$from_shipment_date)
+                    ->whereDate('mb.shipmentDate','<=',$to_shipment_date)
+                    ->whereDate('mb.created_at','>=',$from_oder_date)
+                    ->whereDate('mb.created_at','<=',$to_oder_date)
+                    ->where('mb.poCatNo',$po_cat_no)
+                    ->where('mxp_bookingbuyer_details.buyer_name','like','%'.$buyer_name.'%')
+                    ->where('mxp_bookingbuyer_details.Company_name','like','%'.$company_name.'%')
+                    ->paginate(20)
+                    ->setPath('list?buyer_name_search='.$buyer_name
+                            .'&po_cat_no='.$po_cat_no
+                            .'&company_name_search='.$company_name
+                            .'&from_shipment_date_search='.$from_shipment_date
+                            .'&to_shipment_date_search='.$to_shipment_date
+                            .'&from_oder_date_search='.$from_oder_date
+                            .'&to_oder_date_search='.$to_oder_date);
         }
-
-
 
         if ($checkValidation) {
 

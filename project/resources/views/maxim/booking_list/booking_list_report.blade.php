@@ -77,6 +77,10 @@
                 <label class="col-sm-12 label-control">Attention</label>
                 <input type="text" name="attention_search" class="form-control" placeholder="Attention search" id="attention_search">
             </div> -->
+            <div class="col-sm-3">
+                <label class="col-sm-12 label-control">Po/Cat No.</label>
+                <input type="text" name="po_cat_no" class="form-control" placeholder="PO/Cat No." value="{{$inputArray['po_cat_no']}}">
+            </div>
             <br>
             <div class="col-sm-3">
                 {{-- <input class="btn btn-info click_preloder" type="submit" value="Search" name="booking_advanceSearch_btn"> --}}
@@ -117,7 +121,7 @@
                         <th>PO No.</th>
                         <th>MRF No.</th>
                         <th>Order Date</th>
-                        <th>Requested Date</th>
+                        <th>Requested Shipment Date</th>
                         <th>Item Code</th>
                          <th id="item_size">Item Size</th>
                         <th width="">ERP Code</th>
@@ -135,88 +139,90 @@
                         $fullTotalAmount = 0;
                     ?>
                     <tbody id="booking_list_tbody">
-                        @foreach($bookingList as $value)
+                        @if($bookingList[0]->booking_order_id)
+                            @foreach($bookingList as $value)
+                                <?php $TotalAmount = 0; ?>
+                                @foreach($value->itemLists as $valuelist)
+                                    <?php
+                                        $idstrcount = (8 - strlen($valuelist->id));
+                                        $fullTotalAmount += $valuelist->item_quantity*$valuelist->item_price;
+                                        $TotalAmount += $valuelist->item_quantity*$valuelist->item_price;
+                                    ?>
+                                    <tr id="booking_list_table">
+                                        <td><input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" hidden> {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}</td>
+                                        <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
+                                        <td>
+                                            @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
+                                                {{ 'Booked' }}
+                                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG ) && ($valuelist->mrf->mrf_status == '') && ($valuelist->ipo->ipo_status == ''))
+                                                {{ 'Processing' }}
+                                                                            
+                                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::OPEN_MRF))
+                                                {{ 'Mrf Issued' }}
+                                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->ipo->ipo_status== MrfFlugs::OPEN_MRF))
+                                                {{ 'Ipo Issued' }}
+                                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS) )
+                                                {{ 'Processed to supplier' }}    
+                                            @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) )
+                                                {{ 'Mrf Accepted' }} 
+                                                {{-- {{ 'Processed to supplier' }}     --}}
+                                             
+                                            @else
+                                                {{ 'N/A' }}    
+                                            @endif
+                                        </td>
+                                        <td><input name="buyer_name[]" value="{{$value->buyer_name}}" hidden>{{$value->buyer_name}}</td>
+                                        <td><input name="company_name[]" value="{{$value->Company_name}}" hidden>{{$value->Company_name}}</td>
+                                        <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
+                                        <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
+                                        <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
+                                        <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
+                                        <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
+                                       <td>
+                                            <input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" type="hidden">
+                                            {{ (($valuelist->ipo->ipo_ids != '')? $valuelist->ipo->ipo_ids : (($valuelist->mrf->mrf_ids != '')?'N/A':'')) }}
+                                        </td>
+                                        <td>
+                                            <input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" type="hidden">
+                                            {{ (($valuelist->mrf->mrf_ids != '')? $valuelist->mrf->mrf_ids : (($valuelist->ipo->ipo_ids != '')?'N/A': '')) }}
+                                        </td>
+                                        <td>
+                                            <input name="order_date[]" value="{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}" type="hidden">
+                                            {{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}
+                                        </td>
+                                        <td>
+                                            <input name="requested_date[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" type="hidden">
+                                            {{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}
+                                        </td>
+                                        <td>
+                                            <input name="item_code[]" value="{{$valuelist->item_code}}" type="hidden">{{$valuelist->item_code}}
+                                        </td>
+                                        <td>
+                                            <input name="item_code[]" value="{{$valuelist->item_size_width_height}}" type="hidden">
+                                            {{ ($valuelist->item_size_width_height!= '')? '('. $valuelist->item_size_width_height .')mm': 'N/A' }}
+                                        </td>
+                                        <td>
+                                            <input name="erp_code[]" value="{{$valuelist->erp_code}}" type="hidden">{{$valuelist->erp_code}}
+                                        </td>
+                                        <td>
+                                            <input name="item_size[]" value="{{$valuelist->item_size}}" type="hidden">{{$valuelist->item_size}}
+                                        </td>
+                                        <td><input name="item_description[]" value="{{$valuelist->item_description}}" hidden>{{$valuelist->item_description}}</td>
 
-                            <?php $TotalAmount = 0; ?>
-                            @foreach($value->itemLists as $valuelist)
-                            <?php 
-                                 //print_r("<pre>");
-                                 //print_r($valuelist);
-                                 //print_r("</pre>");
-                            ?>
-                                <?php
-                                    $idstrcount = (8 - strlen($valuelist->id));
-                                    $fullTotalAmount += $valuelist->item_quantity*$valuelist->item_price;
-                                    $TotalAmount += $valuelist->item_quantity*$valuelist->item_price;
-                                ?>
-                                <tr id="booking_list_table">
-                                    <td><input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" hidden> {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}</td>
-                                    <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
-                                    <td>
-                                        @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
-                                            {{ 'Booked' }}
-                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG ) && ($valuelist->mrf->mrf_status == '') && ($valuelist->ipo->ipo_status == ''))
-                                            {{ 'Processing' }}
-                                                                        
-                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::OPEN_MRF))
-                                            {{ 'Mrf Issued' }}
-                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->ipo->ipo_status== MrfFlugs::OPEN_MRF))
-                                            {{ 'Ipo Issued' }}
-                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS) )
-                                            {{ 'Processed to supplier' }}    
-                                        @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) )
-                                            {{ 'Mrf Accepted' }} 
-                                            {{-- {{ 'Processed to supplier' }}     --}}
-                                         
-                                        @else
-                                            {{ 'N/A' }}    
-                                        @endif
-                                    </td>
-                                    <td><input name="buyer_name[]" value="{{$value->buyer_name}}" hidden>{{$value->buyer_name}}</td>
-                                    <td><input name="company_name[]" value="{{$value->Company_name}}" hidden>{{$value->Company_name}}</td>
-                                    <td><input name="attention_invoice[]" value="{{$value->attention_invoice}}" hidden>{{$value->attention_invoice}}</td>
-                                    <td><input name="booking_order_id[]" value="{{$value->booking_order_id}}" hidden>{{$value->booking_order_id}}</td>
-                                    <td><input name="po_cat_no[]" value="{{$valuelist->poCatNo}}" hidden>{{$valuelist->poCatNo}}</td>
-                                    <td><input name="p_ids[]" value="{{$valuelist->pi->p_ids}}" hidden>{{$valuelist->pi->p_ids}}</td>
-                                    <td><input name="challan_ids[]" value="{{$valuelist->challan->challan_ids}}" hidden>{{$valuelist->challan->challan_ids}}</td>
-                                   <td>
-                                        <input name="ipo_ids[]" value="{{$valuelist->ipo->ipo_ids}}" type="hidden">
-                                        {{ (($valuelist->ipo->ipo_ids != '')? $valuelist->ipo->ipo_ids : (($valuelist->mrf->mrf_ids != '')?'N/A':'')) }}
-                                    </td>
-                                    <td>
-                                        <input name="mrf_ids[]" value="{{$valuelist->mrf->mrf_ids}}" type="hidden">
-                                        {{ (($valuelist->mrf->mrf_ids != '')? $valuelist->mrf->mrf_ids : (($valuelist->ipo->ipo_ids != '')?'N/A': '')) }}
-                                    </td>
-                                    <td>
-                                        <input name="order_date[]" value="{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}" type="hidden">
-                                        {{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}
-                                    </td>
-                                    <td>
-                                        <input name="requested_date[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" type="hidden">
-                                        {{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}
-                                    </td>
-                                    <td>
-                                        <input name="item_code[]" value="{{$valuelist->item_code}}" type="hidden">{{$valuelist->item_code}}
-                                    </td>
-                                    <td>
-                                        <input name="item_code[]" value="{{$valuelist->item_size_width_height}}" type="hidden">
-                                        {{ ($valuelist->item_size_width_height!= '')? '('. $valuelist->item_size_width_height .')mm': 'N/A' }}
-                                    </td>
-                                    <td>
-                                        <input name="erp_code[]" value="{{$valuelist->erp_code}}" type="hidden">{{$valuelist->erp_code}}
-                                    </td>
-                                    <td>
-                                        <input name="item_size[]" value="{{$valuelist->item_size}}" type="hidden">{{$valuelist->item_size}}
-                                    </td>
-                                    <td><input name="item_description[]" value="{{$valuelist->item_description}}" hidden>{{$valuelist->item_description}}</td>
-
-                                    <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
-                                    <td><input name="item_quantity[]" value="{{$valuelist->item_quantity}}" hidden>{{$valuelist->item_quantity}}</td>
-                                    <td><input name="item_price[]" value="{{$valuelist->item_price}}" hidden>{{(strtolower($valuelist->item_price) != 'n/a'? '$'.$valuelist->item_price : $valuelist->item_price)}}</td>
-                                    <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$valuelist->item_price }}" hidden>${{ $valuelist->item_quantity*$valuelist->item_price }}</td>
-                                </tr>
+                                        <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
+                                        <td><input name="item_quantity[]" value="{{$valuelist->item_quantity}}" hidden>{{$valuelist->item_quantity}}</td>
+                                        <td><input name="item_price[]" value="{{$valuelist->item_price}}" hidden>{{(strtolower($valuelist->item_price) != 'n/a'? '$'.$valuelist->item_price : $valuelist->item_price)}}</td>
+                                        <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$valuelist->item_price }}" hidden>${{ $valuelist->item_quantity*$valuelist->item_price }}</td>
+                                    </tr>
+                                @endforeach
                             @endforeach
-                        @endforeach
+                        @else
+                            <tr>
+                                <td colspan="23">
+                                    <center>Empty value</center>
+                                </td>
+                            </tr>
+                        @endif
                         <tr>
                             <td colspan="20"></td>
                             <td colspan="2"><strong style="font-size: 12px;">Total Price:</strong></td>
@@ -241,7 +247,7 @@
 @endsection
 @section('LoadScript')
 
-    @if(!empty($inputArray['buyer_name'])  || !empty($inputArray['company_name']) || !empty($inputArray['from_oder_date']) || !empty($inputArray['to_oder_date']) || !empty($inputArray['from_shipment_date']) || !empty($inputArray['to_shipment_date']))
+    @if(!empty($inputArray['buyer_name'])  || !empty($inputArray['company_name']) || !empty($inputArray['from_oder_date']) || !empty($inputArray['to_oder_date']) || !empty($inputArray['from_shipment_date']) || !empty($inputArray['to_shipment_date']) || !empty($inputArray['po_cat_no']))
 
         <script type="text/javascript">
             $('.advance_form').removeClass('hidden');

@@ -383,11 +383,19 @@
             <!-- /#page-wrapper -->
         </div>
     </div>
+
+    <!-- <footer class="main-footer">
+      <div class="pull-right hidden-xs">
+        <b>Version</b> 2.4.0
+      </div>
+      <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+      reserved.
+    </footer> -->
     <!-- Footer -->
-    <footer style="padding: 10px 0;background:#222d32;color:#fff;">
+    <footer style="padding: 10px 0;background:#4A4A4A;color:#fff; margin-left: 250px;">
 
           <!-- Copyright -->
-        <div class="text-center">Copyright© 2018,All Right Reserved – by <a href="#">MAXIM</a><br> 
+        <div class="text-center" style="font-family:roboto-serif;letter-spacing: 1px;font-size: 17px;">Copyright© 2018,All Right Reserved – by <a href="#">MAXIM</a><br> 
             Powered by <a href="http://maxproit.solutions/"> maxproIT.solutions</a>
         </div>
           <!-- Copyright -->

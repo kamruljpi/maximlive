@@ -23,7 +23,7 @@
                     <h3 class="panel-title">Notifications List</h3>
                   </div>
                   <div class="col col-xs-4 text-right">
-                      <a type="button" href="{{ Route('notification_seen') }}" class="btn btn-success">Mark all as seen</a>
+                      <a type="button" href="{{ Route('notification_seen') }}" class="btn btn-success hidden">Mark all as seen</a>
                   </div>
                 </div>
               </div>

@@ -7,12 +7,14 @@ use App\Http\Controllers\taskController\Flugs\LastActionFlugs;
 use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NotificationController;
 use App\Model\MxpBookingBuyerDetails;
 use App\Model\Os\MxpOsPo;
 use App\MxpSupplierPrice;
 use App\Model\MxpMrf;
 use Carbon\Carbon;
 use App\Supplier;
+use App\Notification;
 use Auth;
 use DB;
 
@@ -68,8 +70,10 @@ class PoController extends Controller
 		$supplier = Supplier::where('supplier_id',$request->supplier_id)->select('supplier_id','name')->first();
 		}
 		if(!isset($jobid_values[0]->job_id)){$jobid_values = [];}
-		// $this->print_me($jobid_values);
-		return view('maxim.os.po.po_genarate',compact('jobid_values','supplier'));
+
+		$increase_value = $request->po_increase;
+		// $this->print_me($increase_value);	
+		return view('maxim.os.po.po_genarate',compact('jobid_values','supplier','increase_value'));
 	}
 
 	public function storeOsPo(Request $request){
@@ -79,6 +83,7 @@ class PoController extends Controller
 		$material = $request['material'];
 		$supplier_id = $request['supplier_id'];
 		$shipment_date = $request['shipment_date'];
+		$initial_increase = $request['po_increase_percentage'];
 		$supplier_price = $request['supplier_price'];
 
 		$datas = [];
@@ -88,9 +93,11 @@ class PoController extends Controller
 					$datas[$key]['job_id'] = $value;
 					$datas[$key]['supplier_price'] = $supplier_price[$key];
 					$datas[$key]['material'] = $material[$key];
+					$datas[$key]['initial_increase'] = $initial_increase[$key];
 				}
 			}
 		}
+		// $this->print_me($datas);
 
 		$cc = MxpOsPo::select('po_id')->groupBy('po_id')->get();
 		$cc = count($cc);
@@ -110,9 +117,12 @@ class PoController extends Controller
 					 	'supplier_id' => $supplier_id,
 					 	'supplier_price' => $datasValue['supplier_price'],
 					 	'material' => $datasValue['material'],
+					 	'initial_increase' => $datasValue['initial_increase'],
 					 	'order_date' => Carbon::today()->format('Y-m-d'),
 					 	'shipment_date' => $shipment_date,
-					 	'last_action_at' => LastActionFlugs::CREATE_ACTION
+					 	'last_action_at' => LastActionFlugs::CREATE_ACTION,
+					 	'created_at' => Carbon::today(),
+					 	'updated_at' => Carbon::today()
 				 	]
 				 );
 
@@ -121,6 +131,9 @@ class PoController extends Controller
 				]);
 			}
 		}
+
+		$postNotification = NotificationController::postNotification(Notification::CREATE_SPO, $po_id);
+
 		return \Redirect::route('refresh_os_po_view',['pid' => $po_id]);
 	}
 
@@ -130,7 +143,7 @@ class PoController extends Controller
 						->join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mb.booking_order_id')
 						->join('mxp_product as mp','mp.product_code','mrf.item_code')
 						->Leftjoin('suppliers as s','s.supplier_id','mxp_os_po.supplier_id')
-						->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty','mbd.booking_category'
+						->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.initial_increase','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty','mbd.booking_category'
 						)
 						->where([
 							['mxp_os_po.po_id',$po_id]],

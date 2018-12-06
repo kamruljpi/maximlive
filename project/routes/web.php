@@ -50,14 +50,25 @@ Route::group(
         'as'=>'booking_list_view_by_search',
         'uses'=>'taskController\BookingListController@getBookingListBySearch'
     ));
+    
     Route::post('/booking_list_book_search/', array(
         'as'=>'booking_list_view_book_search',
         'uses'=>'taskController\BookingListController@getBookingListbookSearch'
     ));
 
+    Route::any('planning/advance/search/list', array(
+        'as'=>'planning_advance_search_list',
+        'uses'=>'taskController\BookingListController@getAdvanceSearchPlanningList'
+    ));
+
     Route::post('/booking_list_advance_search_/', array(
         'as'=>'booking_list_advance_search_',
         'uses'=>'taskController\BookingListController@getbookingListAdvanceSearch_'
+    ));
+
+    Route::any('booking/advance/search/list', array(
+        'as'=>'booking_advance_search_list',
+        'uses'=>'taskController\BookingListController@getAdvanceSearchBookingList'
     ));
 
     Route::get('/challan_list_by_challan_id/', array(
@@ -145,6 +156,8 @@ Route::group(
             'as' => 'user_profile_action',
             'uses' => 'UserProfileController@profileUpdate',
         ]);
+
+        Route::get('/notifications', 'NotificationController@getAllNotificationView')->name('getNotification');
 
         Route::group(['middleware' => 'routeAccess'], function () {
             Route::group(['prefix' => 'super-admin'], function () {

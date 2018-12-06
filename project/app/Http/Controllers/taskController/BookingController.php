@@ -5,6 +5,7 @@ namespace App\Http\Controllers\taskController;
 use App\Http\Controllers\dataget\ListGetController;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleManagement;
 use App\Model\BookingFile;
 use App\Model\MxpPi;
@@ -19,6 +20,7 @@ use Validator;
 use Auth;
 use DB;
 use App\User;
+use App\Notification;
 use App\Model\MxpMrf;
 use App\MxpIpo;
 use App\Http\Controllers\taskController\BookingListController;
@@ -237,6 +239,9 @@ class BookingController extends Controller
       }
 
       $is_type = $request->is_type;
+
+      $not_type = NotificationController::postNotification($type=Notification::CREATE_BOOKING, $customid);
+
       return \Redirect::route('refresh_booking_view', ['booking_id' => $customid,'is_type' => $request->is_type]);
     }
 

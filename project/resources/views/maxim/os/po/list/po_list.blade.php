@@ -61,6 +61,7 @@
 				<thead>
 					<tr>
 						<th>Serial no</th>
+						<th>Supplier Name</th>
 						{{-- <th>Booking No.</th> --}}
 						<th>MRF No.</th>
 						<th>PO No.</th>
@@ -75,6 +76,7 @@
 				@foreach($poList as $value)
 					<tr id="mrf_list_table">
 						<td>{{$j++}}</td>
+						<td>{{ $value->name }}</td>
 						{{-- <td>{{$value->booking_order_id}}</td> --}}
 						<td>{{$value->mrf_id}}</td>
 						<td>{{$value->po_id}}</td>

@@ -179,44 +179,42 @@
                             $i=0;
                             $k= 0;
                             ?>
-                        @foreach($notification as $key => $nots)
-                            
-                            <li>
+                        @foreach(session()->get('notification') as $key => $nots)
+                            @foreach($nots as $noti)
+                            <li class="{{ ($noti->seen == 1)? 'seen' : 'unseen' }}">
 
-                                @if($nots[$i])
+                                @if($noti)
                                     <a href="
-                                        @if( $nots[$i]->type == Notification::CREATE_BOOKING )
-                                            {{ Route('booking_list_details_view',['booking_id' => $nots[$i]->type_id]) }}
-                                        @elseif($nots[$i]->type == Notification::CREATE_MRF )
+                                        @if( $noti->type == Notification::CREATE_BOOKING )
+                                            {{ Route('booking_list_details_view',['booking_id' => $noti->type_id]) }}
+                                        @elseif($noti->type == Notification::CREATE_MRF )
                                             {{ Route('os_mrf_details_view',['mid' => $nots[$i]->type_id]) }}
-                                        @elseif($nots[$i]->type == Notification::CREATE_SPO )
+                                        @elseif($noti->type == Notification::CREATE_SPO )
                                              # 
                                         @else 
                                              # 
                                         @endif
                                     ">
                                         <div style="font-size: 12px">
-                                            {{ $nots[$i]->type_id }} Created 
-                                            <span class="pull-right text-muted small">{{ $nots[$i]->created_at->diffForHumans() }}</span>
+                                            {{ $noti->type_id }} Created 
+                                            <span class="pull-right text-muted small">{{ $noti->created_at->diffForHumans() }}</span>
                                         </div>
                                     </a>
-                                    <?php $j=1; $k++;?>
-
-                                    @else
-                                        
-                                        <?php $j=0; ?>
+                                    @if($noti->seen == '0')
+                                        <?php $k++;?>
                                     @endif
+                                
+                                @endif
                             </li>
                             
-                            <li class="divider"></li>
+                            
                             <?php
                             $i++;
 
                             ?>
-                            
+                            @endforeach
                         @endforeach
-                            
-                        @if($j == 1)    
+                        <li class="divider"></li>   
                         <li>
                             <a class="text-center" href="{{ Route('getNotification') }}">
                                 <strong>See All Alerts</strong>
@@ -224,8 +222,6 @@
                                 <input type="text" name="badge" value="{{ $k++ }}" hidden>
                             </a>
                         </li>
-                        @else
-                        @endif
                     </ul>
                     <!-- /.dropdown-alerts -->
                 </li>
@@ -408,7 +404,9 @@
     <script>
     $(document).ready(function() {
         var b = $('input[name=badge]').val();
-        $('#badge').text(b);
+        if (b > 0) {
+            $('#badge').text(b);
+        }
     });
     </script>
 @stop

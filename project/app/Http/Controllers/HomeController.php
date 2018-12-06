@@ -113,7 +113,9 @@ class HomeController extends Controller {
 		// }
 		$user = Auth::user();
 
-		$notification = NotificationController::getAllNotification($status=0);
+		$notification = NotificationController::getAllNotification($status=1);
+
+		session()->put('notification', $notification);
 
 		return view('dashboard',compact('user','notification'));
 	}

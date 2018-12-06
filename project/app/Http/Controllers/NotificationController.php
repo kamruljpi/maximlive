@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Notification;
+use Auth;
 use App\Http\Controllers\Source\User\RoleDefine;
 use Illuminate\Http\Request;
 
@@ -95,5 +96,17 @@ class NotificationController extends Controller
     	$not = self::getAllNotification( $status=1);
     
     	return view('notification.notification_view',compact('not'));
+    }
+
+    public function setAllNotificationSeen(){
+    	$not = self::getAllNotification( $status=1);
+
+    	foreach ($not as $key => $value) {
+    		foreach ($value as $key => $noti) {
+    			self::updateSeenStatus($noti->type_id, Auth::user()->user_id );
+    		}	
+    	}
+
+    	return redirect()->back();
     }
 }

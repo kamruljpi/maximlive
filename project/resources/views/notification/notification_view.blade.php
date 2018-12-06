@@ -4,6 +4,12 @@
 <?php
   //print_r('<pre>');
   //print_r($not['booking']);die();
+?>
+<?php 
+    use App\Http\Controllers\Source\User\RoleDefine;
+    use App\Notification;
+    $object = new RoleDefine();
+    $csRoleCheck = $object->getRole('Customer');
 ?> 
 	<div class="row">
 		<div class="col-md-12"></div>
@@ -13,11 +19,11 @@
             <div class="panel panel-default panel-table">
               <div class="panel-heading">
                 <div class="row">
-                  <div class="col col-xs-6">
+                  <div class="col col-xs-8">
                     <h3 class="panel-title">Notifications List</h3>
                   </div>
-                  <div class="col col-xs-6 text-right">
-                    
+                  <div class="col col-xs-4 text-right">
+                      <a type="button" href="{{ Route('notification_seen') }}" class="btn btn-success">Mark all as seen</a>
                   </div>
                 </div>
               </div>
@@ -29,6 +35,7 @@
                         <th class="hidden-xs">Serial</th>
                         <th>Descriptions</th>
                         <th>Time</th>
+                        <th>Status</th>
                     </tr> 
                   </thead>
                   <tbody>
@@ -37,13 +44,31 @@
                             ?>
                         @foreach($not as $key => $nots)
                             @foreach($nots as $noti)
-                            <tr>
-                              
-                              <td class="hidden-xs">{{ $k++ }}</td>
-                              <td>{{ $noti->type_id }} Created 
-                              </td>
-                              <td><span class="pull-left text-bold small">{{ $noti->created_at->diffForHumans() }}</span></td>
-                            </tr>
+
+                            
+                              <tr class="{{ ($noti->seen == 1)? 'seen' : 'unseen' }}" >
+                                
+                                <td class="hidden-xs">{{ $k++ }}</td>
+                                <td>
+                                    <a href="
+                                        @if( $noti->type == Notification::CREATE_BOOKING )
+                                            {{ Route('booking_list_details_view',['booking_id' => $noti->type_id]) }}
+                                        @elseif($noti->type == Notification::CREATE_MRF )
+                                            {{ Route('os_mrf_details_view',['mid' => $nots[$i]->type_id]) }}
+                                        @elseif($noti->type == Notification::CREATE_SPO )
+                                             # 
+                                        @else 
+                                             # 
+                                        @endif
+                                    "> 
+                                    {{ $noti->type_id }} Created 
+                                    </a> 
+                                </td>
+                                <td><span class="pull-left text-bold small">{{ $noti->created_at->diffForHumans() }}</span></td>
+                                <td>{{ ($noti->seen == 1)? 'Seen' : 'Unseen' }}</td>
+                              </tr>
+                            
+
                           @endforeach
                         @endforeach 
                   </tbody>

@@ -68,6 +68,7 @@
 	<script src="{{ asset('assets/scripts/bootstrap-datetimepicker.min.js') }}"></script>
 	<script src="{{ asset('assets/scripts/frontend.js') }}" type="text/javascript"></script>
 	<script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('assets/scripts/custom.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/new_custom.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/all_product_table.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/journal.js') }}"></script>

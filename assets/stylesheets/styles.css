@@ -9211,4 +9211,10 @@ span.challan_list_rmv:hover {
 }
  table th#item_size {
     min-width: 140px !important;
+}
+.unseen{
+  background-color: #e0e0e0 !important;
+}
+.seen{
+  background-color: #ffffff !important;
 } 

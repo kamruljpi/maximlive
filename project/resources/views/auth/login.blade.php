@@ -65,4 +65,15 @@
 		</div>
 	</div>
 </div>
+<!-- Footer -->
+<footer style="padding: 10px 0;background: #e0e0e0;color: #333;margin-top: 150px;border-top: 1px solid #C4C4C4;border-radius: 4px;">
+
+      <!-- Copyright -->
+    <div class="text-center" style="font-family:roboto-serif;font-size: 15px;">Copyright© 2018,All Right Reserved – by <a href="#">MAXIM</a> 
+        Powered by <a href="http://maxproit.solutions/"> maxproIT.solutions</a>
+    </div>
+      <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
 @endsection

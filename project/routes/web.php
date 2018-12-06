@@ -1061,7 +1061,24 @@ include('os/os_route.php');
 include('history/restore.php');
 
 
-//INSERT INTO `maxpronewerp`.`mxp_menu` (`name`, `route_name`, `description`, `parent_id`, `is_active`, `order_id`) VALUES ('Purchase Order', 'generate_purchase_order', 'purchase order list', '97', '1', '3');
-//INSERT INTO `maxpronewerp`.`mxp_user_role_menu` (`role_id`, `menu_id`, `company_id`, `is_active`) VALUES ('1', '108', '0', '1');
+Route::get('itemupload',
+[
+    'as'=>'itemupload',
+    'uses'=>'BulkUploadController@bulkUploadView'
+]);
 
+Route::any('itemuploadactionview',
+[
+    'as'=>'itemuploadactionview',
+    'uses'=>'BulkUploadController@uploadactionview'
+]);
 
+Route::get('itemupload/cancle', function(){
+    Session::flash('bulksuccess', 'Data insertion cancled');
+    return Redirect::route('itemupload');
+})->name('itemupload_cancle');
+
+Route::post('itemupload/actionfinal', [
+    'as' => 'itemuploadactionfinal',
+    'uses' => 'BulkUploadController@itemuploadactionfinal'
+]);

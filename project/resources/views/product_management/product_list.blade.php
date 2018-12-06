@@ -27,6 +27,11 @@
         <input type="text" class="form-control keyup_preloder" id="search" name="search" placeholder="Item Code"></input>
       </div>
   </div>
+  <div class="col-sm-3">
+        
+         <a href="{{ Route('itemupload') }}" type="button" class="btn btn-success"><i class="fa fa-file" style="font-size:`16px;color:white; margin-right:7px;"></i> Bulk Upload</a>
+      
+  </div>
 
 <div class="col-sm-12">
   <table class="table table-bordered" id="tblSearch">

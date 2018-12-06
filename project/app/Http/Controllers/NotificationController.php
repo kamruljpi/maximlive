@@ -17,40 +17,86 @@ class NotificationController extends Controller
     	return $notification;
     }
 
-    public function getNotification( $status ){
+    public function getNotification( $status, $limit = null ){
     	if($status == 1){
-    		$getBookingNotification = Notification::where(
-				'type', Notification::CREATE_BOOKING	
-    			)->get();
+			if($limit != null) {
+	    		$getBookingNotification = Notification::where(
+					'type', Notification::CREATE_BOOKING	
+	    			)->orderBy('id','DESC')->take($limit)->get();
+			}else{
+				$getBookingNotification = Notification::where(
+					'type', Notification::CREATE_BOOKING	
+	    			)->orderBy('id','DESC')->get();
+			}
+			if($limit != null) {
+				$getMrfNotification = Notification::where(
+					'type',Notification::CREATE_MRF	
+					)->orderBy('id','DESC')->take($limit)->get();
+			}else{
+				$getMrfNotification = Notification::where(
+					'type',Notification::CREATE_MRF	
+					)->orderBy('id','DESC')->get();
+			}
 
-    		$getMrfNotification = Notification::where(
-    			'type',Notification::CREATE_MRF	
-    			)->get();
-
-    		$getOsNotification = Notification::where(
+    		if($limit != null) {
+	    		$getOsNotification = Notification::where(
+					'type', Notification::CREATE_SPO
+	    			)->orderBy('id','DESC')->take($limit)->get();
+			}else{
+				$getOsNotification = Notification::where(
 				'type', Notification::CREATE_SPO
-    			)->get();
+    			)->orderBy('id','DESC')->get();	
+			}
+
     	}else{
-    		$getBookingNotification = Notification::where(
+    		
+			if($limit != null) {
+				$getBookingNotification = Notification::where(
     				[
     					'type' => Notification::CREATE_BOOKING,
     					'seen' => $status
     				]	
-    			)->get();
+				)->orderBy('id','DESC')->take($limit)->get();
+			}else {
+				$getBookingNotification = Notification::where(
+					[
+						'type' => Notification::CREATE_BOOKING,
+						'seen' => $status
+					]	
+				)->orderBy('id','DESC')->get();
+			}
 
-    		$getMrfNotification = Notification::where(
+			if($limit != null) {
+				$getMrfNotification = Notification::where(
     				[
     					'type' => Notification::CREATE_MRF,
     					'seen' => $status
     				]	
-    			)->get();
+    			)->orderBy('id','DESC')->take($limit)->get();
+			}else {
+				$getMrfNotification = Notification::where(
+    				[
+    					'type' => Notification::CREATE_MRF,
+    					'seen' => $status
+    				]	
+    			)->orderBy('id','DESC')->get();
+			}
 
-    		$getOsNotification = Notification::where(
+			if($limit != null) {
+				$getOsNotification = Notification::where(
     				[
     					'type' => Notification::CREATE_SPO,
     					'seen' => $status
     				]	
-    			)->get();
+    			)->orderBy('id','DESC')->take($limit)->get();
+			}else {
+				$getOsNotification = Notification::where(
+    				[
+    					'type' => Notification::CREATE_SPO,
+    					'seen' => $status
+    				]	
+    			)->orderBy('id','DESC')->get();
+			}
     	}
 
     	return [
@@ -71,14 +117,24 @@ class NotificationController extends Controller
     		);
     }
 
-    public function getAllNotification($status){
-    	$notifications = self::getNotification($status);
+    public function getAllNotification($status, $limit=null){
+    	if ($limit != null) {
+    		$notifications = self::getNotification($status, $limit);
+    	}else{
+    		$notifications = self::getNotification($status, $limit=null);
+    	}
     	$cs = RoleDefine::getRole('Customer');
     	$pl = RoleDefine::getRole('Planning');
     	$os = RoleDefine::getRole('OS');
+    	$super_admin = Auth::user()->type;
 
-    	$notification = [];	
-    	if(($cs == 'cs') && ($cs != '') ){
+    	$notification = [];
+    	if($super_admin == 'super_admin'){
+    		$notification['booking'] = $notifications['bookingNotification'];
+    		$notification['mrf'] = $notifications['mrfNotification'];
+    		$notification['os'] = $notifications['getOsNotification'];
+    	}	
+    	elseif(($cs == 'customer') && ($cs != '') ){
     		$notification['mrf'] = $notifications['mrfNotification'];
     		$notification['os'] = $notifications['getOsNotification'];
     	}elseif (($pl == 'planning') && ($pl != '') ) {

@@ -24,7 +24,12 @@ class MrfController extends Controller
 		$getDbValue = [];
 		if(is_array($id) && !empty($id)){
 			foreach ($id as $idValue) {
-				$getDbValue[] = MxpBookingChallan::where('job_id',$idValue)->get();
+				$getDbValue[] = MxpBookingChallan::where([
+					['is_deleted',BookingFulgs::IS_NOT_DELETED],
+					['left_mrf_ipo_quantity','!=',0],
+					['job_id',$idValue]
+				])
+				->get();
 			}
 		}
 

@@ -98,6 +98,28 @@ class MrfListController extends Controller
         else
             return '';
     }
+
+    /**
+     *
+     * @return array()
+     */
+
+    public function getMrfAllId() {
+      $results = array();
+      $mrfDetails = MxpMrf::where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+                    ->select('mrf_id')
+                    ->groupBy('mrf_id')
+                    ->orderBy('id',DESC)
+                    ->get();
+
+      if(isset($mrfDetails) && !empty($mrfDetails[0]->mrf_id)) {
+          foreach ($mrfDetails as $orderKey => $mrf_value) {
+              
+              $results[]['mrf_id'] = $mrf_value->mrf_id;
+          }
+      }
+      return json_encode($results);
+    }
 }
 
 

@@ -35,15 +35,53 @@ class MrfListController extends Controller
         return view('maxim.os.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));
     }
 
-    public function detailsViewForm(Request $request){
-        $mrfDetails = MxpMrf::join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mxp_mrf_table.booking_order_id')
-                        ->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
-                        ->join('mxp_product as mp','mp.product_code','mb.item_code')
-                        ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
-                        ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mbd.booking_category','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name','mp.other_colors','mp.material')
-                        ->where('mxp_mrf_table.mrf_id',$request->mid)
-                        ->get();
-        if(isset($mrfDetails) && !empty($mrfDetails)){
+    /**
+     *
+     * @return array() 0bject
+     */
+
+    public function detailsViewForm(Request $request) {
+
+        $mrf_ids = [];
+        $category = [];
+        $mrfDetails = [];
+
+        /** this request value get App\Http\Controllers\taskController\TaskController (MRF) **/
+
+        $mrfIdList = isset($request->mrfIdList) ? $request->mrfIdList : '';
+        if(!empty($mrfIdList)) {
+            $mrf_ids = rtrim($mrfIdList, ",");
+            $mrf_ids = explode(' , ', $mrf_ids);
+        }        
+
+        if(isset($mrf_ids) && is_array($mrf_ids) && !empty($mrf_ids)) {
+
+            $mrfDetails = MxpMrf::join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mxp_mrf_table.booking_order_id')
+                ->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
+                ->join('mxp_product as mp','mp.product_code','mb.item_code')
+                ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
+                ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mbd.booking_category','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name','mp.other_colors','mp.material')
+                ->whereIn('mxp_mrf_table.mrf_id',$mrf_ids)
+                ->get();
+
+            /** end **/
+
+        } else {
+
+            $mrf_ids = isset($request->mid) ? $request->mid : '';
+
+            $mrfDetails = MxpMrf::join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mxp_mrf_table.booking_order_id')
+                    ->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
+                    ->join('mxp_product as mp','mp.product_code','mb.item_code')
+                    ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
+                    ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mbd.booking_category','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name','mp.other_colors','mp.material')
+                    ->where('mxp_mrf_table.mrf_id',$request->mid)
+                    ->get();
+        }
+
+        // self::print_me($mrf_ids);
+
+        if(isset($mrfDetails) && !empty($mrfDetails[0]->booking_order_id)){
             foreach ($mrfDetails as &$value) {
                 $value->mrf_accpeted = User::where('user_id',$value->accepted_user_id)
                                     ->select('first_name','last_name')
@@ -64,11 +102,18 @@ class MrfListController extends Controller
                                     ])
                                     ->first();
             }
+
+            foreach ($mrfDetails as $valuessss) {
+                $category[] = ucfirst(str_replace('_',' ',$valuessss->booking_category));
+            }
+
+            $categorys = is_array($category) ? implode(', ', array_unique($category)) : '';
         }
+
         $suppliers = Supplier::where('status', 1)->where('is_delete', 0)->get();
 
         NotificationController::updateSeenStatus($request->mid, Auth::user()->user_id);
-        // $this->print_me($mrfDetails['po_details']);
-        return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails','suppliers'));
+        
+        return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails','suppliers','mrf_ids','categorys'));
     }
 }

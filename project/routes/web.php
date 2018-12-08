@@ -870,10 +870,17 @@ Route::group(['middleware' => 'auth'], function () {
                 'as'=>'get_item_details',
                 'uses'=>'taskController\TaskController@getItemCode'
             ]);
+    
     Route::any('get/ordercode',
             [
                 'as'=>'get_order_details',
                 'uses'=>'taskController\BookingController@getordercode'
+            ]);
+
+    Route::any('get/mrf/id',
+            [
+                'as'=>'get_mrf_id',
+                'uses'=>'taskController\MrfListController@getMrfAllId'
             ]);
 
     Route::group(['middleware' => 'routeAccess'], function () {

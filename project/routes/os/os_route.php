@@ -4,7 +4,9 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], functi
 	Route::group(['middleware' => 'routeAccess'], function () {
 	// Route::get('os/mrf/list', 'Mrf\MrfListController@mrfListView')->name('os_mrf_list_view');
 	// Route::get('os/mrf/report', 'Mrf\MrfListController@showMrfReport')->name('os_mrf_list_report_view');
+
 	Route::get('os/mrf/report/{mid?}', 'Mrf\MrfListController@detailsViewForm')->name('os_mrf_details_view');
+	
 	Route::post('os/po/genarate', 'Po\PoController@poGenarateView')->name('os_po_genarate_view');
 	Route::post('os/po/genarate/action', 'Po\PoController@storeOsPo')->name('os_po_genarate_report_action');
 	Route::get('os/po/list', 'Po\PoListController@opListView')->name('os_po_list_view');

@@ -17,8 +17,11 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Model\MxpMrf;
+use App\Http\Controllers\taskController\Os\Mrf\MrfListController;
 
 class TaskController extends Controller {
+
 	CONST CREATE_IPO = "create";
 	CONST UPDATE_IPO = "update";
 
@@ -65,6 +68,7 @@ class TaskController extends Controller {
 			return view('maxim.orderInput.orderInputIndex', compact('buyerDetails'))->with(['taskType' => $taskType]);
 
 		} elseif ($taskType === 'PI' || $taskType === 'FSC PI') {
+
 			$booking_id = rtrim($request->bookingIdList, ",");
 			$booking_id = explode(' , ', $booking_id);
 			$buyerName = '';
@@ -143,47 +147,33 @@ class TaskController extends Controller {
 				]);
 
 		} elseif ($taskType === 'MRF') {
-			$data = $request->all();
 
-			$suppliers = Supplier::where('status', 1)
-				->where('is_delete', 0)
-				->get();
+			$mrfIdList = isset($request->mrfIdList) ? $request->mrfIdList : '';
+			$mrf_ids = rtrim($mrfIdList, ",");
+			$mrf_ids = explode(' , ', $mrf_ids);
 
-			$booking_order_id = $request->bookingId;
-			$validMessages = [
-				'bookingId.required' => 'Booking Id field is required.',
-			];
-			$validator = Validator::make($datas,
-				[
-					'bookingId' => 'required',
-				],
-				$validMessages
-			);
+			foreach ($mrf_ids as $mrf_id) {
 
-			if ($validator->fails()) {
-				return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
+				$mrfDetails = MxpMrf::where([['mrf_id',$mrf_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
+				if (! $mrfDetails->mrf_id) {
+					return redirect()->back()->withErrors($mrf_id." Mrf No. not found.");
+				}
 			}
 
-			$validationError = $validator->messages();
+			if(is_array($mrf_ids) && !empty($mrf_ids)) {
 
-			$bookingDetails = DB::select("SELECT * FROM mxp_booking_challan WHERE booking_order_id = '" . $request->bookingId . "' GROUP BY item_code");
-			// self::print_me($bookingDetails);
+				$mrflist_controller = new MrfListController();
+				return $mrflist_controller->detailsViewForm($request);
 
-			$buyerDetails = DB::select("SELECT * FROM mxp_bookingbuyer_details WHERE booking_order_id = '" . $request->bookingId . "'");
+			} else {
 
-			if (empty($bookingDetails)) {
-				StatusMessage::create('empty_booking_data', 'This booking Id does not show any result . Please check booking Id !');
+				return redirect()->back()->withErrors($mrf_id." MRF No. not found.");
+			} 
 
-				return \Redirect()->Route('dashboard_view');
-			}
-
-			$MrfDetails = DB::select("select * from mxp_mrf_table where booking_order_id = '" . $request->bookingId . "' GROUP BY mrf_id");
-//            return $bookingDetails;
-			return view('maxim.mrf.mrf', compact('bookingDetails', 'MrfDetails', 'booking_order_id', 'suppliers'));
 
 		} elseif ($taskType === 'challan') { // it's not working now. 
 		
-// 			return "Coming soon ";
+			return "Coming soon ";
 			$validMessages = [
 				'bookingIdList.required' => 'Booking Id field is required.',
 			];
@@ -336,6 +326,7 @@ class TaskController extends Controller {
 		}
 		return $bookingDetails;
 	}
+
 	public function getFscBookingValue($booking_order_id){
 		if(isset($booking_order_id) && !empty($booking_order_id)){
 			$bookingDetails = MxpBooking::where([['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->whereIn('booking_order_id',$booking_order_id)->orderBy('id','ASC')->get();

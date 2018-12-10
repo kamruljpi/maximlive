@@ -130,7 +130,7 @@
 			<tr>
 				<td colspan="2">
 					<div class="pull-right">
-						<p>PO No : {{$poDetails[0]->po_id}}</p>
+						<p>SPO No : {{$poDetails[0]->po_id}}</p>
 					</div>
 				</td>
 			</tr>

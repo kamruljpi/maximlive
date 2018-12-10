@@ -13,6 +13,7 @@ use App\Supplier;
 use App\User;
 use Auth;
 use DB;
+use Session;
 
 class MrfListController extends Controller
 {
@@ -46,13 +47,29 @@ class MrfListController extends Controller
         $category = [];
         $mrfDetails = [];
 
-        /** this request value get App\Http\Controllers\taskController\TaskController (MRF) **/
+        /** 
+         * this request value ->
+         * get App\Http\Controllers\taskController\TaskController (MRF) 
+         * this Session::get('mrfIdList') value ->
+         * get App\Http\Controllers\taskController\Os\Po\PoController
+         */
 
-        $mrfIdList = isset($request->mrfIdList) ? $request->mrfIdList : '';
+        $mrfIdList = isset($request->mrfIdList) ? $request->mrfIdList : Session::get('mrfIdList');
+
+        if(empty($mrfIdList)) {
+
+            /** 
+             *  this is work when $request->mid request get
+             *  this is work when multiple mrf reload $request->mid request get 
+             */
+
+            $mrfIdList = isset($request->mid) ? $request->mid : Session::get('mrfIdList');
+        }
+
         if(!empty($mrfIdList)) {
             $mrf_ids = rtrim($mrfIdList, ",");
-            $mrf_ids = explode(' , ', $mrf_ids);
-        }        
+            $mrf_ids = explode(' , ', $mrf_ids);   
+        }
 
         if(isset($mrf_ids) && is_array($mrf_ids) && !empty($mrf_ids)) {
 
@@ -64,9 +81,7 @@ class MrfListController extends Controller
                 ->whereIn('mxp_mrf_table.mrf_id',$mrf_ids)
                 ->get();
 
-            /** end **/
-
-        } else {
+        } else { /** now this condition not work **/
 
             $mrf_ids = isset($request->mid) ? $request->mid : '';
 
@@ -78,8 +93,6 @@ class MrfListController extends Controller
                     ->where('mxp_mrf_table.mrf_id',$request->mid)
                     ->get();
         }
-
-        // self::print_me($mrf_ids);
 
         if(isset($mrfDetails) && !empty($mrfDetails[0]->booking_order_id)){
             foreach ($mrfDetails as &$value) {
@@ -106,6 +119,8 @@ class MrfListController extends Controller
             foreach ($mrfDetails as $valuessss) {
                 $category[] = ucfirst(str_replace('_',' ',$valuessss->booking_category));
             }
+
+            /** this make unique Category **/
 
             $categorys = is_array($category) ? implode(', ', array_unique($category)) : '';
         }

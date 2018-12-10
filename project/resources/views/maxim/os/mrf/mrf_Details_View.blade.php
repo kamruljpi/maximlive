@@ -1,11 +1,7 @@
 @extends('layouts.dashboard')
 @section('page_heading', 'MRF Details')
 @section('section')
-    <?php 
-         //print_r("<pre>");
-        // print_r($category);
-        // print_r(session('data'));
-        // print_r("</pre>");die();
+    <?php
         use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
         use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
     ?>
@@ -46,23 +42,58 @@
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu" style="left:-142px !important;">
-                        <li><a href="{{Route('os_cancel_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}" class="deleteButton" style=" {{($mrfDetails[0]->mrf_status == MrfFlugs::OPEN_MRF)?'pointer-events: none':''}};">Cencel</a></li>
+                        <li>
+                            <form action="{{Route('os_cancel_mrf_action')}}">
+
+                                {{csrf_field()}}
+
+                                @if(is_array($mrf_ids) && !empty($mrf_ids))
+                                    @foreach($mrf_ids as $mrf_idssss)
+                                        <input type="hidden" name="mrf_ids[]" value="{{$mrf_idssss}}">
+                                    @endforeach
+                                @else
+                                    <input type="hidden" name="mrf_ids[]" value="{{$mrf_ids}}">
+                                @endif
+
+                                <button type="submit" style="background-color: #fff; border: 1px solid #fff; padding-left: 10px; " class="form-control">Cencel</button>
+                            </form>
+
+                            {{-- <a href="{{Route('os_cancel_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}" class="deleteButton" style=" {{($mrfDetails[0]->mrf_status == MrfFlugs::OPEN_MRF)?'pointer-events: none':''}};">Cencel</a> --}}
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-        
-    @if($mrfDetails[0]->mrf_status == MrfFlugs::OPEN_MRF)
-        <div class="row">
-            <div class="col-md-12">
-                <center><div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
-                    z-index: 999;">
-                  <strong>Accept!</strong> this Order and go to proccessing. <a href="{{Route('os_accepted_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accept</a>
-                </div></center>
+
+    @foreach($mrfDetails as $mrf_details)
+        @if($mrf_details->mrf_status == MrfFlugs::OPEN_MRF)
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
+                        z-index: 999;">                  
+
+                        <form action="{{Route('os_accepted_mrf_action')}}">
+                            {{csrf_field()}}
+
+                            @if(is_array($mrf_ids) && !empty($mrf_ids))
+                                @foreach($mrf_ids as $mrf_idssss)
+                                    <input type="hidden" name="mrf_ids[]" value="{{$mrf_idssss}}">
+                                @endforeach
+                            @else
+                                <input type="hidden" name="mrf_ids[]" value="{{$mrf_ids}}">
+                            @endif
+
+                            <strong>Accept!</strong> this Order and go to proccessing. 
+                            <button style="font-size: 20px;font-weight: bold; background-color: #d4ecf7; border: 1px solid #d4ecf7;text-decoration: underline;"
+                            title="Click me" >Accept</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </div>
-    @endif
+            @break
+        @endif
+    @endforeach
 
     @if(session('data'))
         <div class="row">
@@ -100,7 +131,15 @@
             </div>
 
                 <form action="{{Route('os_po_genarate_view')}}" method="POST">
-                {{csrf_field()}}
+                    {{csrf_field()}}
+
+                    @if(is_array($mrf_ids) && !empty($mrf_ids))
+                        @foreach($mrf_ids as $mrf_idssss)
+                            <input type="hidden" name="mrf_ids[]" value="{{$mrf_idssss}}">
+                        @endforeach
+                    @else
+                        <input type="hidden" name="mrf_ids[]" value="{{$mrf_ids}}">
+                    @endif
 
                 <div class="row">
                     <div class="col-sm-8">

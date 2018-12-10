@@ -635,15 +635,13 @@ class BookingListController extends Controller
         return redirect()->back();
     }
 
-    public function showBookingReport(Request $request){
-        // $bookingReport = DB::select("call getBookinAndBuyerDeatils('".$request->bid."')");
-
+    public function showBookingReport(Request $request) {
+        
         $bookingReport = $this->getBookingDetailsValue($request->bid);
         $bookingBuyer = $this->getBookingBuyerDetails($request->bid);
         $companyInfo = DB::table('mxp_header')->where('header_type',HeaderType::COMPANY)->get();
         $user = new BookingController();
         $getBookingUserDetails = $user::getUserDetails( $request->bid );
-        // $this->print_me($bookingBuyer);
 
         return view('maxim.orderInput.reportFile',compact('bookingReport','companyInfo','gmtsOrSizeGroup','getBookingUserDetails','bookingBuyer'));
     }
@@ -884,7 +882,7 @@ class BookingListController extends Controller
     }
 
     public static function getBookingDetailsValue($booking_order_id){
-        $bookingDetails = MxpBooking::where('booking_order_id',$booking_order_id)
+        $bookingDetails = MxpBooking::where([['is_deleted',BookingFulgs::IS_NOT_DELETED],['booking_order_id',$booking_order_id]])
                     ->orderBy('id','ASC')
                     ->get();
         return $bookingDetails;

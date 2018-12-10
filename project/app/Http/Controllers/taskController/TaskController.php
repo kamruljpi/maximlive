@@ -44,12 +44,18 @@ class TaskController extends Controller {
 		}
 		return json_encode($results);
 	}
-	public function gettaskActionOrsubmited() {
+	public function gettaskActionOrsubmited(Request $request) {
+
+		// if()
+		// $this->print_me($request->all());
+
 		return \Redirect()->Route('dashboard_view');
 	}
 	public function taskActionOrsubmited(Request $request) {
 		$roleManage = new RoleManagement();
 		$datas = $request->all();
+
+		// $this->print_me($datas);
 
 		$taskType = isset($request->taskType) ? $request->taskType : '';
 		if ($taskType === 'booking' || $taskType === 'FSC Booking') {
@@ -147,6 +153,8 @@ class TaskController extends Controller {
 				]);
 
 		} elseif ($taskType === 'MRF') {
+
+			// $this->print_me($request->all());
 
 			$mrfIdList = isset($request->mrfIdList) ? $request->mrfIdList : '';
 			$mrf_ids = rtrim($mrfIdList, ",");

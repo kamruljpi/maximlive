@@ -17,13 +17,21 @@ use App\Supplier;
 use App\Notification;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Input;
 
 class PoController extends Controller
 {
-	public function poGenarateView(Request $request){
+	public function poGenarateView(Request $request) {
+
+		/** this value need to same page redirect when multiple mrf request **/
+
+		$mrf_ids = isset($request->mrf_ids) ? $request->mrf_ids : '';
+		$mrf_ids = implode(' , ', $mrf_ids); // do not change implode @pram
+
+		/** end **/
 
 		if(!isset($request->job_id) || !isset($request->supplier_id)){
-			return redirect()->back()->with('data','Please select a Item and Suppliers');
+			return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $mrf_ids])->with('mrfIdList', $mrf_ids)->with('data','Please select a Item and Suppliers');
 		}
 
 		if(isset($request->job_id) && !empty($request->job_id)){
@@ -36,28 +44,29 @@ class PoController extends Controller
 			}
 
 			if($jobid_value->mrf_status == MrfFlugs::OPEN_MRF){
-				return redirect()->back()->with('data','Please accpet this order.');
+				return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $mrf_ids])->with('mrfIdList', $mrf_ids)->with('data','Please accpet this order.');
 			}
+			
 			if(!empty($check_open)){
-				return redirect()->back()->with('datas','.modal');
+				return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $mrf_ids])->with('mrfIdList', $mrf_ids)->with('datas','.modal');
 			}
 		}
 
 		$jobid_values = [];
-		if(isset($request->job_id) && !empty($request->job_id)){
+		if(isset($request->job_id) && !empty($request->job_id)) {
 			foreach ($request->job_id as $keyvalues) {
 				$jobid_values[] = MxpMrf::join('mxp_product as mp','mp.product_code','mxp_mrf_table.item_code')
-						->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
-						->select('mxp_mrf_table.*','mp.product_id','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','other_colors','material')
-						->where([
-							['job_id',$keyvalues],
-							['job_id_current_status',MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT]
-						])
-						->first();
+					->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
+					->select('mxp_mrf_table.*','mp.product_id','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','other_colors','material')
+					->where([
+						['job_id',$keyvalues],
+						['job_id_current_status',MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT]
+					])
+					->first();
 			}
 		}
 
-		if(isset($jobid_values[0]->job_id) && !empty($jobid_values[0]->job_id) && !empty($request->supplier_id)){
+		if(isset($jobid_values[0]->job_id) && !empty($jobid_values[0]->job_id) && !empty($request->supplier_id)) {
 			foreach ($jobid_values as &$item_price) {
 				$item_price->item_price = DB::table('mxp_supplier_prices')
 					->where([
@@ -69,22 +78,28 @@ class PoController extends Controller
 			}
 		$supplier = Supplier::where('supplier_id',$request->supplier_id)->select('supplier_id','name')->first();
 		}
-		if(!isset($jobid_values[0]->job_id)){$jobid_values = [];}
+
+		!isset($jobid_values[0]->job_id) ? $jobid_values = [] :''; 
 
 		$increase_value = $request->po_increase;
-		// $this->print_me($increase_value);	
+			
 		return view('maxim.os.po.po_genarate',compact('jobid_values','supplier','increase_value'));
 	}
 
+	/**
+	 * store OS Po datas and
+	 * @return $po_id redirect method 
+	 */
+
 	public function storeOsPo(Request $request){
 
-		$job_id = $request['job_id'];
-		$mrf_id = $request['mrf_id'];
-		$material = $request['material'];
-		$supplier_id = $request['supplier_id'];
-		$shipment_date = $request['shipment_date'];
-		$initial_increase = $request['po_increase_percentage'];
-		$supplier_price = $request['supplier_price'];
+		$job_id = isset($request['job_id']) ? $request['job_id'] : '';
+		$mrf_id = isset($request['mrf_id']) ? $request['mrf_id'] : '';
+		$material = isset($request['material']) ? $request['material'] : '';
+		$supplier_id = isset($request['supplier_id']) ? $request['supplier_id'] : '';
+		$shipment_date = isset($request['shipment_date']) ? $request['shipment_date'] : '';
+		$initial_increase = isset($request['po_increase_percentage']) ? $request['po_increase_percentage'] : '';
+		$supplier_price = isset($request['supplier_price']) ? $request['supplier_price'] : '';
 
 		$datas = [];
 		if(isset($job_id) && isset($supplier_price) && isset($material)){
@@ -97,12 +112,11 @@ class PoController extends Controller
 				}
 			}
 		}
-		// $this->print_me($datas);
 
 		$cc = MxpOsPo::select('po_id')->groupBy('po_id')->get();
 		$cc = count($cc);
 		$count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
-		$id = "PO"."-";
+		$id = "SPO"."-";
 		$date = date('dmY') ;
 		$po_id = $id.$date."-".$count;
 
@@ -139,28 +153,28 @@ class PoController extends Controller
 
 	public static function getOsPoValues($po_id,$order_by = null){
 		$datas = MxpOsPo::join('mxp_mrf_table as mrf','mrf.job_id','mxp_os_po.job_id')
-						->join('mxp_booking as mb','mb.id','mxp_os_po.job_id')
-						->join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mb.booking_order_id')
-						->join('mxp_product as mp','mp.product_code','mrf.item_code')
-						->Leftjoin('suppliers as s','s.supplier_id','mxp_os_po.supplier_id')
-						->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.initial_increase','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty','mbd.booking_category'
-						)
-						->where([
-							['mxp_os_po.po_id',$po_id]],
-							['mxp_os_po.is_deleted',BookingFulgs::IS_NOT_DELETED]
-						)
-						->orderBy('mxp_os_po.job_id',$order_by)
-						->get();
+			->join('mxp_booking as mb','mb.id','mxp_os_po.job_id')
+			->join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mb.booking_order_id')
+			->join('mxp_product as mp','mp.product_code','mrf.item_code')
+			->Leftjoin('suppliers as s','s.supplier_id','mxp_os_po.supplier_id')
+			->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.initial_increase','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty','mbd.booking_category'
+			)
+			->where([
+				['mxp_os_po.po_id',$po_id]],
+				['mxp_os_po.is_deleted',BookingFulgs::IS_NOT_DELETED]
+			)
+			->orderBy('mxp_os_po.job_id',$order_by)
+			->get();
 		return $datas;
 	}
 
 	public function getOsMrfValues(Request $request, $order_by = null){
 	    $mrfvalues = MxpMrf::where([
-	                            ['mrf_id', $request->mrf_id],
-                                ['is_deleted', BookingFulgs::IS_NOT_DELETED ]
-                            ])
-                            ->orderBy('job_id',$order_by)
-                            ->get();
+                ['mrf_id', $request->mrf_id],
+                ['is_deleted', BookingFulgs::IS_NOT_DELETED ]
+            ])
+            ->orderBy('job_id',$order_by)
+            ->get();
 	    return $mrfvalues;
     }
 

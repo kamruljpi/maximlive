@@ -81,6 +81,15 @@ class BookingController extends Controller
     }
 
     public function addBooking(Request $request,BookingListController $BookingListController){
+
+      $order_submit = isset($request->order_submit) ? $request->order_submit : '';
+
+      if ($order_submit == BookingFulgs::ORDER_SAVE) {
+        return (new DraftBooking($request))->storeOrderDraft();
+      }
+
+      $this->print_me($request->all());
+
       $roleManage = new RoleManagement();
 
       $validMessages = [
@@ -156,16 +165,16 @@ class BookingController extends Controller
 
         $data = $request->all();
         $item_description = (isset($data['item_description'])) ? $data['item_description'] : '';
-        $item_gmts_color = (isset($data['item_gmts_color'])) ? $data['item_gmts_color'] : 0;
-        $others_color = (isset($data['others_color'])) ? $data['others_color'] : 0;
+        $item_gmts_color = (isset($data['item_gmts_color'])) ? $data['item_gmts_color'] : '';
+        $others_color = (isset($data['others_color'])) ? $data['others_color'] : '';
         $oos_number = (isset($data['oos_number'])) ? $data['oos_number'] : '';
         $item_price = $data['item_price'];
-        $item_size = (isset($data['item_size'])) ? $data['item_size'] : 0;
+        $item_size = (isset($data['item_size'])) ? $data['item_size'] : '';
         $item_code = $data['item_code'];
         $item_qty = $data['item_qty'];
         $poCatNo = (isset($data['poCatNo'])) ? $data['poCatNo'] : '';
         $style = (isset($data['style'])) ? $data['style'] : '';
-        $erp = (isset($data['erp'])) ? $data['erp'] : 0;
+        $erp = (isset($data['erp'])) ? $data['erp'] : '';
         $sku = $data['sku'];
 
 
@@ -181,14 +190,14 @@ class BookingController extends Controller
         $insertBooking->item_code         = $item_code[$i];
         $insertBooking->sku               = $sku[$i];
         $insertBooking->gmts_color        = $item_gmts_color[$i];//(!empty($item_gmts_color[$i]) ? $item_gmts_color[$i] : '');
-        $insertBooking->others_color      = (!empty($others_color[$i]) ? $others_color[$i] : 0);
-        $insertBooking->item_description  = (!empty($item_description[$i]) ? $item_description[$i] : 0);
-        $insertBooking->oos_number        = (!empty($oos_number[$i]) ? $oos_number[$i] : 0);
-        $insertBooking->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : 0);
-        $insertBooking->style             = (!empty($style[$i]) ? $style[$i] : 0);
-        $insertBooking->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : 0);
-        $insertBooking->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : 0 );
-        $insertBooking->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : 0 );
+        $insertBooking->others_color      = (!empty($others_color[$i]) ? $others_color[$i] : '');
+        $insertBooking->item_description  = (!empty($item_description[$i]) ? $item_description[$i] : '');
+        $insertBooking->oos_number        = (!empty($oos_number[$i]) ? $oos_number[$i] : '');
+        $insertBooking->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
+        $insertBooking->style             = (!empty($style[$i]) ? $style[$i] : '');
+        $insertBooking->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
+        $insertBooking->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
+        $insertBooking->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '');
         $insertBooking->orderDate         = $request->orderDate;
         $insertBooking->orderNo           = $request->orderNo;
         $insertBooking->shipmentDate      = $request->shipmentDate;
@@ -208,15 +217,15 @@ class BookingController extends Controller
         $insertBookingChallan->item_code         = $item_code[$i];
         $insertBookingChallan->sku               = $sku[$i];
         $insertBookingChallan->gmts_color        = $item_gmts_color[$i];
-        $insertBookingChallan->others_color      = (!empty($others_color[$i]) ? $others_color[$i] : 0);
-        $insertBookingChallan->item_description  = (!empty($item_description[$i]) ? $item_description[$i] : 0);
-        $insertBookingChallan->oos_number        = (!empty($oos_number[$i]) ? $oos_number[$i] : 0);
-        $insertBookingChallan->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : 0);
-        $insertBookingChallan->style             = (!empty($style[$i]) ? $style[$i] : 0);
-        $insertBookingChallan->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : 0);
-        $insertBookingChallan->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : 0 );
-        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : 0 );
-        $insertBookingChallan->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : 0 );
+        $insertBookingChallan->others_color      = (!empty($others_color[$i]) ? $others_color[$i] : '');
+        $insertBookingChallan->item_description  = (!empty($item_description[$i]) ? $item_description[$i] : '');
+        $insertBookingChallan->oos_number        = (!empty($oos_number[$i]) ? $oos_number[$i] : '');
+        $insertBookingChallan->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
+        $insertBookingChallan->style             = (!empty($style[$i]) ? $style[$i] : '');
+        $insertBookingChallan->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
+        $insertBookingChallan->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
+        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty$i] : '' );
+        $insertBookingChallan->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '' );
         $insertBookingChallan->orderDate         = $request->orderDate;
         $insertBookingChallan->orderNo           = $request->orderNo;
         $insertBookingChallan->shipmentDate      = $request->shipmentDate;
@@ -231,8 +240,8 @@ class BookingController extends Controller
         $itemQntyByChalan->booking_order_id = $insertBookingChallan->booking_order_id;
         $itemQntyByChalan->item_code = $insertBookingChallan->item_code;
         $itemQntyByChalan->erp_code = $insertBookingChallan->erp_code;
-        $itemQntyByChalan->item_size = (!empty($item_size[$i]) ? $item_size[$i] : 0);
-        $itemQntyByChalan->item_quantity = (!empty($item_qty[$i]) ? $item_qty[$i] : 0 );
+        $itemQntyByChalan->item_size = (!empty($item_size[$i]) ? $item_size[$i] : '');
+        $itemQntyByChalan->item_quantity = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
         $itemQntyByChalan->gmts_color = $item_gmts_color[$i];
         $itemQntyByChalan->save();
 

@@ -224,7 +224,7 @@ class BookingController extends Controller
         $insertBookingChallan->style             = (!empty($style[$i]) ? $style[$i] : '');
         $insertBookingChallan->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
         $insertBookingChallan->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty$i] : '' );
+        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
         $insertBookingChallan->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '' );
         $insertBookingChallan->orderDate         = $request->orderDate;
         $insertBookingChallan->orderNo           = $request->orderNo;

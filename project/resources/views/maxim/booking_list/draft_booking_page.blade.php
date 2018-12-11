@@ -1,13 +1,10 @@
 @extends('layouts.dashboard')
-@section('page_heading',$taskType)
+@section('page_heading','Draft Booking')
 @section('page_heading_right',  Carbon\Carbon::now()->format('d-m-Y'))
 @section('section')
-  <?php 
-    use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-
-    $general = 'Create Booking';
-    $fsc     = 'Create FSC Booking'
-  ?>
+	<?php 
+	  use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+	?>
   <style type="text/css">
     .top-div{
       background-color: #f9f9f9;
@@ -56,17 +53,10 @@
 
   <form class="" action="{{ Route('booking_order_action') }}" role="form" method="POST" enctype="multipart/form-data" target="_blank">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <input type="hidden" name="buyerDetails" value="{{$buyerDetails}}">
-    @if($taskType == $general)
-      <input type="hidden" name="is_type" value="general">
-    @elseif($taskType == $fsc)
-    <input type="hidden" name="is_type" value="fsc">
-    @endif
+
     <div class="col-md-12" style="margin-top: 10px;">
       <div class="pull-left">
         <div class="form-group button_add pull-right">
-          {{--<input type="file" name="booking_files[]" class="btn btn-success" id="" ><i class="fa fa-file" style="font-size:`16px;color:white; margin-right:7px;"></i>Add Files</input>--}}
-
           <label class="btn btn-default btn btn-success">
             <i class="fa fa-file" style="font-size:16px;color:white; margin-right:7px;"></i>
             Select Files <input type="file" style="display: none;" name="booking_files[]" class="" id="" multiple disabled>
@@ -256,8 +246,8 @@
     <div class="form-group button_add pull-left" style="margin-top: 20px;margin-bottom: 20px; ">
       <button type="submit" class="btn btn-success" id="add"><i class="fa fa-copy" style="padding-right: 5px;"></i>Copy Item</button>
       <button type="submit" class="btn btn-success" id="order_copy"><i class="fa fa-plus" style="padding-right: 5px;"></i>Add New Item</button>
-      <button type="submit" class="btn btn-primary" name="order_submit" value="{{BookingFulgs::ORDER_SAVE}}">Save</button>
       <button type="submit" class="btn btn-primary" name="order_submit" value="{{BookingFulgs::ORDER_SUBMIT}}">Submit</button>
+      <button type="submit" class="btn btn-primary" name="order_submit" value="{{BookingFulgs::ORDER_SAVE}}">Save</button>
     </div>
   </form>
 </div>

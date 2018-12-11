@@ -5,9 +5,10 @@ namespace App\Http\Controllers\taskController\Flugs\booking;
 class BookingFulgs
 {	
 	const IS_DELETED = 1;
-	const IS_COMPLETE = 0;
-	const IS_NOT_COMPLETE = 0;
 	const IS_NOT_DELETED = 0;
+	
+	const IS_COMPLETE = 0;
+	// const IS_NOT_COMPLETE = 0;
 
 	const BOOKED_FLUG = 'Booked';
 	const BOOKING_PROCESS_FLUG = 'Process';
@@ -19,4 +20,7 @@ class BookingFulgs
 	const LAST_ACTION_CREATE = 'create';
 	const LAST_ACTION_UPDATE = 'update';
 	const LAST_ACTION_DELETE = 'delete';
+
+	const ORDER_SAVE = 'save';
+	const ORDER_SUBMIT = 'submit';
 }

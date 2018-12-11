@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class mxpDraft extends Model
+class MxpDraft extends Model
 {
     protected $table = 'mxp_draft';
     

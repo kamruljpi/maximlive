@@ -42,7 +42,7 @@
 <div class="row">
     <div class="col-sm-10 col-sm-offset-1">
         @if(!empty($pi_value->p_id))
-            <h3><label>Did you know ? Job Id <span style="color:red;">{{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</span> already make a PI. PI id is <span style="color:red;">{{$pi_value->p_id}}</span>. If you update it's not changing your PI. You need to create new PI.</label>
+            <h3><label>Do you know? Job Id <span style="color:red;">{{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</span> is already a PI. PI id is <span style="color:red;">{{$pi_value->p_id}}</span>. If you want to update then it will not effect on this PI id. You need to create new PI.</label>
                 </h3>
         @endif
     </div>
@@ -147,7 +147,7 @@
                         <div class="form-group" style="    width: 200px !important;">
                             {{--<input type="text" name="item_size[]" class="form-control">--}}
 
-                            <select name="item_size" class="form-control itemSize" id="itemSize" disabled = "true" required>
+                            <select name="item_size" class="form-control itemSize" id="itemSize"  required>
                                 <option value="{{ $mxpBooking->item_size }}">{{ $mxpBooking->item_size }}</option>
                             </select>
                         </div>

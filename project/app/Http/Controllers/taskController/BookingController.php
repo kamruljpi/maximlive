@@ -35,6 +35,7 @@ use Carbon;
 use Session;
 use App\Model\Os\MxpOsPo;
 use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+use App\MxpDraft;
 
 class BookingController extends Controller
 { 
@@ -84,12 +85,6 @@ class BookingController extends Controller
 
       $order_submit = isset($request->order_submit) ? $request->order_submit : '';
 
-      if ($order_submit == BookingFulgs::ORDER_SAVE) {
-        return (new DraftBooking($request))->storeOrderDraft();
-      }
-
-      $this->print_me($request->all());
-
       $roleManage = new RoleManagement();
 
       $validMessages = [
@@ -127,11 +122,19 @@ class BookingController extends Controller
           $companySortName = $getSortCname->sort_name;
       }
 
-      $cc = MxpBookingBuyerDetails::count();
+      $cc_1 = MxpBookingBuyerDetails::count();
+      $cc_2 = MxpDraft::select('booking_order_id')->groupBy('booking_order_id')->get();
+      $cc_3 = count($cc_2);
+      $cc = $cc_1 + $cc_3;
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
       $id = "BK"."-";
       $date = date('dmY') ;
       $customid = $id.$date."-".$companySortName."-".$count;
+
+      if ($order_submit == BookingFulgs::ORDER_SAVE) {
+        return (new DraftBooking())->storeOrderDraft($request,$customid);
+      }
+      $this->print_me($request->all());
 
       foreach ($buyerDetails as $buyers) {
         $InserBuyerDetails = new MxpBookingBuyerDetails();
@@ -224,7 +227,7 @@ class BookingController extends Controller
         $insertBookingChallan->style             = (!empty($style[$i]) ? $style[$i] : '');
         $insertBookingChallan->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
         $insertBookingChallan->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty$i] : '' );
+        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
         $insertBookingChallan->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '' );
         $insertBookingChallan->orderDate         = $request->orderDate;
         $insertBookingChallan->orderNo           = $request->orderNo;

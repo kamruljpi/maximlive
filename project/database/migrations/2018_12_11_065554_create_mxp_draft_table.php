@@ -16,6 +16,7 @@ class CreateMxpDraftTable extends Migration
         Schema::create('mxp_draft', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->nullable();
+            $table->integer('vendor_id')->nullable();
             $table->string('booking_order_id')->nullable();
             $table->string('erp_code')->nullable();
             $table->string('item_code')->nullable();

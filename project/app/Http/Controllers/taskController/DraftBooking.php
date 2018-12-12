@@ -28,8 +28,6 @@ class DraftBooking extends Controller
       $shipment_date = isset($request->shipmentDate) ? $request->shipmentDate :'';
       $season_code = isset($request->season_code) ? $request->season_code :'';
       $booking_category = isset($request->booking_category) ? $request->booking_category : 'sss';
-      // $this->print_me($order_date);
-
       $buyer_details = isset($request['buyerDetails']) ? json_decode($request['buyerDetails']) : '' ;
 
       foreach ($buyer_details as $key => $buyers) {
@@ -66,8 +64,6 @@ class DraftBooking extends Controller
          }
       }
 
-       // $this->print_me($datas);
-
       if(!empty($datas)) {
          foreach ($datas as $key => $data) {
 
@@ -99,6 +95,12 @@ class DraftBooking extends Controller
          }
       }
 
-      return view('maxim.booking_list.draft_booking_page');
+      return $this->redirectDraftBooking($id);
+   }
+
+   public function redirectDraftBooking($id) {
+      $bookings = MxpDraft::where('booking_order_id',$id)->get();
+
+      return view('maxim.booking_list.draft_booking_page',compact($booking));
    }
 }

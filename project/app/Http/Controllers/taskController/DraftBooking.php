@@ -16,6 +16,20 @@ use DB;
 
 class DraftBooking extends Controller
 {
+
+    public function index(){
+        $draft_list = MxpDraft::where('is_deleted',BookingFulgs::IS_NOT_DELETED)->groupBy('booking_order_id')->orderBy('id',DESC)->get();
+        return view('maxim.draft.draft_list',compact('draft_list'));
+    }
+    public function draftIndex($id){
+        $draft_list = MxpDraft::where(
+            [
+                ['booking_order_id' , $id ],
+                ['is_deleted', BookingFulgs::IS_NOT_DELETED ],
+            ]
+            )->get();
+        return view('maxim.booking_list.draft_booking_page',compact('draft_list'));
+    }
    /**
     *
     * @param $request get all input field value

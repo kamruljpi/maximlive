@@ -24,10 +24,27 @@
 		<div class="col-md-12 col-md-offset-0">
 			<table class="table table-bordered">
 				<head>
-					<tr></tr>
+					<tr>
+						<th>Serial No</th>
+						<th>Booking No</th>
+						<th>Category</th>
+						<th>Action</th>
+					</tr>
 				</head>
 				<tbody>
-					<tr></tr>
+					<?php $i=1; ?>
+					@foreach($draft_list as $drafts)
+					<tr>
+						<td>{{ $i }}</td>
+						<td>{{ $drafts->booking_order_id }}</td>
+						<td>{{ $drafts->booking_category }}</td>
+						<td>
+							<a href="{{ Route('getDraft',['id' => $drafts->booking_order_id ]) }}" class="btn btn-success">Edit</a>
+							<a href="#" class="btn btn-danger">Delete</a>
+						</td>
+					</tr>
+					<?php $i++; ?>
+					@endforeach
 				</tbody>
 			</table>
 			<div id=""></div>

@@ -118,6 +118,7 @@ class BookingController extends Controller
       $validationError = $validator->messages();
       $companySortName = '';
       $buyerDetails = json_decode($request['buyerDetails']);
+      
       foreach ($buyerDetails as $getSortCname) {
           $companySortName = $getSortCname->sort_name;
       }

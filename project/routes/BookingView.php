@@ -10,6 +10,8 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController'], function 
 		Route::get('management/tracking/report', 'ManagementTrackingController@managementTrackingReport')->name('management_booking_list');
 
 		Route::any('booking/details/jobid/delete/{id?}', 'BookingController@bookingJobIdDelete')->name('booking_job_id_delete_action');
+		Route::get('draft/booking','DraftBooking@index')->name('getBooking');
+		Route::get('draft/booking/{id}','DraftBooking@draftIndex')->name('getDraft');
 
 	// });
 });

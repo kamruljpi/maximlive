@@ -32,7 +32,7 @@
 					</tr>
 				</head>
 				<tbody>
-					<?php $i=1; ?>
+					@php($j=1 + $draft_list->perPage() * ($draft_list->currentPage() - 1))
 					@foreach($draft_list as $drafts)
 					<tr>
 						<td>{{ $i }}</td>
@@ -47,12 +47,7 @@
 					@endforeach
 				</tbody>
 			</table>
-			<div id=""></div>
-			<div class="pagination-container">
-				<nav>
-					<ul class="pagination"></ul>
-				</nav>
-			</div>
+			{{$draft_list->links()}}
 		</div>
 	</div>
 @endsection

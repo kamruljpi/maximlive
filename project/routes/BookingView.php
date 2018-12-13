@@ -11,7 +11,7 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController'], function 
 
 		Route::any('booking/details/jobid/delete/{id?}', 'BookingController@bookingJobIdDelete')->name('booking_job_id_delete_action');
 		Route::get('draft/booking','DraftBooking@index')->name('getBooking');
-		Route::get('draft/booking/{id}','DraftBooking@draftIndex')->name('getDraft');
+		Route::get('draft/booking/{id?}','DraftBooking@redirectDraftBooking')->name('getDraft');
 
 	// });
 });

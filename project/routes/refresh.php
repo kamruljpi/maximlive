@@ -7,4 +7,6 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController'], function 
 	Route::get('ipo/store/report', 'Ipo\IpoController@redirectIpoReport')->name('refresh_ipo_view');
 	Route::get('pi/store/report', 'pi\PiController@redirectPiReport')->name('refresh_pi_view');
 	Route::get('os/po/store/report', 'Os\Po\PoController@redirectOsPoReport')->name('refresh_os_po_view');
+
+	Route::get('booking/draft/store/{id?}', 'DraftBooking@redirectDraftBooking')->name('refresh_booking_draft');
 });

@@ -84,6 +84,7 @@ class BookingController extends Controller
     public function addBooking(Request $request,BookingListController $BookingListController){
 
       $order_submit = isset($request->order_submit) ? $request->order_submit : '';
+      $booking_number = isset($request['booking_number']) ? $request['booking_number'] : '' ;
 
       $roleManage = new RoleManagement();
 
@@ -123,6 +124,9 @@ class BookingController extends Controller
           $companySortName = $getSortCname->sort_name;
       }
 
+      /**
+       * Generate Boooking number
+       */
       $cc_1 = MxpBookingBuyerDetails::count();
       $cc_2 = MxpDraft::select('booking_order_id')->groupBy('booking_order_id')->get();
       $cc_3 = count($cc_2);
@@ -132,15 +136,29 @@ class BookingController extends Controller
       $date = date('dmY') ;
       $customid = $id.$date."-".$companySortName."-".$count;
 
+      /** it's check draft booking id and remove draft value from draft table
+       * and store booking in booking main table
+       */
+      if($booking_number) {
+
+        $customid = $booking_number ? $booking_number : $customid ;
+        $delete = MxpDraft::where('booking_order_id',$customid)->delete();
+
+      }
+
+      /** end  **/      
+
+      /**
+       * @return Draft store controller 
+       */
       if ($order_submit == BookingFulgs::ORDER_SAVE) {
         return (new DraftBooking())->storeOrderDraft($request,$customid);
       }
-      $this->print_me($request->all());
 
       foreach ($buyerDetails as $buyers) {
         $InserBuyerDetails = new MxpBookingBuyerDetails();
         $InserBuyerDetails->user_id = Auth::user()->user_id;
-        $InserBuyerDetails->booking_order_id      = $customid;//'booking-abc-002';
+        $InserBuyerDetails->booking_order_id      = $customid; //'booking-abc-002';
         $InserBuyerDetails->Company_name          = $buyers->name;
         $InserBuyerDetails->C_sort_name           = $buyers->sort_name;
         $InserBuyerDetails->buyer_name            = $buyers->name_buyer;

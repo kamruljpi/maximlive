@@ -17,6 +17,7 @@ use App\User;
 use Carbon;
 use Session;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\LastActionFlugs;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 
 class PiController extends Controller
@@ -100,6 +101,7 @@ class PiController extends Controller
 				$piDetails->sku = $piValues->sku;
 				$piDetails->style = $piValues->style;
 				$piDetails->is_type = $is_type;
+				$piDetails->last_action_at = LastActionFlugs::CREATE_ACTION;
 				$piDetails->save();
 			}
 		}
@@ -147,6 +149,7 @@ class PiController extends Controller
                 $value->is_deleted = BookingFulgs::IS_DELETED;
                 $value->deleted_user_id = Auth::User()->user_id;
                 $value->deleted_date_at = Carbon\Carbon::now();
+                $value->last_action_at = LastActionFlugs::DELETE_ACTION;
                 $value->save();
                 
                 $booking = MxpBooking::find($value->job_no);

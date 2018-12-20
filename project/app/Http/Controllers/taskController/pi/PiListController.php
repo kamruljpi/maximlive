@@ -51,7 +51,6 @@ class PiListController extends Controller
 	 *
 	 *	@return PI list view page
 	 */
-
 	public function piSearch(Request $request) {
 
 		$p_id = isset($request->p_id) ? $request->p_id : '' ;
@@ -65,7 +64,6 @@ class PiListController extends Controller
 	 *
 	 * @return array()
 	 */
-
 	public function piSearchById($p_id) {
 
 		$pi_value = [] ;
@@ -82,5 +80,29 @@ class PiListController extends Controller
 		}
 
 		return $pi_value;
+	}
+
+	/**
+	 * PI reverse view 
+	 * @return  array() mixed
+	 */
+	public function piReverseView($p_id) {
+
+		$buyerDetails = [];
+		$piDetails = MxpPi::orderBy('id','DESC')			
+            ->where([
+            	['is_deleted','0'],
+            	['p_id',$p_id]
+            ])
+			->get();
+
+		if(!empty($piDetails[0]->booking_order_id)) {
+			$buyerDetails = DB::table('mxp_bookingbuyer_details')
+	    	->where('booking_order_id',$piDetails[0]->booking_order_id)
+	    	->first();
+	    	$buyerDetails->prepared_by = DB::Table('mxp_users')->where('user_id',$piDetails[0]->user_id)->select('first_name','last_name')->first();
+		}
+
+		return view('maxim.pi_format.pi_reverse_page',compact('piDetails','buyerDetails'));
 	}
 }

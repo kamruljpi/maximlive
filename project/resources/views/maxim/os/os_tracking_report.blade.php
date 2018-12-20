@@ -3,7 +3,7 @@
 @section('section')
 <?php 
     use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
-        use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+    use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 ?>
 <style type="text/css">
@@ -139,7 +139,7 @@
                             <tr id="booking_list_table">
                                 <td>
                                     <input name="job_id[]" value="{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $valuelist->job_id }}" type="hidden">
-                                    {{ str_repeat('0',$idstrcount) }}{{ $value->job_id }}
+                                    {{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $value->job_id }}
                                 </td>
                                 <td>
                                     <input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}</td>

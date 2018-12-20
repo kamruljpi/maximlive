@@ -37,7 +37,7 @@ Class Resource extends Controller
 		return $data;
 	}
 
-	public function restorebooking($id){
+	public function restorebooking($id) {
 		try {
 			$booking = MxpBooking::where([
 						['booking_order_id', $id],
@@ -82,7 +82,8 @@ Class Resource extends Controller
         	return false;
 		}
 	}
-	public function restorePi($id){
+
+	public function restorePi($id) {
 		try {
 			$pi_value = MxpPi::where([
 						['p_id', $id],
@@ -98,17 +99,22 @@ Class Resource extends Controller
 	                $pivalue->last_action_at = LastActionFlugs::RESTORED_ACTION;
 	                $pivalue->save();
 	                
-	                $bookingss = MxpBooking::find($value->job_no);
-	                $bookingss->is_pi_type = $value->is_type;
+	                $bookingss = MxpBooking::find($pivalue->job_no);
+	                $bookingss->is_pi_type = $pivalue->is_type;
 	                $bookingss->save();
 	                
 	                $msg = "Pi ".$id." Restore successfully.";
 	            }
+
 	        }else{
+
 	            $error = "Something went wrong please try again later";
+
 	        }
+
 	        Session::flash('message', $msg);
 	        Session::flash('error-m', $error);
+
 			return redirect()->back();
 
 		} catch (Exception $e) {

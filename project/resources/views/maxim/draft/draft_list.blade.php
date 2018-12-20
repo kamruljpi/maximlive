@@ -35,12 +35,12 @@
 					@php($j=1 + $draft_list->perPage() * ($draft_list->currentPage() - 1))
 					@foreach($draft_list as $drafts)
 					<tr>
-						<td>{{ $i }}</td>
+						<td>{{ $j++ }}</td>
 						<td>{{ $drafts->booking_order_id }}</td>
 						<td>{{ $drafts->booking_category }}</td>
 						<td>
 							<a href="{{ Route('getDraft',['id' => $drafts->booking_order_id ]) }}" class="btn btn-success">Edit</a>
-							<a href="#" class="btn btn-danger">Delete</a>
+							<a href="{{Route('draft_delete_action',$drafts->booking_order_id)}}" class="btn btn-danger">Delete</a>
 						</td>
 					</tr>
 					<?php $i++; ?>

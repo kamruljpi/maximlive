@@ -12,6 +12,7 @@ use App\MxpProduct;
 use App\MaxParty;
 use App\MxpDraft;
 use Validator;
+use Session;
 use Carbon;
 use Auth;
 use DB;
@@ -144,4 +145,26 @@ class DraftBooking extends Controller
 
       return view('maxim.draft.draft_booking_page',compact('bookings','buyer_details','buyerDetails'));
    }
+
+  /**
+   * this method soft delete draft booking
+   */
+  public function draftDeleteAction($booking_id) {
+    $draft_bookings = MxpDraft::where('booking_order_id',$booking_id)->get();
+
+    if(!empty($draft_bookings[0]->booking_order_id)) {
+      foreach ($draft_bookings as $boking_value) {
+        $boking_value->is_deleted = BookingFulgs::IS_DELETED;
+        $boking_value->deleted_user_id = Auth::User()->user_id;
+        $boking_value->deleted_date_at = Carbon\Carbon::now();
+        $boking_value->save();
+      }      
+      Session::flash('message', $draft_bookings[0]->booking_order_id.' successfuly deleted.');
+    } else {
+      Session::flash('error-m', $booking_id. ' Something is wrong');
+    }     
+
+    return Redirect()->back();
+  }
+
 }

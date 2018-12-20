@@ -118,7 +118,7 @@
 		    			<td>{{$pi_value->item_quantity}}</td>
 		    			<td width="100%">
 		    				<div style="float: left;width: 45%;">
-		    					<a href="{{Route('pi_edit_view',$pi_value->job_no)}}" class="btn btn-primary" >Edit</a>
+		    					<a href="{{Route('pi_reverse_edit_view',$pi_value->job_no)}}" class="btn btn-primary" >Edit</a>
 		    				</div>
 
 		    				<div style="float: left;width: 45%; padding-right: : 5px;">

@@ -131,6 +131,7 @@ class PiController extends Controller
 	    	->first();
 	    $is_type = $request->is_type;
 		$getUserDetails = $this->getUserDetails($bookingDetails[0]->user_id);
+		
 		return view('maxim.pi_format.piReportPage', compact('companyInfo', 'bookingDetails','footerData','buyerDetails','is_type','getUserDetails'));
 	}
 
@@ -142,7 +143,11 @@ class PiController extends Controller
     }
     public function piEdit($p_id){
 
-        $pi_value = MxpPi::where('p_id', $p_id)->get();
+        $pi_value = MxpPi::where([
+        		['p_id', $p_id],
+        		['is_deleted',BookingFulgs::IS_NOT_DELETED]
+        	])
+        	->get();
 
         if(isset($pi_value) && !empty($pi_value)){
             foreach ($pi_value as $value) {

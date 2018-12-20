@@ -356,10 +356,14 @@ class BookingController extends Controller
                 ])
                 ->first();
 
-      $pi_value = MxpPi::where('job_no',$request->job_id)
-              ->select('p_id','booking_order_id','item_code','item_quantity','item_size','item_price')
-              ->first();
+      $pi_value = MxpPi::where([
+              ['job_no',$request->job_id],
+              ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+            ])
+            ->select('p_id','booking_order_id','item_code','item_quantity','item_size','item_price')
+            ->first();
     }
+    
     $party_id = $request->party_id;
 
     // $this->print_me($pi_value);

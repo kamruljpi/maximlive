@@ -4,8 +4,8 @@
 @section('section')
 	<?php
 		use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-		$object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
-		$roleCheck = $object->getRole();
+		$object = new App\Http\Controllers\Source\User\RoleDefine();
+		$commercial = $object->getRole('Commercial');
 	?>
 	
 	<style type="text/css">
@@ -81,39 +81,44 @@
 					</tr>
 				</thead>
 				<tbody>
-				@php($j=1 + $piDetails->perPage() * ($piDetails->currentPage() - 1))
-				@foreach($piDetails as $value)
-					<?php 
-						$booking_id = explode(',', $value->booking_order_id);
-					?>
-					<tr id="mrf_list_table">
-						<td>{{$j++}}</td>
-						<td>{{$value->booking_order_id}}</td>
-						<td>{{$value->p_id}}</td>
-						<td>
-	                        <div class="btn-group">
-	                            <form action="{{ Route('pi_list_report_view') }}" target="_blank">
-	                                {{ csrf_field() }}
-	                                <input type="hidden" name="pid" value="{{$value->p_id}}">
-	                                <input type="hidden" name="is_type" value="{{$value->is_type}}">
-	                                <input type="hidden" name="bid" value="{{$booking_id[0]}}">
-	                                <button class="btn btn-success b1">Report</button>
+					@php($j=1 + $piDetails->perPage() * ($piDetails->currentPage() - 1))
+					@foreach($piDetails as $value)
+						<?php 
+							$booking_id = explode(',', $value->booking_order_id);
+						?>
+						<tr id="mrf_list_table">
+							<td>{{$j++}}</td>
+							<td>{{$value->booking_order_id}}</td>
+							<td>{{$value->p_id}}</td>
+							<td>
+		                        <div class="btn-group">
+		                            <form action="{{ Route('pi_list_report_view') }}" target="_blank">
+		                                {{ csrf_field() }}
+		                                <input type="hidden" name="pid" value="{{$value->p_id}}">
+		                                <input type="hidden" name="is_type" value="{{$value->is_type}}">
+		                                <input type="hidden" name="bid" value="{{$booking_id[0]}}">
+		                                <button class="btn btn-success b1">Report</button>
+		                               @if($commercial != 'commercial')
+			                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			                                    <span class="caret"></span>
+			                                    <span class="sr-only">Toggle Dropdown</span>
+			                                </button>
 
-	                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                    <span class="caret"></span>
-	                                    <span class="sr-only">Toggle Dropdown</span>
-	                                </button>
+			                                <ul class="dropdown-menu" style="left:-45px !important;">
+			                                    <li>
+			                                        <a  type="button" class="deleteButton" href="{{ Route('pi_edit_action', $value->p_id) }}" >Delete</a>
+			                                    </li>
 
-	                                <ul class="dropdown-menu" style="left:-45px !important;">
-	                                    <li>
-	                                        <a  type="button" class="deleteButton" href="{{ Route('pi_edit_action', $value->p_id) }}" >Delete</a>
-	                                    </li>
-	                                </ul>
-	                            </form>
-	                        </div>
-	                    </td>
-					</tr>
-				@endforeach
+			                                    <li>
+			                                        <a href="{{ Route('pi_reverse_view', $value->p_id) }}" >Reverse</a>
+			                                    </li>
+			                                </ul>
+		                                @endif
+		                            </form>
+		                        </div>
+		                    </td>
+						</tr>
+					@endforeach
 				</tbody>
 			</table>
 			<div id="">{{$piDetails->links()}}</div>

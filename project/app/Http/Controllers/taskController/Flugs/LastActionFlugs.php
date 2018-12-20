@@ -8,4 +8,5 @@ class LastActionFlugs
 	const UPDATE_ACTION = 'update';
 	const DELETE_ACTION = 'deleted';
 	const RESTORED_ACTION = 'restored';
+	const REVERSE_ACTION = 'reverse';
 }

@@ -57,7 +57,7 @@
 	    
 	    <div class="row">
 	        <div class="col-md-12">
-	            <a href="{{ Route('pi_reverse_view', $pi_jobid_details->p_id) }}" class="btn btn-primary" style="width: 15%; margin: 10px 0px 5px 0px;">Back</a>
+	            <a href="{{ Route('pi_reverse_view', !empty($pi_jobid_details->p_id) ? $pi_jobid_details->p_id : '0') }}" class="btn btn-primary" style="width: 15%; margin: 10px 0px 5px 0px;">Back</a>
 	        </div>
 
 	        <div class="col-md-12">
@@ -66,7 +66,7 @@
 	    </div>
 	    <div style="padding-top: 20px;"></div>
 
-	    <form action="{{route('pi_edit_action')}}" method="POST">
+	    <form action="{{route('pi_reverse_edit_action')}}" method="POST">
 	            {{csrf_field()}}
 	        <input type="hidden" name="p_id" value="{{ $pi_jobid_details->p_id }}">
 	        <input type="hidden" name="job_id" value="{{ $pi_jobid_details->job_no }}">

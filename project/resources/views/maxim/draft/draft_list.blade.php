@@ -40,7 +40,7 @@
 						<td>{{ $drafts->booking_category }}</td>
 						<td>
 							<a href="{{ Route('getDraft',['id' => $drafts->booking_order_id ]) }}" class="btn btn-success">Edit</a>
-							<a href="{{Route('draft_delete_action',$drafts->booking_order_id)}}" class="btn btn-danger">Delete</a>
+							<a href="{{Route('draft_delete_action',$drafts->booking_order_id)}}" class="btn btn-danger deleteButton">Delete</a>
 						</td>
 					</tr>
 					<?php $i++; ?>

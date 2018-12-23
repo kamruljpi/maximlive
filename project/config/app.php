@@ -188,6 +188,7 @@ return [
 		*/
 		Collective\Html\HtmlServiceProvider::class,
 		// Collective\Bus\BusServiceProvider::class,
+		Stevebauman\Location\LocationServiceProvider::class,
 
 	],
 
@@ -243,7 +244,7 @@ return [
 		'Html' => Collective\Html\HtmlFacade::class,
 		'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 		'Carbon' => Carbon\Carbon::class,
-
+		'Location' => Stevebauman\Location\Facades\Location::class,
 	],
 
 ];

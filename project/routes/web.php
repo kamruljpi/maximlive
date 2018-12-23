@@ -160,6 +160,8 @@ Route::group(
         Route::get('/notifications', 'NotificationController@getAllNotificationView')->name('getNotification');
         Route::get('/seenAll', 'NotificationController@setAllNotificationSeen')->name('notification_seen');
 
+        Route::get('/restricted', 'IpCheckCOntroller@restrictedView')->name('restricted');
+
         Route::group(['middleware' => 'routeAccess'], function () {
             Route::group(['prefix' => 'super-admin'], function () {
 

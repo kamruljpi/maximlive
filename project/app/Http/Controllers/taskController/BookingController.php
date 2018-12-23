@@ -371,12 +371,37 @@ class BookingController extends Controller
   }
 
   public function updateBooking(Request $request){
+
+
     $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($request->booking_id));
     $job_id_id = str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount).$request->booking_id;
 
     $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
+    $mxp_pi = MxpPi::where('job_no', $request->booking_id)->first();
+    // self::print_me($mxp_pi);
       
+      if(!empty($mxp_pi)) {
+        $mxp_pi->item_description = $request->item_description;
+        $mxp_pi->oos_number = $request->oos_number;
+        $mxp_pi->style = $request->style;
+        $mxp_pi->poCatNo = $request->poCatNo;
+        $mxp_pi->item_code = $request->item_code;
+        $mxp_pi->gmts_color = $request->gmts_color;
+        $mxp_pi->item_size = $request->item_size;
+        $mxp_pi->sku = $request->sku;
+        $mxp_pi->item_quantity = $request->item_qty;
+        $mxp_pi->item_price = $request->item_price;
+        $mxp_pi->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
+        $mxp_pi->save();
+
+        $msg = $job_id_id." Job id Successfully updated.";
+
+      }else{
+        $msg = "Something went wrong please try again later"; 
+      }
+
       if(isset($insertBooking) && !empty($insertBooking)){
+
         $insertBooking->item_description = $request->item_description;
         $insertBooking->oos_number = $request->oos_number;
         $insertBooking->style = $request->style;
@@ -389,11 +414,18 @@ class BookingController extends Controller
         $insertBooking->item_price = $request->item_price;
         $insertBooking->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
         $insertBooking->save();
+
+
         $msg = $job_id_id." Job id Successfully updated.";
+
+
       }else{
+
         $msg = "Something went wrong please try again later"; 
       }
+
       $insertBookingChallan = MxpBookingChallan::where('id', $request->booking_id)->first();
+
       if(isset($insertBookingChallan) && !empty($insertBookingChallan)){
         $insertBookingChallan->item_description = $request->item_description;
         $insertBookingChallan->oos_number = $request->oos_number;
@@ -407,10 +439,13 @@ class BookingController extends Controller
         $insertBookingChallan->item_price = $request->item_price;
         $insertBookingChallan->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
         $insertBookingChallan->save();
+
         $msg = $job_id_id." Job id Successfully updated.";
+
       }else{
         $msg = "Something went wrong please try again later.";
       }
+
       Session::flash('message', $msg);
 
       return redirect()->route('booking_list_details_view', $insertBooking->booking_order_id);

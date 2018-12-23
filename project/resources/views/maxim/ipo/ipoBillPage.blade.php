@@ -137,11 +137,11 @@
 	</div>
 
 	<div class="row body-top">
-	    <table class="table table-bordered">
+	    <table class="table table-bordered" style="font-size: 12px;">
 	        <tr>
 	            <thead>
 		            <th>Job No.</th>
-		        	<th width="25%" id="erp_code">ERP Code</th>
+		        	<th width="25%" id="">ERP Code</th>
 		        	<th width="15%">Item / Code No.</th>
 		        	<th id="item_size">Item Size</th>
 		        	<th width="5%">Season Code</th>
@@ -174,7 +174,7 @@
 		        		<td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $details->job_id }}</td>
 				    	<td width="20%">{{$details->erp_code}}</td>
 	                	<td width="10%">{{$details->item_code}}</td>
-	                	<td >{{ ($details->item_size_width_height != '')? '('. $details->item_size_width_height .')mm' : 'N/A' }}</td>
+	                	<td >{{ ($details->item_size_width_height != '')? '('. $details->item_size_width_height .')mm' : '' }}</td>
 				    	<td width="5%">{{$details->season_code}}</td>
 				        <td width="5%">{{$details->oos_number}}</td>
 				    	<td width="5%">{{$details->style}}</td>

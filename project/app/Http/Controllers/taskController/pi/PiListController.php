@@ -96,9 +96,11 @@ class PiListController extends Controller
 		$buyerDetails = [];
 		$piDetails = MxpPi::orderBy('id','DESC')			
             ->where([
-            	['is_deleted',BookingFulgs::IS_NOT_DELETED],
-            	['p_id',$p_id]
+            	['mxp_pi.is_deleted',BookingFulgs::IS_NOT_DELETED],
+            	['mxp_pi.p_id',$p_id]
             ])
+            ->join('mxp_booking as mb','mb.id','mxp_pi.job_no')
+            ->select('mxp_pi.*','mb.season_code')
 			->get();
 
 		if(!empty($piDetails[0]->booking_order_id)) {

@@ -2,10 +2,10 @@
 @section('page_heading','PI Reverse View')
 @section('section')
 	<?php
-	    // print_r("<pre>");
-	    // print_r($piDetails[0]);
+	     //print_r("<pre>");
+	     //print_r($piDetails[0]);
 	    // print_r(session('data'));
-	    // print_r("</pre>");
+	     //print_r("</pre>");
 
 		use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
 	?>
@@ -55,11 +55,11 @@
 	        <div class="panel panel-default col-sm-5">
 	            <br>
 	            @if($buyerDetails->booking_category)
-	            <p>Category: <b>{{ucfirst(str_replace('_',' ',$buyerDetails->booking_category))}}</b></p>
+	            {{-- <p>Category: <b>{{ucfirst(str_replace('_',' ',$buyerDetails->booking_category))}}</b></p> --}}
 	            @endif
-	            <p>Booking No:<b> {{ $buyerDetails->booking_order_id }}</b></p>
+	            {{-- <p>Booking No:<b> {{ $buyerDetails->booking_order_id }}</b></p> --}}
 	            <p>PI No:<b> {{ $piDetails[0]->p_id }}</b></p>
-	            <p>Booking Status:<b> {{ $buyerDetails->booking_status }}</b></p>
+	            {{-- <p>Booking Status:<b> {{ $buyerDetails->booking_status }}</b></p> --}}
 	            <p>Oreder Date:<b> {{ Carbon::Parse($buyerDetails->created_at)->format('d-m-Y') }}</b></p>
 	            <p>Shipment Date:<b> {{ $buyerDetails->shipmentDate }}</b></p>
 	        </div>
@@ -76,6 +76,7 @@
 	    </div>
 	</div>
 
+	<div class="col-sm-12">
 	<table class="table table-bordered" id="tblSearch">
 	    <thead>
 		    <tr>
@@ -116,19 +117,20 @@
 		    			<td>{{$pi_value->item_size}}</td>
 		    			<td>{{$pi_value->sku}}</td>
 		    			<td>{{$pi_value->item_quantity}}</td>
-		    			<td width="100%">
-		    				<div style="float: left;width: 45%;">
+		    			<td>
+		    				{{-- <div style="float: left;width: 40%;"> --}}
 		    					<a href="{{Route('pi_reverse_edit_view',$pi_value->job_no)}}" class="btn btn-primary" >Edit</a>
-		    				</div>
+		    				{{-- </div> --}}
 
-		    				<div style="float: left;width: 45%; padding-right: : 5px;">
+		    				{{-- <div style="float: left;width: 40%; padding-right: : 5px;"> --}}
 		    					<a href="{{Route('pi_delete_action',$pi_value->job_no)}}" class="btn btn-primary deleteButton" >Cancel</a>
-		    				</div>
+		    				{{-- </div> --}}
 		    			</td>
 		    		</tr>
 		    	@endforeach
 	    	@endif
 	    </tbody>
 	</table>
+	</div>
 
 @endsection

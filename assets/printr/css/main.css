@@ -125,8 +125,20 @@ ul li {
     table th#erp_code {
       min-width: 190px !important;
     }
-     .fixed_footer {page-break-before: always;}
+    .fixed_footer {page-break-before: always;}
+
+    input[type="checkbox"]
+      {
+        visibility: hidden;
+      }
+
+
+      input[type="checkbox"][checked]
+      {
+        visibility: visible;
+      }
 }
+
 #pfooter {
   border: 1px solid #6d6d6d;
   margin-bottom: 5px;

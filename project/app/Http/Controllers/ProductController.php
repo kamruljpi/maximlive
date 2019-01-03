@@ -189,8 +189,8 @@ class ProductController extends Controller
 
     Public function addProduct(Request $request){
         $item_size_width_height = '';
-        if(isset($request->item_size_width) && isset($request->item_size_height) && !empty($request->item_size_width) && !empty($request->item_size_height)){
-            $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;            
+        if(isset($request->item_size_width) && isset($request->item_size_height)){
+            $item_size_width_height = (!empty($request->item_size_width) ? $request->item_size_width :'0') .'-'. (!empty($request->item_size_height) ? $request->item_size_height :'0');            
         }
 
     	$roleManage = new RoleManagement();
@@ -292,8 +292,8 @@ class ProductController extends Controller
 
     public function updateProduct(Request $request){        
         $item_size_width_height = '';
-        if(isset($request->item_size_width) && isset($request->item_size_height) && !empty($request->item_size_width) && !empty($request->item_size_height)){
-            $item_size_width_height = $request->item_size_width.'-'.$request->item_size_height;            
+        if(isset($request->item_size_width) && isset($request->item_size_height)){
+            $item_size_width_height = (!empty($request->item_size_width) ? $request->item_size_width :'0') .'-'. (!empty($request->item_size_height) ? $request->item_size_height :'0');            
         }
 
         $this->addVendorPrice($request, $request->product_id);

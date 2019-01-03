@@ -204,6 +204,12 @@ class BookingController extends Controller
       for ($i=0; $i < count($item_code); $i++) {
 
         $item_details = MxpProduct::where('product_code',$item_code[$i])->get();
+        
+        $str_qty = str_replace(',', '', $item_qty[$i]);
+        $str_item_qty = trim($str_qty, ',');
+
+        $str_price = str_replace('$', '', $item_price[$i]);
+        $str_item_price = trim($str_price, '$');
 
         $insertBooking = new MxpBooking();
         $insertBooking->user_id           = Auth::user()->user_id;
@@ -218,8 +224,8 @@ class BookingController extends Controller
         $insertBooking->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
         $insertBooking->style             = (!empty($style[$i]) ? $style[$i] : '');
         $insertBooking->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
-        $insertBooking->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBooking->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '');
+        $insertBooking->item_quantity     = $str_item_qty;
+        $insertBooking->item_price        = $str_item_price;
         $insertBooking->orderDate         = $request->orderDate;
         $insertBooking->orderNo           = $request->orderNo;
         $insertBooking->shipmentDate      = $request->shipmentDate;
@@ -245,9 +251,9 @@ class BookingController extends Controller
         $insertBookingChallan->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
         $insertBookingChallan->style             = (!empty($style[$i]) ? $style[$i] : '');
         $insertBookingChallan->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
-        $insertBookingChallan->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBookingChallan->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '' );
+        $insertBookingChallan->item_quantity     = $str_item_qty;
+        $insertBookingChallan->left_mrf_ipo_quantity     = $str_item_qty;
+        $insertBookingChallan->item_price        = $str_item_price;
         $insertBookingChallan->orderDate         = $request->orderDate;
         $insertBookingChallan->orderNo           = $request->orderNo;
         $insertBookingChallan->shipmentDate      = $request->shipmentDate;
@@ -263,7 +269,7 @@ class BookingController extends Controller
         $itemQntyByChalan->item_code = $insertBookingChallan->item_code;
         $itemQntyByChalan->erp_code = $insertBookingChallan->erp_code;
         $itemQntyByChalan->item_size = (!empty($item_size[$i]) ? $item_size[$i] : '');
-        $itemQntyByChalan->item_quantity = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
+        $itemQntyByChalan->item_quantity = $str_item_qty;
         $itemQntyByChalan->gmts_color = $item_gmts_color[$i];
         $itemQntyByChalan->save();
 
@@ -436,6 +442,7 @@ class BookingController extends Controller
         $insertBookingChallan->item_size = $request->item_size;
         $insertBookingChallan->sku = $request->sku;
         $insertBookingChallan->item_quantity = $request->item_qty;
+        $insertBookingChallan->left_mrf_ipo_quantity = $request->item_qty;
         $insertBookingChallan->item_price = $request->item_price;
         $insertBookingChallan->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
         $insertBookingChallan->save();

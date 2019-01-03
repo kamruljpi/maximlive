@@ -144,11 +144,14 @@
 			<?php 
 				$jobId = (JobIdFlugs::JOBID_LENGTH - strlen($detailsValue->job_no));
 
-				$totalQtyAmt = $detailsValue->item_quantity * (is_numeric($detailsValue->item_price)?$detailsValue->item_price:'');
+				$str = str_replace('$', '', $detailsValue->item_price);
+                $str_item_price = trim($str, '$');
+
+				$totalQtyAmt = $detailsValue->item_quantity * (is_numeric($str_item_price)?$str_item_price:'');
 				$totalQtyAmt = number_format($totalQtyAmt, 2, '.', '');
 				$totalUsdAmount += $totalQtyAmt;
 				$totalAllqnty += $detailsValue->item_quantity;
-				$item_price = number_format($detailsValue->item_price, 5, '.', '');
+				$item_price = number_format($str_item_price, 5, '.', '');
 			?>
 			<tr>
 				<!-- <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $detailsValue->job_no}}</td> -->

@@ -145,8 +145,10 @@
                                 @foreach($value->itemLists as $valuelist)
                                     <?php
                                         $idstrcount = (8 - strlen($valuelist->id));
-                                        $fullTotalAmount += $valuelist->item_quantity*$valuelist->item_price;
-                                        $TotalAmount += $valuelist->item_quantity*$valuelist->item_price;
+                                        $str = str_replace('$', '', $valuelist->item_price);
+                                        $str_item_price = trim($str, '$');
+                                        $TotalAmount += $valuelist->item_quantity*$str_item_price;
+                                        $fullTotalAmount += $valuelist->item_quantity*$str_item_price;
                                     ?>
                                     <tr id="booking_list_table">
                                         <td><input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" hidden> {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}</td>
@@ -211,8 +213,8 @@
 
                                         <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
                                         <td><input name="item_quantity[]" value="{{$valuelist->item_quantity}}" hidden>{{$valuelist->item_quantity}}</td>
-                                        <td><input name="item_price[]" value="{{$valuelist->item_price}}" hidden>{{(strtolower($valuelist->item_price) != 'n/a'? '$'.$valuelist->item_price : $valuelist->item_price)}}</td>
-                                        <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$valuelist->item_price }}" hidden>${{ $valuelist->item_quantity*$valuelist->item_price }}</td>
+                                        <td><input name="item_price[]" value="{{$str_item_price}}" hidden>{{(strtolower($valuelist->item_price) != 'n/a'? '$'.$valuelist->item_price : $valuelist->item_price)}}</td>
+                                        <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$str_item_price }}" hidden>${{ $valuelist->item_quantity*$str_item_price }}</td>
                                     </tr>
                                 @endforeach
                             @endforeach

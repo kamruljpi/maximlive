@@ -13,7 +13,7 @@ use DB;
 class LocationController extends Controller 
 {
 	public function index() {
-		$details = MxpLocation::where("is_deleted",0)->orderBy('id_location','DESC')->paginate(10);
+		$details = MxpLocation::where("is_deleted",0)->orderBy('id_location','DESC')->paginate(20);
 		return view('location.list_location',compact('details'));
 	}
 
@@ -87,7 +87,7 @@ class LocationController extends Controller
 
 		$delete = MxpLocation::find($request->id);
         $delete->is_deleted = 1;
-        $delete->user_id  = Auth::user()->user_id;
+        $delete->deleted_user_id  = Auth::user()->user_id;
 		$delete->last_action   = ActionMessage::DELETE;
 		$delete->update();
 

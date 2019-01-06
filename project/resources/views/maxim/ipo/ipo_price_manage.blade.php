@@ -137,7 +137,7 @@
 	$('input[name="ipo_increase_percentage[]"]').on("keyup",function () {
 		var qty = parseFloat($('input[name="product_qty[]"]').val());
 		var increase = ($(this).val() != '')? $(this).val() : 0;
-		if(increase != 0 &&!$.isNumeric(increase)){
+		if(increase != 0 && !$.isNumeric(increase)){
 			alert("Enter integer value.");
 			return false;
 		}

@@ -42,7 +42,7 @@
 <div class="row">
     <div class="col-sm-10 col-sm-offset-1">
         @if(!empty($pi_value->p_id))
-            <h3><label>Do you know? Job Id <span style="color:red;">{{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</span> is already a PI. PI id is <span style="color:red;">{{$pi_value->p_id}}</span>. If you want to update then it will not effect on this PI id. You need to create new PI.</label>
+            <h3><label>Do you know? Job Id <span style="color:red;">{{ str_repeat('0',$jobId) }}{{ $mxpBooking->id }}</span> is already in a PI. PI id is <span style="color:red;">{{$pi_value->p_id}}</span>. If you want to update then is automatically update the PI.</label>
                 </h3>
         @endif
     </div>
@@ -95,7 +95,7 @@
                 </thead>
                 <tbody class="idclone" >
                 <tr class="tr_clone">
-                    <input type="hidden" name="others_color[]" class="others_color" id="others_color" value="">
+                    <input type="hidden" name="others_color" class="others_color" id="others_color" value="">
 
                     <!-- PO/Cat No -->
                     <td>

@@ -84,6 +84,7 @@ class BookingController extends Controller
     public function addBooking(Request $request,BookingListController $BookingListController){
 
       $order_submit = isset($request->order_submit) ? $request->order_submit : '';
+      $booking_number = isset($request['booking_number']) ? $request['booking_number'] : '' ;
 
       $roleManage = new RoleManagement();
 
@@ -118,10 +119,14 @@ class BookingController extends Controller
       $validationError = $validator->messages();
       $companySortName = '';
       $buyerDetails = json_decode($request['buyerDetails']);
+      
       foreach ($buyerDetails as $getSortCname) {
           $companySortName = $getSortCname->sort_name;
       }
 
+      /**
+       * Generate Boooking number
+       */
       $cc_1 = MxpBookingBuyerDetails::count();
       $cc_2 = MxpDraft::select('booking_order_id')->groupBy('booking_order_id')->get();
       $cc_3 = count($cc_2);
@@ -131,15 +136,29 @@ class BookingController extends Controller
       $date = date('dmY') ;
       $customid = $id.$date."-".$companySortName."-".$count;
 
+      /** it's check draft booking id and remove draft value from draft table
+       * and store booking in booking main table
+       */
+      if($booking_number) {
+
+        $customid = $booking_number ? $booking_number : $customid ;
+        $delete = MxpDraft::where('booking_order_id',$customid)->delete();
+
+      }
+
+      /** end  **/      
+
+      /**
+       * @return Draft store controller 
+       */
       if ($order_submit == BookingFulgs::ORDER_SAVE) {
         return (new DraftBooking())->storeOrderDraft($request,$customid);
       }
-      $this->print_me($request->all());
 
       foreach ($buyerDetails as $buyers) {
         $InserBuyerDetails = new MxpBookingBuyerDetails();
         $InserBuyerDetails->user_id = Auth::user()->user_id;
-        $InserBuyerDetails->booking_order_id      = $customid;//'booking-abc-002';
+        $InserBuyerDetails->booking_order_id      = $customid; //'booking-abc-002';
         $InserBuyerDetails->Company_name          = $buyers->name;
         $InserBuyerDetails->C_sort_name           = $buyers->sort_name;
         $InserBuyerDetails->buyer_name            = $buyers->name_buyer;
@@ -185,6 +204,12 @@ class BookingController extends Controller
       for ($i=0; $i < count($item_code); $i++) {
 
         $item_details = MxpProduct::where('product_code',$item_code[$i])->get();
+        
+        $str_qty = str_replace(',', '', $item_qty[$i]);
+        $str_item_qty = trim($str_qty, ',');
+
+        $str_price = str_replace('$', '', $item_price[$i]);
+        $str_item_price = trim($str_price, '$');
 
         $insertBooking = new MxpBooking();
         $insertBooking->user_id           = Auth::user()->user_id;
@@ -199,8 +224,8 @@ class BookingController extends Controller
         $insertBooking->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
         $insertBooking->style             = (!empty($style[$i]) ? $style[$i] : '');
         $insertBooking->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
-        $insertBooking->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBooking->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '');
+        $insertBooking->item_quantity     = $str_item_qty;
+        $insertBooking->item_price        = $str_item_price;
         $insertBooking->orderDate         = $request->orderDate;
         $insertBooking->orderNo           = $request->orderNo;
         $insertBooking->shipmentDate      = $request->shipmentDate;
@@ -226,9 +251,9 @@ class BookingController extends Controller
         $insertBookingChallan->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
         $insertBookingChallan->style             = (!empty($style[$i]) ? $style[$i] : '');
         $insertBookingChallan->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
-        $insertBookingChallan->item_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBookingChallan->left_mrf_ipo_quantity     = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
-        $insertBookingChallan->item_price        = (!empty($item_price[$i]) ? $item_price[$i] : '' );
+        $insertBookingChallan->item_quantity     = $str_item_qty;
+        $insertBookingChallan->left_mrf_ipo_quantity     = $str_item_qty;
+        $insertBookingChallan->item_price        = $str_item_price;
         $insertBookingChallan->orderDate         = $request->orderDate;
         $insertBookingChallan->orderNo           = $request->orderNo;
         $insertBookingChallan->shipmentDate      = $request->shipmentDate;
@@ -244,7 +269,7 @@ class BookingController extends Controller
         $itemQntyByChalan->item_code = $insertBookingChallan->item_code;
         $itemQntyByChalan->erp_code = $insertBookingChallan->erp_code;
         $itemQntyByChalan->item_size = (!empty($item_size[$i]) ? $item_size[$i] : '');
-        $itemQntyByChalan->item_quantity = (!empty($item_qty[$i]) ? $item_qty[$i] : '' );
+        $itemQntyByChalan->item_quantity = $str_item_qty;
         $itemQntyByChalan->gmts_color = $item_gmts_color[$i];
         $itemQntyByChalan->save();
 
@@ -337,10 +362,14 @@ class BookingController extends Controller
                 ])
                 ->first();
 
-      $pi_value = MxpPi::where('job_no',$request->job_id)
-              ->select('p_id','booking_order_id','item_code','item_quantity','item_size','item_price')
-              ->first();
+      $pi_value = MxpPi::where([
+              ['job_no',$request->job_id],
+              ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+            ])
+            ->select('p_id','booking_order_id','item_code','item_quantity','item_size','item_price')
+            ->first();
     }
+    
     $party_id = $request->party_id;
 
     // $this->print_me($pi_value);
@@ -348,12 +377,37 @@ class BookingController extends Controller
   }
 
   public function updateBooking(Request $request){
+
+
     $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($request->booking_id));
     $job_id_id = str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount).$request->booking_id;
 
     $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
+    $mxp_pi = MxpPi::where('job_no', $request->booking_id)->first();
+    // self::print_me($mxp_pi);
       
+      if(!empty($mxp_pi)) {
+        $mxp_pi->item_description = $request->item_description;
+        $mxp_pi->oos_number = $request->oos_number;
+        $mxp_pi->style = $request->style;
+        $mxp_pi->poCatNo = $request->poCatNo;
+        $mxp_pi->item_code = $request->item_code;
+        $mxp_pi->gmts_color = $request->gmts_color;
+        $mxp_pi->item_size = $request->item_size;
+        $mxp_pi->sku = $request->sku;
+        $mxp_pi->item_quantity = $request->item_qty;
+        $mxp_pi->item_price = $request->item_price;
+        $mxp_pi->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
+        $mxp_pi->save();
+
+        $msg = $job_id_id." Job id Successfully updated.";
+
+      }else{
+        $msg = "Something went wrong please try again later"; 
+      }
+
       if(isset($insertBooking) && !empty($insertBooking)){
+
         $insertBooking->item_description = $request->item_description;
         $insertBooking->oos_number = $request->oos_number;
         $insertBooking->style = $request->style;
@@ -366,11 +420,18 @@ class BookingController extends Controller
         $insertBooking->item_price = $request->item_price;
         $insertBooking->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
         $insertBooking->save();
+
+
         $msg = $job_id_id." Job id Successfully updated.";
+
+
       }else{
+
         $msg = "Something went wrong please try again later"; 
       }
+
       $insertBookingChallan = MxpBookingChallan::where('id', $request->booking_id)->first();
+
       if(isset($insertBookingChallan) && !empty($insertBookingChallan)){
         $insertBookingChallan->item_description = $request->item_description;
         $insertBookingChallan->oos_number = $request->oos_number;
@@ -381,13 +442,17 @@ class BookingController extends Controller
         $insertBookingChallan->item_size = $request->item_size;
         $insertBookingChallan->sku = $request->sku;
         $insertBookingChallan->item_quantity = $request->item_qty;
+        $insertBookingChallan->left_mrf_ipo_quantity = $request->item_qty;
         $insertBookingChallan->item_price = $request->item_price;
         $insertBookingChallan->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
         $insertBookingChallan->save();
+
         $msg = $job_id_id." Job id Successfully updated.";
+
       }else{
         $msg = "Something went wrong please try again later.";
       }
+
       Session::flash('message', $msg);
 
       return redirect()->route('booking_list_details_view', $insertBooking->booking_order_id);

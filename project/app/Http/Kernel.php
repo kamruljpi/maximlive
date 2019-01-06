@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'routeAccess' => \App\Http\Middleware\RouteAccess::class,
         'onlySuperAdmin' => \App\Http\Middleware\onlySuperAdmin::class,
         'ajax' => \App\Http\Middleware\AllowOnlyAjaxRequests::class,
+        'checkLocation' => \App\Http\Middleware\CheckLocation::class,
     ];
 }

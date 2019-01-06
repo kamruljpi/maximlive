@@ -380,8 +380,8 @@
     <footer style="padding: 10px 0;background:#e0e0e0;color:#333; margin-left: 250px;">
 
           <!-- Copyright -->
-        <div class="text-center" style="font-family:roboto-serif;font-size: 15px;">Copyright© 2018,All Right Reserved – by <a href="#">MAXIM</a> 
-            Powered by <a href="http://maxproit.solutions/"> maxproIT.solutions</a>
+        <div class="text-center" style="font-family:roboto-serif;font-size: 15px;">Copyright© 2018,All Right Reserved – by <a href="#" target="_blank">MAXIM</a> 
+            Powered by <a href="http://maxproit.solutions/" target="_blank"> maxproIT.solutions</a>
         </div>
           <!-- Copyright -->
 

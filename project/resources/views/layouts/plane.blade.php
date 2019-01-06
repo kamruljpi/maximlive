@@ -8,9 +8,9 @@
 	<meta charset="utf-8"/>
 	<title>{{ trans('others.company_name')}}</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta content="width=device-width, initial-scale=1" name="viewport"/>
-	<meta content="" name="description"/>
-	<meta content="" name="author"/>
+	<meta name="author" content="maxproit.solutions" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="keywords" content="HTML5, CSS3, Bootsrtrap, Responsive, Template, Theme, Website, ERP" />
 	<link rel="shortcut icon" href="{{asset('assets/img/icon.png')}}" type="image/x-icon" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/styles.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/main.css') }}" />

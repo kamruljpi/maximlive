@@ -9,7 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
+	
 	public function getRandomGroupId() {
 		return strtotime(date('Y-m-d h:m:s')) % 1000;
 	}

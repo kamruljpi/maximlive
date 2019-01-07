@@ -42,6 +42,10 @@ class LocationController extends Controller
             $validMessages
         );
 
+        if ($validator->fails()) {
+			return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
+		}
+
         $store = new MxpLocation();
         $store->user_id  = Auth::user()->user_id;
         $store->location = $request->location;
@@ -49,9 +53,7 @@ class LocationController extends Controller
 		$store->last_action   = ActionMessage::CREATE;
 		$store->save();
 
-		if ($validator->fails()) {
-			return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
-		}
+		
 
 		StatusMessage::create('store', 'New Location Created Successfully');
 
@@ -70,6 +72,10 @@ class LocationController extends Controller
 		    ],
             $validMessages
         );
+
+        if ($validator->fails()) {
+			return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
+		}
 
         $update = MxpLocation::find($request->id);
         $update->user_id  = Auth::user()->user_id;

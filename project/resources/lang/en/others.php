@@ -302,8 +302,11 @@ return [
 'buyer_name_label' => 'Brand Name',
 'update_buyer_label' => 'Update buyer',
 'mxp_menu_os_mrf_list_view' => 'OS MRF list',
-'mxp_menu_os_po_list_view' => 'OS Purchase Order List',
-'mxp_menu_planning_tracking_report' => 'Planning Tracking List',
-'mxp_menu_os_tracking_list' => 'OS Tracking List',
+'mxp_menu_os_po_list_view' => 'OS Purchase Order',
+'mxp_menu_warehouse' => 'Warehouse',
+'mxp_menu_location_list_view' => 'Location',
+'mxp_menu_warehouse_in_type_list' => 'Warehouse in type',
+'mxp_menu_warehouse_out_type_list' => 'Warehouse out type',
+'mxp_menu_opening_stock_view' => 'Opening Stock',
 
 ];

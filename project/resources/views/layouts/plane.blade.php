@@ -60,6 +60,9 @@
 		.page-header {
 		    margin: 20px 0 10px; 
 		}
+		nav.navbar.navbar-default.navbar-static-top {
+		    padding: 10px 0px 5px;
+		}
 	</style>
 </head>
 <body>

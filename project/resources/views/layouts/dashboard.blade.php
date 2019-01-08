@@ -362,7 +362,7 @@
         <div id="page-wrapper">
 			 <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="page-header">@yield('page_heading')</h1>
+                    <h3 class="page-header">@yield('page_heading')</h3>
                 </div>
                 <div class="col-sm-6">
                     <h3 class="page-header pull-right">@yield('page_heading_right')</h3>

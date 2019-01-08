@@ -51,6 +51,15 @@
 		  margin: -100px 0 0 -100px;
 		  background-image: url({{asset('assets/img/preloader/status.gif')}});
 		}
+		.navbar-brand {
+		    padding: 0 15px !important;
+		}
+		.navbar-top-links {
+		    padding-top: 10px !important;
+		}
+		.page-header {
+		    margin: 20px 0 10px; 
+		}
 	</style>
 </head>
 <body>

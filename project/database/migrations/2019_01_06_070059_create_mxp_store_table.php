@@ -14,7 +14,7 @@ class CreateMxpStoreTable extends Migration
     public function up()
     {
         Schema::create('mxp_store', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('id_store');
             $table->integer('user_id')->nullable();
             $table->integer('job_id')->nullable();
             $table->integer('product_id')->nullable();

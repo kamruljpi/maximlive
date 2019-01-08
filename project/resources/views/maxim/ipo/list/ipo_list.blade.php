@@ -67,6 +67,7 @@
 					<th>Booking No.</th>
 					<th>Ipo No.</th>
 					<th>Total QTY</th>
+					<th>Left QTY</th>
 					<th>Ipo Status</th>
 					{{-- <th>Total Increased QTY</th> --}}
 					<th>Action</th>
@@ -80,7 +81,8 @@
 					<td>{{$j++}}</td>
 					<td>{{$value->booking_order_id}}</td>
 					<td>{{$value->ipo_id}}</td>
-					<td>{{ $value->ipo_quantity }}</td>
+					<td>{{ $value->ipo }}</td>
+					<td>{{ $value->left_quantity }}</td>
 					<td>{{ $value->ipo_status }}</td>
 					{{-- <td> --}}
                         <?php
@@ -95,7 +97,8 @@
 								<input type="hidden" name="ipoid" value="{{$value->ipo_id}}">
 								<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
 								<button class="btn btn-success" target="_blank">Report</button>
-								@if($value->ipo_status != 'Accepted')
+								
+								@if( ($value->ipo -  $left_quantity) >= 1 )
 								<button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								    <span class="caret"></span>
 								    <span class="sr-only">Toggle Dropdown</span>

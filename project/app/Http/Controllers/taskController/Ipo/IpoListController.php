@@ -9,6 +9,7 @@ use App\Model\MxpBookingChallan;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\MxpIpo;
+use App\MxpStore;
 use Validator;
 use Auth;
 use DB;
@@ -24,13 +25,19 @@ class IpoListController extends Controller
 	 */
 	
 	public function getIpoValue(){
-		$ipoDetails = MxpIpo::select('*',DB::Raw('sum(ipo_quantity) as ipo_quantity'))
-            	->orderBy('ipo_id','DESC')
-            	->groupBy('ipo_id')
-            	->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+		$ipoDetails = MxpIpo::leftjoin('mxp_store as ms','ms.product_id', 'mxp_ipo.ipo_id')
+				->select('mxp_ipo.booking_order_id','mxp_ipo.job_id','mxp_ipo.ipo_id','mxp_ipo.erp_code','mxp_ipo.ipo_status',DB::Raw('sum(mxp_ipo.ipo_quantity) as ipo'), DB::Raw('sum(ms.item_quantity) as left_quantity'))	
+            	->orderBy('mxp_ipo.ipo_id','DESC')
+            	->groupBy('mxp_ipo.ipo_id')
+            	->where('mxp_ipo.is_deleted',BookingFulgs::IS_NOT_DELETED)
 				->paginate(20);
 
-		return view('maxim.ipo.list.ipo_list',compact('ipoDetails'));
+	
+	    // print_r("<pre>");            
+	    // print_r($ipoDetails);           
+	    // print_r("<pre>");            
+
+		return view('maxim.ipo.list.ipo_list',compact('ipoDetails','ipo_store'));
 	}
 
 	/**

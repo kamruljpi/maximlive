@@ -29,6 +29,7 @@
 							<th>Size</th>
 							<th>Shipment Date</th>
 							<th>IPO Quantity</th>
+							<th>Left Quantity</th>
 							<th>Receive QTY</th>
 							<th>Action</th>
 						</tr>
@@ -53,6 +54,7 @@
 							<td><input type="hidden" name="item_size" value="{{ $values->item_size }}">{{ $values->item_size }}</td>
 							<td><input type="hidden" name="shipment_date" value="{{ $values->shipmentDate }}">{{ $values->shipmentDate }}</td>
 							<td><input type="hidden" name="ipo_quantity" value="{{ $values->ipo_quantity }}">{{ $values->ipo_quantity }}</td>
+							<td>{{ $values->ipo_quantity-$values->left_quantity }}</td>
 							<td><input type="text" name="receive_qty"></td>
 							<td><button class="btn btn-success">Accept</button></td>
 						</tr>

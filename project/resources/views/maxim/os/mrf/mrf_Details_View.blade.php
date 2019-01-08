@@ -31,7 +31,17 @@
                 <i class="fa fa-arrow-left"></i> Back</a>
             </div>
         </div>
-        <div class="col-sm-8"></div>
+        <div class="col-sm-8">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
         <div class="col-sm-2">
             <div class="pull-right">
                 <div class="btn-group">
@@ -269,29 +279,48 @@
                         <th width="">Item Code</th>
                         <th>Size</th>
                         <th>Order Qty</th>
+                        <th>Available Qty</th>
                         <th>Material</th>
                         <th>Shipment date</th>
                         <th width="">Current Status</th>
+                        <th >Recieve Quantity</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($mrfDetails as $poValues)
+                        <form action="{{ Route('store_mrf') }}" method="POST">
+                        {{csrf_field()}}
+                        
+                        <input type="hidden" name="is_type" value="mrf">
                         @if($poValues->po_details->job_id)
                             <?php 
                                 $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($poValues->po_details->job_id));
                             ?>
                             <tr>
-                                <td>{{ str_repeat(JobIdFlugs::STR_REPEAT ,$jobId) }}{{$poValues->po_details->job_id}}</td>
+                                <td><input type="hidden" name="job_id" value="{{$poValues->po_details->job_id}}">{{ str_repeat(JobIdFlugs::STR_REPEAT ,$jobId) }}{{$poValues->po_details->job_id}}</td>
                                 <td>{{$poValues->po_details->po_id}}</td>
                                 <td>{{$poValues->po_details->name}}</td>
                                 <td>{{$poValues->po_details->person_name}}</td>
-                                <td>{{$poValues->po_details->item_code}}</td>
-                                <td>{{$poValues->po_details->item_size_width_height}}</td>
-                                <td>{{$poValues->po_details->mrf_quantity}}</td>
-                                <td>{{$poValues->po_details->material}}</td>
-                                <td>{{Carbon\Carbon::Parse($poValues->po_details->shipment_date)->format('d-m-Y')}}</td>
+                                <td><input type="hidden" name="item_code" value="{{$poValues->po_details->item_code}}">{{$poValues->po_details->item_code}}</td>
+                                <td><input type="hidden" name="item_size_width_height" value="{{$poValues->po_details->item_size_width_height}}">{{$poValues->po_details->item_size_width_height}}</td>
+                                <td><input type="hidden" name="mrf_quantity" value="{{$poValues->po_details->mrf_quantity}}">{{$poValues->po_details->mrf_quantity}}</td>
+                                <td>{{ $poValues->po_details->mrf_quantity-$poValues->po_details->left_quantity }}</td>
+                                <td><input type="hidden" name="">{{$poValues->po_details->material}}</td>
+                                <td><input type="hidden" name="shipment_date" value="{{ $poValues->po_details->shipment_date }}">{{Carbon\Carbon::Parse($poValues->po_details->shipment_date)->format('d-m-Y')}}</td>
                                 <td>{{ucfirst(str_replace('_',' ',$poValues->po_details->job_id_current_status))}}</td>
+                                
+                                <td><input type="text" name="receive_qty" class="form-control" value="{{ $poValues->po_details->mrf_quantity-$poValues->po_details->left_quantity }}"></td>
+                                
+                                <input type="hidden" name="erp_code" value="{{ $poValues->po_details->erp_code }}">
+                                <input type="hidden" name="item_description" value="{{ $poValues->po_details->item_description }}">
+                                <input type="hidden" name="gmts_color" value="{{ $poValues->po_details->gmts_color }}">
+                                <input type="hidden" name="mrf_id" class="form-control" value="{{ $poValues->po_details->mrf_id }}">
+                                <input type="hidden" name="booking_order_id" class="form-control" value="{{ $poValues->po_details->booking_order_id }}">
+                                
+                                <td><button class="btn btn-success">Accept</button></td>
                             </tr>
+                            </form>
                         @endif
                     @endforeach
                 </tbody>         

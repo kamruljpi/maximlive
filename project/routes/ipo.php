@@ -6,4 +6,5 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Ipo'], funct
 Route::group(['middleware' => 'auth'], function(){
 	Route::get('ipo/view/{id}','StoreController@ipoView')->name('ipo_view');
 	Route::post('ipo/store','StoreController@ipoStore')->name('store_ipo');
+	Route::get('ipo/accepted','StoreController@ipoList')->name('store_ipo_list');
 });

@@ -31,6 +31,6 @@ return [
 'mxp_menu_warehouse_in_type_list' => '',
 'mxp_menu_stored_product_action' => '',
 'mxp_menu_stored_ipo_list' => '',
-'mxp_menu_stored_mrf_list' => '',
+'mxp_menu_stored_mrf_list' => ''
 
 ];

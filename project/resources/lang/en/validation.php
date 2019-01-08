@@ -311,5 +311,4 @@ return [
 'mxp_menu_stored_product_action' => 'Stored Product List',
 'mxp_menu_stored_ipo_list' => 'Accepted Ipo List',
 'mxp_menu_stored_mrf_list' => 'Accepted Mrf List',
-
 ];

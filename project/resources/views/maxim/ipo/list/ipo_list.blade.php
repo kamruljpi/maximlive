@@ -83,7 +83,7 @@
 					<td>{{$value->ipo_id}}</td>
 					<td>{{ $value->ipo }}</td>
 					<td>{{ $value->left_quantity }}</td>
-					<td>{{ $value->ipo_status }}</td>
+					<td>{{ ($value->ipo_status == '') ? 'N/A' : $value->ipo_status }}</td>
 					{{-- <td> --}}
                         <?php
                             //$p = ( ($value->ipo_quantity * $value->initial_increase)/100) + $value->ipo_quantity;

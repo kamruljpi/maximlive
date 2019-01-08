@@ -42,8 +42,21 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/warehouse_out/delete/{id_warehouse_type?}', 'WarehouseOutTypeController@delete')->name('warehouseouttypedelete');
 
    });
+});   
+
+/** Opening Stock Routes **/
+
+Route::group(['middleware' => 'auth'], function(){
+   Route::group(['middleware' => 'routeAccess'], function(){
+   		Route::get('opening/stock', 'OpeningStockController@index')->name('opening_stock_view');
+   		Route::post('store/opening/stock', 'OpeningStockController@store')->name('store_opening_stock_action');
+	});
+
+   /** Ajax Request Route**/
+
+   Route::get('get/item/waise/color/size', 'OpeningStockController@getColorSizeByitemCode')->name('get_item_waise_color_size');
 });
 
-
+/** End **/
 
 ?>

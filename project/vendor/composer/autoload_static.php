@@ -565,6 +565,7 @@ class ComposerStaticInitab9d735579b44960b604e5b47d8891b7
         'CreateMxpProductsColorsTable' => __DIR__ . '/../..' . '/database/migrations/old/2018_07_12_113057_create_mxp_products_colors_table.php',
         'CreateMxpProductsSizesTable' => __DIR__ . '/../..' . '/database/migrations/old/2018_07_12_113042_create_mxp_products_sizes_table.php',
         'CreateMxpPurchaseOrdersTable' => __DIR__ . '/../..' . '/database/migrations/old/2018_07_30_070914_create_mxp_purchase_orders_table.php',
+        'CreateMxpStoreTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_06_070059_create_mxp_store_table.php',
         'CreateMxpSupplierPricesTable' => __DIR__ . '/../..' . '/database/migrations/old/2018_07_20_062001_create_mxp_supplier_prices_table.php',
         'CreateMxpTaskRoleTable' => __DIR__ . '/../..' . '/database/migrations/old/2018_07_18_123833_create_mxp_task_role_table.php',
         'CreateMxpTaskTable' => __DIR__ . '/../..' . '/database/migrations/old/2018_07_17_103743_create_mxp_task_table.php',

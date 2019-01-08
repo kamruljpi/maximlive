@@ -1,7 +1,9 @@
 @extends('layouts.dashboard')
 @section('page_heading','Ipo List' )
 @section('section')
+<style type="text/css">
 
+</style>
 <!-- <button class="btn btn-warning" type="button" id="mrf_reset_btn">Reset</button>
 <div id="mrf_simple_search_form">
 	<div class="form-group custom-search-form col-sm-9 col-sm-offset-2">
@@ -65,6 +67,8 @@
 					<th>Booking No.</th>
 					<th>Ipo No.</th>
 					<th>Total QTY</th>
+					<th>Left QTY</th>
+					<th>Ipo Status</th>
 					{{-- <th>Total Increased QTY</th> --}}
 					<th>Action</th>
 				</tr>
@@ -77,7 +81,9 @@
 					<td>{{$j++}}</td>
 					<td>{{$value->booking_order_id}}</td>
 					<td>{{$value->ipo_id}}</td>
-					<td>{{ $value->ipo_quantity }}</td>
+					<td>{{ $value->ipo }}</td>
+					<td>{{ $value->left_quantity }}</td>
+					<td>{{ $value->ipo_status }}</td>
 					{{-- <td> --}}
                         <?php
                             //$p = ( ($value->ipo_quantity * $value->initial_increase)/100) + $value->ipo_quantity;
@@ -85,12 +91,27 @@
                         ?>
                     {{-- </td> --}}
 					<td>
-						<form action="{{ Route('ipo_list_report_view') }}" role="form" target="_blank">
-							{{ csrf_field() }}
-							<input type="hidden" name="ipoid" value="{{$value->ipo_id}}">
-							<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
-							<button class="btn btn-success">Report</button>
-						</form>
+						<div class="btn-group">
+							<form action="{{ Route('ipo_list_report_view') }}" role="form" target="_blank">
+								{{ csrf_field() }}
+								<input type="hidden" name="ipoid" value="{{$value->ipo_id}}">
+								<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+								<button class="btn btn-success" target="_blank">Report</button>
+								
+								@if( ($value->ipo -  $left_quantity) >= 1 )
+								<button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								    <span class="caret"></span>
+								    <span class="sr-only">Toggle Dropdown</span>
+								</button>
+								
+								<ul class="dropdown-menu" style="left:-45px !important;">
+								    <li>
+								        <a href="{{ Route('ipo_view', ['id' => $value->job_id]) }}" target="_blank">Views</a>
+								    </li>
+								</ul>
+								@endif
+							</form>
+						</div>
 					</td>
 				</tr>
 			@endforeach

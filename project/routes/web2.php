@@ -14,6 +14,33 @@ Route::group(['middleware' => 'auth'], function(){
        Route::get('booking/list/download/file/{booking_buyer_id?}/', 'taskController\BookingListController@bookingFilesDownload')->name('booking_files_download');
 
 
+
+        Route::get('/warehouse_in/list', 'WarehouseInTypeController@index')->name('warehouseintypelist');
+
+        Route::get('/warehouse_in', 'WarehouseInTypeController@createview')->name('warehouseintype');
+
+        Route::post('/warehouse_in/store', 'WarehouseInTypeController@store')->name('warehouseintypestore');
+
+        Route::get('/warehouse_in/updateview/{id_warehouse_type?}', 'WarehouseInTypeController@updateView')->name('warehouseintypeupdateView');
+
+        Route::post('/warehouse_in/updatestore', 'WarehouseInTypeController@updatestore')->name('warehouseintypeupdatestore');
+
+   		Route::get('/warehouse_in/delete/{id_warehouse_type?}', 'WarehouseInTypeController@delete')->name('warehouseintypedelete');
+
+
+
+        Route::get('/warehouse_out/list', 'WarehouseOutTypeController@index')->name('warehouseouttypelist');
+
+        Route::get('/warehouse_out', 'WarehouseOutTypeController@createview')->name('warehouseouttype');
+
+        Route::post('/warehouse_out/store', 'WarehouseOutTypeController@store')->name('warehouseouttypestore');
+
+        Route::get('/warehouse_out/updateview/{id_warehouse_type?}', 'WarehouseOutTypeController@updateView')->name('warehouseouttypeupdateView');
+
+        Route::post('/warehouse_out/updatestore', 'WarehouseOutTypeController@updatestore')->name('warehouseouttypeupdatestore');
+
+        Route::get('/warehouse_out/delete/{id_warehouse_type?}', 'WarehouseOutTypeController@delete')->name('warehouseouttypedelete');
+
    });
 });   
 

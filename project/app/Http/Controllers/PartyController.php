@@ -163,10 +163,10 @@ class PartyController extends Controller
         return Redirect()->Route('party_list_view');
     }
 
-     public function deleteParty(Request $request) {
+    public function deleteParty(Request $request) {
       $party = MaxParty::find($request->id);
       $party->delete();
       StatusMessage::create('party_delete',$party->name .' is deleted Successfully');
       return redirect()->Route('party_list_view');
-     }
+    }
 }

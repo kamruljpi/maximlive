@@ -122,4 +122,5 @@ class HomeController extends Controller {
 
 		return view('dashboard',compact('user','notification'));
 	}
+
 }

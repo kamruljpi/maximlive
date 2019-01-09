@@ -3,7 +3,7 @@
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'routeAccess'], function () {
 
-	    Route::get('ipo/list',
+	    Route::any('ipo/list',
 	        [
 	            'as'=>'ipo_list_view',
 	            'uses'=>'taskController\Ipo\IpoListController@getIpoValue'

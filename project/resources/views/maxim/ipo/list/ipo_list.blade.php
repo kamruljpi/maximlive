@@ -57,6 +57,17 @@
 		<button class="btn btn-primary" type="button" id="mrf_simple_search_btn">Simple Search</button>
 	</form>
 </div>
+<div class="col-sm-2">
+	<a href="" class="btn btn-warning form-control" type="button" id="mrf_reset_btn">Reset</a>
+</div>
+
+<div class="form-group custom-search-form col-sm-10">
+	<form action="{{ Route('ipo_list_view') }}" method="post">
+		{{csrf_field()}}
+		<input type="text" name="p_id" class="form-control" placeholder="Search" id="mrf_id_search">
+		<button class="btn btn-info" type="submit" id="mrf_simple_search"><i class="fa fa-search"></i></button>
+	</form>
+</div>
 <br>
 <div class="row">
 	<div class="col-md-12">
@@ -74,6 +85,7 @@
 				</tr>
 			</thead>
 			<tbody>
+			<?php if(isset($ipoDetails) && !empty($ipoDetails)) { ?>
 			@php($j=1 + $ipoDetails->perPage() * ($ipoDetails->currentPage() - 1))
 			<?php $increase_total_qnty = 0 ?>
 			@foreach($ipoDetails as $value)
@@ -115,9 +127,12 @@
 					</td>
 				</tr>
 			@endforeach
+			<?php } ?>
 			</tbody>
 		</table>
-		<div id="">{{$ipoDetails->links()}}</div>
+		<?php if(isset($ipoDetails) && !empty($ipoDetails)) { ?>
+			<div id="">{{$ipoDetails->links()}}</div>
+		<?php } ?>
 		<div class="pagination-container">
 			<nav>
 				<ul class="pagination"></ul>

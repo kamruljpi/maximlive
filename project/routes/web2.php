@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth'], function(){
    		Route::get('store/opening/product', 'OpeningProductController@index')->name('store_opening_product_action');
       Route::post('store/opening/product', 'OpeningProductController@productStore')->name('store_product_entry_action');
       Route::get('stored/product', 'OpeningProductController@storedProduct')->name('stored_product_action');
+      Route::get('stored/item', 'OpeningProductController@storedItem')->name('stored_item_action');
 	});
 
    /** Ajax Request Route**/

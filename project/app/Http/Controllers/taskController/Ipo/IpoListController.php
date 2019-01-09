@@ -23,16 +23,32 @@ class IpoListController extends Controller
 	/**
 	 *	@return array
 	 */	
-	public function getIpoValue(){
+	public function getIpoValue(Request $request){
 
-		$ipoDetails = MxpIpo::select('mxp_ipo.*',DB::Raw('sum(mxp_ipo.ipo_quantity) as ipo'))	
-            	->orderBy('mxp_ipo.ipo_id','DESC')
-            	->groupBy('mxp_ipo.ipo_id')
-            	->where('mxp_ipo.is_deleted',BookingFulgs::IS_NOT_DELETED)
-				->paginate(20);
+		if(isset($request->p_id) && !empty($request->p_id)){
+			global $pid;
+			$pid = $request->p_id;
+			$ipoDetails = MxpIpo::select('mxp_ipo.*',DB::Raw('sum(mxp_ipo.ipo_quantity) as ipo'))
+	            	->orderBy('mxp_ipo.ipo_id','DESC')
+	            	->groupBy('mxp_ipo.ipo_id')
+	            	->where('mxp_ipo.is_deleted',BookingFulgs::IS_NOT_DELETED)
+	            	->where(function($query){
+	            		global $pid;
+	            		$query->orwhere('mxp_ipo.booking_order_id', '=', $pid)
+	            		->orwhere('mxp_ipo.ipo_id', '=', $pid);
+	            	})
+					->paginate(20);
+		}else{
+			$ipoDetails = MxpIpo::select('mxp_ipo.*',DB::Raw('sum(mxp_ipo.ipo_quantity) as ipo'))	
+	            	->orderBy('mxp_ipo.ipo_id','DESC')
+	            	->groupBy('mxp_ipo.ipo_id')
+	            	->where('mxp_ipo.is_deleted',BookingFulgs::IS_NOT_DELETED)
+					->paginate(20);
+		}
+		
 
 		/** calculate left quantity **/
-		if(!empty($ipoDetails)) {
+		if(isset($ipoDetails) && !empty($ipoDetails)) {
 			foreach ($ipoDetails as &$details) {
 				$ipo_quantitys = (DB::table('mxp_store')->select(DB::Raw('sum(item_quantity) as ipo_quantitys'))->where('product_id',$details->ipo_id)->first())->ipo_quantitys;
 				$details->left_quantity = ($details->ipo) - $ipo_quantitys;

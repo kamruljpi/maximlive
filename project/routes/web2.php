@@ -49,12 +49,17 @@ Route::group(['middleware' => 'auth'], function(){
 Route::group(['middleware' => 'auth'], function(){
    Route::group(['middleware' => 'routeAccess'], function(){
    		Route::get('opening/stock', 'OpeningStockController@index')->name('opening_stock_view');
-   		Route::post('store/opening/stock', 'OpeningStockController@store')->name('store_opening_stock_action');
+      Route::post('store/opening/stock', 'OpeningStockController@store')->name('store_opening_stock_action');
+
+   		Route::get('store/opening/product', 'OpeningProductController@index')->name('store_opening_product_action');
+      Route::post('store/opening/product', 'OpeningProductController@productStore')->name('store_product_entry_action');
+      Route::get('stored/product', 'OpeningProductController@storedProduct')->name('stored_product_action');
 	});
 
    /** Ajax Request Route**/
 
    Route::get('get/item/waise/color/size', 'OpeningStockController@getColorSizeByitemCode')->name('get_item_waise_color_size');
+   Route::get('get/product', 'OpeningProductController@getProduct')->name('get_product_action');
 });
 
 /** End **/

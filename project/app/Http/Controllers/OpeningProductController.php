@@ -118,4 +118,14 @@ class OpeningProductController extends Controller
     	// $this->print_me($product);
     	return view('opening_stock.stored_product', compact('product'));
     }
+
+    public function storedItem(){
+    	$product = $this->getProduct($stock_type=1, $product_stype='opening_stock');
+    	foreach ($product as &$value) {
+    		$value->location = MxpLocation::findOrFail( $value->location_id);
+    		$value->warehouse = MxpWarehouseType::findOrFail( $value->warehouse_type_id);
+    	}
+    	
+    	return view('opening_stock.stored_item', compact('product'));
+    }
 }

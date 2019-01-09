@@ -98,4 +98,5 @@ class OpeningStockController extends Controller
 
 		return $html;
 	}
+	
 }

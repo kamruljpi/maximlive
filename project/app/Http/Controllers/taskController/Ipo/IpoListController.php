@@ -22,20 +22,23 @@ class IpoListController extends Controller
 {
 	/**
 	 *	@return array
-	 */
-	
+	 */	
 	public function getIpoValue(){
-		$ipoDetails = MxpIpo::leftjoin('mxp_store as ms','ms.product_id', 'mxp_ipo.ipo_id')
-				->select('mxp_ipo.booking_order_id','mxp_ipo.job_id','mxp_ipo.ipo_id','mxp_ipo.erp_code','mxp_ipo.ipo_status',DB::Raw('sum(mxp_ipo.ipo_quantity) as ipo'), DB::Raw('sum(ms.item_quantity) as left_quantity'))	
+
+		$ipoDetails = MxpIpo::select('mxp_ipo.*',DB::Raw('sum(mxp_ipo.ipo_quantity) as ipo'))	
             	->orderBy('mxp_ipo.ipo_id','DESC')
             	->groupBy('mxp_ipo.ipo_id')
             	->where('mxp_ipo.is_deleted',BookingFulgs::IS_NOT_DELETED)
 				->paginate(20);
 
-	
-	    // print_r("<pre>");            
-	    // print_r($ipoDetails);           
-	    // print_r("<pre>");            
+		/** calculate left quantity **/
+		if(!empty($ipoDetails)) {
+			foreach ($ipoDetails as &$details) {
+				$ipo_quantitys = (DB::table('mxp_store')->select(DB::Raw('sum(item_quantity) as ipo_quantitys'))->where('product_id',$details->ipo_id)->first())->ipo_quantitys;
+				$details->left_quantity = ($details->ipo) - $ipo_quantitys;
+			}
+		}
+		/**End**/
 
 		return view('maxim.ipo.list.ipo_list',compact('ipoDetails','ipo_store'));
 	}
@@ -43,7 +46,6 @@ class IpoListController extends Controller
 	/**
 	 *	@return array
 	 */
-
 	public function getIpoReport(Request $request){
 		$footerData   = [];
 		$companyInfo  = DB::table("mxp_header")

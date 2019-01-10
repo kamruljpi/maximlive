@@ -13,6 +13,7 @@ use Validator;
 use Session;
 use Carbon;
 use Auth;
+use DB;
 
 class OpeningProductController extends Controller
 {
@@ -208,8 +209,8 @@ class OpeningProductController extends Controller
             return view('opening_stock.stored_item', compact('product','filter','filter_v'));
         }else {
 
-            StatusMessage::create('messages', 'Please select a option');
 
+            StatusMessage::create('messages', 'Please select a option');
             return \Redirect()->Route('stored_item');
         }
     }
@@ -257,7 +258,7 @@ class OpeningProductController extends Controller
 
     public function getProduct($stock_type, $product_stype=null ){
 
-    	if($product_stype==null){
+    	if($product_stype == null){
     		$product = MxpStore::where([
     				['stock_type', $stock_type],
     				['is_deleted', 0]
@@ -310,5 +311,40 @@ class OpeningProductController extends Controller
     	}
     	// $this->print_me($product);
     	return view('opening_stock.stored_product', compact('product'));
+    }
+
+    public function groubByProductList(){
+        // $product = $this->getProduct($stock_type=1);
+        $product = MxpStore::groupby('item_code', 'item_size')
+                   ->select('*',DB::Raw('sum(item_quantity) as quantity'))
+                   ->where([
+                            ['stock_type', 1],
+                            ['is_deleted', 0]
+                        ])
+                   ->paginate(10);
+        foreach ($product as &$value) {
+            $value->location = MxpLocation::find( $value->location_id);
+            $value->warehouse = MxpWarehouseType::find( $value->warehouse_type_id);
+        }
+        // $this->print_me($product);
+        return view('opening_stock.stored_product_list', compact('product'));
+    }
+
+    public function getSingleProduct( $item_code=null ,$item_size=null ,$item_color=null ){
+        $modal = MxpStore::where(
+                        [
+                            ['item_code', $item_code],
+                            ['item_size', $item_size],
+                            ['item_color', $item_color],
+                            ['stock_type', 1],
+                            ['is_deleted', 0],
+                        ])
+                    ->get();
+        foreach ($modal as &$value) {
+            $value->location = MxpLocation::find( $value->location_id);
+            $value->warehouse = MxpWarehouseType::find( $value->warehouse_type_id);
+        }            
+
+        return view('opening_stock.product_modal',compact('modal'));
     }
 }

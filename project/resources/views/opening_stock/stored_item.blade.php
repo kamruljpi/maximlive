@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @section('page_heading','Stored Item')
 @section('section')
-	
+
 	<?php 
 		//  print_r("<pre>");
 		//  print_r($errors);
@@ -98,7 +98,8 @@
 	                	</div>
 	                	<div style="float: left; width: 48% ;margin-left:2.5px;">	                		
 		                    <div class="form-group">
-		                    	<a href="{{Route('stored_item')}}" class="btn btn-primary form-control" style="margin-top: 20px;">Reset</a>
+
+		                    	<a href="{{Route('stored_item')}}" class="btn btn-info form-control" style="margin-top: 20px;">Reset</a>
 		                	</div>
 	                    </div>
 	                </div>

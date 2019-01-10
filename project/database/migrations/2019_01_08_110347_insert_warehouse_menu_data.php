@@ -46,7 +46,7 @@ class InsertWarehouseMenuData extends Migration
 
             $exits = DB::table('mxp_menu')->where('route_name', 'opening_stock_view')->exists();
 
-            if($exits != 1) {
+            // if($exits != 1) {
                 $id = DB::table('mxp_menu')->insertGetId(
                     array(
                         'name' => 'Opening Stock View',
@@ -65,7 +65,7 @@ class InsertWarehouseMenuData extends Migration
                         'is_active' => 1
                     )
                 );
-            }
+            // }
 
             $exits_1 = DB::table('mxp_menu')->where('route_name', 'store_opening_stock_action')->exists();
 

@@ -303,7 +303,7 @@ return [
 'update_buyer_label' => 'Update buyer',
 'mxp_menu_os_mrf_list_view' => 'OS MRF list',
 'mxp_menu_os_po_list_view' => 'OS Purchase Order',
-'mxp_menu_stored_item_action' => 'Stored Item',
+'mxp_menu_stored_item_action' => 'Stored Item List',
 'mxp_menu_warehouse' => 'Warehouse',
 'mxp_menu_location_list_view' => 'Location List',
 'mxp_menu_warehouse_out_type_list' => 'Warehouse Out type List',
@@ -311,4 +311,6 @@ return [
 'mxp_menu_stored_product_action' => 'Stored Product List',
 'mxp_menu_stored_ipo_list' => 'Accepted Ipo List',
 'mxp_menu_stored_mrf_list' => 'Accepted Mrf List',
+'mxp_menu_opening_stock_view' => 'Opening Product Stock',
+'mxp_menu_stored_product_list' => 'Stored Product List',
 ];

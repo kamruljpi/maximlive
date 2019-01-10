@@ -1,6 +1,16 @@
+<?php 
+	// print_r("<pre>");
+	// print_r($item->product_id);
+	// print_r("<pre>");die();
+?>
 @extends('layouts.dashboard')
 @section('page_heading','Opening Stock')
 @section('section')
+	<style type="text/css">
+		select{
+			/*padding: 15px 0px;*/
+		}
+	</style>
 	<div class="container-fluid">
 	    <!-- <div class="row">
 	        <div class="col-sm-2">
@@ -83,11 +93,42 @@
 	                        	</div>
 	                        </div>
 
-	                        <div class="form-group">
-	                            <div class="col-sm-3 col-sm-offset-9 col-xs-offset-9">
-	                                <button type="submit" class="btn btn-primary form-control">Add</button>
-	                            </div>
-	                        </div>                        
+	                     	<div class="row">
+	                     		<div class="col-sm-3">
+	                     			<div class="form-group">
+		                        		<label class="col-sm-12 label-control">Location</label>
+		                        		<div class="col-sm-12">
+		                        		    <select class="select_2" name="location_id" id="">
+		                        		    	
+		                        		        <option value="">-- Select --</option>
+		                        		        @foreach($locations as $location)
+		                        		        	<option value="{{$location->id_location}}">{{$location->location}}</option>
+		                        		        @endforeach
+		                        		    </select>
+		                        		</div>
+	                        		</div>
+	                     		</div>
+	                     		<div class="col-sm-3">
+	                     			<div class="form-group">
+		                        		<label class="col-sm-12 label-control">Warehouse in type</label>
+		                        		<div class="col-sm-12">
+		                        		    <select class="select_2" name="id_warehouse_type" id="">
+		                        		        <option value="">-- Select --</option>
+		                        		        @foreach($warehouses as $warehouse)
+		                        		        	<option value="{{$warehouse->id_warehouse_type}}">{{$warehouse->warehouse_type}}</option>
+		                        		        @endforeach
+		                        		    </select>
+		                        		</div>
+	                        		</div>
+	                     		</div>
+	                     		<div class="form-group">
+	                     		    <div class="col-sm-3" style="padding-top:22px;">
+	                     		        <button type="submit" class="btn btn-primary form-control">Add</button>
+	                     		    </div>
+	                     		</div> 
+	                     	</div>
+
+	                                               
 	                    </form>
 	                </div>
 	            </div>

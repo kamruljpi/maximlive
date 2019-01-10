@@ -32,5 +32,7 @@ return [
 'mxp_menu_stored_product_action' => '',
 'mxp_menu_stored_ipo_list' => '',
 'mxp_menu_stored_mrf_list' => '',
+'mxp_menu_opening_stock_view' => '',
+'mxp_menu_stored_product_list' => '',
 
 ];

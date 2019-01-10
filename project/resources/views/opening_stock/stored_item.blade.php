@@ -3,9 +3,9 @@
 @section('section')
 	
 	<?php 
-		// print_r("<pre>");
-		// print_r($product[0]->location);
-		// print_r("</pre>");die();
+		//  print_r("<pre>");
+		//  print_r($errors);
+		//  print_r("</pre>");
 	?>
 	<div class="container-fluid">
 
@@ -20,6 +20,11 @@
 	    @if(Session::has('update'))
 	        @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('update') ))
 	    @endif
+
+	    @if(Session::has('messages'))
+	        @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('messages') ))
+	    @endif
+
 	    @if(count($errors) > 0)
 	        <div class="alert alert-danger" role="alert">
 	            @foreach($errors->all() as $error)
@@ -31,6 +36,25 @@
 	    <div class="row">
 	        <form action="{{Route('item_stored_filter_action')}}" method="POST">
 	            {{csrf_field()}}
+
+	            <div class="col-sm-12">
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Receive Date From</label>
+	                    <input type="date" name="receive_from_date" class="form-control" value="{{(isset($filter_v['receive_from_date']) ? $filter_v['receive_from_date'] :'')}}">
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Receive Date To</label>
+	                    <input type="date" name="receive_to_date" class="form-control" value="{{(isset($filter_v['receive_to_date']) ? $filter_v['receive_to_date'] :'')}}">
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Shipment Date From</label>
+	                    <input type="date" name="shipment_from_date" class="form-control" value="{{(isset($filter_v['shipment_from_date']) ? $filter_v['shipment_from_date'] :'')}}">
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Shipment Date To</label>
+	                    <input type="date" name="shipment_to_date" class="form-control" value="{{(isset($filter_v['shipment_to_date']) ? $filter_v['shipment_to_date'] :'')}}">
+	                </div>
+	            </div>
 
 	            <div class="col-sm-12">
 	                <div class="col-sm-3">
@@ -74,7 +98,7 @@
 	                	</div>
 	                	<div style="float: left; width: 48% ;margin-left:2.5px;">	                		
 		                    <div class="form-group">
-		                    	<a href="{{Route('stored_item_action')}}" class="btn btn-info form-control" style="margin-top: 20px;">Reset</a>
+		                    	<a href="{{Route('stored_item')}}" class="btn btn-primary form-control" style="margin-top: 20px;">Reset</a>
 		                	</div>
 	                    </div>
 	                </div>
@@ -93,7 +117,7 @@
 	                    			<tr>
 	                    				<th>Stock Id</th>
 	                    				<th>Item Code</th>
-	                    				<th>Erp Code</th>
+	                    				{{-- <th>Erp Code</th> --}}
 	                    				<th>Item Size</th>
 	                    				<th>Item Color</th>
 	                    				<th>Item Quantity</th>
@@ -108,7 +132,7 @@
 			                    			<tr>
 			                    				<td>PSE-{{ $item->store_id }}</td>
 			                    				<td>{{ $item->item_code }}</td>
-			                    				<td>{{ $item->erp_code }}</td>
+			                    				{{-- <td>{{ $item->erp_code }}</td> --}}
 			                    				<td>{{ $item->item_size }}</td>
 			                    				<td>{{ $item->item_color }}</td>
 			                    				<td>{{ $item->item_quantity }}</td>

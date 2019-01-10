@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\OpeningProductController;
 use App\Http\Controllers\dataget\ListGetController;
 use App\Http\Controllers\Message\StatusMessage;
 use Illuminate\Http\Request;
@@ -17,8 +18,10 @@ class OpeningStockController extends Controller
 {
 	public function index() {
 		$items = MxpProduct::where('status', 1)->select('product_id','product_code')->get();
+    	$locations = OpeningProductController::getLocation();
+    	$warehouses = OpeningProductController::getWarehouseType($type='in');
 		$details = [];
-		return view('opening_stock.create_opening_stock',compact('details','items'));
+		return view('opening_stock.create_opening_stock',compact('details','locations','warehouses','items'));
 	}
 
 	public function store(Request $request) {
@@ -29,6 +32,8 @@ class OpeningStockController extends Controller
             'color.required' => 'Color field is required.',
             'size_range.required' => 'Size Range field is required.',
             'quantity.required' => 'Quantity field is required.',
+            'location_id.required' => 'Location field is required.',
+            'id_warehouse_type.required' => 'Warehouse type field is required.',
             ];
     	$validator = Validator::make($datas, 
             [
@@ -36,6 +41,8 @@ class OpeningStockController extends Controller
     			// 'color' => 'required',
     			'size_range' => 'required',
     			'quantity' => 'required',
+    			'location_id' => 'required',
+    			'id_warehouse_type' => 'required',
 		    ],
             $validMessages
         );
@@ -50,6 +57,10 @@ class OpeningStockController extends Controller
 		$store->item_size = $request->size_range;
 		$store->item_color = $request->item_color;
 		$store->item_quantity = $request->quantity;
+
+		$store->warehouse_type_id = $request->warehouse_type_id;
+		$store->location_id = $request->location_id;
+
 		$store->last_action_at = 'create';
 		$store->is_type = 'opening_stock';
 		$store->stock_type = 1;

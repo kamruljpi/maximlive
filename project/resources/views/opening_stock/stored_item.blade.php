@@ -2,11 +2,6 @@
 @section('page_heading','Stored Item')
 @section('section')
 	
-	<?php 
-		// print_r("<pre>");
-		// print_r($product[0]->location);
-		// print_r("</pre>");die();
-	?>
 	<div class="container-fluid">
 
 	    @if(Session::has('store'))
@@ -74,7 +69,7 @@
 	                	</div>
 	                	<div style="float: left; width: 48% ;margin-left:2.5px;">	                		
 		                    <div class="form-group">
-		                    	<a href="{{Route('stored_item_action')}}" class="btn btn-info form-control" style="margin-top: 20px;">Reset</a>
+		                    	<a href="{{Route('stored_item')}}" class="btn btn-info form-control" style="margin-top: 20px;">Reset</a>
 		                	</div>
 	                    </div>
 	                </div>

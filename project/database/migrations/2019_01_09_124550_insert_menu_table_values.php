@@ -15,14 +15,14 @@ class InsertMenuTableValues extends Migration
     {
         $menu_exits = (DB::table('mxp_menu')->where([['name', 'Warehouse'],['description','Warehouse']])->select('menu_id')->first())->menu_id;
         
-        $exits = DB::table('mxp_menu')->where('route_name', 'stored_product_action')->exists();
+        $exits = DB::table('mxp_menu')->where('route_name', 'stored_product')->exists();
 
         if($exits != 1) {
             $id = DB::table('mxp_menu')->insertGetId(
                 array(
                     'name' => 'Stored Product Action',
                     'description' => 'Stored Product Action',
-                    'route_name' => 'stored_product_action',
+                    'route_name' => 'stored_product',
                     'parent_id' => $menu_exits,
                     'is_active' => 1,
                     'order_id' => 0
@@ -38,14 +38,14 @@ class InsertMenuTableValues extends Migration
             );
         }
 
-        $exits_1 = DB::table('mxp_menu')->where('route_name', 'stored_item_action')->exists();
+        $exits_1 = DB::table('mxp_menu')->where('route_name', 'stored_item')->exists();
 
         if($exits_1 != 1) {
             $id_1 = DB::table('mxp_menu')->insertGetId(
                 array(
                     'name' => 'Stored Item Action',
                     'description' => 'Stored Item Action',
-                    'route_name' => 'stored_item_action',
+                    'route_name' => 'stored_item',
                     'parent_id' => $menu_exits,
                     'is_active' => 1,
                     'order_id' => 0

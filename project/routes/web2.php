@@ -55,9 +55,11 @@ Route::group(['middleware' => 'auth'], function(){
       Route::post('store/opening/product', 'OpeningProductController@productStore')->name('store_product_entry_action');
 
       Route::get('stored/product', 'OpeningProductController@storedProduct')->name('stored_product');
-      Route::get('stored/item', 'OpeningProductController@storedItem')->name('stored_item');
-     
+      Route::any('filter/stored/product', 'OpenningProductSearch@filterStoredProduct')->name('product_stored_filter_action');
+
+      Route::get('stored/item', 'OpeningProductController@storedItem')->name('stored_item');    
       Route::any('filter/stored/item', 'OpeningProductController@filterStoredItem')->name('item_stored_filter_action');
+
 	});
 
    /** Ajax Request Route**/

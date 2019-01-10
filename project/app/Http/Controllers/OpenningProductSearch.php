@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\OpeningProductController;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Model\Location\MxpLocation;
 use Illuminate\Http\Request;
@@ -14,45 +15,10 @@ use Session;
 use Carbon;
 use Auth;
 
-class OpeningProductController extends Controller
+class OpenningProductSearch extends Controller
 {
-    public function index(){
-    	$product = $this->getProduct($type=0);
-    	$location = $this->getLocation();
-    	$warehouse = $this->getWarehouseType($type='in');
-    	$details = [];
-    	return view('opening_stock.create_opening_product',compact('details','product','location','warehouse'));
-    }
-
-    public function filterOptionValue() {
-        $filter['items'] = MxpProduct::where('status', 1)->select('product_id','product_code')->get();
-        $filter['location'] = MxpLocation::where('status', 1)->select('id_location','location')->get();
-        $filter['in_type'] = MxpWarehouseType::where([['warehouse_in_out_type','in'],['status', 1]])->select('id_warehouse_type','warehouse_type')->get();
-
-        return $filter;
-    }
-
-    /**
-     * @return void
-     */
-    public function joiningValue($product){
-        if(isset($product) && !empty($product)) {
-            foreach ($product as &$value) {
-                $value->location = (MxpLocation::find( $value->location_id))->location;
-                $value->warehouse = (MxpWarehouseType::find( $value->warehouse_type_id))->warehouse_type;
-            }
-        }
-    }
-
-    public function storedItem(){
-        $filter = $this->filterOptionValue();
-        $product = $this->getProduct($stock_type=1, $product_stype='opening_stock');
-        $this->joiningValue($product);
-        return view('opening_stock.stored_item', compact('product','filter'));
-    }
-
-    public function filterStoredItem(Request $request) {
-        $filter = $this->filterOptionValue();
+	public function filterStoredProduct(Request $request) {
+        $filter = OpeningProductController::filterOptionValue();
         $item_code = isset($request->item_code) ? $request->item_code : '';
         $location_id = isset($request->location_id) ? $request->location_id : '';
         $id_warehouse_type = isset($request->id_warehouse_type) ? $request->id_warehouse_type : '';
@@ -212,103 +178,7 @@ class OpeningProductController extends Controller
 
             return \Redirect()->Route('stored_item');
         }
-    }
 
-    public function productStore(Request $request)
-    {
-    		$validMessages = [
-    		      'product_id.required' => 'Product Id field is required.',
-    		      'warehouse.required' => 'warehouse field is required',
-    		      'location.required' => 'location field is required',
-    		      ];
-    		$datas = $request->all();
-
-    		$validator = Validator::make($datas, 
-    		      [
-    		    'product_id' => 'required',
-    		    'location' => 'required',
-    		    'warehouse' => 'required',
-    		  ],
-    		      $validMessages
-    		  );
-
-    		if ($validator->fails()) {
-    		  return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
-    		}
-
-    		
-	        if(isset($request->product_id) && !empty($request->product_id)){
-
-	            MxpStore::where('store_id', $request->product_id)
-	            	->update([
-	            		'stock_type' => 1,
-	            		'location_id' => $request->location,
-	            		'warehouse_type_id' => $request->warehouse,
-	            		'warehouse_entry_date' => Carbon\Carbon::now() ,
-	            		'warehouse_user_id' => Auth::user()->user_id ,
-	            	]); 
-	            Session::flash('store','PSE-'.$request->product_id." Product Successfully stored.");
-        	}else{
-        		Session::flash('delete',"Opps something went wrong.");
-        	}
-
-    	return redirect()->back();
-    }
-
-    public function getProduct($stock_type, $product_stype=null ){
-
-    	if($product_stype==null){
-    		$product = MxpStore::where([
-    				['stock_type', $stock_type],
-    				['is_deleted', 0]
-				])
-    			->where(function($is_type){
-    				$is_type->where('is_type', 'ipo')->orwhere('is_type', 'mrf');
-    			})
-    			->paginate(10);
-    			
-    	}
-    	elseif($product_stype){
-    		$product = MxpStore::where([
-    				['stock_type', $stock_type],
-    				['is_deleted', 0],
-    				['is_type', $product_stype]
-				])
-    		->paginate(10);
-    	}else{
-    		return "ops Something went wrong.";
-    	}
-    	
-		return $product;
-    }
-
-    public function getLocation(){
-    	$location = MxpLocation::where([
-    					['status', 1],
-    					['is_deleted', 0],
-    				])
-    				->get();
-    	return $location;
-    }
-
-    public function getWarehouseType( $type ){
-
-    	$warehouse = MxpWarehouseType::where([
-    			['warehouse_in_out_type', $type],
-    			['status', 1],
-    			['is_deleted', 0],
-    		])
-    		->get();
-		return $warehouse;
-    }
-
-    public function storedProduct(){
-    	$product = $this->getProduct($stock_type=1);
-    	foreach ($product as &$value) {
-    		$value->location = MxpLocation::find( $value->location_id);
-    		$value->warehouse = MxpWarehouseType::find( $value->warehouse_type_id);
-    	}
-    	// $this->print_me($product);
-    	return view('opening_stock.stored_product', compact('product'));
+        $this->print_me($request->all());
     }
 }

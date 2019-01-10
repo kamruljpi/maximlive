@@ -52,6 +52,7 @@ class OpeningStockController extends Controller
 		$store->item_quantity = $request->quantity;
 		$store->last_action_at = 'create';
 		$store->is_type = 'opening_stock';
+		$store->stock_type = 1;
 		$store->status = 1;
 		$store->save();
 

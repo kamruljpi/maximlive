@@ -108,7 +108,7 @@ class OpeningProductController extends Controller
             return view('opening_stock.stored_item', compact('product','filter','filter_v'));
         }else {
 
-            return \Redirect()->Route('stored_item_action')->withInput($request->input())->withErrors('Please select a option.');
+            return \Redirect()->Route('stored_item')->withInput($request->input())->withErrors('Please select a option.');
         }
     }
 
@@ -155,7 +155,7 @@ class OpeningProductController extends Controller
 
     public function getProduct($stock_type, $product_stype=null ){
 
-    	if($product_stype==null){
+    	if($product_stype == null){
     		$product = MxpStore::where([
     				['stock_type', $stock_type],
     				['is_deleted', 0]

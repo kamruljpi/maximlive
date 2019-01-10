@@ -23,7 +23,7 @@ return [
 'buyer_name_label' => 'Brand Name',
 'update_buyer_label' => 'Update buyer',
 'mxp_menu_os_mrf_list_view' => 'OS MRF list',
-'mxp_menu_os_po_list_view' => 'OS Purchase Order',
+'mxp_menu_os_po_list_view' => 'OS Purchase Order'
 'mxp_menu_stored_item_action' => '',
 'mxp_menu_warehouse' => '',
 'mxp_menu_location_list_view' => '',

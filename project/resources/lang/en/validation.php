@@ -313,5 +313,4 @@ return [
 'mxp_menu_stored_mrf_list' => 'Accepted Mrf List',
 'mxp_menu_opening_stock_view' => 'Opening Product Stock',
 'mxp_menu_stored_product_list' => 'Stored Product List',
-
 ];

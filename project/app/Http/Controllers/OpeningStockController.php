@@ -58,8 +58,8 @@ class OpeningStockController extends Controller
 		$store->item_color = $request->item_color;
 		$store->item_quantity = $request->quantity;
 
-		$store->warehouse_type_id = $request->warehouse_type_id;
 		$store->location_id = $request->location_id;
+		$store->warehouse_type_id = $request->id_warehouse_type;
 
 		$store->last_action_at = 'create';
 		$store->is_type = 'opening_stock';

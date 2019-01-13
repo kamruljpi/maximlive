@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm-2">
             <div class="form-group ">
-                <a href="{{ URL::previous() }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
+                <a href="{{ route('warehouseintypelist') }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
                 <i class="fa fa-arrow-left"></i> Back</a>
             </div>
         </div>
@@ -29,7 +29,7 @@
                             <div style="" class="col-md-12 col-sm-12 ">
                                 <div class="form-group">
                                     <div class="col-md-6 col-sm-6">
-                                        <input type="hidden" class="form-control  input_required" name="warehouse_in_out_type" value="{{ $warehousetype->warehouse_in_out_type }}">
+                                        <input type="hidden" class="form-control" name="warehouse_in_out_type" value="{{ $warehousetype->warehouse_in_out_type }}">
                                     </div>
                                 </div>
                                 <div class="form-group">

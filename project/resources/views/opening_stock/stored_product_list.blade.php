@@ -15,6 +15,83 @@
 	    @if(Session::has('update'))
 	        @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('update') ))
 	    @endif
+
+	    @if(Session::has('messages'))
+	        @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('messages') ))
+	    @endif
+
+	    <div class="row">
+	        <form action="{{Route('product_list_stored_filter_action')}}" method="POST">
+	            {{csrf_field()}}
+
+	            <div class="col-sm-12">
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Receive Date From</label>
+	                    <input type="date" name="receive_from_date" class="form-control" value="{{(isset($filter_v['receive_from_date']) ? $filter_v['receive_from_date'] :'')}}">
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Receive Date To</label>
+	                    <input type="date" name="receive_to_date" class="form-control" value="{{(isset($filter_v['receive_to_date']) ? $filter_v['receive_to_date'] :'')}}">
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Shipment Date From</label>
+	                    <input type="date" name="shipment_from_date" class="form-control" value="{{(isset($filter_v['shipment_from_date']) ? $filter_v['shipment_from_date'] :'')}}">
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Shipment Date To</label>
+	                    <input type="date" name="shipment_to_date" class="form-control" value="{{(isset($filter_v['shipment_to_date']) ? $filter_v['shipment_to_date'] :'')}}">
+	                </div>
+	            </div>
+
+	            <div class="col-sm-12">
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Item Code</label>
+	                    <div class="col-sm-12">
+                            <select class="select_2" name="item_code" id="item_code">
+                                <option value="">-- Select --</option>
+                                @foreach($filter['items'] as $item)
+                                	<option value="{{$item->product_code}}" {{((isset($filter_v['item_code']) && $filter_v['item_code'] == $item->product_code) ? 'selected' : '')}} >{{$item->product_code}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Location</label>
+	                    <div class="col-sm-12">
+	                        <select class="select_2" name="location_id" id="">
+	                            <option value="">-- Select --</option>
+	                            @foreach($filter['location'] as $item)
+	                            	<option value="{{$item->id_location}}" {{((isset($filter_v['location_id']) && $filter_v['location_id'] == $item->id_location) ? 'selected' : '')}}>{{$item->location}}</option>
+	                            @endforeach
+	                        </select>
+	                    </div>
+	                </div>
+	                <div class="col-sm-3">
+	                    <label class="col-sm-12 label-control">Warehouse in type</label>
+	                    <div class="col-sm-12">
+	                        <select class="select_2" name="id_warehouse_type" id="">
+	                            <option value="">-- Select --</option>
+	                            @foreach($filter['in_type'] as $item)
+	                            	<option value="{{$item->id_warehouse_type}}" {{((isset($filter_v['id_warehouse_type']) && $filter_v['id_warehouse_type'] == $item->id_warehouse_type) ? 'selected' : '')}} >{{$item->warehouse_type}}</option>
+	                            @endforeach
+	                        </select>
+	                    </div>
+	                </div>
+	                <div class="col-sm-3">
+	                	<div style="float: left; width: 48%;margin-right:2.5px;">	                		
+		                    <div class="form-group">
+		                    	<button type="submit" class="btn btn-info form-control" style="margin-top: 20px;">Search</button>
+		                    </div>
+	                	</div>
+	                	<div style="float: left; width: 48% ;margin-left:2.5px;">	                		
+		                    <div class="form-group">
+		                    	<a href="{{Route('stored_product_list')}}" class="btn btn-primary form-control" style="margin-top: 20px;">Reset</a>
+		                	</div>
+	                    </div>
+	                </div>
+	            </div>     
+	        </form>
+	    </div>
 	    
 	    <div class="row">
 	        {{-- Product Entry Column --}}
@@ -46,33 +123,36 @@
                     				</tr>
 	                    		</thead>
 	                    		<tbody>
-	                    			<?php $i=1; ?>
-	                    			@foreach($product as $item)	
-
-	                    			<tr>
-	                    				<td>PSE-{{ $item->store_id }}</td>
-	                    				<td>{{ $item->product_id }}</td>
-	                    				<td>{{ $item->booking_order_id }}</td>
-	                    				<td>{{ $item->item_code }}</td>
-	                    				<td>{{ $item->erp_code }}</td>
-	                    				<td>{{ $item->item_size }}</td>
-	                    				<td>{{ $item->item_color }}</td>
-	                    				<td>{{ $item->quantity }}</td>
-	                    				<td>{{ $item->location->location }}</td>
-	                    				<td>{{ $item->warehouse->warehouse_type }}</td>
-	                    				<td>
-	                    					<a href="{{ route('get_single_product',
-		                    					[	'item_code' => $item->item_code,
-		                    						'item_size' => $item->item_size,
-		                    						'item_color' => $item->item_color
-		                						]
-	                    					) }}" class="btn btn-success"> 
-	                    						<i class="fa fa-eye" aria-hidden="true"></i>
-	                    					</a>
-	                    				</td>
-                    				</tr>
-	                    			<?php $i++ ;?>
-	                    			@endforeach
+	                    			@if(!empty($product[0]->store_id))
+		                    			@foreach($product as $item)	
+			                    			<tr>
+			                    				<td>PSE-{{ $item->store_id }}</td>
+			                    				<td>{{ $item->product_id }}</td>
+			                    				<td>{{ $item->booking_order_id }}</td>
+			                    				<td>{{ $item->item_code }}</td>
+			                    				<td>{{ $item->erp_code }}</td>
+			                    				<td>{{ $item->item_size }}</td>
+			                    				<td>{{ $item->item_color }}</td>
+			                    				<td>{{ $item->quantity }}</td>
+			                    				<td>{{ $item->location }}</td>
+			                    				<td>{{ $item->warehouse }}</td>
+			                    				<td>
+			                    					<a href="{{ route('get_single_product',
+				                    					[	'item_code' => $item->item_code,
+				                    						'item_size' => $item->item_size,
+				                    						'item_color' => $item->item_color
+				                						]
+			                    					) }}" class="btn btn-success"> 
+			                    						<i class="fa fa-eye" aria-hidden="true"></i>
+			                    					</a>
+			                    				</td>
+		                    				</tr>
+		                    			@endforeach
+		                    		@else
+		                    			<tr>
+		                    				<td colspan="9"><center>Empty</center></td>
+		                    			</tr>
+	                    			@endif
 	                    		</tbody>
 	                    	</table>
 	                    	{{ $product->links() }}

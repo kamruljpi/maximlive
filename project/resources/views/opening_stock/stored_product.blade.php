@@ -15,6 +15,10 @@
 	        @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('update') ))
 	    @endif
 
+	    @if(Session::has('messages'))
+	        @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('messages') ))
+	    @endif
+
 	    <div class="row">
 	        <form action="{{Route('product_stored_filter_action')}}" method="POST">
 	            {{csrf_field()}}
@@ -118,28 +122,31 @@
                     				</tr>
 	                    		</thead>
 	                    		<tbody>
-	                    			<?php $i=1; ?>
-	                    			@foreach($product as $item)	
-
-	                    			<tr>
-	                    				<td>PSE-{{ $item->store_id }}</td>
-	                    				<td>{{ $item->product_id }}</td>
-	                    				<td>{{ $item->booking_order_id }}</td>
-	                    				<td>{{ $item->item_code }}</td>
-	                    				<td>{{ $item->erp_code }}</td>
-	                    				<td>{{ $item->item_size }}</td>
-	                    				<td>{{ $item->item_color }}</td>
-	                    				<td>{{ $item->item_quantity }}</td>
-	                    				<td>{{ $item->location->location }}</td>
-	                    				<td>{{ $item->warehouse->warehouse_type }}</td>
-	                    				<td>
-	                    					<button class="btn btn-success">
-	                    						<i class="fa fa-trash" aria-hidden="true"></i>
-	                    					</button>
-	                    				</td>
-                    				</tr>
-	                    			<?php $i++ ;?>
-	                    			@endforeach
+	                    			@if(!empty($product[0]->store_id))
+		                    			@foreach($product as $item)
+			                    			<tr>
+			                    				<td>PSE-{{ $item->store_id }}</td>
+			                    				<td>{{ $item->product_id }}</td>
+			                    				<td>{{ $item->booking_order_id }}</td>
+			                    				<td>{{ $item->item_code }}</td>
+			                    				<td>{{ $item->erp_code }}</td>
+			                    				<td>{{ $item->item_size }}</td>
+			                    				<td>{{ $item->item_color }}</td>
+			                    				<td>{{ $item->item_quantity }}</td>
+			                    				<td>{{ $item->location }}</td>
+			                    				<td>{{ $item->warehouse }}</td>
+			                    				<td>
+			                    					<button class="btn btn-success">
+			                    						<i class="fa fa-trash" aria-hidden="true"></i>
+			                    					</button>
+			                    				</td>
+		                    				</tr>
+		                    			@endforeach
+	                    			@else
+		                    			<tr>
+		                    				<td colspan="11"><center>Empty</center></td>
+		                    			</tr>
+	                    			@endif
 	                    		</tbody>
 	                    	</table>
 	                    	{{ $product->links() }}

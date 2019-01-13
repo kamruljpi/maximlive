@@ -208,8 +208,7 @@ class OpeningProductController extends Controller
 
             return view('opening_stock.stored_item', compact('product','filter','filter_v'));
         }else {
-
-
+            
             StatusMessage::create('messages', 'Please select a option');
             return \Redirect()->Route('stored_item');
         }
@@ -304,17 +303,16 @@ class OpeningProductController extends Controller
     }
 
     public function storedProduct(){
-    	$product = $this->getProduct($stock_type=1);
-    	foreach ($product as &$value) {
-    		$value->location = MxpLocation::find( $value->location_id);
-    		$value->warehouse = MxpWarehouseType::find( $value->warehouse_type_id);
-    	}
-    	// $this->print_me($product);
-    	return view('opening_stock.stored_product', compact('product'));
+        $filter = $this->filterOptionValue();
+        $product = $this->getProduct($stock_type = 1);
+        $this->joiningValue($product);
+
+    	return view('opening_stock.stored_product', compact('product','filter'));
     }
 
     public function groubByProductList(){
         // $product = $this->getProduct($stock_type=1);
+        $filter = $this->filterOptionValue();
         $product = MxpStore::groupby('item_code', 'item_size')
                    ->select('*',DB::Raw('sum(item_quantity) as quantity'))
                    ->where([
@@ -322,12 +320,16 @@ class OpeningProductController extends Controller
                             ['is_deleted', 0]
                         ])
                    ->paginate(10);
-        foreach ($product as &$value) {
-            $value->location = MxpLocation::find( $value->location_id);
-            $value->warehouse = MxpWarehouseType::find( $value->warehouse_type_id);
-        }
+
+        $this->joiningValue($product);
+        
+        // foreach ($product as &$value) {
+        //     $value->location = MxpLocation::find( $value->location_id);
+        //     $value->warehouse = MxpWarehouseType::find( $value->warehouse_type_id);
+        // }
         // $this->print_me($product);
-        return view('opening_stock.stored_product_list', compact('product'));
+
+        return view('opening_stock.stored_product_list', compact('product','filter'));
     }
 
     public function getSingleProduct( $item_code=null ,$item_size=null ,$item_color=null ){

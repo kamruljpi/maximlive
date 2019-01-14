@@ -103,10 +103,16 @@ class ProductController extends Controller
     Public function updateProductView(Request $request){
         $brands = MxpBrand::where('status', self::ACTIVE_BRAND)->get();
         $product = $this->allProducts($request->product_id);
-        $colors = MxpGmtsColor::where('item_code', NULL)->get();
-        $sizes = MxpProductSize::where('product_code', '')->get();
-        $colorsJs=[];
-        $sizesJs=[];
+        $product_code_ = $product[0]->product_code ;        
+
+        // $sizes = MxpProductSize::where('product_code', '')->get();
+        // $colors = MxpGmtsColor::where('item_code', NULL)->get();
+
+        $sizes = MxpProductSize::where('product_code', '')->orWhere('product_code', $product_code_)->get();
+        $colors = MxpGmtsColor::where('item_code', NULL)->orWhere('item_code',$product_code_)->get();
+
+        $sizesJs = [];
+        $colorsJs = [];
 
         foreach ($product as $color){
             foreach ($color->colors as $data){
@@ -183,15 +189,15 @@ class ProductController extends Controller
         }
         $buyers = DB::table('mxp_buyer')->select('id_mxp_buyer','buyer_name')->orderBy('buyer_name', ASC)->get(); 
 
-        // $this->print_me($vendorCompanyListPrice);
+        // $this->print_me($product);
        return view('product_management.update_product', compact('product', 'vendorCompanyListPrice', 'supplierPrices', 'supplierList', 'vendorCompanyList',  'colors', 'sizes', 'colorsJs', 'sizesJs', 'buyers'))->with('brands',$brands)->with('itemList',$itemList);
     }
 
     Public function addProduct(Request $request){
         $item_size_width_height = '';
-        if(isset($request->item_size_width) && isset($request->item_size_height)){
+        // if(isset($request->item_size_width) && isset($request->item_size_height)){
             $item_size_width_height = (!empty($request->item_size_width) ? $request->item_size_width :'0') .'-'. (!empty($request->item_size_height) ? $request->item_size_height :'0');            
-        }
+        // }
 
     	$roleManage = new RoleManagement();
 
@@ -290,12 +296,12 @@ class ProductController extends Controller
 		return \Redirect()->Route('product_list_view');    	
     }
 
-    public function updateProduct(Request $request){        
+    public function updateProduct(Request $request){  
         $item_size_width_height = '';
-        if(isset($request->item_size_width) && isset($request->item_size_height)){
+        // if(isset($request->item_size_width) && isset($request->item_size_height)){
             $item_size_width_height = (!empty($request->item_size_width) ? $request->item_size_width :'0') .'-'. (!empty($request->item_size_height) ? $request->item_size_height :'0');            
-        }
-
+        // }
+        // $this->print_me($item_size_width_height);
         $this->addVendorPrice($request, $request->product_id);
 
         SupplierController::updateProductPrice($request);

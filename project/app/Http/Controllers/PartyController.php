@@ -64,14 +64,14 @@ class PartyController extends Controller
             'name.required' => 'Company Name is required',
             'sort_name.required' => 'Company sort name is required',
             'name_buyer.required' => 'Brand name is required',
-            'name.unique' => 'Vendor name already entered',
+            'name.unique' => 'This vendor ( '.$request->name.' ) name already inserts',
             
         ];
 
         $validator = Validator::make($request->all(), [
                 // 'party_id'               => 'required|unique:mxp_party,party_id',
-                // 'name'                   => 'required||unique:mxp_party,name',
-                'name'                   => 'required',
+                'name'                   => 'required||unique:mxp_party,name',
+                // 'name'                   => 'required',
                 'sort_name'              =>'required',
                 'name_buyer'             => 'required',
             ],

@@ -25,6 +25,7 @@ class SupplierController extends Controller
 
         $inputErrorMsg = [
             'name.required' => 'Name is required',
+            'name.unique' => 'This supllier ( '.$req->name.' ) already inserts',
             'person_name.required' => 'Person Name is required',
             'email.required' => 'Email is required',
             'address.required' => 'Address is required',
@@ -34,7 +35,7 @@ class SupplierController extends Controller
         $validate = Validator::make(
             $req->all(),
             [
-                'name' => 'required',
+                'name' => 'required|unique:suppliers,name',
                 // 'person_name' => 'required',
                 // 'email' => 'required',
                 // 'address' => 'required',

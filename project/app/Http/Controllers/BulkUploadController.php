@@ -16,6 +16,8 @@ use Redirect;
 use DateTime;
 use App\MxpProduct;
 use Carbon\Carbon;
+use App\MxpProductSize;
+use App\Model\MxpGmtsColor;
 
 class BulkUploadController extends Controller
 {
@@ -192,8 +194,6 @@ class BulkUploadController extends Controller
         if(isset($sizes) && !empty($sizes)){
             DB::table('mxp_productsize')->insert($sizes);
         }
-        $getGmts_Color = $this->getGmts_Color();
-        $getProductSize = $this->getProductSize();
         $filters_array = self::unique_multidim_array($temp_insert,'item_code');
         $filters_array = self::unique_multidim_array($filters_array,'erp_code');
         if(count($filters_array) == count($temp_insert)){
@@ -272,9 +272,9 @@ class BulkUploadController extends Controller
                             $insert[$i]['brand'] = '';
                         }
                         if(isset($xvalue->item_description)){
-                            $item_description = strtolower($xvalue->item_description);
+                            $item_description = strtolower(trim($xvalue->item_description));
                             if(isset($getItem_description[$item_description])){
-                                $insert[$i]['product_description'] = $xvalue->item_description;
+                                $insert[$i]['product_description'] = trim($xvalue->item_description);
                                 $insert[$i]['item_description_id'] = $getItem_description[$item_description];
                             }else{
                                 $insert[$i]['product_description'] = '';
@@ -325,6 +325,8 @@ class BulkUploadController extends Controller
                             foreach ($data as $xkey => $xvalue) {
                                 if(isset($xvalue->item_code) && !empty($xvalue->item_code)){
                                     if(isset($itemcode_lists[strtolower($xvalue->item_code)])){
+                                        $getGmts_Color = $this->getGmts_Color($xvalue->item_code);
+                                        $getProductSize = $this->getProductSize($xvalue->item_code);
                                         $item_id = $itemcode_lists[strtolower($xvalue->item_code)];
                                         if(isset($xvalue->color) && !empty($xvalue->color)){
                                             $xvalue_color = str_replace(", ",",",$xvalue->color);
@@ -344,7 +346,6 @@ class BulkUploadController extends Controller
                                         if(isset($xvalue->size_range) && !empty($xvalue->size_range)){
                                             $xvalue_size_range = str_replace(", ", ",", $xvalue->size_range);
                                             $item_sizes = explode(",", $xvalue_size_range);
-                            
                                             if(isset($item_sizes) && !empty($item_sizes)){
                                                 foreach ($item_sizes as $item_size) {
                                                     if(isset($getProductSize[strtolower($item_size)])){
@@ -374,6 +375,8 @@ class BulkUploadController extends Controller
                                             $product_costs[$itco]['user_id'] = $user_id;
                                             $itco++;
                                         }
+                                        $getGmts_Color = array();
+                                        $getProductSize = array();
                                     }
                                 }
                             }
@@ -480,7 +483,7 @@ class BulkUploadController extends Controller
         if($item_code == null){
             $gmtscolors_ = DB::table('mxp_gmts_color')->where('status', 1)->get();
         }else{
-            $gmtscolors_ = DB::table('mxp_gmts_color')->where('item_code', '=', $item_code)->where('status', 1)->get();
+            $gmtscolors_ = MxpGmtsColor::where('item_code', '')->orWhere('item_code',$item_code)->get();
         }
         $gmtscolors = array();
         if(isset($gmtscolors_) && !empty($gmtscolors_)){
@@ -494,10 +497,11 @@ class BulkUploadController extends Controller
     }
     public function getProductSize($item_code = null)
     {
+
         if($item_code == null){
             $productsizes_ = DB::table('mxp_productsize')->where('status', 1)->get();
         }else{
-            $productsizes_ = DB::table('mxp_productsize')->where('product_code', '=', $item_code)->where('status', 1)->get();
+            $productsizes_ = MxpProductSize::where('product_code', '')->orWhere('product_code', $item_code)->get();
         }
         
         $productsizes = array();

@@ -45,11 +45,12 @@ class ColorController extends Controller
         $validMessages = [
             //            'p_code.required' => 'Product code field is required.',
             'gmts_color.required' => 'Color field is required.',
+            'gmts_color.unique' => 'This color already inserts.',
             ];
     	$validator = Validator::make($datas, 
             [
     			//               'p_code' => 'required',
-    			'gmts_color' => 'required',
+    			'gmts_color' => 'required|unique:mxp_gmts_color,color_name',
 		    ],
             $validMessages
         );

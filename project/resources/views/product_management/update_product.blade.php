@@ -10,6 +10,15 @@
         $object = new RoleDefine();
         $os_define_role = $object->getRole('OS');
     ?>
+
+    <?php 
+        foreach ($sizes as $s_value) {
+           // print_r('<pre>');
+            //print_r($s_value->proSize_id);
+        }
+
+        //die();
+    ?>
     <style type="text/css">
         .price_icon{
             float: left;
@@ -539,22 +548,24 @@
         var colors = {!! json_encode($colorsJs) !!};
         var sizes = {!! json_encode($sizesJs) !!};
 
+        console.log(sizes);
+
         selectedColors.val(colors).trigger("change");
         selectedSizes.val(sizes).trigger("change");
     </script>
 
     <script type="text/javascript">
-        inputOnlyNumberCheck('p_unit_price');
+        // inputOnlyNumberCheck('p_unit_price');
 
-        function inputOnlyNumberCheck(classs) {
-            var regex = /[0-9]|\./;
-            $('.'+classs).on('focusout',function(){
-                var key = $(this).val();
-                if( !regex.test(key) ) {
-                    alert("Only allow Number.");
-                    $(this).val(' ');
-                }
-            });
-        }       
+        // function inputOnlyNumberCheck(classs) {
+        //     var regex = /[0-9]|\./;
+        //     $('.'+classs).on('focusout',function(){
+        //         var key = $(this).val();
+        //         if( !regex.test(key) ) {
+        //             alert("Only allow Number.");
+        //             $(this).val(' ');
+        //         }
+        //     });
+        // }       
     </script>
 @endsection

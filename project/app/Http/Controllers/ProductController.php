@@ -56,9 +56,21 @@ class ProductController extends Controller
         
         if(isset($buyerList) && !empty($buyerList)){
             if($productId == null ){
-                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->whereIn('id_buyer',$buyerList)->orderBy('product_id','DESC')->paginate(20);
+                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->whereIn('id_buyer',$buyerList)->orWhere('id_buyer','')->orderBy('product_id','DESC')->paginate(20);
             }else{
                 $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->whereIn('id_buyer',$buyerList)->orderBy('product_id','DESC')->paginate(20);
+
+                /** when product id_buyer field is empty
+                 *  and need to update
+                 *  only PID 2 user acces this
+                 */
+                if(empty($proWithSizeColors[0]->id_buyer)){
+                    if(Auth::user()->email == 'PID-1bd@maxim-group.com' || Auth::user()->email == 'PID-2bd@maxim-group.com') {
+                        $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->where('id_buyer','')->orderBy('product_id','DESC')->paginate(20);
+                    }
+                }
+
+                /** End**/
             }
         }else if(Auth::user()->type == 'super_admin'){
             if($productId == null ){

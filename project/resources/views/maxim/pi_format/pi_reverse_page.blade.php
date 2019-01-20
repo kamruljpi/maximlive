@@ -123,7 +123,7 @@
 		    				{{-- </div> --}}
 
 		    				{{-- <div style="float: left;width: 40%; padding-right: : 5px;"> --}}
-		    					<a href="{{Route('pi_delete_action',$pi_value->job_no)}}" class="btn btn-primary deleteButton" >Cancel</a>
+		    					<a href="{{Route('pi_delete_action',$pi_value->job_no)}}/{{$pi_value->p_id}}" class="btn btn-primary deleteButton" >Cancel</a>
 		    				{{-- </div> --}}
 		    			</td>
 		    		</tr>

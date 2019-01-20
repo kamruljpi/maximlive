@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\pi'], functi
 
     Route::get('pi/edit/{job_id?}','PiReverseController@piEditView')->name('pi_reverse_edit_view');
     Route::post('pi/edit/action','PiReverseController@piEditAction')->name('pi_reverse_edit_action');
-    Route::get('pi/{job_id?}/delete','PiReverseController@piDeleteAction')->name('pi_delete_action');
+    Route::get('pi/{job_id?}/delete/{p_id?}','PiReverseController@piDeleteAction')->name('pi_delete_action');
     });
     
     Route::post('pi/list','PiListController@piSearch')->name('pi_list_search');

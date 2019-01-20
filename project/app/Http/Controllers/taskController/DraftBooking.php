@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\taskController;
 
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
 use App\Http\Controllers\NotificationController;
 use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\Controller;
@@ -19,12 +20,39 @@ use DB;
 
 class DraftBooking extends Controller
 {
+    use UserAccessBuyerList;
 
     public function index(){
-        $draft_list = MxpDraft::where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+
+        /** buyer wiase booking value filter **/
+
+        $buyerList = $this->getUserByerList(); // use trait class
+
+        if(isset($buyerList) && !empty($buyerList)){
+
+          $draft_list = MxpDraft::where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+            ->groupBy('booking_order_id')
+            ->whereIn('id_buyer',$buyerList)
+            ->orderBy('id',DESC)
+            ->paginate(15);
+
+        }else if(Auth::user()->type == 'super_admin'){
+
+          $draft_list = MxpDraft::where('is_deleted',BookingFulgs::IS_NOT_DELETED)
             ->groupBy('booking_order_id')
             ->orderBy('id',DESC)
             ->paginate(15);
+
+        }else{
+          // when condition false
+          // return paginate empty object
+          $draft_list = MxpDraft::where('vendor_id','')
+            ->groupBy('booking_order_id')
+            ->orderBy('id',DESC)
+            ->paginate(15);
+        }
+
+        /** End**/        
             
         return view('maxim.draft.draft_list',compact('draft_list'));
     }
@@ -90,7 +118,7 @@ class DraftBooking extends Controller
 
       $ids = $booking_number ? $booking_number : $id ;
 
-
+      // $this->print_me($buyer_details);
       if(!empty($datas)) {
 
          $delete = MxpDraft::where('booking_order_id',$ids)->delete();
@@ -102,6 +130,7 @@ class DraftBooking extends Controller
             $mxp_draft = new MxpDraft();
             $mxp_draft->user_id = Auth::User()->user_id;
             $mxp_draft->vendor_id = $buyer_details->id;
+            $mxp_draft->id_buyer = $buyer_details->id_buyer;
             $mxp_draft->booking_order_id = $ids;
             $mxp_draft->erp_code = $data['erp'];
             $mxp_draft->item_code = $data['item_code'];

@@ -321,6 +321,44 @@ class BookingController extends Controller
       return ture;
     }
 
+
+
+    //     public function getItemDetails($item_size){
+    //       $buyerList = $this->getUserByerList();
+    //       if(isset($buyerList) && !empty($buyerList)){
+    //         $value = DB::table('mxp_product as mp')
+    //           ->leftJoin('mxp_productsize as mps','mps.product_code', '=','mp.product_code')
+    //           ->leftJoin('mxp_products_colors as mpc','mpc.product_id', '=', 'mp.product_id')
+    //           ->leftJoin('mxp_gmts_color as mgs','mgs.id', '=', 'mpc.color_id')
+    //           ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(DISTINCT mps.product_size) as size'),DB::raw('GROUP_CONCAT(DISTINCT mgs.color_name) as color'))
+    //           ->where([
+    //               ['mp.product_code',$item_size],
+    //               ['mp.status',ActionMessage::ACTIVE]
+    //             ])
+    //           ->whereIn('mp.id_buyer',$buyerList)
+    //           ->get();
+              
+    //       }else if(Auth::user()->type == 'super_admin'){
+    //         $value = DB::table('mxp_product as mp')
+    //           ->leftJoin('mxp_productsize as mps','mps.product_code', '=','mp.product_code')
+    //           ->leftJoin('mxp_products_colors as mpc','mpc.product_id', '=', 'mp.product_id')
+    //           ->leftJoin('mxp_gmts_color as mgs','mgs.id', '=', 'mpc.color_id')
+    //           ->select('mp.erp_code','mp.product_id','mp.unit_price','mp.product_name','mp.others_color','mp.product_description',DB::raw('GROUP_CONCAT(DISTINCT mps.product_size) as size'),DB::raw('GROUP_CONCAT(DISTINCT mgs.color_name) as color'))
+    //           ->where([
+    //               ['mp.product_code',$item_size],
+    //               ['mp.status',ActionMessage::ACTIVE]
+    //             ])
+    //           ->get();
+    //       }else{
+    //             $value = [];
+    //       }
+    //     return $value;
+    //   }
+
+
+
+    
+
     public function getItemDetails($item_size){
       $buyerList = $this->getUserByerList();
       if(isset($buyerList) && !empty($buyerList)){

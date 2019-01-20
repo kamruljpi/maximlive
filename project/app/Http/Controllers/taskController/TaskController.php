@@ -19,8 +19,11 @@ use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Model\MxpMrf;
 use App\Http\Controllers\taskController\Os\Mrf\MrfListController;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
 
-class TaskController extends Controller {
+class TaskController extends Controller 
+{
+	use UserAccessBuyerList;
 
 	CONST CREATE_IPO = "create";
 	CONST UPDATE_IPO = "update";
@@ -35,7 +38,24 @@ class TaskController extends Controller {
   //       LEFT JOIN mxp_productsize mps ON (mps.product_code = mp.product_code)
   //       LEFT JOIN mxp_gmts_color mgs ON (mgs.item_code = mps.product_code) GROUP BY mps.product_code, mgs.item_code");
 
-		$productDetails = MxpProduct::select('product_code')->get();
+		/** buyer wiase booking value filter **/
+
+		$buyerList = $this->getUserByerList(); // use trait class
+
+		if(isset($buyerList) && !empty($buyerList)){
+
+			$productDetails = MxpProduct::whereIn('id_buyer',$buyerList)->select('product_code')->get();
+
+		}else if(Auth::user()->type == 'super_admin'){
+
+			$productDetails = MxpProduct::select('product_code')->get();			
+
+		}else{
+			$productDetails = MxpProduct::select('product_code')->get();			
+		}
+
+		/** End **/
+
 		if (isset($productDetails) && !empty($productDetails)) {
 			foreach ($productDetails as $itemKey => $itemValue) {
 

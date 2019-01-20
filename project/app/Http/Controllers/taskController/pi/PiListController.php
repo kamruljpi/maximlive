@@ -8,15 +8,51 @@ use DB;
 use App\Http\Controllers\taskController\pi\PiController;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
+use Auth;
 
 class PiListController extends Controller
 {
+	use UserAccessBuyerList;
+
 	public function getPiList(){
-		$piDetails = MxpPi::orderBy('id','DESC')
-			->select('*',DB::Raw('GROUP_CONCAT(DISTINCT booking_order_id) as booking_order_id'))
-            ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
-			->groupBy('p_id')
-			->paginate(20);
+
+		/** buyer wiase booking value filter **/
+
+        $buyerList = $this->getUserByerList(); // use trait class
+
+        if(isset($buyerList) && !empty($buyerList)){
+
+        	$piDetails = MxpPi::orderBy('id','DESC')
+				->select('mxp_pi.*',DB::Raw('GROUP_CONCAT(DISTINCT mxp_pi.booking_order_id) as booking_order_id'),'mbd.buyer_name')
+				->join('mxp_bookingbuyer_details as mbd', 'mbd.booking_order_id', 'mxp_pi.booking_order_id')
+	            ->where('mxp_pi.is_deleted',BookingFulgs::IS_NOT_DELETED)
+	            // use trait class
+	            ->whereIn('mbd.buyer_name',$this->getUserByerNameList()) 
+				->groupBy('p_id')
+				->paginate(20);
+
+        }else if(Auth::user()->type == 'super_admin'){
+
+        	$piDetails = MxpPi::orderBy('id','DESC')
+				->select('mxp_pi.*',DB::Raw('GROUP_CONCAT(DISTINCT mxp_pi.booking_order_id) as booking_order_id'),'mbd.buyer_name')
+				->join('mxp_bookingbuyer_details as mbd', 'mbd.booking_order_id', 'mxp_pi.booking_order_id')
+	            ->where('mxp_pi.is_deleted',BookingFulgs::IS_NOT_DELETED)
+				->groupBy('p_id')
+				->paginate(20);
+				
+        }else{
+        	// when condition false
+        	// return empty paginate object
+        	$piDetails = MxpPi::orderBy('id','DESC')
+	            ->where('mxp_pi.is_deleted',BookingFulgs::IS_NOT_DELETED)
+	            ->where('mxp_pi.booking_order_id','')
+				->groupBy('p_id')
+				->paginate(20);
+        }
+
+        /** End**/ 
+
 		return view('maxim.pi_format.list.pi_list',compact('piDetails'));
 	}
 	

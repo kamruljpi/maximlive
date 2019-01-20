@@ -37,13 +37,14 @@ class ProductSizeController extends Controller
 
         $validMessages = [
         //  'p_code.required' => 'Product code field is required.',
-            'p_size.required' => 'Size field is required.'
+            'p_size.required' => 'Size field is required.',
+            'p_size.unique' => 'This size already inserts.',
             ];
         $datas = $request->all();
         $validator = Validator::make($datas, 
                 [
     //              'p_code' => 'required',
-                    'p_size' => 'required'
+                    'p_size' => 'required|unique:mxp_productsize,product_size'
                 ],
                 $validMessages
         );

@@ -14,12 +14,17 @@ class ItemSearchController extends Controller
     public function itemSearch(Request $request){
         $output = "";
         if ($request->ajax()) {
-            $products = MxpProduct::leftJoin('mxp_productsize as mps','mxp_product.product_code','mps.product_code')
+            $products = MxpProduct::leftJoin('mxp_products_sizes as mpss','mpss.product_id', '=','mxp_product.product_id')
+                ->leftJoin('mxp_productsize as mps','mps.proSize_id', '=','mpss.size_id')
+                // leftJoin('mxp_productsize as mps','mxp_product.product_code','mps.product_code')
                 ->leftJoin('mxp_gmts_color as mgc','mxp_product.product_code','mgc.item_code')
                 ->select('mxp_product.*',DB::raw('GROUP_CONCAT(DISTINCT mps.product_size SEPARATOR ", ") as size'),DB::raw('GROUP_CONCAT(DISTINCT mgc.color_name SEPARATOR ", ") as gmts_color'))
                 ->where('mxp_product.product_code', 'LIKE', '%' . $request->search . "%")
-                ->groupBy('mxp_product.product_code')
-                ->get();
+                ->orWhere('mxp_product.erp_code', 'LIKE', '%' . $request->search . "%")
+                ->orWhere('mxp_product.brand', 'LIKE', '%' . $request->search . "%")
+                ->orWhere('mxp_product.product_description', 'LIKE', '%' . $request->search . "%")
+                ->groupBy('mxp_product.product_code','mxp_product.created_at')
+                ->paginate(20);
 
             if (!empty($products[0]->product_code)) {
                 foreach ($products as $key => $product) {

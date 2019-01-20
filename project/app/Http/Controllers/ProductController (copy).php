@@ -26,7 +26,6 @@ use App\userbuyer;
 use App\Http\Controllers\Source\User\UserAccessBuyerList;
 use App\Model\Product\ItemCostPrice;
 use Session;
-use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -50,10 +49,8 @@ class ProductController extends Controller
     }
 
     public function allProducts($productId = null){
-
-        
         $buyerList = $this->getUserByerList();
-        
+
         if(isset($buyerList) && !empty($buyerList)){
             if($productId == null ){
                 $proWithSizeColors = MxpProduct::with('colors', 'sizes')->whereIn('id_buyer',$buyerList)->orderBy('product_id','DESC')->paginate(20);
@@ -67,8 +64,6 @@ class ProductController extends Controller
                 $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->orderBy('product_id','DESC')->paginate(20);
             }
         }
-
-
 
         $i=0;
         foreach ($proWithSizeColors as $proWithSizeColor) {
@@ -108,23 +103,22 @@ class ProductController extends Controller
     Public function updateProductView(Request $request){
         $brands = MxpBrand::where('status', self::ACTIVE_BRAND)->get();
         $product = $this->allProducts($request->product_id);
-        $product_code_ = $product[0]->product_code ;      
-        if(empty($product_code_)){
-            Session::flash('new_product_delete', "This Product Is not Available or You Don't have permission to edit this page.");
-            return \Redirect()->Route('product_list_view');  
-        }
+        $product_code_ = $product[0]->product_code ;        
+
+        // $sizes = MxpProductSize::where('product_code', '')->get();
+        // $colors = MxpGmtsColor::where('item_code', NULL)->get();
 
         $sizes = MxpProductSize::where('product_code', '')->orWhere('product_code', $product_code_)->get();
         $colors = MxpGmtsColor::where('item_code', NULL)->orWhere('item_code',$product_code_)->get();
 
-        $product_code_by_sizes = MxpProductSize::where('product_code', $product_code_)->get();
-        $product_code_by_colors = MxpGmtsColor::where('item_code',$product_code_)->get();
+        // $this->print_me($sizes);
 
         $sizesJs = [];
         $colorsJs = [];
 
         foreach ($product as $color){
             foreach ($color->colors as $data){
+
                 array_push($colorsJs, $data->color_id.','.$data->color_name);
             }
         }
@@ -134,27 +128,6 @@ class ProductController extends Controller
                 array_push($sizesJs, $data->size_id.','.$data->product_size);
             }
         }
-
-        //  if(isset($product_code_by_sizes) && !empty($product_code_by_sizes)) {
-        //     foreach ($product_code_by_colors as $code_by_colors){
-        //         $created_at = Carbon::parse($code_by_colors->created_at)->format('Y-m-d');
-
-
-        //         if($created_at == '2019-01-17'){                    
-        //             // array_push($colorsJs, $code_by_colors->id.','.$created_at);
-        //         }else {                    
-        //             array_push($colorsJs, $code_by_colors->id.','.$code_by_colors->color_name);
-        //         }
-        //         // $this->print_me($created_at);
-        //     }
-        // }
-
-        if(isset($product_code_by_sizes) && !empty($product_code_by_sizes)) {
-            foreach ($product_code_by_sizes as $code_by_size){
-                array_push($sizesJs, $code_by_size->proSize_id.','.$code_by_size->product_size);
-            }
-        }
-
 
         $vendorCompanyListPrice = VendorPrice::with('party')->where('product_id', $request->product_id)->get();
 
@@ -287,25 +260,29 @@ class ProductController extends Controller
         SupplierController::saveSupplierProductPrice($request, $lastProId);
 
        for ($i=0; $i<count($request->colors); $i++){
-            $colorData = explode(',', $request->colors[$i]);
-            $storeColor = new MxpProductsColors();
+
+           $colorData = explode(',', $request->colors[$i]);
+
+           $storeColor = new MxpProductsColors();
             $storeColor->product_id = $lastProId;
             $storeColor->color_id = $colorData[0];
             $storeColor->status = 1;
             $storeColor->save();
 
-            // $this->saveColor($colorData[1], $request->p_code);
+            $this->saveColor($colorData[1], $request->p_code);
         }
 
         for ($i=0; $i<count($request->sizes); $i++){
-            $sizeData = explode(',', $request->sizes[$i]);
+
+           $sizeData = explode(',', $request->sizes[$i]);
+
             $storeSize = new MxpProductsSizes();
             $storeSize->product_id = $lastProId;
             $storeSize->size_id = $sizeData[0];
             $storeSize->status = 1;
             $storeSize->save();
 
-            // $this->saveSize($sizeData[1], $request->p_code);
+            $this->saveSize($sizeData[1], $request->p_code);
         }
 
         ItemCostPrice::create([
@@ -382,6 +359,7 @@ class ProductController extends Controller
         $lastProductID = $updateProduct->product_id;
 
         MxpProductsColors::where('product_id', $lastProductID)->delete();
+        MxpGmtsColor::where('item_code', $request->p_code)->delete();
 
         if(isset($request->colors)) {
             for ($i = 0; $i < count($request->colors); $i++) {
@@ -393,11 +371,12 @@ class ProductController extends Controller
                 $color->status = 1;
                 $color->save();
 
+                $this->saveColor($color_name, $request->p_code);
             }
         }
         
         MxpProductsSizes::where('product_id', $lastProductID)->delete();
-        // MxpProductSize::where('product_code', $request->p_code)->delete();
+        MxpProductSize::where('product_code', $request->p_code)->delete();
 
         if (isset($request->sizes)) {
             for ($i = 0; $i < count($request->sizes); $i++) {
@@ -410,7 +389,7 @@ class ProductController extends Controller
                 $size ->status = 1;
                 $size->save();
 
-                // $this->saveSize($size_name , $request->p_code);
+                $this->saveSize($size_name , $request->p_code);
             }
         }
         $cost_table_value = DB::table('mxp_item_cost_price')->where('id_product',$request->product_id)->get();
@@ -453,7 +432,7 @@ class ProductController extends Controller
     public function saveColor($color, $productCode){
         $insertGmtsColor = new MxpGmtsColor();
         $insertGmtsColor->user_id = Auth::user()->user_id;
-        $insertGmtsColor->item_code = $productCode;
+       $insertGmtsColor->item_code = $productCode;
         $insertGmtsColor->color_name = $color;
         $insertGmtsColor->action = 'create';
         $insertGmtsColor->status = 1;
@@ -463,7 +442,7 @@ class ProductController extends Controller
     public function saveSize($size, $productCode){
         $createSize = new MxpProductSize();
         $createSize->user_id = Auth::user()->user_id;
-        $createSize->product_code = $productCode;
+       $createSize->product_code = $productCode;
         $createSize->product_size = $size;
         $createSize->status = 1;
         $createSize->action = 'create';

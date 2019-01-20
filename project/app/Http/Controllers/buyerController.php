@@ -22,14 +22,15 @@ class buyerController extends Controller
     public function addbuyer(Request $request){
 
         $validMessages = [
-            'buyer_name.required' => 'buyer Name field is required.'
+            'buyer_name.required' => 'buyer Name field is required.',
+            'buyer_name.unique' => 'This buyer Name already inserts.',
             ];
 
         $datas = $request->all();
 
     	$validator = Validator::make($datas, 
             [
-    			'buyer_name' => 'required'
+    			'buyer_name' => 'required|unique:mxp_buyer,buyer_name',
 		    ],
             $validMessages
         );

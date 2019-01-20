@@ -576,7 +576,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         /* product size routes*/
 
-        Route::get('view/product/list',
+        Route::get('view/product_size/list',
             [
                 'as'=>'product_size_view',
                 'uses'=>'ProductSizeController@sizeView'
@@ -999,7 +999,7 @@ Route::group(['middleware' => 'auth'], function () {
                 'uses'=>'taskController\BookingListController@bookingListView'
             ]);
 
-//added in maxim-office
+            //added in maxim-office
             Route::get('booking/list/report',
             [
                 'as'=>'booking_list_report',

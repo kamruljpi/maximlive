@@ -72,9 +72,10 @@ class PiReverseController extends Controller
 		return Redirect()->route('pi_reverse_view', $p_id);
 	}
 
-	public function piDeleteAction($job_id) {
-		if(!empty($job_id)) {
-			$mxp_pi = MxpPi::where('job_no',$job_id)->first();
+	public function piDeleteAction(Request $request) {
+
+		if(!empty($request->job_id) && !empty($request->p_id)) {
+			$mxp_pi = MxpPi::where([['job_no',$request->job_id],['p_id',$request->p_id]])->first();
 			// $mxp_pi->user_id = Auth::user()->user_id;
 			$mxp_pi->is_deleted = BookingFulgs::IS_DELETED;
 			$mxp_pi->deleted_user_id = Auth::User()->user_id;
@@ -82,13 +83,13 @@ class PiReverseController extends Controller
 			$mxp_pi->last_action_at = LastActionFlugs::REVERSE_ACTION;
 			$mxp_pi->save();
 
-			$jobId = (JobIdFlugs::JOBID_LENGTH - strlen($job_id));
-			Session::flash('message', str_repeat(JobIdFlugs::STR_REPEAT,$jobId).$job_id.' succesfully Cancel.');
+			$jobId = (JobIdFlugs::JOBID_LENGTH - strlen($request->job_id));
+			Session::flash('message', str_repeat(JobIdFlugs::STR_REPEAT,$jobId).$request->job_id.' succesfully Cancel.');
 		}else {
 			Session::flash('error-m', 'Something is wrong');
 		}
 
 		return Redirect()->back();
-		self::print_me($job_id);
+		// self::print_me($job_id);
 	}
 }

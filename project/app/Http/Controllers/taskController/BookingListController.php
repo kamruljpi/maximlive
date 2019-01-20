@@ -29,29 +29,61 @@ use App\User;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Source\source;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
 
 class BookingListController extends Controller
 {   
+    use UserAccessBuyerList;
+
     CONST CREATE_IPO = "create";
     CONST UPDATE_IPO = "update";
 
     public function bookingListView(){
 
-        $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
-            ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
-            ->orderBy('id','DESC')
-            ->paginate(15);
-        foreach($bookingList as &$booking){
-            $booking->booking = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->user_id)->first();
-            $booking->accepted = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->accepted_user_id)->first();
+        /** buyer wiase booking value filter **/
 
-            $booking->mrf = MxpMrf::where([['booking_order_id',$booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mxp_mrf_table.mrf_status','mu.first_name','mu.middle_name','mu.last_name')->first();
+        $buyerList = $this->getUserByerList(); // use trait class
 
-            $booking->ipo = MxpIpo::where([['booking_order_id',$booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mxp_ipo.ipo_status','mu.first_name','mu.middle_name','mu.last_name')->first();
+        if(isset($buyerList) && !empty($buyerList)){
 
-            $booking->po = MxpIpo::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
-            $booking->bookingDetails = MxpBooking::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'),'shipmentDate')->first();
+            $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
+                ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+                ->whereIn('buyer_name',$this->getUserByerNameList()) // use trait class
+                ->orderBy('id','DESC')
+                ->paginate(15);
+
+        }else if(Auth::user()->type == 'super_admin'){
+
+            $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
+                ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
+                ->orderBy('id','DESC')
+                ->paginate(15);
+
+        }else{
+            // when condition false
+            // return empty paigante object
+            $bookingList = MxpBookingBuyerDetails::where('buyer_name','')
+                ->orderBy('id','DESC')
+                ->paginate(15);
+
         }
+
+        /** End**/
+
+        if(isset($bookingList) && !empty($bookingList)) {
+            foreach($bookingList as &$booking){
+                $booking->booking = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->user_id)->first();
+                $booking->accepted = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->accepted_user_id)->first();
+
+                $booking->mrf = MxpMrf::where([['booking_order_id',$booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mxp_mrf_table.mrf_status','mu.first_name','mu.middle_name','mu.last_name')->first();
+
+                $booking->ipo = MxpIpo::where([['booking_order_id',$booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mxp_ipo.ipo_status','mu.first_name','mu.middle_name','mu.last_name')->first();
+
+                $booking->po = MxpIpo::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
+                $booking->bookingDetails = MxpBooking::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'),'shipmentDate')->first();
+            }
+        }
+
         return view('maxim.booking_list.booking_list_page',compact('bookingList'));
     }
 
@@ -126,7 +158,44 @@ class BookingListController extends Controller
 
     public function bookingListReport(){
 
-        $bookingList = DB::table('mxp_bookingbuyer_details')->where([['is_complete', BookingFulgs::IS_COMPLETE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('booking_order_id')->orderBy('id','DESC')->paginate(20);
+        /** buyer wiase booking value filter **/
+
+        $buyerList = $this->getUserByerList(); // use trait class
+
+        if(isset($buyerList) && !empty($buyerList)){
+
+            $bookingList = DB::table('mxp_bookingbuyer_details')
+                    ->where([
+                        ['is_complete', BookingFulgs::IS_COMPLETE],
+                        ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+                    ])
+                    // useing trait class
+                    ->whereIn('buyer_name',$this->getUserByerNameList()) 
+                    ->groupBy('booking_order_id')
+                    ->orderBy('id','DESC')
+                    ->paginate(20);
+
+        }else if(Auth::user()->type == 'super_admin'){
+
+            $bookingList = DB::table('mxp_bookingbuyer_details')
+                        ->where([
+                            ['is_complete', BookingFulgs::IS_COMPLETE],
+                            ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+                        ])
+                        ->groupBy('booking_order_id')
+                        ->orderBy('id','DESC')
+                        ->paginate(20);
+        }else{
+            // when condition false
+            // return empty paginate object
+            $bookingList = DB::table('mxp_bookingbuyer_details')
+                        ->where('buyer_name', '')
+                        ->groupBy('booking_order_id')
+                        ->orderBy('id','DESC')
+                        ->paginate(20);
+        }
+
+        /** End**/
 
         if(isset($bookingList) && !empty($bookingList)){
             foreach ($bookingList as &$booking) {
@@ -213,12 +282,48 @@ class BookingListController extends Controller
         $to_shipment_date = isset($request->to_shipment_date_search) ? $request->to_shipment_date_search : '';
         $po_cat_no = isset($request->po_cat_no) ? $request->po_cat_no : '';
 
-        $bookingLists = DB::table('mxp_bookingbuyer_details')
-                ->where([
-                    ['mxp_bookingbuyer_details.is_complete', BookingFulgs::IS_COMPLETE],
-                    ['mxp_bookingbuyer_details.is_deleted',BookingFulgs::IS_NOT_DELETED]
-                ])
-                ->orderBy('mxp_bookingbuyer_details.id','DESC');
+        // if(empty($booking_id) && empty($buyer_name) && empty($attention)
+        // && empty($company_name) && empty($from_oder_date) && empty($to_oder_date)
+        // && empty($from_shipment_date) && empty($to_shipment_date) && empty($po_cat_no)){
+
+        //     StatusMessage::create('messages', 'Please select a option');
+        //     return \Redirect()->Route('booking_list_report');
+        // }
+
+
+        /** buyer wiase booking value filter **/
+
+        $buyerList = $this->getUserByerList(); // use trait class
+
+        if(isset($buyerList) && !empty($buyerList)){
+
+            $bookingLists = DB::table('mxp_bookingbuyer_details')
+                    ->where([
+                        ['mxp_bookingbuyer_details.is_complete', BookingFulgs::IS_COMPLETE],
+                        ['mxp_bookingbuyer_details.is_deleted',BookingFulgs::IS_NOT_DELETED]
+                    ])
+                    ->whereIn('buyer_name',$this->getUserByerNameList())
+                    ->orderBy('mxp_bookingbuyer_details.id','DESC');
+
+        }else if(Auth::user()->type == 'super_admin'){
+
+            $bookingLists = DB::table('mxp_bookingbuyer_details')
+                    ->where([
+                        ['mxp_bookingbuyer_details.is_complete', BookingFulgs::IS_COMPLETE],
+                        ['mxp_bookingbuyer_details.is_deleted',BookingFulgs::IS_NOT_DELETED]
+                    ])
+                    ->orderBy('mxp_bookingbuyer_details.id','DESC');
+
+        }else{
+            // when condition false
+            // return empty paginate object
+            $bookingLists = DB::table('mxp_bookingbuyer_details')
+                    ->where('buyer_name', '')
+                    ->orderBy('mxp_bookingbuyer_details.id','DESC');
+
+        }
+
+        /** end **/
 
         $checkValidation = false;
 

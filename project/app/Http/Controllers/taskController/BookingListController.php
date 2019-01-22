@@ -75,11 +75,32 @@ class BookingListController extends Controller
                 $booking->booking = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->user_id)->first();
                 $booking->accepted = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->accepted_user_id)->first();
 
-                $booking->mrf = MxpMrf::where([['booking_order_id',$booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mxp_mrf_table.mrf_status','mu.first_name','mu.middle_name','mu.last_name')->first();
+                $booking->mrf = MxpMrf::where([
+                                    ['booking_order_id',$booking->booking_order_id],
+                                    ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+                                ])
+                                ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
+                                ->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mxp_mrf_table.mrf_status','mu.first_name','mu.middle_name','mu.last_name',DB::Raw('GROUP_CONCAT(DISTINCT mxp_mrf_table.mrf_id SEPARATOR ", ") as mrf_id'))
+                                ->groupBy('mrf_id')
+                                ->first();
 
-                $booking->ipo = MxpIpo::where([['booking_order_id',$booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mxp_ipo.ipo_status','mu.first_name','mu.middle_name','mu.last_name')->first();
+                $booking->ipo = MxpIpo::where([
+                                    ['booking_order_id',$booking->booking_order_id],
+                                    ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+                                ])
+                                ->groupBy('ipo_id')
+                                ->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')
+                                ->select('mxp_ipo.user_id','mxp_ipo.created_at','mxp_ipo.ipo_status','mu.first_name','mu.middle_name','mu.last_name')
+                                ->first();
 
-                $booking->po = MxpIpo::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
+                $booking->po = MxpIpo::where([
+                                    ['booking_order_id', $booking->booking_order_id],
+                                    ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+                                ])
+                                ->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))
+                                ->groupBy('booking_order_id')
+                                ->first();
+
                 $booking->bookingDetails = MxpBooking::where([['booking_order_id', $booking->booking_order_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'),'shipmentDate')->first();
             }
         }

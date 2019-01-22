@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 @section('page_heading', trans("others.mxp_menu_booking_list") )
 @section('section')
-<?php
-    use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-    use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
-    $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
-    $roleCheck = $object->getRole();
-?>
+    <?php
+        use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+        use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
+        $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
+        $roleCheck = $object->getRole();
+    ?>
     <style type="text/css">
         .b1{
             border-bottom-left-radius: 4px;
@@ -126,7 +126,7 @@
                     <th>Company Name</th>
                     <th>Attention</th>
                     <th>Booking No.</th>
-                    <th>PO No.</th>
+                    <th>IPO / MRF No.</th>
                     <th>PO/CAT No.</th>
                     <th width="10%">Order Date</th>
                     <th width="10%">Requested Shipment Date</th>
@@ -146,7 +146,15 @@
                         <td>{{$value->Company_name}}</td>
                         <td>{{$value->attention_invoice}}</td>
                         <td>{{$value->booking_order_id}}</td>
-                        <td>{{$value->po->ipo_id }}</td>
+                        <td>
+                            @if(!empty($value->po->ipo_id) && !empty($value->mrf->mrf_id))
+                                {{$value->po->ipo_id }} , {{ $value->mrf->mrf_id }}
+                            @elseif(!empty($value->po->ipo_id) && empty($value->mrf->mrf_id))
+                                {{$value->po->ipo_id }}
+                            @elseif(empty($value->po->ipo_id) && !empty($value->mrf->mrf_id))
+                                {{ $value->mrf->mrf_id }}
+                            @endif
+                        </td>
                         <td>{{$value->bookingDetails->po_cat }}</td>
                         <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
                         <td>{{Carbon\Carbon::parse($value->bookingDetails->shipmentDate)->format('d-m-Y')}}</td>

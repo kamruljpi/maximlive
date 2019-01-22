@@ -64,7 +64,7 @@
               {{--<td>{{$product->product_name}} </td>--}}
                   <td>{{$product->description->name}}</td>
                   
-                  <td>{{$product->unit_price}}</td>
+                  <td>{{(isset($product->unit_price) ? number_format($product->unit_price, 5, '.', '') : '') }}</td>
                   <td>{{(!empty($product->item_size_width_height))?$product->item_size_width_height.' mm' :''}}</td>
                   <!-- <td>{{$product->weight_qty}}</td> -->
                   <!-- <td>{{$product->weight_amt}}</td> -->

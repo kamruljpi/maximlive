@@ -8,6 +8,7 @@ use Auth;
 use DB;
 use URL;
 use Illuminate\Http\Request;
+use App\Model\Product\ItemCostPrice;
 
 class ItemSearchController extends Controller
 {
@@ -26,6 +27,14 @@ class ItemSearchController extends Controller
                 ->groupBy('mxp_product.product_code','mxp_product.created_at')
                 ->paginate(20);
 
+            if(isset($products) && !empty($products)){   
+                foreach ($products as &$productValue) {
+
+                    $productValue->cost_price = ItemCostPrice::where('id_product',$productValue->product_id)->first();
+                }
+                
+            }
+
             if (!empty($products[0]->product_code)) {
                 foreach ($products as $key => $product) {
                     $output .= '<tr>' .
@@ -35,6 +44,7 @@ class ItemSearchController extends Controller
                     '<td>' .$product->erp_code. '</td>' .
                     '<td>' .$product->product_description. '</td>' .
                     '<td>' .$product->unit_price. '</td>' .
+                    '<td>' .$product->cost_price->price_1. '</td>' .
                     '<td>' .((!empty($product->item_size_width_height))?$product->item_size_width_height.' mm' :''). '</td>' .
                     '<td>' .$product->size. '</td>' .
                     '<td>' .$product->gmts_color. '</td>' .

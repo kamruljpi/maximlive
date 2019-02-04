@@ -14,6 +14,8 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController'], function 
 		Route::get('draft/booking/{id?}','DraftBooking@redirectDraftBooking')->name('getDraft');
 		Route::get('draft/{booking_id?}/delete','DraftBooking@draftDeleteAction')->name('draft_delete_action');
 
+		Route::post('make_challan','BookingListController@makeChallan')->name('make_challan_view');
+
 	// });
 });
 

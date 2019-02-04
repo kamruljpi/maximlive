@@ -24,19 +24,19 @@ class ChallanListController extends Controller
 
 
     public function showChallanReport(Request $request){
-//        $this->print_me($request->cid);
+       // $this->print_me($request->bid);
         $headerValue = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
-        $multipleChallan = DB::select(" select * from mxp_multiplechallan where challan_id ='".$request->cid."'");
+
+        $multipleChallan = DB::table('mxp_multiplechallan as mmc')
+                            ->join('mxp_booking as mb','mb.id','mmc.job_id')
+                            ->where('mmc.challan_id',$request->cid)
+                            ->get();
+
         $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$request->bid)->get();
+        
         $footerData = DB::select("select * from mxp_reportfooter");
 
-        return view('maxim.challan.challanBoxingPage',
-            [
-                'footerData' => $footerData,
-                'headerValue' => $headerValue,
-                'buyerDetails' => $buyerDetails,
-                'multipleChallan' => $multipleChallan
-            ]);
+        return view('maxim.challan.challanBoxingPage', compact('footerData','headerValue','buyerDetails','multipleChallan'));
     }
 
     public function getChallanListByChallanId(Request $request){

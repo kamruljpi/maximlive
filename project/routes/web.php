@@ -479,7 +479,7 @@ Route::group(['middleware' => 'auth'], function () {
                 'as'=>'party_create',
                 'uses'=>'PartyController@create'
             ]);
-        Route::post('party/create/hh',
+        Route::post('party/create',
             [
                 'as'=>'party_save_action',
                 'uses'=>'PartyController@store'

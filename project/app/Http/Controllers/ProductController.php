@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
+use App\Http\Controllers\Supplier\SupplierController;
 use App\Http\Controllers\dataget\ListGetController;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\RoleManagement;
-use App\MaxParty;
-use App\MxpProduct;
-use App\MxpBrand;
+use App\Model\Product\ItemCostPrice;
+use App\Model\MxpItemDescription;
+use Illuminate\Http\Request;
+use App\Model\MxpGmtsColor;
 use App\MxpProductsColors;
 use App\MxpSupplierPrice;
-use App\Supplier;
-use App\VendorPrice;
-use App\buyer;
-use App\Model\MxpItemDescription;
-use Auth;
-use Illuminate\Http\Request;
-use Validator;
-use App\Model\MxpGmtsColor;
-use App\MxpProductSize;
 use App\MxpProductsSizes;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Supplier\SupplierController;
-use App\userbuyer;
-use App\Http\Controllers\Source\User\UserAccessBuyerList;
-use App\Model\Product\ItemCostPrice;
-use Session;
+use App\MxpProductSize;
+use App\VendorPrice;
+use App\MxpProduct;
 use Carbon\Carbon;
+use App\userbuyer;
+use App\MaxParty;
+use App\MxpBrand;
+use App\Supplier;
+use Validator;
+use App\buyer;
+use Session;
+use Auth;
+use DB;
 
 class ProductController extends Controller
 {
@@ -40,12 +40,16 @@ class ProductController extends Controller
         $products = $this->allProducts();
         if(isset($products) && !empty($products)){   
             foreach ($products as &$productValue) {
+
                 $productValue->description = MxpItemDescription::where('id',$productValue->item_description_id)->first();
+
+                $productValue->cost_price = ItemCostPrice::where('id_product',$productValue->product_id)->first();
             }
-        }
-        if(empty($products)){
+            
+        }else {
             $products = MxpProduct::where('product_id',0)->paginate(20);
         }
+
     	return view('product_management.product_list',compact('products'));
     }
 
@@ -105,8 +109,11 @@ class ProductController extends Controller
     Public function addProductListView(){
 
         $brands = MxpBrand::where('status', self::ACTIVE_BRAND)->get();
-    	$colors = MxpGmtsColor::where('status', '=', 1)->get();
-        $sizes = MxpProductSize::where('status', '=', 1)->get();
+
+    	$colors = MxpGmtsColor::where([['item_code',null],['status', '=', 1]])->groupBy('color_name')->get();
+
+        $sizes = MxpProductSize::where([['product_code',''],['status', '=', 1]])->groupBy('product_size')->get();
+
         $vendorCompanyList = MaxParty::select('id', 'name', 'name_buyer')->get()->sortBy('name_buyer');
         $supplierList = Supplier::where('status', 1)
                         ->where('is_delete', 0)
@@ -347,12 +354,13 @@ class ProductController extends Controller
 
         $validMessages = [
             'p_code.required' => 'The Product Code field is required.',
+            'p_code.unique' => 'Item Code has been entered before.',
             'p_erp_code.required' => 'ERP Code field is required.',
 
             ];
     	$validator = Validator::make($request->all(), 
             [
-			'p_code' => 'required',
+			'p_code' => 'required|unique:mxp_product,product_code,'.$request->product_id.',product_id',
 			'p_erp_code' => 'required',
 
 		   ],

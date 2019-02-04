@@ -11,6 +11,7 @@
 	<meta name="author" content="maxproit.solutions" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="keywords" content="HTML5, CSS3, Bootsrtrap, Responsive, Template, Theme, Website, ERP" />
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link rel="shortcut icon" href="{{asset('assets/img/icon.png')}}" type="image/x-icon" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/styles.css') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/stylesheets/main.css') }}" />

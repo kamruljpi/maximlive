@@ -42,14 +42,12 @@
                 <th>Brand</th>                        
                 <th>Item Code</th>
                 <th>ERP Code</th>
-                {{--<th class="">Item Name</th>--}}
                 <th>Description</th>
                 <th>Unit Price</th>
+                <th>Cost Price 1</th>
                 <th>Item Size</th>
                 <th>Size Range</th>
                 <th>Colors</th>
-                <th>Cost Price 1</th>
-                <!-- <th class="">Weight Amt</th> -->
                 <th>status</th>
                 <th>Action</th>                        
             </tr>
@@ -61,13 +59,13 @@
                   <td>{{$product->brand}}</td>
                   <td>{{$product->product_code}}</td>
                   <td>{{$product->erp_code}}</td>
-              {{--<td>{{$product->product_name}} </td>--}}
                   <td>{{$product->description->name}}</td>
                   
                   <td>{{(isset($product->unit_price) ? number_format($product->unit_price, 5, '.', '') : '') }}</td>
+
+                  <td>{{(isset($product->cost_price->price_1) ? $product->cost_price->price_1 :'')}}</td>
+
                   <td>{{(!empty($product->item_size_width_height))?$product->item_size_width_height.' mm' :''}}</td>
-                  <!-- <td>{{$product->weight_qty}}</td> -->
-                  <!-- <td>{{$product->weight_amt}}</td> -->
                   <td>
                       @foreach($product->sizes as $size)
                           {{ $size->product_size }}@if (!$loop->last),@endif
@@ -78,9 +76,7 @@
                       @foreach($product->colors as $color)
                           {{$color->color_name}}@if (!$loop->last),@endif
                       @endforeach
-                  </td>
-
-                  <td>{{(isset($product->cost_price->price_1) ? $product->cost_price->price_1 :'')}}</td>
+                  </td>                  
 
                   <td>
                     {{($product->status == 1)? trans("others.action_active_label"):trans("others.action_inactive_label")}}

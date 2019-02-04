@@ -7,12 +7,17 @@ use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 use App\Http\Controllers\Controller;
 use App\Model\MxpMrf;
 use Carbon\Carbon;
+use Session;
 use Auth;
 use DB;
 
 class CancelJobidByMrf extends Controller 
 {
-	public function __invoke($job_id){
+	public function __invoke(Request $request,$job_id){
+
+		$mrf_ids = isset($request->mrf_ids) ? $request->mrf_ids : Session::get('mrf_ids');
+
+		$mrf_idsss = implode(' , ', $mrf_ids);
 
 		MxpMrf::where('job_id',$job_id)->update([
 			'job_id_current_status' => MrfFlugs::JOBID_CURRENT_STATUS_OPEN,
@@ -20,7 +25,6 @@ class CancelJobidByMrf extends Controller
 			'current_status_accepted_date_at' => Carbon::today()
 		]);
 		
-		return redirect()->back()->with('data', MrfFlugs::CANCEL_MAESSAGE);
-
+		return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $job_id])->with('mrfIdList', $mrf_idsss)->with('data', MrfFlugs::CANCEL_MAESSAGE);
 	}
 }

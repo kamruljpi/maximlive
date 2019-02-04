@@ -157,7 +157,7 @@ class PoController extends Controller
 			->join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mb.booking_order_id')
 			->join('mxp_product as mp','mp.product_code','mrf.item_code')
 			->Leftjoin('suppliers as s','s.supplier_id','mxp_os_po.supplier_id')
-			->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.initial_increase','mxp_os_po.user_id','mrf.mrf_id','mrf.booking_order_id','mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty','mbd.booking_category'
+			->select('mxp_os_po.job_id','mxp_os_po.po_id','mxp_os_po.initial_increase','mxp_os_po.user_id',DB::Raw('group_concat(DISTINCT mrf.mrf_id SEPARATOR ", ") as mrf_id'),DB::Raw('group_concat(DISTINCT mrf.booking_order_id SEPARATOR ", ") as booking_order_id'),'mrf.erp_code','mrf.item_code','mrf.item_size','mrf.item_description','mrf.gmts_color','mrf.poCatNo','mrf.mrf_quantity','mb.sku','mb.season_code','mb.oos_number','mb.style','mb.item_size_width_height','mxp_os_po.supplier_price','mxp_os_po.material','mxp_os_po.order_date','mxp_os_po.shipment_date','s.name','s.person_name','s.address','mp.weight_qty','mbd.booking_category'
 			)
 			->where([
 				['mxp_os_po.po_id',$po_id]],

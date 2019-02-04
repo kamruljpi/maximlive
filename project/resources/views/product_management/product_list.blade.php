@@ -48,7 +48,7 @@
                 <th>Item Size</th>
                 <th>Size Range</th>
                 <th>Colors</th>
-                <!-- <th class="">Weight Qty</th> -->
+                <th>Cost Price 1</th>
                 <!-- <th class="">Weight Amt</th> -->
                 <th>status</th>
                 <th>Action</th>                        
@@ -79,10 +79,13 @@
                           {{$color->color_name}}@if (!$loop->last),@endif
                       @endforeach
                   </td>
-                  <td >
+
+                  <td>{{(isset($product->cost_price->price_1) ? $product->cost_price->price_1 :'')}}</td>
+
+                  <td>
                     {{($product->status == 1)? trans("others.action_active_label"):trans("others.action_inactive_label")}}
                   </td>
-                  <td >
+                  <td>
                       <a href="{{ Route('update_product_view')}}/{{$product->product_id}}" class="btn btn-success">edit</a>
                       <a href="{{ Route('delete_product_action')}}/{{$product->product_id}}" class="btn btn-danger">delete</a>
                   </td>

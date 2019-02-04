@@ -9,4 +9,5 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController'], function 
 	Route::get('os/po/store/report', 'Os\Po\PoController@redirectOsPoReport')->name('refresh_os_po_view');
 
 	Route::get('booking/draft/store/{id?}', 'DraftBooking@redirectDraftBooking')->name('refresh_booking_draft');
+	Route::get('challan/report', 'ChallanController@redirectChallanReport')->name('refresh_challan_view');
 });

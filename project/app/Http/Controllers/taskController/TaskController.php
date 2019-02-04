@@ -48,10 +48,10 @@ class TaskController extends Controller
 
 		}else if(Auth::user()->type == 'super_admin'){
 
-			$productDetails = MxpProduct::select('product_code')->get();			
+			$productDetails = MxpProduct::select(DB::Raw('DISTINCT product_code'))->get();	
 
 		}else{
-			$productDetails = MxpProduct::select('product_code')->get();			
+			$productDetails = MxpProduct::select(DB::Raw('DISTINCT product_code'))->get();			
 		}
 
 		/** End **/
@@ -201,7 +201,8 @@ class TaskController extends Controller
 
 		} elseif ($taskType === 'challan') { // it's not working now. 
 		
-			return "Coming soon ";
+			// return "Coming soon ";
+		
 			$validMessages = [
 				'bookingIdList.required' => 'Booking Id field is required.',
 			];

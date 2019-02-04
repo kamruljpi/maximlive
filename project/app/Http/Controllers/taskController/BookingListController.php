@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Supplier;
 use App\MxpIpo;
+use App\MxpStore;
 use App\Model\MxpMrf;
 use Validator;
 use Auth;
@@ -30,6 +31,7 @@ use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Source\source;
 use App\Http\Controllers\Source\User\UserAccessBuyerList;
+use App\Http\Controllers\taskController\Flugs\ChallanFlugs;
 
 class BookingListController extends Controller
 {   
@@ -999,11 +1001,16 @@ class BookingListController extends Controller
 
         NotificationController::updateSeenStatus($type_id = $request->booking_id, Auth::user()->user_id);
 
+        /** get stock quantity by booking **/
+        $stock_booking = $this->getBookingStock($request->booking_id);
+        /** End **/
+
         return view('maxim.booking_list.booking_View_Details',
                     [
                         'booking_id' => $request->booking_id, 
                         'bookingDetails' => $bookingDetails,
-                        'leftBooking' => $leftBook
+                        'leftBooking' => $leftBook,
+                        'stock_booking' => $stock_booking
                     ]);
     }
 
@@ -1020,4 +1027,51 @@ class BookingListController extends Controller
         return $buyerDetails;
     }
 
+    public function getBookingStock($booking_id){
+
+        $booking_stock = [];
+
+        if(isset($booking_id) && !empty($booking_id)) {
+            $booking_stock = MxpStore::join('mxp_booking as mb','mb.id','mxp_store.job_id')
+                            ->where('mxp_store.booking_order_id', $booking_id)
+                            ->select('mxp_store.*',DB::Raw('SUM(mxp_store.item_quantity) as store_quantity'),'mb.item_quantity as booking_quantity')
+                            ->groupBy('mxp_store.job_id')
+                            ->get();
+        }
+
+        $this->addchallanQuantity($booking_stock);
+
+        return $booking_stock;
+    }
+
+    public function makeChallan(Request $request){
+
+        $bookingDetails = MxpStore::join('mxp_booking as mb','mb.id','mxp_store.job_id')
+                        ->whereIn('mxp_store.job_id', $request->job_id)
+                        ->select('mxp_store.*',DB::Raw('SUM(mxp_store.item_quantity) as store_quantity'),'mb.item_quantity as booking_quantity')
+                        ->groupBy('mxp_store.job_id')
+                        ->get();
+
+        $this->addchallanQuantity($bookingDetails);
+        
+        return view('maxim.challan.challan', compact('bookingDetails'));
+    }
+
+    /**
+     * return void()
+     */
+    public function addchallanQuantity($bookingDetails){
+        if(isset($bookingDetails) && !empty($bookingDetails)) {
+            foreach ($bookingDetails as &$challan) {
+                $challan->delivery_challan_quantity = (DB::table('mxp_multiplechallan')
+                ->select(DB::Raw('SUM(quantity) as delivery_challan_quantity'))
+                ->groupBy('job_id')
+                ->where('status',ChallanFlugs::CHALLAN_REQUEST_SENT)
+                ->first())->delivery_challan_quantity;
+
+                $challan->available_challan_quantity = $challan->store_quantity - $challan->delivery_challan_quantity ;
+
+            }
+        }
+    }
 }

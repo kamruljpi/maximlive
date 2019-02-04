@@ -132,7 +132,7 @@ $(document).ready(function(){
 
   $('#page-wrapper').on('change','.item_code', function(){
       // console.log(parentLii);
-      var item_code = $.trim($(this).val());
+      var item_code = encodeURIComponent($(this).val());
       var item_parent_class = $(this).data('parent');
 
       $.ajax({

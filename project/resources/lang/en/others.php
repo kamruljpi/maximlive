@@ -313,5 +313,7 @@ return [
 'mxp_menu_stored_mrf_list' => 'Accepted Mrf List',
 'mxp_menu_opening_stock_view' => 'Opening Product Stock',
 'mxp_menu_stored_product_list' => 'Stored Product List',
+'mxp_menu_planning_tracking_report' => 'Planning Tracking Report',
+'mxp_menu_os_tracking_list' => 'OS Tracking Report',
 
 ];

@@ -6,8 +6,21 @@
         use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
         use App\Http\Controllers\taskController\Flugs\Role\PlaningFlugs;
         use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+        use App\Http\Controllers\Source\User\RoleDefine;
+
+        /** only for user planning role check **/
+
         $object = new App\Http\Controllers\Source\User\PlanningRoleDefine();
         $roleCheck = $object->getRole();
+
+        /** End**/
+
+        /** auth user CS role check **/
+
+        $cs_object = new RoleDefine();
+        $csRoleCheck = $cs_object->getRole('Customer');
+
+        /** End**/
     ?>
     <style type="text/css">
         .impomrf{
@@ -346,5 +359,59 @@
                 </table>
             </div>
         </div>
+
+    @elseif($cs_role_check == 'customer'
+            || session::get('user_type') == "super_admin" )
+
+        <div class="panel panel-default">
+            <div class="panel-heading" style="font-size: 120%">Stock Challan Details</div>
+            <div class="panel-body aaa">
+                <form action="{{ Route('make_challan_view') }}" method="POST">
+                    {{ csrf_field()}}
+
+                    <table class="table table-bordered vi_table" id="b_table">
+                        <thead>
+                            <th>#</th>
+                            <th>Job No.</th>
+                            <th width="17%">IPO / MRF No.</th>
+                            <th>Item Code</th>
+                            <th>Color</th>
+                            <th>Item Size</th>
+                            <th>Order Quantity</th>
+                            <th>Available Quantity</th>
+                            <th>Challan Quantity</th>
+                            <th>Status</th>
+                            {{-- <th>Action</th> --}}
+                        </thead>
+                        <tbody>
+                            @if(isset($stock_booking) && !empty($stock_booking))
+                                @foreach($stock_booking as $stock)
+                                    <?php
+                                        $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($stock->job_id));
+                                    ?>
+                                    <tr>
+                                        <td><input type="checkbox" name="job_id[]" class="" value="{{ $stock->job_id }}"></td>
+                                        <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{$stock->job_id}}</td>
+                                        <td>{{$stock->product_id}}</td>
+                                        <td>{{$stock->item_code}}</td>
+                                        <td>{{$stock->item_color}}</td>
+                                        <td>{{$stock->item_size}}</td>
+                                        <td>{{$stock->booking_quantity}}</td>
+                                        <td>{{$stock->available_challan_quantity }}</td>
+                                        <td>{{$stock->delivery_challan_quantity }}</td>
+                                        <td></td>
+                                    </tr>
+                                @endforeach
+                            @endif                    
+                        </tbody>
+                    </table>
+
+                    <div class="form-group pull-right">
+                        <button type="submit" class="btn btn-primary form-control" >Make Challan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     @endif
 @endsection

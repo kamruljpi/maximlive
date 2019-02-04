@@ -160,7 +160,7 @@
 </div>
 
 <div class="row body-top">
-    <table class="table table-bordered">
+    <table class="table table-bordered" style="font-size: 12px;">
         <tr>
             <thead>
 	            <th>Job No.</th>

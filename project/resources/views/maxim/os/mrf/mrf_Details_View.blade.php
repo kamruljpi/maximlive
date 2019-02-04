@@ -140,12 +140,17 @@
                 <label>MRF : <span style="color:red;">{{ ucwords($mrfDetails[0]->mrf_status) }}</span></label><br>
             </div>
 
+                    <?php
+
+                        $mrf_idssa = [] ;
+                    ?>
                 <form action="{{Route('os_po_genarate_view')}}" method="POST">
                     {{csrf_field()}}
 
                     @if(is_array($mrf_ids) && !empty($mrf_ids))
                         @foreach($mrf_ids as $mrf_idssss)
                             <input type="hidden" name="mrf_ids[]" value="{{$mrf_idssss}}">
+                        <?php  $mrf_idssa[] = $mrf_idssss; ?>
                         @endforeach
                     @else
                         <input type="hidden" name="mrf_ids[]" value="{{$mrf_ids}}">
@@ -214,19 +219,33 @@
                             <td>{{$values->mrf_quantity}}</td>
                             <td>
                                 @if($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS)
-                                 <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">Request sent ({{ucwords($values->jobid_accpeted->first_name)}}) </label>
+
+                                    <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">
+                                        Request sent ({{ucwords($values->jobid_accpeted->first_name)}}) 
+                                    </label>
+
                                 @elseif($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id == $values->current_status_accepted_user_id)
+
                                     <a href="{{Route('os_mrf_jobid_cancel')}}/{{$values->job_id}}" class="btn btn-primary">
-                                        {{-- {{ucwords($values->job_id_current_status)}} --}}
                                         Cancel
                                     </a>
+
+                                    <?php Session::flash('mrf_ids',$mrf_idssa);?>
+
                                 @elseif($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT)
-                                    <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">{{ ucwords($values->jobid_accpeted->first_name) }} {{ ucwords($values->jobid_accpeted->last_name) }} (Accpeted)</label>
+
+                                    <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">
+                                        {{ ucwords($values->jobid_accpeted->first_name) }} {{ ucwords($values->jobid_accpeted->last_name) }} (Accpeted)
+                                    </label>
                                 @else
                                     <div style="z-index: 9999;">
+
                                         <a href="{{Route('os_mrf_jobid_accept')}}/{{$values->job_id}}" class="btn btn-primary">
                                             {{ucwords($values->job_id_current_status)}}
                                         </a>
+
+                                        <?php Session::flash('mrf_ids',$mrf_idssa);?>
+
                                     </div>
                                 @endif
                             </td>

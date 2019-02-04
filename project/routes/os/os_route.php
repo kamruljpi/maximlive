@@ -12,8 +12,8 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], functi
 	Route::get('os/po/list', 'Po\PoListController@opListView')->name('os_po_list_view');
 	Route::get('os/accepted/mrf/{mid?}', 'Accept\AcceptMrf')->name('os_accepted_mrf_action');
 	Route::get('os/cencel/mrf/{mid?}', 'Cancel\CancelMrf')->name('os_cancel_mrf_action');
-	Route::get('os/accept/jobid/{job_id?}', 'Accept\AcceptJobidByMrf')->name('os_mrf_jobid_accept');
-	Route::get('os/cencel/jobid/{job_id?}', 'Cancel\CancelJobidByMrf')->name('os_mrf_jobid_cancel');
+	Route::any('os/accept/jobid/{job_id?}', 'Accept\AcceptJobidByMrf')->name('os_mrf_jobid_accept');
+	Route::any('os/cencel/jobid/{job_id?}', 'Cancel\CancelJobidByMrf')->name('os_mrf_jobid_cancel');
     Route::get('os/tracking/report', 'OsTrackingController@trackingReportView')->name('os_tracking_list');
     Route::post('os/export','OsTrackingController@exportReport')->name('os_export');
     Route::get('os/po/report/view','Po\PoListController@getPoReport')->name('os_po_report_view');

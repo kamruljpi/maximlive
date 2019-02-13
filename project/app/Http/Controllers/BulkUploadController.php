@@ -15,6 +15,7 @@ use File;
 use Redirect;
 use DateTime;
 use App\MxpProduct;
+use App\buyer;
 use Carbon\Carbon;
 use App\MxpProductSize;
 use App\Model\MxpGmtsColor;
@@ -259,13 +260,22 @@ class BulkUploadController extends Controller
                             $insert[$i]['material'] = '';
                         }
                         if(isset($xvalue->brand)){
-                            $brand = strtolower($xvalue->brand);
+                            $brand = strtolower(trim($xvalue->brand));
                             if(isset($getBrand[$brand])){
-                                $insert[$i]['brand'] = $xvalue->brand;
+                                $insert[$i]['brand'] = trim($xvalue->brand);
                                 $insert[$i]['id_buyer'] = $getBrand[$brand];
                             }else{
-                                $insert[$i]['id_buyer'] = 0;
-                                $insert[$i]['brand'] = '';
+                                $buyer = new buyer();
+                                $buyer->buyer_name = trim($xvalue->brand);
+                                $buyer->save();
+                                if(isset($buyer->id_mxp_buyer)){
+                                    $insert[$i]['id_buyer'] = (int)$buyer->id_mxp_buyer;
+                                    $insert[$i]['brand'] = trim($xvalue->brand);
+                                    $getBrand = $this->getBrand();
+                                }else{
+                                    $insert[$i]['id_buyer'] = 0;
+                                    $insert[$i]['brand'] = '';
+                                }
                             }
                         }else{
                             $insert[$i]['id_buyer'] = 0;

@@ -74,7 +74,8 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th>Serial No.</th>
+						<th>#</th>
+						<th>Buyer Name</th>
 						<th>Booking No.</th>
 						<th>Pi No.</th>
 						<th width="15%">Action</th>
@@ -88,6 +89,7 @@
 						?>
 						<tr id="mrf_list_table">
 							<td>{{$j++}}</td>
+							<td>{{$value->buyer_details->buyer_name}}</td>
 							<td>{{$value->booking_order_id}}</td>
 							<td>{{$value->p_id}}</td>
 							<td>

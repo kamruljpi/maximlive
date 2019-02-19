@@ -1,30 +1,57 @@
-.top-div{
-		background-color: #f9f9f9;
-		padding:5px 0px 5px 10px;
-		border-radius: 7px;
-		box-sizing: border-box;
-		display: block;
-	}
-	.showMrfList{
-		background-color: #f9f9f9;
-		border-radius: 10px;
-		box-sizing: border-box;
-		box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 6px rgba(0,0,0,0.15);
-		z-index: 999;
-	}
-	.top-div .mrfControl{
-		text-align: left;
-		width:30%;
-		display: inline-block;
-	}
-	.top-div .mrfControl .all{
-		display: inline;
-		float: left;
-		width: 10%;
-	}
+.Hold,.Hold:hover{
+    background-color: red !important;
+}
 
-	@media (max-width: 300px) {
-		.top-div .mrfControl{
+.Booked,.proccess,#booking_list_table .abcdc .open,.Booked:hover,.proccess:hover,#booking_list_table .abcdc .open:hover{
+    background-color: yellow !important;
+}
+
+.Process,.waiting_for_goods,.Process:hover,.waiting_for_goods:hover{
+    background-color: green !important;
+}
+
+span.Hold, span.Booked,.Process,span.proccess,span.open,.waiting_for_goods{
+	padding: 5px;
+}
+
+.Hold,.Booked,.Process,.proccess,#booking_list_table .abcdc .open,.waiting_for_goods{
+    color:#ffffff;       
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.changes_status{
+    margin-left: 15px;
+    color: black !important;
+}
+
+.top-div{
+	background-color: #f9f9f9;
+	padding:5px 0px 5px 10px;
+	border-radius: 7px;
+	box-sizing: border-box;
+	display: block;
+}
+.showMrfList{
+	background-color: #f9f9f9;
+	border-radius: 10px;
+	box-sizing: border-box;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 6px rgba(0,0,0,0.15);
+	z-index: 999;
+}
+.top-div .mrfControl{
+	text-align: left;
+	width:30%;
+	display: inline-block;
+}
+.top-div .mrfControl .all{
+	display: inline;
+	float: left;
+	width: 10%;
+}
+
+@media (max-width: 300px) {
+	.top-div .mrfControl{
 		text-align: left;
 		width:40%;
 		display: inline-block;
@@ -34,4 +61,4 @@
 		float: left;
 		width: 25%;
 	}
-	}
+}

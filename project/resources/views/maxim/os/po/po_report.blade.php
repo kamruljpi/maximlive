@@ -101,7 +101,8 @@
 
 <div class="row">
 	<div class="report-header">
-		<h2 align="center" style=" padding:8px; font-weight: bold;">Purchase Order</h2>
+		<h2 align="center" style=" padding:8px; font-weight: bold;">SPO</h2>
+		{{-- <h2 align="center" style=" padding:8px; font-weight: bold;">Purchase Order</h2> --}}
 	</div>
 </div>
 

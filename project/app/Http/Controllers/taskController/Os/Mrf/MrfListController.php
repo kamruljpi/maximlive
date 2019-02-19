@@ -3,6 +3,7 @@ namespace App\Http\Controllers\taskController\Os\Mrf;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\NotificationController;
@@ -22,6 +23,11 @@ class MrfListController extends Controller
             ->groupBy('mrf_id')
             ->orderBy('id','DESC')
             ->paginate(15);
+        if(!empty($bookingList)) {
+            foreach ($bookingList as &$detail) {
+                # code...
+            }
+        }
         return view('maxim.os.mrf.list.mrfList',compact('bookingList'));
     }
 
@@ -81,7 +87,7 @@ class MrfListController extends Controller
                 ->whereIn('mxp_mrf_table.mrf_id',$mrf_ids)
                 ->get();
 
-        } else { /** now this condition not work **/
+        } else { /** now this condition is not work **/
 
             $mrf_ids = isset($request->mid) ? $request->mid : '';
 
@@ -95,7 +101,18 @@ class MrfListController extends Controller
         }
 
         if(isset($mrfDetails) && !empty($mrfDetails[0]->booking_order_id)){
+
+            // Check in available job id
+            $request_mid = $request->mid;
+            $mrfDetails->available_jobs = MxpMrf::where('job_id_current_status','!=',MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS)
+                    ->where(function($query) use ($mrf_ids,$request_mid){
+                        $query->where('mrf_id',$request_mid)->orWhereIn('mrf_id',$mrf_ids);
+                    })                    
+                    ->count();
+            // end
+
             foreach ($mrfDetails as &$value) {
+
                 $value->mrf_accpeted = User::where('user_id',$value->accepted_user_id)
                                     ->select('first_name','last_name')
                                     ->first();
@@ -137,6 +154,8 @@ class MrfListController extends Controller
         $suppliers = Supplier::where('status', 1)->where('is_delete', 0)->get();
 
         NotificationController::updateSeenStatus($request->mid, Auth::user()->user_id);
+
+        // $this->print_me($mrfDetails->available_jobs);
         
         return view('maxim.os.mrf.mrf_Details_View', compact('mrfDetails','suppliers','mrf_ids','categorys'));
     }

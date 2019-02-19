@@ -41,6 +41,11 @@ Route::group(
         'uses'=>'taskController\BookingListController@getBookingListByBookingId'
     ));
 
+    Route::any('change/booking/status', [
+    'as' => 'change_booking_status',
+    'uses' => 'taskController\BookingListController@changeBookingStatus'
+]);
+
     Route::get('/booking_report_list_by_book_id/', array(
         'as'=>'booking_list_view_by_booking_id',
         'uses'=>'taskController\BookingListController@getBookingReportListByBookingId'
@@ -910,15 +915,9 @@ Route::group(['middleware' => 'auth'], function () {
                 'uses'=>'taskController\BookingController@addBooking'
             ]);
 
-        // Route::get('booking/list/list',
-        //     [
-        //         'as'=>'booking_list_view',
-        //         'uses'=>'taskController\BookingController@addBooking'
-        //     ]);
-
         /** there are all booking list routes here **/
 
-        Route::get('booking/list/view',
+        Route::any('booking/list/view',
             [
                 'as'=>'booking_list_action_task',
                 'uses'=>'taskController\BookingListController@showBookingReport'
@@ -993,7 +992,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'routeAccess'], function () {
 
-            Route::get('booking/list/list',
+            Route::get('booking/list',
             [
                 'as'=>'booking_list_view',
                 'uses'=>'taskController\BookingListController@bookingListView'
@@ -1006,7 +1005,7 @@ Route::group(['middleware' => 'auth'], function () {
                 'uses'=>'taskController\BookingListController@bookingListReport'
             ]);
 
-            Route::get('mrf/list/list',
+            Route::get('mrf/list',
             [
                 'as'=>'mrf_list_view',
                 'uses'=>'taskController\MrfListController@mrfListView'

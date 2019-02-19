@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Source\User;
 
+use App\Model\MxpBookingBuyerDetails;
 use App\userbuyer;
 use Auth;
 use DB;
@@ -29,5 +30,29 @@ trait UserAccessBuyerList
 			}
 		}
 		return $buyerNameList;
+	}
+
+	/**
+	 * @param $datas must be get value details and
+	 * there was a booking id
+	 *
+	 * @return void()
+	 */
+	public function addBuyerDetails($datas = null) {
+
+		if(!is_null($datas)) {
+			foreach ($datas as &$data) {
+
+				$booking_order_id = isset($data->booking_order_id) ? $data->booking_order_id : '';
+
+				$booking_order_id = explode(',', $booking_order_id);
+
+				if(is_array($booking_order_id)) {
+					$data->buyer_details = MxpBookingBuyerDetails::whereIn('booking_order_id',$booking_order_id)
+						->select("*",DB::Raw('group_concat(DISTINCT buyer_name SEPARATOR ", ") as buyer_name'))
+						->first();
+				}
+			}
+		}
 	}
 }

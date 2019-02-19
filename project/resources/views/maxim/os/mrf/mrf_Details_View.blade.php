@@ -67,8 +67,6 @@
 
                                 <button type="submit" style="background-color: #fff; border: 1px solid #fff; padding-left: 10px; " class="form-control">Cencel</button>
                             </form>
-
-                            {{-- <a href="{{Route('os_cancel_mrf_action')}}/{{$mrfDetails[0]->mrf_id}}" class="deleteButton" style=" {{($mrfDetails[0]->mrf_status == MrfFlugs::OPEN_MRF)?'pointer-events: none':''}};">Cencel</a> --}}
                         </li>
                     </ul>
                 </div>
@@ -155,6 +153,11 @@
                     @else
                         <input type="hidden" name="mrf_ids[]" value="{{$mrf_ids}}">
                     @endif
+                <div class="row">
+                    <div class="panel panel-default col-sm-12" style="background-color: #000a12; color: #ffffff; text-align: center">
+                        <h4>Available Jobs: {{isset($mrfDetails->available_jobs) ? $mrfDetails->available_jobs : ''}}</h4>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-sm-8">

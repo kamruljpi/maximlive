@@ -315,5 +315,6 @@ return [
 'mxp_menu_stored_product_list' => 'Stored Product List',
 'mxp_menu_planning_tracking_report' => 'Planning Tracking Report',
 'mxp_menu_os_tracking_list' => 'OS Tracking Report',
+'mxp_menu_draft_booking' => 'Draft Booking List',
 
 ];

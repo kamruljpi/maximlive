@@ -19,12 +19,16 @@ class AcceptJobidByMrf extends Controller
 
 		$mrf_idsss = implode(' , ', $mrf_ids);
 
-		MxpMrf::where('job_id',$job_id)->update([
-			'job_id_current_status' => MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT,
-			'current_status_accepted_user_id' => Auth::user()->user_id,
-			'current_status_accepted_date_at' => Carbon::today()
-		]);
+		MxpMrf::where([
+				['job_id',$job_id],
+				['job_id_current_status','!=',MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT]
+			])
+			->update([
+				'job_id_current_status' => MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT,
+				'current_status_accepted_user_id' => Auth::user()->user_id,
+				'current_status_accepted_date_at' => Carbon::today()
+			]);
 		
-		return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $job_id])->with('mrfIdList', $mrf_idsss)->with('data', MrfFlugs::ACCEPTED_MAESSAGE);
+		return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $mrf_idsss])->with('mrfIdList', $mrf_idsss)->with('data', MrfFlugs::ACCEPTED_MAESSAGE);
 	}
 }

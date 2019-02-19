@@ -53,6 +53,8 @@ class PiListController extends Controller
 
         /** End**/ 
 
+        $this->addBuyerDetails($piDetails);
+
 		return view('maxim.pi_format.list.pi_list',compact('piDetails'));
 	}
 	
@@ -67,7 +69,8 @@ class PiListController extends Controller
 	    	])
 	    	->first();
 
-		$bookingDetails = MxpPi::where([
+	    if($buyerDetails->buyer_name == 'Gymboree') {
+	    	$bookingDetails = MxpPi::where([
 					['is_deleted',BookingFulgs::IS_NOT_DELETED],
 					['p_id',$request->pid],
 					['is_type',$is_type],
@@ -78,8 +81,23 @@ class PiListController extends Controller
 					DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
 				->groupBy('item_code')
 				->groupBy('poCatNo')
-				->orderBy('poCatNo')
+				->orderBy('poCatNo','ASC')
 				->get();
+			}else {
+				$bookingDetails = MxpPi::where([
+							['is_deleted',BookingFulgs::IS_NOT_DELETED],
+							['p_id',$request->pid],
+							['is_type',$is_type],
+						])
+						->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
+							DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
+							DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
+							DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
+						->groupBy('job_no')
+						->orderBy('job_no','ASC')
+						->get();
+			}
+		
 				
 		$companyInfo = DB::table('mxp_header')->where('header_type', HeaderType::PI)->get();
 		$footerData = DB::select("select * from mxp_reportfooter");

@@ -145,29 +145,45 @@
                                         <td>
                                             @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
                                                 <input type="hidden" name="order_status[]" value="Booked" >
-                                                {{ 'Booked' }}
+
+                                                <span class="{{ $value->booking_status }}">{{ 'Booked' }}</span>
+
+                                            @elseif($value->booking_status == BookingFulgs::ON_HOLD_FLUG)
+                                                <input type="hidden" name="order_status[]" value="{{ $value->booking_status }}" >
+
+                                                <span class="{{ $value->booking_status }}">Hold</span>
+
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG ) && ($valuelist->mrf->mrf_status == '') && ($valuelist->ipo->ipo_status == ''))
-                                                <input type="hidden" name="order_status[]" value="Processing" >  
-                                                {{ 'Processing' }}
+                                                <input type="hidden" name="order_status[]" value="Processing" > 
+
+                                                <span class="{{ $value->booking_status }}">Process</span>
                                                                               
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::OPEN_MRF))
+
                                                 <input type="hidden" name="order_status[]" value="Mrf Issued" >
-                                                {{ 'Mrf Issued' }}
+
+                                                <span class="{{ $value->booking_status }}">Mrf Issued</span>
                                                 
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->ipo->ipo_status== MrfFlugs::OPEN_MRF))
+
                                                 <input type="hidden" name="order_status[]" value="Ipo Issued" >
-                                                {{ 'Ipo Issued' }}
+
+                                                <span class="{{ $value->booking_status }}">Ipo Issued</span>
                                                 
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS) )
+
                                                 <input type="hidden" name="order_status[]" value="Processed to supplier">
-                                                {{ 'Processed to supplier' }}
+
+                                                <p class="{{ $value->booking_status }}">Processed to supplier</p>
                                                     
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) )
+                                            
                                                 <input type="hidden" name="order_status[]" value="Mrf Accepted" >
-                                                {{ 'Mrf Accepted' }} 
+
+                                                <span class="{{ $value->booking_status }}">Mrf Accepted</span>
                                         
                                             @else
-                                                {{ 'N/A' }}    
+                                                <span class="{{ $value->booking_status }}">{{ $value->booking_status }} </span>
                                             @endif
                                         </td>
                                         <td>

@@ -35,22 +35,27 @@
             </div>
         </div>
         @if($roleCheck == 'p')
-            <div class="col-sm-8"></div>
-            <div class="col-sm-2">
-                <div class="pull-right">
-                    <div class="btn-group">
-                        <button type="button" class="dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #fff; border:0;">
-                            <span style="font-size: 25px;">
-                                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                            </span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu" style="left:-142px !important;">
-                            <li><a href="{{Route('planning_cancel_booking_action')}}/{{$bookingDetails->booking_order_id}}" class="deleteButton" style=" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)?'pointer-events: none':''}};">Cencel</a></li>
-                        </ul>
+            @if($bookingDetails->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG)
+                <div class="col-sm-8"></div>
+                <div class="col-sm-2">
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #fff; border:0;">
+                                <span style="font-size: 25px;">
+                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                </span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+
+                            
+                                <ul class="dropdown-menu" style="left:-142px !important;">
+                                    <li><a href="{{Route('planning_cancel_booking_action')}}/{{$bookingDetails->booking_order_id}}" class="deleteButton" style=" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)?'pointer-events: none':''}};">Cencel</a></li>
+                                </ul>
+                                                    
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         @endif
     </div>
 
@@ -88,9 +93,18 @@
         @if($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG)
             <div class="row">
                 <div class="col-md-12">
-                    <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
+                    <div class="alert alert-info booking_accept" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
                         z-index: 999;">
                       <center><strong>Accept!</strong> this Order and go to proccessing. <a href="{{route('accepted_booking')}}/{{$bookingDetails->booking_order_id}}" style="font-size: 20px;font-weight: bold;" title="Click Me"> Accept</a></center>
+                    </div>
+                </div>
+            </div>
+        @elseif($bookingDetails->booking_status == BookingFulgs::ON_HOLD_FLUG)
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-info" style="font-size: 18px;box-shadow: 0 10px 20px rgba(0,0,0,0.10), 0 6px 15px rgba(0,0,0,0.15);
+                        z-index: 999;">
+                      <center><strong>Booking!</strong> is Hold. </center>
                     </div>
                 </div>
             </div>
@@ -127,7 +141,7 @@
                 <p>Category: <b>{{ucfirst(str_replace('_',' ',$bookingDetails->booking_category))}}</b></p>
                 @endif
                 <p>Booking No:<b> {{ $bookingDetails->booking_order_id }}</b></p>
-                <p>Booking Status:<b> {{ $bookingDetails->booking_status }}</b></p>
+                <p>Booking Status: <span class="{{$bookingDetails->booking_status}}" style="padding: 5px;"> {{ $bookingDetails->booking_status }}</span></p>
                 <p>Oreder Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
                 <p>Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
                 @if($roleCheck == 'p')

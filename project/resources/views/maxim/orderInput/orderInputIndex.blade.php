@@ -190,7 +190,6 @@
           <td>
             <div class="form-group" style="    width: 200px !important;">
               <input type="text" name="erp[]" class="form-control erpNo" id="erpNo" placeholder="ERP code" readonly = "true" >
-              <!-- <select name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true"> -->
               </select>
             </div>
           </td>
@@ -212,8 +211,6 @@
           </td>
           <td>
             <div class="form-group" style="    width: 200px !important;">
-              {{--<input type="text" name="item_size[]" class="form-control">--}}
-
               <select name="item_size[]" class="form-control itemSize" id="itemSize" disabled = "true" required>
                 <option value=" ">Item Size</option>
               </select>
@@ -224,14 +221,14 @@
           <!-- Style -->
           <td>
             <div class="form-group">
-              <input type="text" name="style[]" class="form-control item_style" id="item_style" placeholder="Style" required>
+              <input type="text" name="style[]" class="form-control item_style" id="item_style" placeholder="Style">
             </div>
           </td>
           <!-- end -->
 
           <td>
             <div class="form-group">
-              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" placeholder="Sku" required>
+              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" placeholder="Sku">
             </div>
           </td>
 

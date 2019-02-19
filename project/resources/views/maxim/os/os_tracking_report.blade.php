@@ -105,7 +105,7 @@
                     <tr>
                         <th>Job No.</th>
                         <th>Category</th>
-                        <th>Order Status</th>
+                        <th width="10%">Order Status</th>
                         <th>Supplier Name</th>
                         <th>Contact Person</th>
                         <th>Booking No.</th>
@@ -115,8 +115,7 @@
                         <th>Item Code</th>
                         <th id="item_size">Item Size</th>
                         <th>ERP Code</th>
-                        <th >Size Range</th>
-                        
+                        <th>Size Range</th>                        
                         <th>Description</th>
                         <th>Material</th>
                         <th width="10%">Order Date</th>
@@ -144,22 +143,27 @@
                                 <td>
                                     <input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}</td>
                                 </td>
-                                <td>
-                                    @if( $value->mrf_status == MrfFlugs::OPEN_MRF )
-                                        {{ 'Available' }}
+                                <td class="abcdc">
+                                    @if($value->mrf_status == MrfFlugs::OPEN_MRF && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS
+                                        || $value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS
+                                        || $value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS)
+
                                         <input type="hidden" name="order_status[]" value="Available">
-                                    @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT))
-                                        {{ 'Mrf Accepted' }}    
-                                        <input type="hidden" name="order_status[]" value="Mrf Accepted">                           
-                                    @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) && ($value->job_id_current_status == MrfFlugs::OPEN_MRF))
-                                        {{ 'Mrf Issued' }}
-                                        <input type="hidden" name="order_status[]" value="Mrf Issued"> 
+
+                                        <span class="{{ $value->mrf_status }}">Available</span>
+
                                     @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT ) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS))
-                                        {{ 'Processed to supplier' }}    
-                                        <input type="hidden" name="order_status[]" value="Processed to supplier"> 
+
+                                        <p class="{{ $value->job_id_current_status }}">Waiting for Goods</p>
+
+                                        <input type="hidden" name="order_status[]" value="Processed to supplier">
+
                                     @else
-                                        {{ 'N/A' }}
-                                        <input type="hidden" name="order_status[]" value="N/A">    
+
+                                        <input type="hidden" name="order_status[]" value="N/A">
+
+                                        {{ $value->mrf_status }}
+
                                     @endif
                                 </td>
                                 <td><input type="hidden" name="supplier_name[]" value="{{$value->os_po->name}}">{{$value->os_po->name}}</td>

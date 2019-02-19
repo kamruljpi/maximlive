@@ -1,6 +1,18 @@
 @extends('layouts.dashboard')
 @section('page_heading',trans('others.product_list_label'))
 @section('section')
+  
+  <?php
+      use App\Http\Controllers\Source\User\RoleDefine;
+
+     /** auth user PID role check **/
+
+      $object = new RoleDefine();
+      $role_check = $object->getRole('Product');
+
+      /** End**/
+  ?>
+
   <style type="text/css">
   	.top-btn-pro{
   		padding-bottom: 15px;
@@ -28,11 +40,14 @@
         <input type="text" class="form-control keyup_preloder" id="search" name="search" placeholder="Item Code"></input>
       </div>
   </div>
-  <div class="col-sm-3">
-        
-         <a href="{{ Route('itemupload') }}" type="button" class="btn btn-success"><i class="fa fa-file" style="font-size:`16px;color:white; margin-right:7px;"></i> Bulk Upload</a>
-      
-  </div>
+  
+  @if($role_check == 'product' || Auth::user()->type == 'super_admin')
+    <div class="col-sm-3">        
+      <a href="{{ Route('itemupload') }}" type="button" class="btn btn-success">
+        <i class="fa f == 'super_admin'a-file" style="font-size:`16px;color:white; margin-right:7px;">
+      </i> Bulk Upload</a>      
+    </div>
+  @endif
 
   <div class="col-sm-12">
     <table class="table table-bordered" id="tblSearch">

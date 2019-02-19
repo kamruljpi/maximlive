@@ -45,17 +45,17 @@
     }
   </style>
 <div class="col-md-12">
-  @if ($errors->any())
-      <div class="alert alert-danger">
-          <ul>
-              @foreach ($errors->all() as $error)
-                 <li>{{ $error }}</li>
-              @endforeach
-          </ul>
-      </div>
-  @endif
+
   @if(Session::has('error_code'))
       @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ))
+  @endif
+
+  @if(Session::has('message'))
+      @include('widgets.alert', array('class'=>'success', 'message'=> Session::get('message') ))
+  @endif
+  
+  @if(Session::has('errorss'))
+      @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('errorss') ))
   @endif
 
   <form class="" action="{{ Route('booking_order_action') }}" role="form" method="POST" enctype="multipart/form-data" >
@@ -73,9 +73,9 @@
         </div>
       </div>
 
-      <div class="pull-right col-sm-3">
+      <div class="pull-right col-sm-5">
         <div class="form-group">
-          <input type="text" name="booking_number" value="{{$bookings[0]->booking_order_id}}" readonly="true" class="form-control">
+          <input type="text" name="booking_number" value="{{$bookings[0]->booking_order_id}}" readonly="true" class="form-control" style="border-color:red;">
         </div>
       </div>
 
@@ -212,7 +212,7 @@
 
               <td>
                 <div class="form-group" style="    width: 145px !important;">
-                  <select name="item_gmts_color[]" class="form-control itemGmtsColor" id="itemGmtsColor">
+                  <select name="item_gmts_color[]" class="form-control itemGmtsColor" id="itemGmtsColor" readonly>
                   <option value=" ">GMT/Color</option>
 
                   @if($booking->gmts_color)
@@ -239,26 +239,26 @@
               <!-- Style -->
               <td>
                 <div class="form-group">
-                  <input type="text" name="style[]" class="form-control item_style" id="item_style" value="{{$booking->style}}" placeholder="Style" required>
+                  <input type="text" name="style[]" class="form-control item_style" id="item_style" value="{{$booking->style}}" placeholder="Style">
                 </div>
               </td>
               <!-- end -->
 
               <td>
                 <div class="form-group">
-                  <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" placeholder="Sku" value="{{$booking->sku}}" required>
+                  <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" placeholder="Sku" value="{{$booking->sku}}">
                 </div>
               </td>
 
               <td>
                 <div class="form-group">
-                  <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" value="{{$booking->item_quantity}}" placeholder="Quantity" required>
+                  <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" value="{{$booking->item_quantity}}" placeholder="Quantity">
                 </div>
               </td>
 
               <td>
                 <div class="form-group">
-                  <input type="text" name="item_price[]" class="form-control item_price" readonly="true" value="{{$booking->item_price}}" placeholder="Price" required>
+                  <input type="text" name="item_price[]" class="form-control item_price" readonly="true" value="{{$booking->item_price}}" placeholder="Price">
                   <!-- readonly -->
                 </div>
               </td>
@@ -272,7 +272,7 @@
           <!-- PO/Cat No -->
           <td>
             <div class="form-group">
-                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO/Cat No." title ="PO/Cat No." id="item_po_cat_no" required>
+                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO/Cat No." title ="PO/Cat No." id="item_po_cat_no" >
               </div>
           </td>
           <!-- end -->
@@ -287,14 +287,13 @@
 
           <td width="15%" style="padding-top: 15px;">
             <div class="form-group item_codemxp_parent">
-              <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code[]"  id="item_codemxp" data-parent="tr_clone" required placeholder="Item Code">
+              <input class="booking_item_code item_code easyitemautocomplete" type="text" name="item_code[]"  id="item_codemxp" data-parent="tr_clone"  placeholder="Item Code">
 
             </div>
           </td>
           <td>
             <div class="form-group" style="    width: 200px !important;">
               <input type="text" name="erp[]" class="form-control erpNo" id="erpNo" placeholder="ERP code" readonly = "true" >
-              <!-- <select name="erp[]" class="form-control erpNo" id="erpNo" readonly = "true"> -->
               </select>
             </div>
           </td>
@@ -318,7 +317,7 @@
             <div class="form-group" style="    width: 200px !important;">
               {{--<input type="text" name="item_size[]" class="form-control">--}}
 
-              <select name="item_size[]" class="form-control itemSize" id="itemSize" disabled = "true" required>
+              <select name="item_size[]" class="form-control itemSize" id="itemSize" required>
                 <option value=" ">Item Size</option>
               </select>
             </div>
@@ -327,26 +326,26 @@
           <!-- Style -->
           <td>
             <div class="form-group">
-              <input type="text" name="style[]" class="form-control item_style" id="item_style" placeholder="Style" required>
+              <input type="text" name="style[]" class="form-control item_style" id="item_style" placeholder="Style">
             </div>
           </td>
           <!-- end -->
 
           <td>
             <div class="form-group">
-              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" placeholder="Sku" required>
+              <input type="text" name="sku[]" class="form-control item_sku" id="item_sku" placeholder="Sku">
             </div>
           </td>
 
           <td>
             <div class="form-group">
-              <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" placeholder="Quantity" required>
+              <input type="text" name="item_qty[]" class="form-control easyitemautocomplete item_qty" id="item_qtymxp" placeholder="Quantity">
             </div>
           </td>
 
           <td>
             <div class="form-group">
-              <input type="text" name="item_price[]" class="form-control item_price" readonly="true" placeholder="Price" required>
+              <input type="text" name="item_price[]" class="form-control item_price" readonly="true" placeholder="Price">
               <!-- readonly -->
             </div>
           </td>

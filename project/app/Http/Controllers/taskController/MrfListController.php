@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers\taskController;
 
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
 use App\Http\Controllers\dataget\ListGetController;
 use App\Http\Controllers\Message\StatusMessage;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\RoleManagement;
-use Illuminate\Http\Request;
+use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\Controller;
 use App\Model\MxpBookingChallan;
+use Illuminate\Http\Request;
 use App\Model\MxpMrf;
 use Carbon\Carbon;
 use Validator;
 use Auth;
 use DB;
-use App\Model\MxpBookingBuyerDetails;
-use App\Http\Controllers\taskController\Flugs\HeaderType;
-use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 
 class MrfListController extends Controller
 {
+    use UserAccessBuyerList;
+
     public function mrfListView(){
         $bookingList = DB::table('mxp_mrf_table')
             ->select('*',DB::Raw('sum(mrf_quantity) as mrf_quantity'))
@@ -26,6 +29,9 @@ class MrfListController extends Controller
             ->groupBy('mrf_id')
             ->orderBy('id','DESC')
             ->paginate(15);
+
+        $this->addBuyerDetails($bookingList);
+
         return view('maxim.mrf.list.mrfList',compact('bookingList'));
     }
 

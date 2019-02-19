@@ -8,7 +8,7 @@ use Auth;
 class RoleDefine
 {
 	/**
-	 * @return string role frist character
+	 * @return string role frist word
 	 */
 	public function getRole($role_value){
 		$roleId  = Auth::user()->user_role_id;

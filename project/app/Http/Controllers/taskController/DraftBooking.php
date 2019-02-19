@@ -52,7 +52,9 @@ class DraftBooking extends Controller
             ->paginate(15);
         }
 
-        /** End**/        
+        /** End**/
+
+        // $this->addBuyerDetails($draft_list);
             
         return view('maxim.draft.draft_list',compact('draft_list'));
     }
@@ -163,13 +165,19 @@ class DraftBooking extends Controller
       $buyerDetails = [];
       $bookings = MxpDraft::where('booking_order_id',$id)->get();
 
-      if(!empty($bookings)) {
+      if(!empty($bookings[0]->vendor_id)) {
          $buyer_details = MaxParty::where('id',$bookings[0]->vendor_id)
             ->select('id','party_id','name','sort_name','name_buyer','address_part1_invoice','address_part2_invoice','attention_invoice','mobile_invoice','telephone_invoice','fax_invoice','address_part1_delivery','address_part2_delivery','attention_delivery','mobile_delivery')
             ->first();
 
          $buyerDetails = json_encode(MaxParty::where('id',$bookings[0]->vendor_id)
             ->get());
+      }else {
+        $has = MxpBookingBuyerDetails::where('booking_order_id',$id)->count();
+        if($has){
+          Session::flash('message','Booking is successfuly submit '.$id);
+          return Redirect()->Route('booking_list_view');
+        }
       }
 
       return view('maxim.draft.draft_booking_page',compact('bookings','buyer_details','buyerDetails'));

@@ -2,36 +2,37 @@
 
 namespace App\Http\Controllers\taskController;
 
-use  App\Http\Controllers\dataget\ListGetController;
-use App\Http\Controllers\Message\StatusMessage;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\BookingController;
-use App\Http\Controllers\RoleManagement;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\ChallanFlugs;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
+use App\Http\Controllers\dataget\ListGetController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Source\User\RoleDefine;
+use App\Http\Controllers\Message\StatusMessage;
+use App\Http\Controllers\RoleManagement;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Source\source;
+use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use App\Model\MxpMultipleChallan;
+use Illuminate\Http\Request;
 use App\Model\BookingFile;
 use App\Model\MxpBooking;
-use App\Model\MxpMultipleChallan;
-use App\Model\MxpPi;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use App\Supplier;
-use App\MxpIpo;
-use App\MxpStore;
 use App\Model\MxpMrf;
+use App\Model\MxpPi;
+use Carbon\Carbon;
+use App\MxpStore;
+use App\Supplier;
+use ZipArchive;
+use App\MxpIpo;
 use Validator;
+use App\User;
 use Auth;
 use DB;
-use Illuminate\Support\Facades\Response;
-use ZipArchive;
-use App\Model\MxpBookingBuyerDetails;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use App\User;
-use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-use App\Http\Controllers\taskController\Flugs\HeaderType;
-use App\Http\Controllers\Source\source;
-use App\Http\Controllers\Source\User\UserAccessBuyerList;
-use App\Http\Controllers\taskController\Flugs\ChallanFlugs;
 
 class BookingListController extends Controller
 {   
@@ -51,14 +52,14 @@ class BookingListController extends Controller
             $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
                 ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
                 ->whereIn('buyer_name',$this->getUserByerNameList()) // use trait class
-                ->orderBy('id','DESC')
+                ->orderBy('booking_status')
                 ->paginate(15);
 
         }else if(Auth::user()->type == 'super_admin'){
 
             $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
                 ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
-                ->orderBy('id','DESC')
+                ->orderBy('booking_status')
                 ->paginate(15);
 
         }else{
@@ -800,19 +801,30 @@ class BookingListController extends Controller
 
     public function getBookingListByBookingId(Request $request){
 
-        $bookingList = DB::table('mxp_bookingbuyer_details')
+        $role_define = new RoleDefine();
+
+        // cs role define
+        $bookingList['user_role_type'] = $role_define->getRole('Customer');
+
+        if($bookingList['user_role_type'] == 'empty') {
+            //super admin role define
+            $bookingList['user_role_type'] = Auth::user()->type;
+        }        
+
+        $bookingList['details'] = DB::table('mxp_bookingbuyer_details')
             ->where([['booking_order_id', 'like', '%'.$request->booking_id.'%'],['is_deleted',BookingFulgs::IS_NOT_DELETED]])
             ->orderBy('id','DESC')
             ->get();
 
-        foreach($bookingList as &$booking){
+        foreach($bookingList['details'] as &$booking){
             $booking->booking = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->user_id)->first();
             $booking->accepted = User::select('user_id','first_name','middle_name','last_name')->where('user_id',$booking->accepted_user_id)->first();
-            $booking->mrf = MxpMrf::where('booking_order_id',$booking->booking_order_id)->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
+            $booking->mrf = MxpMrf::where('booking_order_id',$booking->booking_order_id)->groupBy('mrf_id')->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')->select('mxp_mrf_table.user_id','mxp_mrf_table.created_at','mu.first_name','mu.middle_name','mu.last_name',DB::Raw('GROUP_CONCAT(DISTINCT mxp_mrf_table.mrf_id SEPARATOR ", ") as mrf_id'))->first();
             $booking->ipo = MxpIpo::where('booking_order_id',$booking->booking_order_id)->groupBy('ipo_id')->join('mxp_users as mu','mu.user_id','mxp_ipo.user_id')->select('mxp_ipo.user_id','mxp_ipo.created_at','mu.first_name','mu.middle_name','mu.last_name')->first();
             $booking->po = MxpIpo::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT ipo_id SEPARATOR ", ") as ipo_id'))->groupBy('booking_order_id')->first();
             $booking->bookingDetails = MxpBooking::where('booking_order_id', $booking->booking_order_id)->select(DB::Raw('GROUP_CONCAT(DISTINCT poCatNo SEPARATOR ", ") as po_cat'))->groupBy('item_code')->first();
         }
+
         return $bookingList;
     }
 
@@ -1073,5 +1085,29 @@ class BookingListController extends Controller
 
             }
         }
+    }
+
+
+    public function changeBookingStatus(Request $request) {
+
+        $bid = isset($request->bid) ? $request->bid : '' ;
+        $change_status = isset($request->change_status) ? $request->change_status : '' ;
+
+        if(!empty($bid)) {
+            if($change_status == BookingFulgs::BOOKED_FLUG) {
+                MxpBookingBuyerDetails::where('booking_order_id',$bid)
+                    ->update([
+                        'booking_status' => BookingFulgs::BOOKED_FLUG,
+                    ]);
+            }else if($change_status == BookingFulgs::ON_HOLD_FLUG) {
+                MxpBookingBuyerDetails::where('booking_order_id',$bid)
+                    ->update([
+                        'booking_status' => BookingFulgs::ON_HOLD_FLUG,
+                    ]);
+            }                    
+        }        
+        
+        return Redirect()->Back();
+        $this->print_me($request->all());
     }
 }

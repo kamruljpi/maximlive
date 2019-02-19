@@ -1,23 +1,23 @@
 @extends('layouts.dashboard')
 @section('page_heading', trans("others.mxp_menu_mrf_list") )
 @section('section')
-
-<style type="text/css">
-	.b1{
-	    border-bottom-left-radius: 4px;
-	    border-top-right-radius: 0px;
-	}
-	.b2{
-	    border-bottom-left-radius: 0px;
-	    border-top-right-radius: 4px;
-	}
-	.btn-group .btn + .btn,
-	.btn-group .btn + .btn-group,
-	.btn-group .btn-group + .btn,
-	.btn-group .btn-group + .btn-group {
-	    margin-left: -5px;
-	}
-</style>
+	
+	<style type="text/css">
+		.b1{
+		    border-bottom-left-radius: 4px;
+		    border-top-right-radius: 0px;
+		}
+		.b2{
+		    border-bottom-left-radius: 0px;
+		    border-top-right-radius: 4px;
+		}
+		.btn-group .btn + .btn,
+		.btn-group .btn + .btn-group,
+		.btn-group .btn-group + .btn,
+		.btn-group .btn-group + .btn-group {
+		    margin-left: -5px;
+		}
+	</style>
 
 	<button class="btn btn-warning" type="button" id="mrf_reset_btn">Reset</button>
 	<div id="mrf_simple_search_form">
@@ -77,7 +77,8 @@
 			<table class="table table-bordered">
 				<tr>
 					<thead>
-					<th>Serial no</th>
+					<th>#</th>
+					<th>Buyer Name</th>
 					<th>Booking No.</th>
 					<th>MRF No.</th>
 					<th>Order Qty</th>
@@ -88,43 +89,37 @@
 				</tr>
 				@php($j=1 + $bookingList->perPage() * ($bookingList->currentPage() - 1))
 				<tbody id="mrf_list_tbody">
-				@foreach($bookingList as $value)
-					<tr id="mrf_list_table">
-						<td>{{$j++}}</td>
-						<td>{{$value->booking_order_id}}</td>
-						<td>{{$value->mrf_id}}</td>
-						<td>{{$value->mrf_quantity}}</td>
-						<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
-						<td>{{$value->shipmentDate}}</td>
-						{{-- <td>
-							<form action="{{Route('mrf_list_action_task') }}" role="form" target="_blank">
-								<input type="hidden" name="mid" value="{{$value->mrf_id}}">
-								<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
-								<button class="btn btn-success" target="_blank">Report</button>
-							</form>
-						</td> --}}
-						<td width="12%">
-                        <div class="btn-group">
-                            <form action="{{ Route('mrf_list_action_task') }}" target="_blank">
-                                <input type="hidden" name="mid" value="{{$value->mrf_id}}">
-                                <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
-                                <button class="btn btn-success" target="_blank">Report</button>
+					@foreach($bookingList as $value)
+						<tr id="mrf_list_table">
+							<td>{{$j++}}</td>
+							<td>{{$value->buyer_details->buyer_name}}</td>
+							<td>{{$value->booking_order_id}}</td>
+							<td>{{$value->mrf_id}}</td>
+							<td>{{$value->mrf_quantity}}</td>
+							<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
+							<td>{{$value->shipmentDate}}</td>
+							<td width="12%">
+	                        <div class="btn-group">
+	                            <form action="{{ Route('mrf_list_action_task') }}" target="_blank">
+	                                <input type="hidden" name="mid" value="{{$value->mrf_id}}">
+	                                <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+	                                <button class="btn btn-success" target="_blank">Report</button>
 
-                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
+	                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                                    <span class="caret"></span>
+	                                    <span class="sr-only">Toggle Dropdown</span>
+	                                </button>
 
-                                <ul class="dropdown-menu" style="left:-45px !important;">
-                                    <li>
-                                        <a href="{{ Route('os_mrf_details_view', $value->mrf_id) }}">Views</a>
-                                    </li>
-                                </ul>
-                            </form>
-                        </div>
-                    </td>
-					</tr>
-				@endforeach
+	                                <ul class="dropdown-menu" style="left:-45px !important;">
+	                                    <li>
+	                                        <a href="{{ Route('os_mrf_details_view', $value->mrf_id) }}">Views</a>
+	                                    </li>
+	                                </ul>
+	                            </form>
+	                        </div>
+	                    </td>
+						</tr>
+					@endforeach
 				</tbody>
 			</table>
 			<div id="mrf_list_pagination">{{$bookingList->links()}}</div>

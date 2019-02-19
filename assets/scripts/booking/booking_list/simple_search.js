@@ -8,13 +8,14 @@ var simple_search = (function(){
 			    if(booking_id == ''){
 			        alert("The search field cannot be empty");
 			        return;
-			    }
-			    else
-			    {
+			    }else{
+
 			        var results = ajaxFunc("/booking_list_by_booking_id", "GET", "booking_id="+booking_id);
-			        if((results.responseJSON != '') && (results.responseJSON != null))
-			            addBookingListRow(results.responseJSON, 0);
-			        else {
+                    
+			        if((results.responseJSON != '') && (results.responseJSON != null)) {
+
+			            addBookingListRow(results.responseJSON.details, 0,results.responseJSON.user_role_type);
+			        }else {
 			            EmptyValueView('.pagination', '#booking_list_tbody', "#booking_list_pagination", 9); // this function use js/production.js
 			        }
 			    }
@@ -23,7 +24,7 @@ var simple_search = (function(){
 	}
 })();
 
-function addBookingListRow(results, start){
+function addBookingListRow(results, start,user_role_type){
     $('.pagination').empty();
     $('#booking_list_tbody').empty();
     $("#booking_list_pagination").css('display','none');
@@ -46,15 +47,16 @@ function addBookingListRow(results, start){
     {
         book_html += '<tr class="booking_list_table">';
         book_html += '<td>'+sl+'</td>';            
+        book_html += '<td>'+rows[i].booking_category.toUpperCase().replace('_', ' ')+'</td>';        
         book_html += '<td>'+rows[i].buyer_name+'</td>';        
         book_html += '<td>'+rows[i].Company_name+'</td>';        
         book_html += '<td>'+rows[i].attention_invoice+'</td>';       
         book_html += '<td>'+rows[i].booking_order_id+'</td>';    
-        book_html += '<td>'+((rows[i].po != null)? ((rows[i].po.ipo_id !=null)? rows[i].po.ipo_id :'') : '')+'</td>';  
+        book_html += '<td>'+((rows[i].po != null)? ((rows[i].po.ipo_id !=null)? rows[i].po.ipo_id :'') : '')+' , '+((rows[i].mrf != null)? ((rows[i].mrf.mrf_id !=null)? rows[i].mrf.mrf_id :'') : '')+'</td>';  
         book_html += '<td>'+rows[i].bookingDetails.po_cat+'</td>';  
         book_html += '<td>'+rows[i].created_at+'</td>';
         book_html += '<td>'+rows[i].shipmentDate+'</td>';
-        book_html += '<td><a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">'+rows[i].booking_status+'</a>';
+        book_html += '<td><a id="popoverOption" class="btn popoverOption '+rows[i].booking_status+'" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">'+rows[i].booking_status+'</a>';
         book_html += '<div class="popper-content hide">';
         book_html += '<label>Booking Prepared by: ';
         book_html += ((rows[i].booking != null)?((rows[i].booking.first_name ==null)?'':rows[i].booking.first_name)+' '+((rows[i].booking.last_name==null)?'':rows[i].booking.last_name)+' '+((rows[i].created_at ==null)?'':'( '+rows[i].created_at)+' )': '');
@@ -81,9 +83,31 @@ function addBookingListRow(results, start){
         book_html += '<span class="sr-only">Toggle Dropdown</span>';
         book_html += '</button>';
         book_html += '<ul class="dropdown-menu" style="left:-45px !important;">';
-        book_html += '<li><a href="detailsView/'+ rows[i].booking_order_id +'">Views</a></li>';
-        book_html += ((typeof(rows[i].booking_status) != "undefined" && rows[i].booking_status !=null && rows[i].booking_status != "Process") ? '<li><a href="'+baseURL+'/booking/details/cancel/'+rows[i].booking_order_id+'" class="deleteButton">Cancel</a></li>' :'');
-        book_html += '<li><a href="download/file/'+rows[i].booking_order_id+'" class="btn btn-info">Download Files</a></li>';
+        book_html += '<li><a href="'+baseURL+'/booking/list/detailsView/'+ rows[i].booking_order_id +'">Views</a></li>';
+
+        if( user_role_type == 'customer' || user_role_type == 'super_admin') {
+
+            book_html += '<li>';
+            book_html += '<form action="'+baseURL+'/change/booking/status">';
+
+            book_html += '<input type="hidden" name="bid" value="'+ rows[i].booking_order_id+'">';
+
+            if((typeof(rows[i].booking_status) != "undefined" && rows[i].booking_status != null && rows[i].booking_status == "Booked")){
+
+                book_html += '<button class="deleteButton changes_status" value="Hold" name="change_status">On Hold</button>';
+
+            }else if((typeof(rows[i].booking_status) != "undefined" && rows[i].booking_status !=null && rows[i].booking_status == "Hold")){
+                
+                book_html += '<button class="deleteButton changes_status" value="Booked" name="change_status">On Booked</button>';
+            }
+
+            book_html += '</form></li>';
+
+            book_html += ((typeof(rows[i].booking_status) != "undefined" && rows[i].booking_status !=null && rows[i].booking_status != "Process") ? '<li><a href="'+baseURL+'/booking/details/cancel/'+rows[i].booking_order_id+'" class="deleteButton">Cancel</a></li>' :'');
+
+            // book_html += '<li><a href="'+baseURL+'/download/file/'+rows[i].booking_order_id+'" class="btn btn-info">Download Files</a></li>';
+        }
+
         book_html += '</ul>';        
         book_html += '</div>';
         book_html += '</td>';

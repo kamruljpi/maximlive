@@ -127,8 +127,13 @@
 		    	<th width="18%" id="erp_code">ERP Code</th>
 		    	<!-- <th>GMTS / Item Color</th> -->
 		        <th>Item Descreption</th>
+
 		        <th>Style</th>
-		        <!-- <th width="10%">Item Size</th> -->
+		        @if($buyerDetails->buyer_name == 'Gymboree')
+				@else
+		        	<th width="10%">Item Size</th>
+				@endif
+
 		        <th>Qty / Pcs</th>
 		        <th>Unit Price / Pcs</th>
 		        <th>USD Amount / USD</th>
@@ -154,8 +159,13 @@
 				$item_price = number_format($str_item_price, 5, '.', '');
 			?>
 			<tr>
-				<!-- <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $detailsValue->job_no}}</td> -->
-				<td>{{ $j++ }}</td>
+
+				@if($buyerDetails->buyer_name == 'Gymboree')
+					<td>{{ $j++ }}</td>
+				@else
+					<td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $detailsValue->job_no}}</td>
+				@endif
+
 				<td>{{ $detailsValue->poCatNo }}</td>
 				<td>{{ $detailsValue->oos_number }}</td>
 				<td>{{ $detailsValue->item_code }}
@@ -163,28 +173,18 @@
 					{{ ($is_type == 'fsc')? '( FSC-MIX )':'' }}
 				</td>
 				<td>{{ $detailsValue->erp_code }}</td>
-				<!-- @if($itemcodestatus != $detailsValue->item_code)
-			    	<td width="10%" rowspan="">
-			    		<div>{{$detailsValue->item_code}}</div>
-			    	</td>
-			    @else
-			    <td></td>
-		    	@endif -->
 
-		    	<!-- @if($itemcodestatus != $detailsValue->item_code)
-			    	<td width="18%" rowspan="">
-			    		{{ $detailsValue->erp_code }}
-			    	</td>
-			    @else
-			    <td></td>
-		    	@endif -->
 				<!-- <td>{{ $detailsValue->gmts_color }}</td> -->
 				<td>{{ $detailsValue->item_description }}</td>
 				<td style="width: 10%;">
 					{{ $detailsValue->style }}
 					
 				</td>
-				<!-- <td>{{ $detailsValue->item_size }}</td> -->
+
+				@if($buyerDetails->buyer_name == 'Gymboree')
+				@else
+					<td>{{ $detailsValue->item_size }}</td>
+				@endif
 				<td>{{ $detailsValue->item_quantity}}</td>
 				<td>{{(!empty($item_price)?((is_numeric($item_price))?'$':'').$item_price: '')}}</td>
 				<td>{{(!empty($detailsValue->item_quantity)? '$'. $totalQtyAmt: '')}}</td>
@@ -205,37 +205,41 @@
 		
 		</tbody>
 	</table>
+
 	<?php
 	   //  $totalUsdAmount = floor($totalUsdAmount);
 	     
 		 $fractionUSD = explode('.', $totalUsdAmount);
 		 $amountInWordUsd = $objectConvertController->convertNumberToWord($fractionUSD[0]);
+
+		 if(!empty($amountInWordUsd)) {
+		 	$amountInWordUsd .= " Dollar";
+		 }
+
 		 if(sizeof($fractionUSD) > 1){
 		 	$fractionInWordUSD = $objectConvertController->convertNumberToWord($fractionUSD[1]);
 		 }
 		 
 
-		 $fractionBD = explode('.', $BDTandUSD);
-		 $amountInWordBD = $objectConvertController->convertNumberToWord($fractionBD[0]);
-		 if(sizeof($fractionBD) > 1){
-		 	$fractionInWordBD = $objectConvertController->convertNumberToWord($fractionBD[1]);
-		 }
+		 // $fractionBD = explode('.', $BDTandUSD);
+		 // $amountInWordBD = $objectConvertController->convertNumberToWord($fractionBD[0]);
+		 // if(sizeof($fractionBD) > 1){
+		 //	$fractionInWordBD = $objectConvertController->convertNumberToWord($fractionBD[1]);
+		 // }
 	?>
+
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
 			<table  border="5px solid #DBDBDB" class="table table-bordered">
 				<tr>
 					<td>					
 						<div style="text-align:;font-weight: bold;">
-							<?php if(sizeof($fractionUSD) == 1){ ?>
 
-							<span>1. TOTAL AMOUNT : USD : {{$amountInWordUsd}} {{(empty($amountInWordUsd))?'':'USD Only'}}</span>
-
-							<?php }else{?>
-
-							<span>1. TOTAL AMOUNT : USD : {{$amountInWordUsd}} And {{$fractionInWordUSD}} Cents USD Only</span>
-
-							<?php }?>
+							@if(sizeof($fractionUSD) == 1)
+								<span>1. TOTAL AMOUNT : USD : {{$amountInWordUsd}} {{(empty($amountInWordUsd))?'':'USD Only'}}</span>
+							@else
+								<span>1. TOTAL AMOUNT : USD : {{$amountInWordUsd}} {{((!empty($amountInWordUsd))? 'And' : '')}} {{$fractionInWordUSD}} {{((!empty($fractionInWordUSD))? ' Cents USD Only' : '')}}</span>
+							@endif
 						</div>
 					</td>
 				</tr>

@@ -56,11 +56,28 @@ class PartyController extends Controller
 
     public function store(Request $request)
     {   
-        $roleManage = new RoleManagement();
+        /** make sort_name instead name**/
+        $name = isset($request->name) ? $request->name : '' ;
+        $names = explode(' ', $name);
+
+        $sort_name_as = '';
+
+        if(!empty($names)) {
+            foreach ($names as $name_) {
+                if($name_[0] != '(') {
+                    $sort_name_as .= $name_[0];                    
+                }
+            }
+        }else{
+            $sort_name_as = $name ;
+        }
+        
+        /** End **/
+        // $this->print_me(strtoupper($sort_name_as));
 
         $validMassage = [            
             'name.required' => 'Company Name is required',
-            'sort_name.required' => 'Company sort name is required',
+            // 'sort_name.required' => 'Company sort name is required',
             'name_buyer.required' => 'Brand name is required',
             'name.unique' => 'This vendor ( '.$request->name.' ) name already inserts',
             
@@ -68,7 +85,7 @@ class PartyController extends Controller
 
         $validator = Validator::make($request->all(), [
                 'name'                   => 'required||unique:mxp_party,name',
-                'sort_name'              =>'required',
+                // 'sort_name'              =>'required',
                 'name_buyer'             => 'required',
             ],
             $validMassage
@@ -82,7 +99,7 @@ class PartyController extends Controller
         $party->party_id               = $request->party_id;
         $party->user_id                = Auth::user()->user_id;
         $party->name                   = $request->name;
-        $party->sort_name              = $request->sort_name;
+        $party->sort_name              = (isset($request->sort_name) ? $request->sort_name : strtoupper($sort_name_as));
         $party->name_buyer             = $request->name_buyer;
         $party->address_part1_invoice  = $request->address_part_1_invoice;
         $party->address_part2_invoice  = $request->address_part_2_invoice;
@@ -110,7 +127,24 @@ class PartyController extends Controller
 
     public function update(Request $request)
     {
+        /** make sort_name instead name**/
+        $name = isset($request->name) ? $request->name : '' ;
+        $names = explode(' ', $name);
 
+        $sort_name_as = '';
+
+        if(!empty($names)) {
+            foreach ($names as $name_) {
+                if($name_[0] != '(') {
+                    $sort_name_as .= $name_[0];                    
+                }
+            }
+        }else{
+            $sort_name_as = $name ;
+        }
+        
+        /** End **/
+        
         $validMassage = [
             'name.required' => 'Company Name is required',
             'sort_name.required' => 'Company sort name is required',
@@ -133,7 +167,7 @@ class PartyController extends Controller
         $update_party->party_id               = $request->party_id;
         $update_party->user_id                = Auth::user()->user_id;
         $update_party->name                   = $request->name;
-        $update_party->sort_name              = $request->sort_name;
+        $update_party->sort_name              = strtoupper($sort_name_as);
         $update_party->name_buyer             = $request->name_buyer;
         $update_party->address_part1_invoice  = $request->address_part_1_invoice;
         $update_party->address_part2_invoice  = $request->address_part_2_invoice;

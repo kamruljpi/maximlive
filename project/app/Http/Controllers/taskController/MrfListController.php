@@ -32,6 +32,8 @@ class MrfListController extends Controller
 
         $this->addBuyerDetails($bookingList);
 
+        // $this->print_me($bookingList);
+
         return view('maxim.mrf.list.mrfList',compact('bookingList'));
     }
 

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	$('#buyerChange').on('change',function(){
-		var selectedValue = $.trim($("#buyerChange").find(":selected").val());
+		var selectedValue = encodeURIComponent($("#buyerChange").find(":selected").val());
 
 		$.ajax({
           type: "GET",

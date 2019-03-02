@@ -60,9 +60,17 @@ class ProductController extends Controller
         
         if(isset($buyerList) && !empty($buyerList)){
             if($productId == null ){
-                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->whereIn('id_buyer',$buyerList)->orWhere('id_buyer','')->orderBy('product_id','DESC')->paginate(20);
+                $proWithSizeColors = MxpProduct::with('colors', 'sizes')
+                                    ->whereIn('id_buyer',$buyerList)
+                                    ->orWhere('id_buyer','')
+                                    ->orderBy('product_id','DESC')
+                                    ->paginate(20);
             }else{
-                $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->whereIn('id_buyer',$buyerList)->orderBy('product_id','DESC')->paginate(20);
+                $proWithSizeColors = MxpProduct::with('colors', 'sizes')
+                                    ->where('product_id', $productId)
+                                    ->whereIn('id_buyer',$buyerList)
+                                    ->orderBy('product_id','DESC')
+                                    ->paginate(20);
 
                 /** when product id_buyer field is empty
                  *  and need to update
@@ -127,7 +135,8 @@ class ProductController extends Controller
     Public function updateProductView(Request $request){
         $brands = MxpBrand::where('status', self::ACTIVE_BRAND)->get();
         $product = $this->allProducts($request->product_id);
-        $product_code_ = $product[0]->product_code ;      
+        $product_code_ = $product[0]->product_code ;
+
         if(empty($product_code_)){
             Session::flash('new_product_delete', "This Product Is not Available or You Don't have permission to edit this page.");
             return \Redirect()->Route('product_list_view');  
@@ -154,19 +163,19 @@ class ProductController extends Controller
             }
         }
 
-        //  if(isset($product_code_by_sizes) && !empty($product_code_by_sizes)) {
-        //     foreach ($product_code_by_colors as $code_by_colors){
-        //         $created_at = Carbon::parse($code_by_colors->created_at)->format('Y-m-d');
+         if(isset($product_code_by_sizes) && !empty($product_code_by_sizes)) {
+            foreach ($product_code_by_colors as $code_by_colors){
+                // $created_at = Carbon::parse($code_by_colors->created_at)->format('Y-m-d');
 
 
-        //         if($created_at == '2019-01-17'){                    
-        //             // array_push($colorsJs, $code_by_colors->id.','.$created_at);
-        //         }else {                    
-        //             array_push($colorsJs, $code_by_colors->id.','.$code_by_colors->color_name);
-        //         }
-        //         // $this->print_me($created_at);
-        //     }
-        // }
+                // if($created_at == '2019-01-17'){                    
+                    // array_push($colorsJs, $code_by_colors->id.','.$created_at);
+                // }else {                    
+                    array_push($colorsJs, $code_by_colors->id.','.$code_by_colors->color_name);
+                // }
+                // $this->print_me($created_at);
+            }
+        }
 
         if(isset($product_code_by_sizes) && !empty($product_code_by_sizes)) {
             foreach ($product_code_by_sizes as $code_by_size){

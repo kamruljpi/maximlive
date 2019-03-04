@@ -111,7 +111,7 @@
 @section('LoadScript')
   <script type="text/javascript">
       $('#search').on('keyup',function(){
-          $value=$(this).val();
+          $value= encodeURIComponent($(this).val());
           $.ajax({
               type : 'get',
               url : '{{URL::to('product/lists')}}',

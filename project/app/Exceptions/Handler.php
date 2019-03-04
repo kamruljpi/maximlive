@@ -48,6 +48,8 @@ class Handler extends ExceptionHandler
             return redirect('/')->with('message', 'Sorry, your session seems to have expired. Please login again.');
         }
 
+        // return view('401_error_page');
+        
         return parent::render($request, $exception);
 
         // return parent::render($request, $exception);

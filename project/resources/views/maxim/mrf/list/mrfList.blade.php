@@ -84,6 +84,7 @@
 					<th>Order Qty</th>
 					<th>MRF Create Date</th>
 					<th>MRF Shipment Date</th>
+					{{-- <th>Status</th> --}}
 					<th width="12%">Action</th>
 					</thead>
 				</tr>
@@ -98,26 +99,27 @@
 							<td>{{$value->mrf_quantity}}</td>
 							<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
 							<td>{{$value->shipmentDate}}</td>
+							{{-- <td>{{$value->shipmentDate}}</td> --}}
 							<td width="12%">
-	                        <div class="btn-group">
-	                            <form action="{{ Route('mrf_list_action_task') }}" target="_blank">
-	                                <input type="hidden" name="mid" value="{{$value->mrf_id}}">
-	                                <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
-	                                <button class="btn btn-success" target="_blank">Report</button>
+		                        <div class="btn-group">
+		                            <form action="{{ Route('mrf_list_action_task') }}" target="_blank">
+		                                <input type="hidden" name="mid" value="{{$value->mrf_id}}">
+		                                <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+		                                <button class="btn btn-success" target="_blank">Report</button>
 
-	                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                    <span class="caret"></span>
-	                                    <span class="sr-only">Toggle Dropdown</span>
-	                                </button>
+		                                <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		                                    <span class="caret"></span>
+		                                    <span class="sr-only">Toggle Dropdown</span>
+		                                </button>
 
-	                                <ul class="dropdown-menu" style="left:-45px !important;">
-	                                    <li>
-	                                        <a href="{{ Route('os_mrf_details_view', $value->mrf_id) }}">Views</a>
-	                                    </li>
-	                                </ul>
-	                            </form>
-	                        </div>
-	                    </td>
+		                                <ul class="dropdown-menu" style="left:-45px !important;">
+		                                    <li>
+		                                        <a href="{{ Route('os_mrf_details_view', $value->mrf_id) }}">Views</a>
+		                                    </li>
+		                                </ul>
+		                            </form>
+		                        </div>
+	                    	</td>
 						</tr>
 					@endforeach
 				</tbody>

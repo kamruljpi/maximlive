@@ -288,14 +288,14 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            PO Details
+            SPO Details
         </div>
         <div class="panel-body">
             <table class="table table-bordered vi_table">
                 <thead>
                     <tr>
                         <th>Job No.</th>
-                        <th width="15%">PO No.</th>
+                        <th width="15%">SPO No.</th>
                         <th>Supplier Name</th>
                         <th>Person Name</th>
                         <th width="">Item Code</th>

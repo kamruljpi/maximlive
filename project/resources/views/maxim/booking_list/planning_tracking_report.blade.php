@@ -4,6 +4,7 @@
 <?php
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
 ?>
 <style type="text/css">
     .b1{
@@ -132,13 +133,13 @@
                             @foreach($bookingList as $value)                     
                                 @foreach($value->itemLists as $valuelist)
                                     <?php 
-                                        $idstrcount = (8 - strlen($valuelist->id));
+                                        $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($valuelist->id));
                                         $total_qty += $valuelist->item_quantity;
                                      ?>
                                     <tr id="booking_list_table">
                                         <td>
-                                            <input name="job_id[]" value="{{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}" type="hidden">
-                                            {{ str_repeat('0',$idstrcount) }}{{ $valuelist->id }}
+                                            <input name="job_id[]" value="{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $valuelist->id }}" type="hidden">
+                                            {{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $valuelist->id }}
                                         </td>
                                         <td><input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_category))}}
                                         </td>
@@ -162,13 +163,13 @@
 
                                                 <input type="hidden" name="order_status[]" value="Mrf Issued" >
 
-                                                <span class="{{ $value->booking_status }}">Mrf Issued</span>
+                                                <p class="{{ $value->booking_status }}">Mrf Issued</p>
                                                 
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->ipo->ipo_status== MrfFlugs::OPEN_MRF))
 
                                                 <input type="hidden" name="order_status[]" value="Ipo Issued" >
 
-                                                <span class="{{ $value->booking_status }}">Ipo Issued</span>
+                                                <p class="{{ $value->booking_status }}">Ipo Issued</p>
                                                 
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS) )
 

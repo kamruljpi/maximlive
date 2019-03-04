@@ -164,6 +164,7 @@ class PoController extends Controller
 				['mxp_os_po.is_deleted',BookingFulgs::IS_NOT_DELETED]
 			)
 			->orderBy('mxp_os_po.job_id',$order_by)
+			->groupBy('mxp_os_po.job_id')
 			->get();
 		return $datas;
 	}

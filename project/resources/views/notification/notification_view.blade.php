@@ -6,6 +6,7 @@
   //print_r($not['booking']);die();
 ?>
 <?php 
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
     use App\Http\Controllers\Source\User\RoleDefine;
     use App\Notification;
     $object = new RoleDefine();
@@ -61,7 +62,12 @@
                                              # 
                                         @endif
                                     "> 
-                                    {{ $noti->type_id }} Created 
+                                      @if($noti->type == Notification::GOODS_RECEIVE )
+                                      <?php $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($noti->type_id)); ?>
+                                          {{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $noti->type_id }} Job id goods receive.
+                                      @else
+                                          {{ $noti->type_id }} Created 
+                                      @endif
                                     </a> 
                                 </td>
                                 <td><span class="pull-left text-bold small">{{ $noti->created_at->diffForHumans() }}</span></td>

@@ -1,11 +1,16 @@
 @extends('layouts.plane')
 @section('body')
 <?php 
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
     use App\Http\Controllers\Source\User\RoleDefine;
     use App\Notification;
     $object = new RoleDefine();
     $csRoleCheck = $object->getRole('Customer');
     $os_team = $object->getRole('OS');
+
+    // print_r("<pre>");
+    // print_r(session()->get('notification'));
+    // print_r("<pre>");die();
 ?>
  <div id="wrapper">
         <!-- Navigation -->
@@ -182,37 +187,40 @@
                             ?>
                         @foreach(session()->get('notification') as $key => $nots)
                             @foreach($nots as $noti)
-                            <li class="{{ ($noti->seen == 1)? 'seen' : 'unseen' }}">
+                                <li class="{{ ($noti->seen == 1)? 'seen' : 'unseen' }}">
+                                    @if($noti)
+                                        <a href="
+                                            @if( $noti->type == Notification::CREATE_BOOKING )
+                                                {{ Route('booking_list_details_view',['booking_id' => $noti->type_id]) }}
+                                            @elseif($noti->type == Notification::CREATE_MRF )
+                                                {{ Route('os_mrf_details_view',['mid' => $nots[$i]->type_id]) }}
+                                            @elseif($noti->type == Notification::CREATE_SPO )
+                                                 # 
+                                            @else 
+                                                 # 
+                                            @endif
+                                        ">
+                                            <div style="font-size: 12px">
+                                                @if($noti->type == Notification::GOODS_RECEIVE )
+                                                <?php $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($noti->type_id)); ?>
+                                                    {{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $noti->type_id }} Job id goods receive.
+                                                @else
+                                                    {{ $noti->type_id }} Created 
+                                                @endif
 
-                                @if($noti)
-                                    <a href="
-                                        @if( $noti->type == Notification::CREATE_BOOKING )
-                                            {{ Route('booking_list_details_view',['booking_id' => $noti->type_id]) }}
-                                        @elseif($noti->type == Notification::CREATE_MRF )
-                                            {{ Route('os_mrf_details_view',['mid' => $nots[$i]->type_id]) }}
-                                        @elseif($noti->type == Notification::CREATE_SPO )
-                                             # 
-                                        @else 
-                                             # 
+                                                <span class="pull-right text-muted small">{{ $noti->created_at->diffForHumans() }}</span>
+                                            </div>
+                                        </a>
+                                        @if($noti->seen == '0')
+                                            <?php $k++;?>
                                         @endif
-                                    ">
-                                        <div style="font-size: 12px">
-                                            {{ $noti->type_id }} Created 
-                                            <span class="pull-right text-muted small">{{ $noti->created_at->diffForHumans() }}</span>
-                                        </div>
-                                    </a>
-                                    @if($noti->seen == '0')
-                                        <?php $k++;?>
+                                    
                                     @endif
+                                </li>                                
                                 
-                                @endif
-                            </li>
-                            
-                            
-                            <?php
-                            $i++;
-
-                            ?>
+                                <?php
+                                    $i++;
+                                ?>
                             @endforeach
                         @endforeach
                         <li class="divider"></li>   

@@ -125,7 +125,7 @@ ul li {
     table th#erp_code {
       min-width: 190px !important;
     }
-    .fixed_footer {page-break-before: always;}
+    /*.fixed_footer {page-break-before: always;}*/
 
     input[type="checkbox"]
       {

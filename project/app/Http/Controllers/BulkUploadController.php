@@ -37,7 +37,6 @@ class BulkUploadController extends Controller
                 $path = $request->file('bulk')->getRealPath();
                 $data = Excel::load($path, function($reader) {
                 })->get();
-                
                 $insert = [];
                 $err_insert = [];
                 $temp_insert = [];
@@ -64,6 +63,7 @@ class BulkUploadController extends Controller
                     Session::flash('bulkerror', 'Excel File Data is Empty.');
                     return back();
                 }
+
                 Session::flash('err_item_list', $temp_insert);
                 $members_item_list  = json_encode($data);
                 return view('bulk_upload.itemuploadactionview',['err_item_list'=>$temp_insert,'members_item_list'=>$members_item_list]);

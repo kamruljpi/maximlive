@@ -25,7 +25,7 @@ class ListGetController extends Controller {
 				->leftjoin('mxp_role', 'mxp_role.id', '=', 'mxp_users.user_role_id')
 				->get()
 				->where('type', 'company_user')
-				->where('group_id', $group_id)
+				->where('group_id', 49)
 				->sortByDesc("user_id");
 		} else {
 			$groupId = $group_id;

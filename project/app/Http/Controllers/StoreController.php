@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Message\StatusMessage;
 use Illuminate\Http\Request;
+use App\Notification;
 use App\Model\MxpMrf;
 use App\MxpStore;
 use App\MxpIpo;
@@ -140,6 +142,7 @@ class StoreController extends Controller
     }
 
     public function mrfStore(Request $request){
+
             $validMessages = [
                   'job_id.required' => 'Job Id field is required.',
                   'is_type.required' => 'Type field is required',
@@ -202,6 +205,8 @@ class StoreController extends Controller
             }else{
                 return redirect()->back()->withInput($request->input())->withErrors("Your entered Quantity is 0.");
             }
+
+            NotificationController::postNotification(Notification::GOODS_RECEIVE, $request->job_id);
 
             StatusMessage::create('messages', 'This '.$request->item_code.' Item Code '.$request->receive_qty.' Quantity Successfully received.');
 

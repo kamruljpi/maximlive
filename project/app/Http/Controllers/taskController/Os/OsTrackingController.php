@@ -25,6 +25,7 @@ class OsTrackingController extends Controller
     public function trackingReportView(){
         $bookingList = MxpMrf::where('mxp_mrf_table.is_deleted', BookingFulgs::IS_NOT_DELETED)
                 ->select($this->mrf())
+                ->orderBy('mxp_mrf_table.job_id_current_status','ASC')
                 ->orderBy('mxp_mrf_table.job_id','DESC')
                 ->paginate(20);
 

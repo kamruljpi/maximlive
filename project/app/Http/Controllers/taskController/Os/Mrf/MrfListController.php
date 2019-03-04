@@ -18,30 +18,6 @@ use Session;
 
 class MrfListController extends Controller
 {
-	public function mrfListView(){
-        $bookingList = MxpMrf::select('*',DB::Raw('sum(mrf_quantity) as mrf_quantity'))
-            ->groupBy('mrf_id')
-            ->orderBy('id','DESC')
-            ->paginate(15);
-        if(!empty($bookingList)) {
-            foreach ($bookingList as &$detail) {
-                # code...
-            }
-        }
-        return view('maxim.os.mrf.list.mrfList',compact('bookingList'));
-    }
-
-    public function showMrfReport(Request $request){
-        $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
-                        ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku')
-                        ->where([['mxp_mrf_table.mrf_id',$request->mid],['mxp_mrf_table.is_deleted',BookingFulgs::IS_NOT_DELETED]])
-                        ->get();
-        $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
-        $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->bid)->first();
-        $footerData =[];
-        return view('maxim.os.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));
-    }
-
     /**
      *
      * @return array() 0bject

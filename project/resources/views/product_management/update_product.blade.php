@@ -6,18 +6,8 @@
 
     <?php 
         use App\Http\Controllers\Source\User\RoleDefine;
-
         $object = new RoleDefine();
         $os_define_role = $object->getRole('OS');
-    ?>
-
-    <?php 
-        foreach ($sizes as $s_value) {
-           // print_r('<pre>');
-            //print_r($s_value->proSize_id);
-        }
-
-        //die();
     ?>
     <style type="text/css">
         .price_icon{
@@ -45,7 +35,7 @@
         </div>
         <div class="row">
              <div class="col-md-12 ">   <!--col-md-offset-2 -->
-            	@if(count($errors) > 0)
+                @if(count($errors) > 0)
                     <div class="alert alert-danger" role="alert">
                         @foreach($errors->all() as $error)
                           <li><span>{{ $error }}</span></li>
@@ -116,7 +106,8 @@
                                                     <select class="select-color-list" name="colors[]" multiple="multiple" {{($os_define_role == 'os')?'readonly':''}}>
                                                         <option value="">Choose Color</option>
                                                         @foreach($colors as $color)
-                                                            <option value="{{$color->id}},{{$color->color_name}}" >{{$color->color_name}}</option>
+                                                            <option <?php if(in_array($color['id'],$SelectedColors)){ ?> selected="selected" 
+                                                        <?php } ?> value="{{$color['id']}},{{$color['color_name']}}" >{{$color['color_name']}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -139,10 +130,11 @@
                                             <label class="col-md-4 control-label">Size Range</label>
                                             <div class="col-md-6">
                                                 <div class="product-size-list" style="width:80%; float: left;{{($os_define_role == 'os')?' pointer-events: none;':''}}">
-                                                    <select class="select-size-list" name="sizes[]" multiple="multiple">
+                                                      <select class="select-size-list" name="sizes[]" multiple="multiple">
                                                         <option value="">Choose Size Range</option>
                                                         @foreach($sizes as $size)
-                                                            <option value="{{$size->proSize_id}},{{$size->product_size}}">{{$size->product_size}}</option>
+                                                            <option <?php if(in_array($size['proSize_id'],$SelectedSizes)){ ?> selected="selected" 
+                                                            <?php } ?> value="{{$size['proSize_id']}},{{$size['product_size']}}">{{$size['product_size']}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -316,48 +308,48 @@
                                 </div>
 
                                 <!-- Add Vendor Company Price-->
-        						<div class="modal fade" id="addVendorComPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        							<div class="modal-dialog" role="document">
-        								<div class="modal-content">
-        									<div class="modal-body">
-        										<div class="panel panel-default">
-        											<div class="panel-heading">Vendor Company Price
-        												<button type="button" class="close" data-dismiss="addVendorComPrice" aria-label="Close">
-        													<span aria-hidden="true">&times;</span>
-        												</button>
-        											</div>
+                                <div class="modal fade" id="addVendorComPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">Vendor Company Price
+                                                        <button type="button" class="close" data-dismiss="addVendorComPrice" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
 
-        											<div class="panel-body">
-        												{{--<form class="form-horizontal vendor-price" role="form" method="POST" action="{{ Route('create_brand_action') }}">--}}
+                                                    <div class="panel-body">
+                                                        {{--<form class="form-horizontal vendor-price" role="form" method="POST" action="{{ Route('create_brand_action') }}">--}}
 
-        												@if ($errors->any())
-        													<div class="alert alert-danger">
-        														<ul>
-        															@foreach ($errors->all() as $error)
-        																<li>{{ $error }}</li>
-        															@endforeach
-        														</ul>
-        													</div>
-        												@endif
+                                                        @if ($errors->any())
+                                                            <div class="alert alert-danger">
+                                                                <ul>
+                                                                    @foreach ($errors->all() as $error)
+                                                                        <li>{{ $error }}</li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        @endif
 
-        												@foreach($vendorCompanyListPrice as $vCom)
-        													<input type="hidden" name="price_id[]" value="{{ $vCom->price_id  }}" >
+                                                        @foreach($vendorCompanyListPrice as $vCom)
+                                                            <input type="hidden" name="price_id[]" value="{{ $vCom->price_id  }}" >
                                                             <input type="hidden" name="party_table_id[]" value="{{ $vCom->party_table_id  }}" >
 
-        													<div class="col-md-4">
-        														{{--<label class="control-label">Size Name</label>--}}
-        														<input type="text" class="form-control" value="{{ $vCom->party->name_buyer  }}" readonly>
-        													</div>
+                                                            <div class="col-md-4">
+                                                                {{--<label class="control-label">Size Name</label>--}}
+                                                                <input type="text" class="form-control" value="{{ $vCom->party->name_buyer  }}" readonly>
+                                                            </div>
 
-        													<div class="col-md-5">
-        														{{--<label class="control-label col-md-12">Size Name</label>--}}
-        														<input type="text" class="form-control" value="{{ $vCom->party->name  }}" readonly>
-        													</div>
+                                                            <div class="col-md-5">
+                                                                {{--<label class="control-label col-md-12">Size Name</label>--}}
+                                                                <input type="text" class="form-control" value="{{ $vCom->party->name  }}" readonly>
+                                                            </div>
 
-        													<div class="col-md-3">
-        														{{--<label class="control-label">Size Name</label>--}}
-        														<input type="text" class="form-control v_com_price" name="v_com_price[]" value="{{$vCom->vendor_com_price}}" placeholder="Enter Price">
-        													</div>
+                                                            <div class="col-md-3">
+                                                                {{--<label class="control-label">Size Name</label>--}}
+                                                                <input type="text" class="form-control v_com_price" name="v_com_price[]" value="{{$vCom->vendor_com_price}}" placeholder="Enter Price">
+                                                            </div>
 
                                                         @endforeach
 
@@ -400,22 +392,22 @@
                                                             </div>
                                                         @endforeach
 
-        												{{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
+                                                        {{--<input type="hidden" name="_token" value="{{ csrf_token() }}">--}}
 
-        													<div class="form-group">
-        														<div class="col-md-2 col-md-offset-10">
-        															<button class="btn btn-primary vendor-price-btn" style="margin-right: 15px;">
-        																Next
-        															</button>
-        														</div>
-        													</div>
-        												{{--</form>--}}
-        											</div>
-        										</div>
-        									</div>
-        								</div>
-        							</div>
-        						</div>
+                                                            <div class="form-group">
+                                                                <div class="col-md-2 col-md-offset-10">
+                                                                    <button class="btn btn-primary vendor-price-btn" style="margin-right: 15px;">
+                                                                        Next
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        {{--</form>--}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Add Supplier Price-->
                                 <div class="modal fade" id="addSupplierPrice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -526,7 +518,7 @@
                                     <div class="col-sm-2 col-sm-offset-8">
                                         <button type="submit" class="btn btn-primary form-control" style="margin-right: 15px;">
                                             {{ trans('others.update_button') }}
-                                    	</button>
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -539,19 +531,18 @@
 
     <script type="text/javascript">
         $(".selections").select2();
-        // $(".select-color-list").select2();
-        // $(".select-size-list").select2();
+        $(".select-color-list").select2();
+        $(".select-size-list").select2();
 
-        var selectedColors = $(".select-color-list").select2();
-        var selectedSizes = $(".select-size-list").select2();
+        // var selectedColors = $(".select-color-list").select2();
+        // var selectedSizes = $(".select-size-list").select2();
 
-        var colors = {!! json_encode($colorsJs) !!};
-        var sizes = {!! json_encode($sizesJs) !!};
+        // var colors = {!! json_encode($colorsJs) !!};
+        // var sizes = {!! json_encode($sizesJs) !!};
 
-        console.log(sizes);
 
-        selectedColors.val(colors).trigger("change");
-        selectedSizes.val(sizes).trigger("change");
+        // selectedColors.val(colors).trigger("change");
+        // selectedSizes.val(sizes).trigger("change");
     </script>
 
     <script type="text/javascript">

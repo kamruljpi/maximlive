@@ -10,6 +10,8 @@ class Notification extends Model
 	CONST CREATE_MRF = 'create_mrf';
 	CONST CREATE_SPO = 'create_spo';
 
+	CONST GOODS_RECEIVE = 'goods_receive';
+
     protected $table = "mxp_notifications";
 
 	protected $fillable = [

@@ -65,7 +65,11 @@ class PartyController extends Controller
         if(!empty($names)) {
             foreach ($names as $name_) {
                 if($name_[0] != '(') {
-                    $sort_name_as .= $name_[0];                    
+
+                    $str = str_replace('/', '', $name_[0]);
+                    $str_n = trim($str, '/');
+
+                    $sort_name_as .= $str_n;                   
                 }
             }
         }else{
@@ -127,7 +131,7 @@ class PartyController extends Controller
 
     public function update(Request $request)
     {
-        /** make sort_name instead name**/
+        /** make sort_name instead name **/
         $name = isset($request->name) ? $request->name : '' ;
         $names = explode(' ', $name);
 
@@ -136,7 +140,10 @@ class PartyController extends Controller
         if(!empty($names)) {
             foreach ($names as $name_) {
                 if($name_[0] != '(') {
-                    $sort_name_as .= $name_[0];                    
+                    $str = str_replace('/', '', $name_[0]);
+                    $str_n = trim($str, '/');
+
+                    $sort_name_as .= $str_n;                    
                 }
             }
         }else{
@@ -167,7 +174,7 @@ class PartyController extends Controller
         $update_party->party_id               = $request->party_id;
         $update_party->user_id                = Auth::user()->user_id;
         $update_party->name                   = $request->name;
-        $update_party->sort_name              = strtoupper($sort_name_as);
+        $update_party->sort_name              = $request->sort_name;
         $update_party->name_buyer             = $request->name_buyer;
         $update_party->address_part1_invoice  = $request->address_part_1_invoice;
         $update_party->address_part2_invoice  = $request->address_part_2_invoice;

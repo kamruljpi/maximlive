@@ -179,8 +179,8 @@
 	        	<th width="">Material</th>
 	        	<th>Unit</th>
 	        	<th>Order Qty</th>
-	        	<th>Initial Increase(%)</th>
-	        	<th>Increase Qty</th>
+	        	{{-- <th>Initial Increase(%)</th> --}}
+	        	{{-- <th>Increase Qty</th> --}}
 	        	<th>Unit Price</th>
 	        	<th>Total Price</th>
             </thead>
@@ -212,24 +212,23 @@
 					<td>{{$details->material}}</td>
 					<td>{{(!empty($details->weight_qty))?$details->weight_qty:'PSC'}} </td>
 			        <td>{{$details->mrf_quantity}}</td>
-			        <td>{{$details->initial_increase}}</td>
-			        <td>
+			        {{-- <td>{{$details->initial_increase}}</td> --}}
+			        <!--<td>
 			        	<?php
 			        		$increase_qty = round((($details->mrf_quantity * $details->initial_increase)/100)+$details->mrf_quantity)+1;
 			        		echo $increase_qty;
 			        	?>
-			        </td>
+			        </td>-->
 			        <td>{{(!empty($details->supplier_price))?'$'.$details->supplier_price:''}}</td>
 			        <td>{{(!empty($details->mrf_quantity*$details->supplier_price))?'$'.$details->mrf_quantity*$details->supplier_price:''}}</td>
 	        	</tr>
         	@endforeach
         	<tr style="height: 30px;">
-        		<td colspan="13"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
-        		<td> {{$TotalPoQty}}</td>
+        		<td colspan="11"><span style="font-weight: bold;" class="pull-right">Total Quantity</span></td>
+        		<td colspan="3"> <div style="float: right;padding-right: 12px;">{{$TotalPoQty}}</div></td>
         		<td>US</td>
         		<td>{{(!empty($TotalPoPrice))?'$'.$TotalPoPrice:''}}</td>
-        		<td></td>
-        		<td></td>
+        		
         	</tr>
         </tbody>
     </table>

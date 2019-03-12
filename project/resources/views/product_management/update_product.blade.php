@@ -431,6 +431,15 @@
                                                             </div>
                                                         @endif
 
+                                                        <div class="row">
+                                                            <div class="col-sm-6"></div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group custom-search-form">
+                                                                    <input type="text" name="searchFld" class="form-control keyup_preloder" placeholder="Search" id="user_search">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                         @foreach($supplierPrices as $supplierPrice)
                                                             <input type="hidden" name="supplie_price_id[]" value="{{ $supplierPrice->supplier_price_id  }}" >
                                                             <input type="hidden" name="supplier_id[]" value="{{ $supplierPrice->supplier_id  }}" >

@@ -17,7 +17,7 @@ class AcceptedBooking extends Controller
 			MxpBookingBuyerDetails::where('booking_order_id',$request)->update([
 				'booking_status' => self::PROCESS_MESSAGE,
 				'accepted_user_id' => Auth::user()->user_id,
-				'accepted_date_at' => Carbon::today(),
+				'accepted_date_at' => Carbon::now(),
 			]);
 			return redirect()->back()->with('data', self::PROCESS_MESSAGE);
 		} catch (Exception $e) {

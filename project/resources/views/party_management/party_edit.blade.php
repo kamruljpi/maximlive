@@ -1,6 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading',
-trans('others.update_party_label'))
+@section('page_heading','Update Vender')
 @section('section')
 <div class="container-fluid">
     <div class="row">
@@ -21,7 +20,7 @@ trans('others.update_party_label'))
                 </div>
             @endif
             <div class="panel panel-default">
-                <div class="panel-heading">{{ trans('others.update_party_label') }}</div>
+                <div class="panel-heading">Update Vender</div>
                 <div class="panel-body">
                     @foreach($party_edits as $party_edit)
                         <form class="form-horizontal" action="{{ Route('party_edit_action') }}/{{$party_edit->id}}" role="form" method="POST" >

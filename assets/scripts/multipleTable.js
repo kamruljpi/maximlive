@@ -145,8 +145,10 @@ $(document).ready(function(){
           success: function(result) {
               var myObj = JSON.parse(result);
               // console.log(myObj);
-              if(myObj.length === 0)
+              if(myObj.length == 0)
               {
+                alert('Please check the Item code or Mismatch Item code. There are no data found. Please contact with PID team.');
+                
                 $('.'+item_parent_class+' .erpNo').attr("disabled","true");
                 $('.'+item_parent_class+' .itemSize').attr("disabled","true");
                 $('.'+item_parent_class+' .itemGmtsColor').attr("readonly","true");
@@ -170,7 +172,7 @@ $(document).ready(function(){
                   $('.'+item_parent_class+' .item_qty').eq(0).val('');                
 
                 
-              }else{
+              }else {
 
                 for(ik in myObj){
                   // $('.'+item_parent_class+' .erpNo').html($('<option>', {

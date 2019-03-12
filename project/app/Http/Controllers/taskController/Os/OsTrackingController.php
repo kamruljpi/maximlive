@@ -27,7 +27,7 @@ class OsTrackingController extends Controller
                 ->select($this->mrf())
                 ->orderBy('mxp_mrf_table.job_id_current_status','ASC')
                 ->orderBy('mxp_mrf_table.job_id','DESC')
-                ->paginate(20);
+                ->paginate(100);
 
         if (!empty($bookingList[0]->job_id)) {
             foreach ($bookingList as &$bookingList_value) {

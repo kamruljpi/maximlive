@@ -148,8 +148,10 @@
                                     @foreach($value->itemLists as $valuelist)
                                         <?php
                                             $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($valuelist->id));
+                                            
                                             $str = str_replace('$', '', $valuelist->item_price);
                                             $str_item_price = trim($str, '$');
+
                                             $TotalAmount += $valuelist->item_quantity*$str_item_price;
                                             $fullTotalAmount += $valuelist->item_quantity*$str_item_price;
                                         ?>
@@ -195,7 +197,7 @@
                                                 
                                                     <input type="hidden" name="order_status[]" value="Mrf Accepted" >
 
-                                                    <span class="{{ $value->booking_status }}">Mrf Accepted</span>
+                                                    <p class="{{ $value->booking_status }}">Mrf Accepted</p>
                                                  
                                                 @else
                                                     <span class="{{ $value->booking_status }}">{{ $value->booking_status }} </span>    

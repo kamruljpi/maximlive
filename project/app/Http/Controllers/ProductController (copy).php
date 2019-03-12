@@ -217,10 +217,11 @@ class ProductController extends Controller
         $missing_vendor = array_diff($array1,$array2);
 
         if(isset($missing_vendor) && !empty($missing_vendor)){
-            foreach ($missing_vendor as $key => $missing_vendor_value) {
-                # code...
-            }
-            $vendorCompanyListPrice->missingParty = MaxParty::where('id',$missing_vendor_value)->get();
+            // foreach ($missing_vendor as $key => $missing_vendor_value) {
+            //     # code...
+            // }
+            
+             $vendorCompanyListPrice->missingParty = MaxParty::whereIn('id',$missing_vendor)->get();
         }
 
         /* end*/
@@ -296,7 +297,12 @@ class ProductController extends Controller
 
         $validationError = $validator->messages();
         $description_name = MxpItemDescription::where('id',$request->p_description)->select('name')->first();
+
         $buyer_name = buyer::where('id_mxp_buyer',$request->id_buyer)->select('buyer_name')->first();
+
+        $str_price = str_replace('$', '', $request->p_unit_price);
+        $p_unit_price = trim($str_price, '$');
+
         $createProduct = new MxpProduct();
         $createProduct->product_code = $request->p_code;
         $createProduct->product_name = $request->p_name;
@@ -306,7 +312,7 @@ class ProductController extends Controller
         $createProduct->brand = htmlspecialchars($buyer_name->buyer_name);
         $createProduct->erp_code = $request->p_erp_code;
         $createProduct->item_inc_percentage = $request->item_inc_percentage;
-        $createProduct->unit_price = $request->p_unit_price;
+        $createProduct->unit_price = $p_unit_price;
         $createProduct->weight_qty = $request->p_weight_qty;
         $createProduct->weight_amt = $request->p_weight_amt;
         $createProduct->user_id = Auth::user()->user_id;
@@ -319,7 +325,9 @@ class ProductController extends Controller
         $createProduct->save();
 
         $lastProId = $createProduct->product_id;
+
         $this->addVendorPrice($request, $lastProId);
+
         SupplierController::saveSupplierProductPrice($request, $lastProId);
 
        for ($i=0; $i<count($request->colors); $i++){
@@ -391,7 +399,12 @@ class ProductController extends Controller
         $validationError = $validator->messages();
 
         $description_name = MxpItemDescription::where('id',$request->p_description)->select('name')->first();
+
         $buyer_name = buyer::where('id_mxp_buyer',$request->id_buyer)->select('buyer_name')->first();
+
+        $str_price = str_replace('$', '', $request->p_unit_price);
+        $p_unit_price = trim($str_price, '$');
+
         $updateProduct = MxpProduct::find($request->product_id);
         $updateProduct->product_code = $request->p_code;
         $updateProduct->product_name = $request->p_name;
@@ -401,13 +414,9 @@ class ProductController extends Controller
         $updateProduct->erp_code = $request->p_erp_code;
         $updateProduct->item_inc_percentage = $request->item_inc_percentage;
         $updateProduct->item_description_id = $request->p_description;
-        $updateProduct->unit_price = $request->p_unit_price;
+        $updateProduct->unit_price = $p_unit_price;
         $updateProduct->weight_qty = $request->p_weight_qty;
         $updateProduct->weight_amt = $request->p_weight_amt;
-        // $updateProduct->description_1 = $request->p_description1;
-        // $updateProduct->description_2 = $request->p_description2;
-        // $updateProduct->description_3 = $request->p_description3;
-        // $updateProduct->description_4 = $request->p_description4;
         $updateProduct->user_id = Auth::user()->user_id;
         $updateProduct->status = $request->is_active;
         $updateProduct->id_buyer = $request->id_buyer;

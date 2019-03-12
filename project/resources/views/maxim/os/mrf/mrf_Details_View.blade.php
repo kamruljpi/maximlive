@@ -229,7 +229,7 @@
 
                                 @elseif($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id == $values->current_status_accepted_user_id)
 
-                                    <a href="{{Route('os_mrf_jobid_cancel')}}/{{$values->job_id}}" class="btn btn-primary">
+                                    <a href="{{Route('os_mrf_jobid_cancel')}}/{{$values->job_id}}" class="btn btn-success">
                                         Cancel
                                     </a>
 
@@ -260,7 +260,7 @@
                 <div class="form-group">
                     <div class="col-sm-7"></div>
                     <div class="col-sm-3">
-                        <input type="text" name="po_increase" class="form-control po_increase_field" id="po_increase" placeholder="Increase value" style="border-color: red;">
+                        {{-- <input type="text" name="po_increase" class="form-control po_increase_field" id="po_increase" placeholder="Increase value" style="border-color: red;"> --}}
                     </div>
                     <div class="col-sm-2 pull-right">
                         <button class="btn btn-success form-control abc"> Submit</button>

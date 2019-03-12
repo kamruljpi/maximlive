@@ -132,7 +132,11 @@
                             <?php
                                 $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($value->job_id));
                                 $total_qty += $value->mrf_quantity;
-                                $price = $value->mrf_quantity * $value->os_po->supplier_price;
+
+                                $str = str_replace('$', '', $value->os_po->supplier_price);
+                                $str_supplier_price = trim($str, '$');
+
+                                $price = $value->mrf_quantity * $str_supplier_price;
                                 $total_price += $price;
                             ?>
                             <tr id="booking_list_table">
@@ -196,7 +200,8 @@
 
                                 <td><input name="mrf_quantity[]" value="{{$value->mrf_quantity}}" type="hidden">{{$value->mrf_quantity}}</td>
 
-                                <td><input name="supplier_price[]" value="{{$value->os_po->supplier_price}}" type="hidden">{{($value->os_po->supplier_price != '')?'$'.$value->os_po->supplier_price : ''}}</td>
+                                <td><input name="supplier_price[]" value="{{$value->os_po->supplier_price}}" type="hidden">{{($value->os_po->supplier_price != '')?'$'.$str_supplier_price : ''}}</td>
+                                
                                 <td><input name="total_price[]" value="{{$price}}" type="hidden">{{($price != 0)?'$'.$price : ''}}</td>
                             </tr>
                         @endforeach

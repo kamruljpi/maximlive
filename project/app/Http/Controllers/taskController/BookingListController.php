@@ -52,14 +52,16 @@ class BookingListController extends Controller
             $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
                 ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
                 ->whereIn('buyer_name',$this->getUserByerNameList()) // use trait class
-                ->orderBy('booking_status')
+                // ->orderBy('booking_status')
+                ->orderBy('id','DESC')
                 ->paginate(15);
 
         }else if(Auth::user()->type == 'super_admin'){
 
             $bookingList = MxpBookingBuyerDetails::groupBy('booking_order_id')
                 ->where('is_deleted',BookingFulgs::IS_NOT_DELETED)
-                ->orderBy('booking_status')
+                // ->orderBy('booking_status')
+                ->orderBy('id','DESC')
                 ->paginate(15);
 
         }else{

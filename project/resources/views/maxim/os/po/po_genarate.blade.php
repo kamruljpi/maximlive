@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
-@section('page_heading','New PO Genarate')
+@section('page_heading','New SPO Genarate')
 @section('section')
 <?php 
 	//print_r("<pre>");
@@ -11,7 +11,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-sm-2">
-			<div class="form-group ">
+			<div class="form-group">
 				<a href="{{ URL::previous() }}" class="btn btn-primary " style="width: 100%; margin: 10px 0px 5px 0px;">
 				<i class="fa fa-arrow-left"></i> Back</a>
 			</div>
@@ -32,7 +32,7 @@
 	<div class="row">
 		<div class="col-md-12 col-md-offset-0">
 			<div class="panel panel-default">
-				<div class="panel-heading">New PO Genarate</div>
+				<div class="panel-heading">New SPO Genarate</div>
 				<div class="panel-body aaa">
 					<form class="form-horizontal" role="form" method="POST" action="{{ Route('os_po_genarate_report_action') }}" target="_blank">
 						{{ csrf_field() }}
@@ -80,8 +80,8 @@
 									<th width="">Item Color</th>
 									<th width="">Size</th>
 									<th width="">Quantity</th>
-									<th width="">Initial Increase(%)</th>
-									<th style="min-width: 100px;">Increase Qty</th>
+									{{-- <th width="">Initial Increase(%)</th> --}}
+									{{-- <th style="min-width: 100px;">Increase Qty</th> --}}
 									<th width="30%">Supplier Price</th>
 									<th width="50%">Material</th>
 								</tr>
@@ -105,15 +105,18 @@
 											<input style="" type="text" class="form-control mrf_quantity hidden" name="mrf_qty[]" value="{{ $values->mrf_quantity }}" >
 											{{ $values->mrf_quantity }}
 										</td>
-										<td>
+
+										<!--<td>
 											<input type="text" name="po_increase_percentage[]" value="{{$increase_value}}" placeholder="Percentage" class="form-control" maxlength="3">
-										</td>
-										<td> 
+										</td> -->
+
+										<!-- <td> 
 											<?php
 												$increase_qty = round((($values->mrf_quantity * $increase_value)/100) + $values->mrf_quantity)+1;
 											?>
 											<input type="text" name="increase_qtys[]" class="form-control " readonly="true" value="{{$increase_qty}}" >
-										</td>
+										</td> -->
+
 										<td>
 											<input type="text" name="supplier_price[]" class="form-control" value="{{$values->item_price->supplier_price}}" readonly="true">
 										</td>

@@ -42,17 +42,22 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
+
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {                    
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect('/')->with('message', 'Sorry, your session seems to have expired. Please login again.');
         }
-
-        // return view('401_error_page');
         
-        return parent::render($request, $exception);
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException){
+            return redirect('/');
+        }
+        
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException){
+            return redirect('/');
+        }
 
-        // return parent::render($request, $exception);
+        return parent::render($request, $exception);
     }
 
     /**

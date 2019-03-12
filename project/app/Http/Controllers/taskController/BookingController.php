@@ -2,40 +2,37 @@
 
 namespace App\Http\Controllers\taskController;
 
-use App\Http\Controllers\dataget\ListGetController;
-use App\Http\Controllers\Message\StatusMessage;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\BookingListController;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\RoleManagement;
-use App\Model\BookingFile;
-use App\Model\MxpPi;
-use App\MxpProduct;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Message\ActionMessage;
 use App\Model\MxpBookingBuyerDetails;
-use App\Model\MxpBookingChallan;
-use App\Model\MxpBooking;
-use App\VendorPrice;
 use App\MxpItemsQntyByBookingChallan;
-use Validator;
-use Auth;
-use DB;
-use App\User;
+use App\Http\Controllers\Controller;
+use App\Model\MxpItemDescription;
+use App\Model\MxpBookingChallan;
+use Illuminate\Http\Request;
+use App\Model\BookingFile;
+use App\Model\MxpBooking;
+use App\Model\Os\MxpOsPo;
 use App\Notification;
 use App\Model\MxpMrf;
-use App\MxpIpo;
-use App\Http\Controllers\taskController\BookingListController;
+use App\VendorPrice;
+use App\Model\MxpPi;
+use App\MxpProduct;
 use App\userbuyer;
-use App\Http\Controllers\Source\User\UserAccessBuyerList;
-use App\Http\Controllers\Message\ActionMessage;
-use Redirect;
-use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-use App\Http\Controllers\taskController\Flugs\HeaderType;
-use App\Model\MxpItemDescription;
-use Carbon;
-use Session;
-use App\Model\Os\MxpOsPo;
-use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
 use App\MxpDraft;
+use App\MxpIpo;
+use Validator;
+use Redirect;
+use App\User;
+use Session;
+use Carbon;
+use Auth;
+use DB;
 
 class BookingController extends Controller
 { 
@@ -105,8 +102,6 @@ class BookingController extends Controller
       $order_submit = isset($request->order_submit) ? $request->order_submit : '';
       $booking_number = isset($request['booking_number']) ? $request['booking_number'] : '' ;
 
-      $roleManage = new RoleManagement();
-
       $validMessages = [
             'item_code.required' => 'Brand Name field is required.',
             'poCatNo.required' => 'Po/Cat number field is required',
@@ -174,6 +169,13 @@ class BookingController extends Controller
         return (new DraftBooking())->storeOrderDraft($request,$customid);
       }
 
+      /**
+       *  if shipment date 12/12/12 then replace 12-12-12
+       */
+        $str_shipmentDate = str_replace('/', '-', $request->shipmentDate);
+
+      // end
+
       foreach ($buyerDetails as $buyers) {
         $InserBuyerDetails = new MxpBookingBuyerDetails();
         $InserBuyerDetails->user_id = Auth::user()->user_id;
@@ -193,7 +195,7 @@ class BookingController extends Controller
         $InserBuyerDetails->mobile_delivery       = $buyers->mobile_delivery;
         $InserBuyerDetails->telephone_delivery    = $buyers->telephone_delivery;
         $InserBuyerDetails->fax_delivery          = $buyers->fax_delivery;
-        $InserBuyerDetails->shipmentDate          = $request->shipmentDate;
+        $InserBuyerDetails->shipmentDate          = $str_shipmentDate;
         $InserBuyerDetails->booking_status        = BookingFulgs::BOOKED_FLUG;
         $InserBuyerDetails->last_action_at        = BookingFulgs::LAST_ACTION_CREATE;
         $InserBuyerDetails->is_complete           = BookingFulgs::IS_COMPLETE;
@@ -211,11 +213,22 @@ class BookingController extends Controller
 
           $item_details = MxpProduct::where('product_code',$item_code[$i])->get();
           
+          // qty trim ","
           $str_qty = str_replace(',', '', $item_qty[$i]);
           $str_item_qty = trim($str_qty, ',');
 
+          // price trim "$"
           $str_price = str_replace('$', '', $item_price[$i]);
           $str_item_price = trim($str_price, '$');
+
+          // style add comma and space (", ") 
+          $str_oos_number = str_replace(',', ', ', $oos_number[$i]);
+
+          // style add comma and space (", ") 
+          $str_poCatNo = str_replace(',', ', ', $poCatNo[$i]);
+
+          // style add comma and space (", ") 
+          $str_style = str_replace(',', ', ', $style[$i]);
 
           $insertBooking = new MxpBooking();
           $insertBooking->user_id           = Auth::user()->user_id;
@@ -226,15 +239,15 @@ class BookingController extends Controller
           $insertBooking->gmts_color        = $item_gmts_color[$i];
           $insertBooking->others_color      = (!empty($others_color[$i]) ? $others_color[$i] : '');
           $insertBooking->item_description  = (!empty($item_description[$i]) ? $item_description[$i] : '');
-          $insertBooking->oos_number        = (!empty($oos_number[$i]) ? $oos_number[$i] : '');
-          $insertBooking->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
-          $insertBooking->style             = (!empty($style[$i]) ? $style[$i] : '');
+          $insertBooking->oos_number        = (!empty($str_oos_number) ? $str_oos_number : '');
+          $insertBooking->poCatNo           = (!empty($str_poCatNo) ? $str_poCatNo : '');
+          $insertBooking->style             = (!empty($str_style) ? $str_style : '');
           $insertBooking->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
           $insertBooking->item_quantity     = $str_item_qty;
           $insertBooking->item_price        = $str_item_price;
           $insertBooking->orderDate         = $request->orderDate;
           $insertBooking->orderNo           = $request->orderNo;
-          $insertBooking->shipmentDate      = $request->shipmentDate;
+          $insertBooking->shipmentDate      = $str_shipmentDate;
           $insertBooking->season_code       = $request->season_code;
           $insertBooking->item_size_width_height = $item_details[0]->item_size_width_height;
           $insertBooking->is_type           = $request->is_type;
@@ -253,16 +266,16 @@ class BookingController extends Controller
           $insertBookingChallan->gmts_color        = $item_gmts_color[$i];
           $insertBookingChallan->others_color      = (!empty($others_color[$i]) ? $others_color[$i] : '');
           $insertBookingChallan->item_description  = (!empty($item_description[$i]) ? $item_description[$i] : '');
-          $insertBookingChallan->oos_number        = (!empty($oos_number[$i]) ? $oos_number[$i] : '');
-          $insertBookingChallan->poCatNo           = (!empty($poCatNo[$i]) ? $poCatNo[$i] : '');
-          $insertBookingChallan->style             = (!empty($style[$i]) ? $style[$i] : '');
+          $insertBookingChallan->oos_number        = (!empty($str_oos_number) ? $str_oos_number : '');
+          $insertBookingChallan->poCatNo           = (!empty($str_poCatNo) ? $str_poCatNo : '');
+          $insertBookingChallan->style             = (!empty($str_style) ? $str_style : '');
           $insertBookingChallan->item_size         = (!empty($item_size[$i]) ? $item_size[$i] : '');
           $insertBookingChallan->item_quantity     = $str_item_qty;
           $insertBookingChallan->left_mrf_ipo_quantity     = $str_item_qty;
           $insertBookingChallan->item_price        = $str_item_price;
           $insertBookingChallan->orderDate         = $request->orderDate;
           $insertBookingChallan->orderNo           = $request->orderNo;
-          $insertBookingChallan->shipmentDate      = $request->shipmentDate;
+          $insertBookingChallan->shipmentDate      = $str_shipmentDate;
           $insertBookingChallan->season_code       = $request->season_code;
           $insertBookingChallan->last_action_at    = BookingFulgs::LAST_ACTION_CREATE;
           $insertBookingChallan->item_size_width_height       = $item_details[0]->item_size_width_height;
@@ -409,225 +422,251 @@ class BookingController extends Controller
   public function updateBookingView(Request $request){
     $description = MxpItemDescription::where('is_active',ActionMessage::ACTIVE)->get();
     if(isset($request->job_id) && !empty($request->job_id)){
-      $mxpBooking = MxpBooking::where([
-                  ['is_deleted',BookingFulgs::IS_NOT_DELETED],
-                  ['id',$request->job_id]
+      $mxpBooking = MxpBooking::join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mxp_booking.booking_order_id')
+                ->where([
+                  ['mxp_booking.is_deleted',BookingFulgs::IS_NOT_DELETED],
+                  ['mxp_booking.id',$request->job_id],
+                  ['mbd.booking_status',BookingFulgs::BOOKED_FLUG]
                 ])
+                ->select('mxp_booking.*')
                 ->first();
 
-      $pi_value = MxpPi::where([
-              ['job_no',$request->job_id],
-              ['is_deleted',BookingFulgs::IS_NOT_DELETED]
-            ])
-            ->select('p_id','booking_order_id','item_code','item_quantity','item_size','item_price')
-            ->first();
+      if(!empty($mxpBooking)) {
+        $pi_value = MxpPi::where([
+                ['job_no',$request->job_id],
+                ['is_deleted',BookingFulgs::IS_NOT_DELETED]
+              ])
+              ->select('p_id','booking_order_id','item_code','item_quantity','item_size','item_price')
+              ->first();
+      }else{
+        $booking_order_id = (MxpBooking::where([['mxp_booking.is_deleted',BookingFulgs::IS_NOT_DELETED],['mxp_booking.id',$request->job_id]])->first())->booking_order_id;
+        return redirect()->Route('booking_list_details_view', $booking_order_id)->with('message',"This job id is proccessing.");
+      }
     }
     
     $party_id = $request->party_id;
 
-    // $this->print_me($pi_value);
+    // $this->print_me($mxpBooking);
     return view('maxim.booking_list.booking_update',compact('description','mxpBooking','party_id','pi_value'));
   }
 
   public function updateBooking(Request $request){
-
 
     $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($request->booking_id));
     $job_id_id = str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount).$request->booking_id;
 
     $insertBooking = MxpBooking::where('id', $request->booking_id)->first();
     $mxp_pi = MxpPi::where('job_no', $request->booking_id)->first();
-    // self::print_me($mxp_pi);
+
+    // oos_number add comma and space (", ") 
+    $str_oos_number = str_replace(',', ', ', $request->oos_number);
+
+    // poCatNo add comma and space (", ") 
+    $str_poCatNo = str_replace(',', ', ', $request->poCatNo);
+
+    // style add comma and space (", ") 
+    $str_style = str_replace(',', ', ', $request->style);
       
-      if(!empty($mxp_pi)) {
-        $mxp_pi->item_description = $request->item_description;
-        $mxp_pi->oos_number = $request->oos_number;
-        $mxp_pi->style = $request->style;
-        $mxp_pi->poCatNo = $request->poCatNo;
-        $mxp_pi->item_code = $request->item_code;
-        $mxp_pi->gmts_color = $request->gmts_color;
-        $mxp_pi->item_size = $request->item_size;
-        $mxp_pi->sku = $request->sku;
-        $mxp_pi->item_quantity = $request->item_qty;
-        $mxp_pi->item_price = $request->item_price;
-        $mxp_pi->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
-        $mxp_pi->save();
+    if(!empty($mxp_pi)) {
+      $mxp_pi->item_description = $request->item_description;
+      $mxp_pi->oos_number = $str_oos_number;
+      $mxp_pi->poCatNo = $str_poCatNo;
+      $mxp_pi->style = $str_style;
+      $mxp_pi->item_code = $request->item_code;
+      $mxp_pi->gmts_color = $request->gmts_color;
+      $mxp_pi->item_size = $request->item_size;
+      $mxp_pi->sku = $request->sku;
+      $mxp_pi->item_quantity = $request->item_qty;
+      $mxp_pi->item_price = $request->item_price;
+      $mxp_pi->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
+      $mxp_pi->save();
 
-        $msg = $job_id_id." Job id Successfully updated.";
+      $msg = $job_id_id." Job id Successfully updated.";
 
-      }else{
-        $msg = "Something went wrong please try again later"; 
-      }
-
-      if(isset($insertBooking) && !empty($insertBooking)){
-
-        $insertBooking->item_description = $request->item_description;
-        $insertBooking->oos_number = $request->oos_number;
-        $insertBooking->style = $request->style;
-        $insertBooking->poCatNo = $request->poCatNo;
-        $insertBooking->item_code = $request->item_code;
-        $insertBooking->gmts_color = $request->gmts_color;
-        $insertBooking->item_size = $request->item_size;
-        $insertBooking->sku = $request->sku;
-        $insertBooking->item_quantity = $request->item_qty;
-        $insertBooking->item_price = $request->item_price;
-        $insertBooking->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
-        $insertBooking->save();
-
-
-        $msg = $job_id_id." Job id Successfully updated.";
-
-
-      }else{
-
-        $msg = "Something went wrong please try again later"; 
-      }
-
-      $insertBookingChallan = MxpBookingChallan::where('id', $request->booking_id)->first();
-
-      if(isset($insertBookingChallan) && !empty($insertBookingChallan)){
-        $insertBookingChallan->item_description = $request->item_description;
-        $insertBookingChallan->oos_number = $request->oos_number;
-        $insertBookingChallan->style = $request->style;
-        $insertBookingChallan->poCatNo = $request->poCatNo;
-        $insertBookingChallan->item_code = $request->item_code;
-        $insertBookingChallan->gmts_color = $request->gmts_color;
-        $insertBookingChallan->item_size = $request->item_size;
-        $insertBookingChallan->sku = $request->sku;
-        $insertBookingChallan->item_quantity = $request->item_qty;
-        $insertBookingChallan->left_mrf_ipo_quantity = $request->item_qty;
-        $insertBookingChallan->item_price = $request->item_price;
-        $insertBookingChallan->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
-        $insertBookingChallan->save();
-
-        $msg = $job_id_id." Job id Successfully updated.";
-
-      }else{
-        $msg = "Something went wrong please try again later.";
-      }
-
-      Session::flash('message', $msg);
-
-      return redirect()->route('booking_list_details_view', $insertBooking->booking_order_id);
+    }else{
+      $msg = "Something went wrong please try again later"; 
     }
 
-    public function cancelBooking($id){
-      
-      $booking = MxpBooking::where('booking_order_id', $id)->get();
+    if(isset($insertBooking) && !empty($insertBooking)){
+      $insertBooking->item_description = $request->item_description;
+      $insertBooking->oos_number = $str_oos_number;
+      $insertBooking->poCatNo = $str_poCatNo;
+      $insertBooking->style = $str_style;
+      $insertBooking->item_code = $request->item_code;
+      $insertBooking->gmts_color = $request->gmts_color;
+      $insertBooking->item_size = $request->item_size;
+      $insertBooking->sku = $request->sku;
+      $insertBooking->item_quantity = $request->item_qty;
+      $insertBooking->item_price = $request->item_price;
+      $insertBooking->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
+      $insertBooking->save();
 
-      if(isset($booking) && !empty($booking)){
-        foreach ($booking as $value) {
+      $msg = $job_id_id." Job id Successfully updated.";
+    }else{
+      $msg = "Something went wrong please try again later"; 
+    }
+
+    $insertBookingChallan = MxpBookingChallan::where('id', $request->booking_id)->first();
+
+    if(isset($insertBookingChallan) && !empty($insertBookingChallan)){
+      $insertBookingChallan->item_description = $request->item_description;
+      $insertBookingChallan->oos_number = $str_oos_number;
+      $insertBookingChallan->style = $str_style;
+      $insertBookingChallan->poCatNo = $str_poCatNo;
+      $insertBookingChallan->item_code = $request->item_code;
+      $insertBookingChallan->gmts_color = $request->gmts_color;
+      $insertBookingChallan->item_size = $request->item_size;
+      $insertBookingChallan->sku = $request->sku;
+      $insertBookingChallan->item_quantity = $request->item_qty;
+      $insertBookingChallan->left_mrf_ipo_quantity = $request->item_qty;
+      $insertBookingChallan->item_price = $request->item_price;
+      $insertBookingChallan->last_action_at = BookingFulgs::LAST_ACTION_UPDATE;
+      $insertBookingChallan->save();
+
+      $msg = $job_id_id." Job id Successfully updated.";
+
+    }else{
+      $msg = "Something went wrong please try again later.";
+    }
+
+    Session::flash('message', $msg);
+
+    return redirect()->route('booking_list_details_view', $insertBooking->booking_order_id);
+  }
+
+  public function cancelBooking($id){
+
+    $InserBuyerDetails = MxpBookingBuyerDetails::where([['booking_order_id', $id],['booking_status',BookingFulgs::BOOKED_FLUG]])->get();
+
+    $booking = MxpBooking::where('booking_order_id', $id)->get();
+
+    if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
+      foreach ($booking as $value) {
+        $value->is_deleted = BookingFulgs::IS_DELETED;
+        $value->deleted_user_id = Auth::User()->user_id;
+        $value->deleted_date_at = Carbon\Carbon::now();
+        $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+        $value->save();
+        $msg = "Booking ".$id." canceled"; 
+      }
+
+      $booking_challan = MxpBookingChallan::where('booking_order_id', $id)->get();
+
+      if(isset($booking_challan) && !empty($booking_challan[0]->booking_order_id)){
+          foreach ($booking_challan as $booking_challan_value) {
+              $booking_challan_value->is_deleted = BookingFulgs::IS_DELETED;
+              $booking_challan_value->deleted_user_id = Auth::User()->user_id;
+              $booking_challan_value->deleted_date_at = Carbon\Carbon::now();
+              $booking_challan_value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+              $booking_challan_value->save();
+              $msg = "Booking ".$id." canceled";
+          }
+
+      }else{
+          $error = "Something went wrong on Booking Challan Table please try again later";
+      }
+
+      if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
+          foreach ($InserBuyerDetails as $value) {
+              $value->is_deleted = BookingFulgs::IS_DELETED;
+              $value->deleted_user_id = Auth::User()->user_id;
+              $value->deleted_date_at = Carbon\Carbon::now();
+              $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
+              $value->save();
+              $msg = "Booking ".$id." canceled";
+          }
+
+      }else{
+          $error = "Something went wrong on Buyer Details table please try again later";
+      }
+
+      $pi_value = MxpPi::where('booking_order_id', $id)->get();
+
+      if(isset($pi_value) && !empty($pi_value)) {
+        foreach ($pi_value as $value) {
           $value->is_deleted = BookingFulgs::IS_DELETED;
           $value->deleted_user_id = Auth::User()->user_id;
           $value->deleted_date_at = Carbon\Carbon::now();
-          $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
           $value->save();
-          $msg = "Booking ".$id." canceled"; 
         }
-
-        $booking_challan = MxpBookingChallan::where('booking_order_id', $id)->get();
-
-        if(isset($booking_challan) && !empty($booking_challan[0]->booking_order_id)){
-            foreach ($booking_challan as $booking_challan_value) {
-                $booking_challan_value->is_deleted = BookingFulgs::IS_DELETED;
-                $booking_challan_value->deleted_user_id = Auth::User()->user_id;
-                $booking_challan_value->deleted_date_at = Carbon\Carbon::now();
-                $booking_challan_value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-                $booking_challan_value->save();
-                $msg = "Booking ".$id." canceled";
-            }
-
-        }else{
-            $error = "Something went wrong on Booking Challan Table please try again later";
-        }
-
-        $InserBuyerDetails = MxpBookingBuyerDetails::where('booking_order_id', $id)->get();
-
-        if(isset($InserBuyerDetails) && !empty($InserBuyerDetails)){
-            foreach ($InserBuyerDetails as $value) {
-                $value->is_deleted = BookingFulgs::IS_DELETED;
-                $value->deleted_user_id = Auth::User()->user_id;
-                $value->deleted_date_at = Carbon\Carbon::now();
-                $value->last_action_at = BookingFulgs::LAST_ACTION_DELETE;
-                $value->save();
-                $msg = "Booking ".$id." canceled";
-            }
-
-        }else{
-            $error = "Something went wrong on Buyer Details table please try again later";
-        }
-
-        $pi_value = MxpPi::where('booking_order_id', $id)->get();
-
-        if(isset($pi_value) && !empty($pi_value)) {
-          foreach ($pi_value as $value) {
-            $value->is_deleted = BookingFulgs::IS_DELETED;
-            $value->deleted_user_id = Auth::User()->user_id;
-            $value->deleted_date_at = Carbon\Carbon::now();
-            $value->save();
-          }
-        }
-
-        // $ipo = MxpIpo::where('booking_order_id', $id)->get();
-
-        // if(isset($ipo) && !empty($ipo[0]->ipo_id)) {
-        //   foreach ($ipo as $ipovalue) {
-        //     $ipovalue->is_deleted = BookingFulgs::IS_DELETED;
-        //     $ipovalue->deleted_user_id = Auth::User()->user_id;
-        //     $ipovalue->deleted_date_at = Carbon\Carbon::now();
-        //     $ipovalue->save();
-        //   }
-        // }
-
-        // $mrf_value = MxpMrf::where('booking_order_id', $id)->get();
-
-        //  if(isset($mrf_value) && !empty($mrf_value[0]->mrf_id)) {
-        //   foreach ($mrf_value as $mrfvalue) {
-        //     $mrfvalue->is_deleted = BookingFulgs::IS_DELETED;
-        //     $mrfvalue->deleted_user_id = Auth::User()->user_id;
-        //     $mrfvalue->deleted_date_at = Carbon\Carbon::now();
-        //     $mrfvalue->save();
-        //   }
-        // $os_po_value = MxpOsPo::where('mrf_id', $mrf_value[0]->mrf_id)->get();
-        // }
-
-        // if(isset($os_po_value) && !empty($os_po_value[0]->mrf_id)) {
-        //   foreach ($os_po_value as $osPoValue) {
-        //     $osPoValue->is_deleted = BookingFulgs::IS_DELETED;
-        //     $osPoValue->deleted_user_id = Auth::User()->user_id;
-        //     $osPoValue->save();
-        //   }
-        // }
-        
-      }else{
-        $error = "Something went wrong please on booking table try again later ";
       }
 
-        Session::flash('message', $msg);
-        Session::flash('error-m', $error);
+      // $ipo = MxpIpo::where('booking_order_id', $id)->get();
+
+      // if(isset($ipo) && !empty($ipo[0]->ipo_id)) {
+      //   foreach ($ipo as $ipovalue) {
+      //     $ipovalue->is_deleted = BookingFulgs::IS_DELETED;
+      //     $ipovalue->deleted_user_id = Auth::User()->user_id;
+      //     $ipovalue->deleted_date_at = Carbon\Carbon::now();
+      //     $ipovalue->save();
+      //   }
+      // }
+
+      // $mrf_value = MxpMrf::where('booking_order_id', $id)->get();
+
+      //  if(isset($mrf_value) && !empty($mrf_value[0]->mrf_id)) {
+      //   foreach ($mrf_value as $mrfvalue) {
+      //     $mrfvalue->is_deleted = BookingFulgs::IS_DELETED;
+      //     $mrfvalue->deleted_user_id = Auth::User()->user_id;
+      //     $mrfvalue->deleted_date_at = Carbon\Carbon::now();
+      //     $mrfvalue->save();
+      //   }
+      // $os_po_value = MxpOsPo::where('mrf_id', $mrf_value[0]->mrf_id)->get();
+      // }
+
+      // if(isset($os_po_value) && !empty($os_po_value[0]->mrf_id)) {
+      //   foreach ($os_po_value as $osPoValue) {
+      //     $osPoValue->is_deleted = BookingFulgs::IS_DELETED;
+      //     $osPoValue->deleted_user_id = Auth::User()->user_id;
+      //     $osPoValue->save();
+      //   }
+      // }
       
-      return Redirect()->back();
+    }else{
+      $error = "Something went wrong please check on booking status and try again later ";
     }
 
-    public function bookingJobIdDelete(Request $request){
-      $idstrcount = (8 - strlen($request->id));
-      $job_id_id = str_repeat('0',$idstrcount).$request->id;
+      Session::flash('message', $msg);
+      Session::flash('error-m', $error);
+    
+    return Redirect()->back();
+  }
 
-      MxpBooking::where('id', $request->id)->update([
-        'is_deleted' => BookingFulgs::IS_DELETED,
-        'deleted_user_id' => Auth::User()->user_id,
-        'deleted_date_at' =>  Carbon\Carbon::now(),
-        'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
-      ]);
+  public function bookingJobIdDelete(Request $request){
+    $idstrcount = (JobIdFlugs::JOBID_LENGTH - strlen($request->id));
+    $job_id_id = str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount).$request->id;
 
-      MxpBookingChallan::where('job_id', $request->id)->update([
-        'is_deleted' => BookingFulgs::IS_DELETED,
-        'deleted_user_id' => Auth::User()->user_id,
-        'deleted_date_at' =>  Carbon\Carbon::now(),
-        'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
-      ]);
+    if(isset($request->id) && !empty($request->id)) {
+      $mxpBooking = MxpBooking::join('mxp_bookingbuyer_details as mbd','mbd.booking_order_id','mxp_booking.booking_order_id')
+                ->where([
+                  ['mxp_booking.is_deleted',BookingFulgs::IS_NOT_DELETED],
+                  ['mxp_booking.id',$request->id],
+                  ['mbd.booking_status',BookingFulgs::BOOKED_FLUG]
+                ])
+                ->select('mxp_booking.*')
+                ->first();
 
-      Session::flash('message', $job_id_id." Job id Successfully Deleted.");
-      return Redirect()->back();
+      if(!empty($mxpBooking)) {
+        MxpBooking::where('id', $request->id)->update([
+          'is_deleted' => BookingFulgs::IS_DELETED,
+          'deleted_user_id' => Auth::User()->user_id,
+          'deleted_date_at' =>  Carbon\Carbon::now(),
+          'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
+        ]);
+
+        MxpBookingChallan::where('job_id', $request->id)->update([
+          'is_deleted' => BookingFulgs::IS_DELETED,
+          'deleted_user_id' => Auth::User()->user_id,
+          'deleted_date_at' =>  Carbon\Carbon::now(),
+          'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
+        ]);
+      }else{
+        $booking_order_id = (MxpBooking::where([['mxp_booking.is_deleted',BookingFulgs::IS_NOT_DELETED],['mxp_booking.id',$request->id]])->first())->booking_order_id;
+        return redirect()->Route('booking_list_details_view', $booking_order_id)->with('message',"This job id is proccessing.");
+      }
     }
+
+    Session::flash('message', $job_id_id." Job id Successfully Deleted.");
+    return Redirect()->back();
+  }
 }

@@ -79,10 +79,14 @@ class SupplierController extends Controller
 
     public static function saveSupplierProductPrice(Request $req, $productId){
         for($i=0; $i<count($req->supplier_id); $i++){
+
+            $str_price = str_replace('$', '', $req->supplier_price[$i]);
+            $supplier_price = trim($str_price, '$');
+
             $sPrice = new MxpSupplierPrice;
             $sPrice->supplier_id = $req->supplier_id[$i];
             $sPrice->product_id = $productId;
-            $sPrice->supplier_price = $req->supplier_price[$i];
+            $sPrice->supplier_price = $supplier_price;
             $sPrice->save();
         }
         return $req->all();
@@ -96,9 +100,12 @@ class SupplierController extends Controller
                 $sPrice = new MxpSupplierPrice();
             }
 
+            $str_price = str_replace('$', '', $request->supplier_price[$i]);
+            $supplier_price = trim($str_price, '$');
+            
             $sPrice->supplier_id = $request->supplier_id[$i];
             $sPrice->product_id = $request->product_id;
-            $sPrice->supplier_price = $request->supplier_price[$i];
+            $sPrice->supplier_price = $supplier_price;
             $sPrice->save();
         }
 

@@ -168,7 +168,7 @@
           <!-- PO/Cat No -->
           <td>
             <div class="form-group">
-                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO/Cat No." title ="PO/Cat No." id="item_po_cat_no" required>
+                <input type="text" name="poCatNo[]" class="form-control" placeholder="PO/Cat No." title ="PO/Cat No." id="item_po_cat_no">
               </div>
           </td>
           <!-- end -->

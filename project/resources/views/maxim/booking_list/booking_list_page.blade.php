@@ -137,93 +137,125 @@
 
                 @php($j=1 + $bookingList->perPage() * ($bookingList->currentPage() - 1))
                 <tbody id="booking_list_tbody">
-                @foreach($bookingList as $value)
-                    <tr id="booking_list_table">
-                        <td>{{$j++}}</td>
-                        <td>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
-                        <td>{{$value->buyer_name}}</td>
-                        <td>{{$value->Company_name}}</td>
-                        <td>{{$value->attention_invoice}}</td>
-                        <td>{{$value->booking_order_id}}</td>
-                        <td>
-                            @if(!empty($value->po->ipo_id) && !empty($value->mrf->mrf_id))
-                                {{$value->po->ipo_id }} , {{ $value->mrf->mrf_id }}
-                            @elseif(!empty($value->po->ipo_id) && empty($value->mrf->mrf_id))
-                                {{$value->po->ipo_id }}
-                            @elseif(empty($value->po->ipo_id) && !empty($value->mrf->mrf_id))
-                                {{ $value->mrf->mrf_id }}
-                            @endif
-                        </td>
-                        <td>{{$value->bookingDetails->po_cat }}</td>
-                        <td>{{Carbon\Carbon::parse($value->created_at)->format('d-m-Y')}}</td>
-                        <td>{{Carbon\Carbon::parse($value->bookingDetails->shipmentDate)->format('d-m-Y')}}</td>
-                        <td>
-                            <button id="popoverOption" class=" popoverOption {{ $value->booking_status }}"   rel="popover" data-placement="top" data-original-title="" >{{$value->booking_status}}</button>
+                    @foreach($bookingList as $value)
+                        <tr id="booking_list_table">
+                            <td>{{$j++}}</td>
+                            <td>{{ucfirst(str_replace('_',' ',$value->booking_category))}}</td>
+                            <td>{{$value->buyer_name}}</td>
+                            <td>{{$value->Company_name}}</td>
+                            <td>{{$value->attention_invoice}}</td>
+                            <td>{{$value->booking_order_id}}</td>
+                            <td>
+                                @if(!empty($value->po->ipo_id) && !empty($value->mrf->mrf_id))
+                                    {{$value->po->ipo_id }} , {{ $value->mrf->mrf_id }}
+                                @elseif(!empty($value->po->ipo_id) && empty($value->mrf->mrf_id))
+                                    {{$value->po->ipo_id }}
+                                @elseif(empty($value->po->ipo_id) && !empty($value->mrf->mrf_id))
+                                    {{ $value->mrf->mrf_id }}
+                                @endif
+                            </td>
+                            <td>
+                                <div class="table-responsive" style="max-width: 100%;max-height: 100px;overflow: auto;">
+                                  <table>
+                                    <td>{{$value->bookingDetails->po_cat }}</td>
+                                  </table>
+                                </div>
+                            </td>
 
-                            <div class="popper-content hide">
-                                <label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{Carbon\Carbon::parse($value->created_at)->format('d-m-Y H:i:s')}})</label><br>
+                            <?php 
+                                $dt = new DateTime($value->created_at, new DateTimezone('Asia/Dhaka'));
+                            ?>
 
-                                <label>Booking Accepted by: {{$value->accepted->first_name}} {{$value->accepted->last_name}}
-                                    {{(!empty($value->accepted_date_at)?'('.Carbon\Carbon::parse($value->accepted_date_at)->format('d-m-Y H:i:s').')':'')}}
-                                </label><br>
+                            <td>{{$dt->format('d-m-Y, g:i a')}}</td>
 
-                                <label>MRF Issue by: {{$value->mrf->first_name}} {{$value->mrf->last_name}}
-                                    {{(!empty($value->mrf->created_at)?'('.Carbon\Carbon::parse($value->mrf->created_at)->format('d-m-Y H:i:s').')':'')}}
-                                </label><br>
+                            <?php 
+                                $str_date = str_replace('/', '-', $value->bookingDetails->shipmentDate);
+                                $shipmentDate = new DateTime($str_date, new DateTimezone('Asia/Dhaka'));
+                            ?>
+                            
+                            <td>{{$shipmentDate->format('d-m-Y')}}</td>
+                            
+                            <td>
+                                <button id="popoverOption" class=" popoverOption {{ $value->booking_status }}"   rel="popover" data-placement="top" data-original-title="" >{{$value->booking_status}}</button>
 
-                                <label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} {{(!empty($value->ipo->created_at)?'('.Carbon\Carbon::parse($value->ipo->created_at)->format('d-m-Y H:i:s').')':'')}}</label><br>
-                            </div>
-                        </td>
-                        <td width="12%">
-                            <div class="btn-group">
-                                <form action="{{ Route('booking_list_action_task') }}" target="_blank">
-                                    <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
-                                    <button class="btn btn-success b1">Report</button>
-                                </form>
-                                    <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
+                                <div class="popper-content hide">
+                                    <label>Booking Prepared by: {{$value->booking->first_name}} {{$value->booking->last_name}} ({{$dt->format('d-m-Y, g:i a')}})</label><br>
 
-                                    <ul class="dropdown-menu" style="left:-45px !important;">
-                                        <li>
-                                            <a href="{{ Route('booking_list_details_view', $value->booking_order_id) }}">Views</a>
-                                        </li>
-                                        @if($roleCheck != 'p')
-                                            @if($value->booking_status == BookingFulgs::BOOKED_FLUG 
-                                                || $value->booking_status == BookingFulgs::ON_HOLD_FLUG )
-                                                <li>
-                                                    <form method="post" action="{{ Route('change_booking_status') }}">
+                                    <label>Booking Accepted by: {{$value->accepted->first_name}} {{$value->accepted->last_name}}
 
-                                                        {{csrf_field()}}
+                                        <?php 
+                                            $dtt = new DateTime($value->accepted_date_at, new DateTimezone('Asia/Dhaka'));
+                                        ?>
 
-                                                        <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+                                        {{(!empty($value->accepted_date_at)?'('.$dtt->format('d-m-Y, g:i a').')':'')}}
+                                    </label><br>
 
-                                                        @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
-                                                            <button class="deleteButton changes_status" value="{{ BookingFulgs::ON_HOLD_FLUG }}" name="change_status">
-                                                                On Hold
-                                                            </button>
-                                                        @elseif($value->booking_status == BookingFulgs::ON_HOLD_FLUG)
-                                                            <button class="deleteButton changes_status" value="{{ BookingFulgs::BOOKED_FLUG }}" name="change_status">
-                                                                On Booked
-                                                            </button>
-                                                        @endif
-                                                    </form>                                           
-                                                </li>
-                                                <li>
-                                                    <a href="{{ Route('booking_details_cancel_action', $value->booking_order_id) }}" class="deleteButton">Cancel</a>
-                                                </li>
+                                    <label>MRF Issue by: {{$value->mrf->first_name}} {{$value->mrf->last_name}}
+                                        <?php 
+                                            $dtm = new DateTime($value->mrf->created_at, new DateTimezone('Asia/Dhaka'));
+                                        ?>
+
+                                        {{(!empty($value->mrf->created_at)?'('.$dtm->format('d-m-Y, g:i a').')':'')}}
+                                    </label><br>
+
+                                    <label>PO Issue by: {{$value->ipo->first_name}} {{$value->ipo->last_name}} 
+                                        <?php 
+                                            $dtipo = new DateTime($value->ipo->created_at, new DateTimezone('Asia/Dhaka'));
+                                        ?>
+
+                                        {{(!empty($value->ipo->created_at)?'('.$dtipo->format('d-m-Y, g:i a').')':'')}}</label><br>
+                                </div>
+                            </td>
+                            <td width="12%">
+                                <div class="btn-group">
+                                    <form action="{{ Route('booking_list_action_task') }}" target="_blank">
+                                        <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+                                        <button class="btn btn-success b1">Report</button>
+                                    </form>
+                                        <button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+
+                                        <ul class="dropdown-menu" style="left:-45px !important;">
+                                            <li>
+                                                <a href="{{ Route('booking_list_details_view', $value->booking_order_id) }}">Views</a>
+                                            </li>
+                                            @if($roleCheck != 'p')
+                                                @if($value->booking_status == BookingFulgs::BOOKED_FLUG 
+                                                    || $value->booking_status == BookingFulgs::ON_HOLD_FLUG )
+                                                    <li>
+                                                        <form method="post" action="{{ Route('change_booking_status') }}">
+
+                                                            {{csrf_field()}}
+
+                                                            <input type="hidden" name="bid" value="{{$value->booking_order_id}}">
+
+                                                            @if($value->booking_status == BookingFulgs::BOOKED_FLUG)
+                                                                <button class="deleteButton changes_status" value="{{ BookingFulgs::ON_HOLD_FLUG }}" name="change_status">
+                                                                    On Hold
+                                                                </button>
+                                                            @elseif($value->booking_status == BookingFulgs::ON_HOLD_FLUG)
+                                                                <button class="deleteButton changes_status" value="{{ BookingFulgs::BOOKED_FLUG }}" name="change_status">
+                                                                    On Booked
+                                                                </button>
+                                                            @endif
+                                                        </form>                                           
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ Route('booking_details_cancel_action', $value->booking_order_id) }}" class="deleteButton">Cancel</a>
+                                                    </li>
+                                                @endif
                                             @endif
-                                        @endif
-                                        {{-- <li>
-                                            <a href="{{ Route('booking_files_download', $value->id) }}" class="btn btn-info">Download Files</a>
-                                        </li> --}}
-                                    </ul>
-                                
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
+                                            {{-- <li>
+                                                <a href="{{ Route('booking_files_download', $value->id) }}" class="btn btn-info">Download Files</a>
+                                            </li> --}}
+                                        </ul>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
 

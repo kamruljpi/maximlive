@@ -120,7 +120,11 @@
 	<table class="table table-bordered">
 		<thead>
 		    <tr>
-		    	<th width="5%">Serial No</th>
+		        @if($buyerDetails->buyer_name == 'Gymboree')
+		            <th width="5%">Serial No</th>
+				@else
+		    	    <th width="5%">Job No</th>
+		    	@endif
 		    	<th width="" id="poCatNo">PO/Cat No. </th>
 		    	<th width="8%">OOS No. </th>
 		    	<th width="10%">Item code</th>
@@ -131,7 +135,7 @@
 		        <th>Style</th>
 		        @if($buyerDetails->buyer_name == 'Gymboree')
 				@else
-		        	<th width="10%">Item Size</th>
+		        	<!--<th width="10%">Item Size</th>-->
 				@endif
 
 		        <th>Qty / Pcs</th>
@@ -183,7 +187,7 @@
 
 				@if($buyerDetails->buyer_name == 'Gymboree')
 				@else
-					<td>{{ $detailsValue->item_size }}</td>
+					<!--<td>{{ $detailsValue->item_size }}</td>-->
 				@endif
 				<td>{{ $detailsValue->item_quantity}}</td>
 				<td>{{(!empty($item_price)?((is_numeric($item_price))?'$':'').$item_price: '')}}</td>
@@ -192,7 +196,17 @@
 				<?php $itemcodestatus = $detailsValue->item_code; ?>
 			@endforeach		
 				<tr>
-					<td colspan="7">
+				    <?php 
+				    
+				        $colspan_value = 7 ;
+				        
+				        if($buyerDetails->buyer_name == 'Gymboree'){
+        					$colspan_value = 7 ;
+        				}else{
+        					$colspan_value = 7 ;
+        				}
+				    ?>
+					<td colspan="{{ $colspan_value }}">
 						<span style="font-weight: bold; font-size: 18px; float: right;">Total Quantity:</span>
 					</td>
 					<td>{{$totalAllqnty}}</td>
@@ -277,13 +291,13 @@
 				<li>4. Payment Terms：BBLC/ CHAQUE/ CASH/ FDD BEFORE SHIPMENT</li>
 				<li>i) Payment : By Irrevocable Letter of Credit (L/C) to be opened in our favor to be Advised through " Eastern bank Ltd, Bangladesh ,Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh  and Original L/C must be received to Our Bank. SWIFT CODE : EBLDBDDH </li>
 				<li>ii) Bill of Exchange will be Signed by the Applicant before Submitting to the Applicant's Bank.</li>
-				<li>iii) Payment to be made in US Dollar within 90/60/45/30/0 days from the Date of Delivery not Acceptance or At Sight .</li>
+				<li>iii) Payment to be made in US Dollar within {{((isset($bookingDetails[0]) && !empty($bookingDetails[0]->payment_days)) ? $bookingDetails[0]->payment_days : '90/60/45/30/0')}} days from the Date of Delivery not Acceptance or At Sight .</li>
 				<li>iv) Payment reimbursement proceeds through FDD/Cheque in Foreign Currency (US Dollar) Drawn on Bangladesh Bank.	</li>								
 				<li style="text-decoration: underline;">v) Overdue interest to be paid for delayed period at 15% p@ from the date of Maturity .</li>		
 				<li style="text-decoration: underline;">vi) All charge (Swift,Payment ,Reimbursement,Handling fee,etc) will bear by applicant.</li>							
 				<li style="text-decoration: underline;">vii) Maturity date will be calculated from the date of delivery.</li>			
 				<li style="text-decoration: underline;">viii) No. discrepancy clause will be accepted into BBLC.</li>					
-				<li style="text-decoration: underline;">ix) L/C   value  should   be  minimum    US$  1500.00 otherwise  L/C   to  be  opened   at Sight & $75 will be  added  to  the  invoice   as collection  and  bank  charge.</li>
+				<li style="text-decoration: underline;">ix) L/C   value  should   be  minimum    US$  1500.00 otherwise  L/C   to  be  opened   at Sight & $50 will be  added  to  the  invoice   as collection  and  bank  charge.</li>
 				<li style="text-decoration: underline;">x) The  Bill  of  exchange and  Delivery  Challan/Truck Receipt   are need  to be  Signed by Customer Signatory within 07-10 days from the date of Submission. </li>									
 													
 				<li>xi) Information: Master Export L/C No & Date be clearly Mentioned in the Back to Back L/C.</li>							

@@ -8,7 +8,9 @@
      /** auth user PID role check **/
 
       $object = new RoleDefine();
+      $role_check_os = $object->getRole('OS');
       $role_check = $object->getRole('Product');
+      $role_check_planning = $object->getRole('Planning');
 
       /** End**/
   ?>
@@ -58,13 +60,21 @@
                 <th>Item Code</th>
                 <th>ERP Code</th>
                 <th>Description</th>
-                <th>Unit Price</th>
-                <th>Cost Price 1</th>
+
+                @if($role_check_planning == 'planning' || $role_check_os == 'os')
+                @else
+                  <th>Unit Price</th>
+                  <th>Cost Price 1</th>
+                @endif
+
                 <th>Item Size</th>
                 <th>Size Range</th>
                 <th>Colors</th>
                 <th>status</th>
-                <th>Action</th>                        
+                @if($role_check_planning == 'planning' || $role_check_os == 'os')
+                @else
+                  <th>Action</th>                        
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -76,30 +86,50 @@
                   <td>{{$product->erp_code}}</td>
                   <td>{{$product->description->name}}</td>
                   
-                  <td>{{(isset($product->unit_price) ? number_format($product->unit_price, 5, '.', '') : '') }}</td>
+                  @if($role_check_planning == 'planning' || $role_check_os == 'os')
+                  @else
+                    <td>{{(isset($product->unit_price) ? number_format($product->unit_price, 5, '.', '') : '') }}</td>
 
-                  <td>{{(isset($product->cost_price->price_1) ? $product->cost_price->price_1 :'')}}</td>
+                    <td>{{(isset($product->cost_price->price_1) ? $product->cost_price->price_1 :'')}}</td>
+                  @endif
 
                   <td>{{(!empty($product->item_size_width_height))?$product->item_size_width_height.' mm' :''}}</td>
+
                   <td>
-                      @foreach($product->sizes as $size)
-                          {{ $size->product_size }}@if (!$loop->last),@endif
-                      @endforeach
+                    <div class="table-responsive" style="max-width: 100%;max-height: 100px;overflow: auto;">
+                      <table>
+                        <td>
+                            @foreach($product->sizes as $size)
+                              {{ $size->product_size }}@if (!$loop->last),@endif
+                            @endforeach
+                        </td>
+                      </table>
+                    </div>
                   </td>
 
                   <td>
-                      @foreach($product->colors as $color)
-                          {{$color->color_name}}@if (!$loop->last),@endif
-                      @endforeach
+                    <div class="table-responsive" style="max-width: 100%;max-height: 100px;overflow: auto;">
+                      <table>
+                        <td>
+                          @foreach($product->colors as $color)
+                            {{$color->color_name}}@if (!$loop->last),@endif
+                          @endforeach
+                        </td>
+                      </table>
+                    </div>
                   </td>                  
 
                   <td>
                     {{($product->status == 1)? trans("others.action_active_label"):trans("others.action_inactive_label")}}
                   </td>
-                  <td>
-                      <a href="{{ Route('update_product_view')}}/{{$product->product_id}}" class="btn btn-success">edit</a>
-                      <a href="{{ Route('delete_product_action')}}/{{$product->product_id}}" class="btn btn-danger">delete</a>
-                  </td>
+
+                  @if($role_check_planning == 'planning' || $role_check_os == 'os')
+                  @else
+                    <td>
+                        <a href="{{ Route('update_product_view')}}/{{$product->product_id}}" class="btn btn-success">edit</a>
+                        <a href="{{ Route('delete_product_action')}}/{{$product->product_id}}" class="btn btn-danger">delete</a>
+                    </td>
+                  @endif
                 </tr>
             @endforeach      
                   
@@ -111,7 +141,7 @@
 @section('LoadScript')
   <script type="text/javascript">
       $('#search').on('keyup',function(){
-          $value= encodeURIComponent($(this).val());
+          $value= $(this).val();
           $.ajax({
               type : 'get',
               url : '{{URL::to('product/lists')}}',

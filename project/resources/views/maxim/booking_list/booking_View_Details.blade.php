@@ -24,7 +24,12 @@
     ?>
     <style type="text/css">
         .impomrf{
-            background-color: gainsboro;
+            background-color: #d3d3d3;
+            color: black;
+        }
+        .impomrf:hover{
+            background-color: #B0BEC5;
+            color: #fff;
         }
     </style>
     <div class="row">
@@ -142,7 +147,7 @@
                 @endif
                 <p>Booking No:<b> {{ $bookingDetails->booking_order_id }}</b></p>
                 <p>Booking Status: <span class="{{$bookingDetails->booking_status}}" style="padding: 5px;"> {{ $bookingDetails->booking_status }}</span></p>
-                <p>Oreder Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
+                <p>Order Date:<b> {{ $bookingDetails->bookings[0]->orderDate }}</b></p>
                 <p>Shipment Date:<b> {{ $bookingDetails->bookings[0]->shipmentDate }}</b></p>
                 @if($roleCheck == 'p')
                     @if($bookingDetails->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG)
@@ -211,11 +216,11 @@
                                 {{csrf_field()}}
                                 <input type="hidden" name="job_id" value="{{$bookedItem->id}}">
                                 <input type="hidden" name="party_id" value="{{$bookingDetails->party_id_->party_id_}}">
-                                <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Edit</button>
+                                <button class="form-control btn btn-primary" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG && $bookingDetails->booking_status != BookingFulgs::ON_HOLD_FLUG) ? 'disabled' :''}}>Edit</button>
                             </form>
                         </div>
                         <div style="padding-top: 5px;">
-                            <a href="{{Route('booking_job_id_delete_action')}}/{{$bookedItem->id}}" class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG) ? 'disabled' :''}}>Delete</a>
+                            <a href="{{Route('booking_job_id_delete_action')}}/{{$bookedItem->id}}" class="form-control deleteButton btn btn-danger" {{($bookingDetails->booking_status != BookingFulgs::BOOKED_FLUG && $bookingDetails->booking_status != BookingFulgs::ON_HOLD_FLUG) ? 'disabled' :''}}>Delete</a>
                         </div>
                     </td>
                 </tr>
@@ -378,7 +383,7 @@
             || session::get('user_type') == "super_admin" )
 
         <div class="panel panel-default">
-            <div class="panel-heading" style="font-size: 120%">Stock Challan Details</div>
+            <div class="panel-heading" style="font-size: 120%">Stock Booking Available Details</div>
             <div class="panel-body aaa">
                 <form action="{{ Route('make_challan_view') }}" method="POST">
                     {{ csrf_field()}}

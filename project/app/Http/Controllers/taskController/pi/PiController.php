@@ -2,29 +2,45 @@
 
 namespace App\Http\Controllers\taskController\pi;
 
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\Flugs\LastActionFlugs;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 use App\Http\Controllers\Message\ActionMessage;
 use App\Http\Controllers\Message\StatusMessage;
+use App\Model\MxpBookingBuyerDetails;
 use App\Http\Controllers\Controller;
 use App\Model\MxpBookingChallan;
 use Illuminate\Http\Request;
-use Validator;
-use Auth;
-use DB;
-use App\Model\MxpBookingBuyerDetails;
 use App\Model\MxpBooking;
 use App\Model\MxpPi;
+use Validator;
 use App\User;
-use Carbon;
 use Session;
-use App\Http\Controllers\taskController\Flugs\HeaderType;
-use App\Http\Controllers\taskController\Flugs\LastActionFlugs;
-use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use Carbon;
+use Auth;
+use DB;
+
 
 class PiController extends Controller
 {
 	public function piGenerate(Request $request){
 		$data = $request->all();
-		// $this->print_me($data['job_id']);
+
+		$validMassage = [
+		    'payment_days.required' => 'Payment days required.'
+		];
+
+		$validator = Validator::make($request->all(), [
+		    'payment_days' => 'required'
+		],$validMassage);
+
+		if ($validator->fails()) {
+		    return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
+		}
+
+		// $this->print_me($data);
+
+
 		if($request->is_type === BookingFulgs::IS_PI_NON_FSC_TYPE){
 			$is_type = BookingFulgs::IS_PI_NON_FSC_TYPE;
 		}else if($request->is_type === BookingFulgs::IS_PI_FSC_TYPE){
@@ -100,6 +116,7 @@ class PiController extends Controller
 				$piDetails->oos_number = $piValues->oos_number;
 				$piDetails->sku = $piValues->sku;
 				$piDetails->style = $piValues->style;
+				$piDetails->payment_days = $request->payment_days;
 				$piDetails->is_type = $is_type;
 				$piDetails->last_action_at = LastActionFlugs::CREATE_ACTION;
 				$piDetails->save();

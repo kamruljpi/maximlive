@@ -4,6 +4,7 @@ var trainingScheduleValidDate = (function(){
 			var poupValue ;
 			$('#datePickerDate').on('change',function(){
 				var _token = $('input[name=_token]').val();
+				var dates_ = $(this).attr("value");
 				var requested_date = $('#datePickerDate').val();
 				var d = new Date();
 				var day = d.getDate();
@@ -16,7 +17,7 @@ var trainingScheduleValidDate = (function(){
 
 				if(current_dates - requested_dates > 0){
 					alert("Please enter the requested date after the current.");
-					$('#datePickerDate').val(" ");
+					$('#datePickerDate').val(dates_);
 					return false;
 				}
 			});

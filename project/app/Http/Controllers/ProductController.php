@@ -62,11 +62,11 @@ class ProductController extends Controller
 
                 /** when product id_buyer field is empty
                  *  and need to update
-                 *  only PID 2 user acces this
+                 *  only PID-1 & PID-2 user acces this Item
                  */
                 if(empty($proWithSizeColors[0]->id_buyer)){
                     if(Auth::user()->email == 'PID-1bd@maxim-group.com' || Auth::user()->email == 'PID-2bd@maxim-group.com') {
-                        $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->where('id_buyer','')->orderBy('product_id','DESC')->paginate(20);
+                        $proWithSizeColors = MxpProduct::with('colors', 'sizes')->where('product_id', $productId)->orderBy('product_id','DESC')->paginate(20);
                     }
                 }
 

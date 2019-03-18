@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers\taskController\Os\Po;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
-use App\Http\Controllers\taskController\Flugs\HeaderType;
-use App\Http\Controllers\Controller;
 use App\Http\Controllers\taskController\Os\Po\PoController;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Model\Os\MxpOsPo;
 use App\Model\MxpMrf;
 use Auth;
@@ -29,6 +30,10 @@ class PoListController extends controller
 		$companyInfo  = DB::table("mxp_header")
 			->where('header_type',HeaderType::COMPANY)
 			->get();
+
+		// notification seen action
+		NotificationController::updateSeenStatus($request->poid, Auth::user()->user_id);
+
 		return view('maxim.os.po.po_report',compact('companyInfo','poDetails'));
 	}
 }

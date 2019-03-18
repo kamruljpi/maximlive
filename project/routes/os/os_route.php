@@ -16,7 +16,7 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], functi
 	Route::any('os/cencel/jobid/{job_id?}', 'Cancel\CancelJobidByMrf')->name('os_mrf_jobid_cancel');
     Route::get('os/tracking/report', 'OsTrackingController@trackingReportView')->name('os_tracking_list');
     Route::post('os/export','OsTrackingController@exportReport')->name('os_export');
-    Route::get('os/po/report/view','Po\PoListController@getPoReport')->name('os_po_report_view');
+    Route::get('os/po/report/view/{poid?}','Po\PoListController@getPoReport')->name('os_po_report_view');
 
     Route::any('os/advance/search/list','OsTrackingController@getAdvanceSearchOsList')->name('os_advance_search_list');
 });

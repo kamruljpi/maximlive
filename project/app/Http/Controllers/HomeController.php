@@ -17,7 +17,7 @@ class HomeController extends Controller {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->middleware('checkLocation');
+		// $this->middleware('checkLocation');
 	}
 	
 	/**
@@ -32,7 +32,7 @@ class HomeController extends Controller {
 
 	public function dashboard() {
 
-		IpCheckCOntroller::checkPermission();
+		// IpCheckCOntroller::checkPermission();
 
 		// $taskRoleData = array();
 		// $user_role_id = session()->get('user_role_id');

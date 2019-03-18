@@ -1,16 +1,14 @@
 @extends('layouts.dashboard')
 @section('page_heading', 'Notifications' )
 @section('section')
-<?php
-  //print_r('<pre>');
-  //print_r($not['booking']);die();
-?>
 <?php 
     use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
     use App\Http\Controllers\Source\User\RoleDefine;
     use App\Notification;
     $object = new RoleDefine();
     $csRoleCheck = $object->getRole('Customer');
+
+    
 ?> 
 	<div class="row">
 		<div class="col-md-12"></div>
@@ -55,9 +53,9 @@
                                         @if( $noti->type == Notification::CREATE_BOOKING )
                                             {{ Route('booking_list_details_view',['booking_id' => $noti->type_id]) }}
                                         @elseif($noti->type == Notification::CREATE_MRF )
-                                            {{ Route('os_mrf_details_view',['mid' => $nots[$i]->type_id]) }}
+                                            {{ Route('os_mrf_details_view',['mid' => $noti->type_id]) }}
                                         @elseif($noti->type == Notification::CREATE_SPO )
-                                             # 
+                                             {{ Route('os_po_report_view',['poid' => $noti->type_id]) }}
                                         @else 
                                              # 
                                         @endif
@@ -66,7 +64,7 @@
                                       <?php $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($noti->type_id)); ?>
                                           {{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $noti->type_id }} Job id goods receive.
                                       @else
-                                          {{ $noti->type_id }} Created 
+                                          {{ $noti->type_id }} Created  {{$nots[$i]->type_id}}
                                       @endif
                                     </a> 
                                 </td>

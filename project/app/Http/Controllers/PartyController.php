@@ -136,7 +136,6 @@ class PartyController extends Controller
         $name = isset($request->name) ? $request->name : '' ;
         $names = explode(' ', $name);
 
-        // $this->print_me($names);
         $sort_name_as = '';
 
         if(!empty($names)) {
@@ -159,13 +158,13 @@ class PartyController extends Controller
         $validMassage = [
             'name.required' => 'Company Name is required',
             'sort_name.required' => 'Company sort name is required',
-            'name_buyer.required' => 'Buyer name is required',
+            'id_buyer.required' => 'Buyer name is required',
         ];
 
         $validator = Validator::make($request->all(), [
                 'name'                   => 'required',
                 'sort_name'              => 'required',
-                'name_buyer'             => 'required',
+                'id_buyer'             => 'required',
             ],
             $validMassage
         );
@@ -174,12 +173,14 @@ class PartyController extends Controller
             return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
         }
 
+        $name_buyer = (buyer::where('id_mxp_buyer',$request->id_buyer)->select('buyer_name')->first())->buyer_name;
+
         $update_party = MaxParty::find($request->id);
         $update_party->party_id               = $request->party_id;
         $update_party->user_id                = Auth::user()->user_id;
         $update_party->name                   = $request->name;
         $update_party->sort_name              = strtoupper($sort_name_as);
-        $update_party->name_buyer             = $request->name_buyer;
+        $update_party->name_buyer             = $name_buyer;
         $update_party->address_part1_invoice  = $request->address_part_1_invoice;
         $update_party->address_part2_invoice  = $request->address_part_2_invoice;
         $update_party->attention_invoice      = $request->attention_invoice;

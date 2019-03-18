@@ -1,6 +1,11 @@
 @extends('layouts.dashboard')
 @section('page_heading','Update Vender')
 @section('section')
+<?php 
+    // print_r("<pre>");
+    // print_r($buyers);
+    // print_r("<pre>");die();
+?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-2">
@@ -48,15 +53,15 @@
                                     <div class="form-group">
                                         <label class="col-sm-5 control-label">{{ trans('others.name_buyer_label') }}</label>
                                         <div class="col-sm-6">
-                                            <select class ="form-control" name="name_buyer" id="name_buyer">
+                                            <select class ="form-control" name="id_buyer" id="name_buyer">
                                                 <option value="">Choose a Option</option>
                                                 @foreach($buyers as $buyer)   
                                                     <option @if($buyer->id_mxp_buyer == $party_edit->id_buyer)
                                                           selected="selected" 
-                                                    @endif data-id="{{ $buyer->id_mxp_buyer }}" value="{{ $buyer->buyer_name }}">{{ $buyer->buyer_name }}</option>
+                                                    @endif data-id="{{ $buyer->id_mxp_buyer }}" value="{{ $buyer->id_mxp_buyer }}">{{ $buyer->buyer_name }}</option>
                                                 @endforeach
                                             </select>
-                                            <input type="hidden" id="id_buyer" name="id_buyer" value="{{ $party_edit->id_buyer }}">
+                                            {{-- <input type="hidden" id="id_buyer" name="id_buyer" value="{{ $party_edit->id_buyer }}"> --}}
                                         </div>
                                     </div>
 

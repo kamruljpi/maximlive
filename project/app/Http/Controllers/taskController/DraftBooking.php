@@ -13,6 +13,7 @@ use App\MxpProduct;
 use App\MaxParty;
 use App\MxpDraft;
 use Validator;
+use App\User;
 use Session;
 use Carbon;
 use Auth;
@@ -163,15 +164,17 @@ class DraftBooking extends Controller
    public function redirectDraftBooking($id) {
       $buyer_details = [];
       $buyerDetails = [];
-      $bookings = MxpDraft::where('booking_order_id',$id)->get();
+      $bookings['bookings'] = MxpDraft::where('booking_order_id',$id)->get();
 
-      if(!empty($bookings[0]->vendor_id)) {
-         $buyer_details = MaxParty::where('id',$bookings[0]->vendor_id)
+      if(!empty($bookings['bookings'][0]->vendor_id)) {
+         $buyer_details = MaxParty::where('id',$bookings['bookings'][0]->vendor_id)
             ->select('id','party_id','name','sort_name','name_buyer','address_part1_invoice','address_part2_invoice','attention_invoice','mobile_invoice','telephone_invoice','fax_invoice','address_part1_delivery','address_part2_delivery','attention_delivery','mobile_delivery')
             ->first();
 
-         $buyerDetails = json_encode(MaxParty::where('id',$bookings[0]->vendor_id)
+         $buyerDetails = json_encode(MaxParty::where('id',$bookings['bookings'][0]->vendor_id)
             ->get());
+
+         $bookings['prepared'] = User::where('user_id',$bookings['bookings'][0]->user_id)->select('first_name','last_name')->first();
       }else {
         $has = MxpBookingBuyerDetails::where('booking_order_id',$id)->count();
         if($has){

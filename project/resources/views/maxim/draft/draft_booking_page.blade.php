@@ -9,7 +9,7 @@
     $fsc     = 'Create FSC Booking';
 
     // print_r("<pre>");
-    // print_r($bookings[0]);
+    // print_r($bookings['bookings'][0]);
      //print_r("</pre>");die();
   ?>
   <style type="text/css">
@@ -43,6 +43,10 @@
     .idclone .form-group{
       width: 130px !important;
     }
+    .draft-prepared ul {
+      list-style-type: none;
+      margin-left: -40px;
+    }
   </style>
 <div class="col-md-12">
 
@@ -73,10 +77,14 @@
         </div>
       </div>
 
-      <div class="pull-right col-sm-5">
+      <div class="pull-right col-sm-5 draft-prepared">
         <div class="form-group">
-          <input type="text" name="booking_number" value="{{$bookings[0]->booking_order_id}}" readonly="true" class="form-control" style="border-color:red;">
+          <input type="text" name="booking_number" value="{{$bookings['bookings'][0]->booking_order_id}}" readonly="true" class="form-control" style="border-color:red;">
         </div>
+
+        <ul>
+          <li><label>Prepared By:</label> {{$bookings['prepared']->first_name}} {{$bookings['prepared']->last_name}}</li>
+        </ul>
       </div>
 
     </div>
@@ -108,10 +116,10 @@
             <div class="col-md-12">
               <select name="booking_category" class="form-control" required="true">
                 <option value="">Choose a option</option>
-                <option value="normal_order" {{($bookings[0]->booking_category == 'normal_order') ? 'selected' : ''}}>Normal order</option>
-                <option value="urgent_order" {{($bookings[0]->urgent_order == 'normal_order') ? 'selected' : ''}}>Urgent order</option>
-                <option value="top_urgent_order" {{($bookings[0]->booking_category == 'top_urgent_order') ? 'selected' : ''}}>Top Urgent order</option>
-                <option value="export_goods" {{($bookings[0]->booking_category == 'export_goods') ? 'selected' : ''}}>Export goods</option>
+                <option value="normal_order" {{($bookings['bookings'][0]->booking_category == 'normal_order') ? 'selected' : ''}}>Normal order</option>
+                <option value="urgent_order" {{($bookings['bookings'][0]->urgent_order == 'normal_order') ? 'selected' : ''}}>Urgent order</option>
+                <option value="top_urgent_order" {{($bookings['bookings'][0]->booking_category == 'top_urgent_order') ? 'selected' : ''}}>Top Urgent order</option>
+                <option value="export_goods" {{($bookings['bookings'][0]->booking_category == 'export_goods') ? 'selected' : ''}}>Export goods</option>
               </select>
             </div>
           </div>
@@ -121,9 +129,9 @@
       <div class="row">
         <div class="col-md-4 col-xs-4">
           <div class="form-group">
-            <label class="col-md-12">Order Date</label>
+            <label class="col-md-12">Order Date (Current)</label>
             <div class="col-md-12">
-              <input type="text" name="orderDate" class="form-control" placeholder="Order Date" title="Order Date" value="{{$bookings[0]->orderDate}}" readonly>
+              <input type="text" name="orderDate" class="form-control" placeholder="Order Date" title="Order Date" value="{{carbon\carbon::today()->format('d-m-Y')}}" readonly>
             </div>
           </div>
         </div>
@@ -132,7 +140,7 @@
           <div class="form-group " >
             <label class="col-md-12">Requested Delivery Date</label>
             <div class="col-md-12">
-              <input type="date" id="datePickerDate" name="shipmentDate" class="form-control" placeholder="Request Date" title="Request Date" value="{{$bookings[0]->shipmentDate}}" required>
+              <input type="date" id="datePickerDate" name="shipmentDate" class="form-control" placeholder="Request Date" title="Request Date" value="{{$bookings['bookings'][0]->shipmentDate}}" required>
             </div>
           </div>
         </div>
@@ -141,7 +149,7 @@
           <div class="form-group " >
             <label class="col-md-12">Season Code</label>
             <div class="col-md-12">
-              <input type="text" name="season_code" class="form-control" value="{{$bookings[0]->season_code}}" placeholder="Season Code" title ="Season Code">
+              <input type="text" name="season_code" class="form-control" value="{{$bookings['bookings'][0]->season_code}}" placeholder="Season Code" title ="Season Code">
             </div>
           </div>
         </div>
@@ -170,8 +178,8 @@
       </thead>
       <tbody class="idclone" >
 
-        @if(!empty($bookings))
-          @foreach($bookings as $booking)
+        @if(!empty($bookings['bookings']))
+          @foreach($bookings['bookings'] as $booking)
             <tr>
                 <input type="hidden" name="others_color[]" class="others_color" id="others_color" value="">
               <td>

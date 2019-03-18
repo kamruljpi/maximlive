@@ -221,10 +221,11 @@ class BookingController extends Controller
           $str_price = str_replace('$', '', $item_price[$i]);
           $str_item_price = trim($str_price, '$');
 
-          // style add comma and space (", ") 
+          // oos_number add comma and space (", ") 
           $str_oos_number = str_replace(',', ', ', $oos_number[$i]);
+          $str_oos_number = str_replace('+', '+ ', $str_oos_number);
 
-          // style add comma and space (", ") 
+          // poCatNo add comma and space (", ") 
           $str_poCatNo = str_replace(',', ', ', $poCatNo[$i]);
 
           // style add comma and space (", ") 
@@ -440,7 +441,8 @@ class BookingController extends Controller
               ->first();
       }else{
         $booking_order_id = (MxpBooking::where([['mxp_booking.is_deleted',BookingFulgs::IS_NOT_DELETED],['mxp_booking.id',$request->job_id]])->first())->booking_order_id;
-        return redirect()->Route('booking_list_details_view', $booking_order_id)->with('message',"This job id is proccessing.");
+
+        return redirect()->Route('booking_list_details_view', $booking_order_id)->with('message',"Sorry, This job id is proccessing.");
       }
     }
     
@@ -460,6 +462,8 @@ class BookingController extends Controller
 
     // oos_number add comma and space (", ") 
     $str_oos_number = str_replace(',', ', ', $request->oos_number);
+    // oos_number add plus and space ("+ ") 
+    $str_oos_number = str_replace('+', '+ ', $str_oos_number);
 
     // poCatNo add comma and space (", ") 
     $str_poCatNo = str_replace(',', ', ', $request->poCatNo);
@@ -484,7 +488,7 @@ class BookingController extends Controller
       $msg = $job_id_id." Job id Successfully updated.";
 
     }else{
-      $msg = "Something went wrong please try again later"; 
+      $msg = "Something went wrong please try again later";
     }
 
     if(isset($insertBooking) && !empty($insertBooking)){
@@ -662,7 +666,8 @@ class BookingController extends Controller
         ]);
       }else{
         $booking_order_id = (MxpBooking::where([['mxp_booking.is_deleted',BookingFulgs::IS_NOT_DELETED],['mxp_booking.id',$request->id]])->first())->booking_order_id;
-        return redirect()->Route('booking_list_details_view', $booking_order_id)->with('message',"This job id is proccessing.");
+
+        return redirect()->Route('booking_list_details_view', $booking_order_id)->with('message',"Sorry, This job id is proccessing.");
       }
     }
 

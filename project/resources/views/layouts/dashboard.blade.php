@@ -8,9 +8,16 @@
     $csRoleCheck = $object->getRole('Customer');
     $os_team = $object->getRole('OS');
 
-    // print_r("<pre>");
-    // print_r(session()->get('notification'));
-    // print_r("<pre>");die();
+    // foreach (session()->get('notification') as $values) {
+        // foreach ($values as $key => $value) {
+            // if($value->type == Notification::CREATE_SPO){
+                // print_r("<pre>");
+                // print_r($value);
+            // }
+       //  }
+    // }
+     
+     // print_r("<pre>");die();
 ?>
  <div id="wrapper">
         <!-- Navigation -->
@@ -193,11 +200,11 @@
                                             @if( $noti->type == Notification::CREATE_BOOKING )
                                                 {{ Route('booking_list_details_view',['booking_id' => $noti->type_id]) }}
                                             @elseif($noti->type == Notification::CREATE_MRF )
-                                                {{ Route('os_mrf_details_view',['mid' => $nots[$i]->type_id]) }}
+                                                {{ Route('os_mrf_details_view',['mid' => $noti->type_id]) }}
                                             @elseif($noti->type == Notification::CREATE_SPO )
-                                                 # 
+                                                {{ Route('os_po_report_view',['poid' => $noti->type_id]) }}
                                             @else 
-                                                 # 
+                                                # 
                                             @endif
                                         ">
                                             <div style="font-size: 12px">

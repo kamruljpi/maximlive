@@ -47,10 +47,10 @@
 	                    </tr>
 	                </thead>
                     <tbody>  
-                        @php($i=1)
+                        @php($j=1 + $buyers->perPage() * ($buyers->currentPage() - 1))
                         @foreach($buyers as $buyer)                  
                             <tr>                        	
-                            	<td>{{$buyer->id_mxp_buyer}}</td>
+                            	<td>{{$j++}}</td>
                             	<td>{{$buyer->buyer_name}}</td>                	            	
                             	<td>
                                     <a href="{{ Route('update_buyer_view')}}/{{$buyer->id_mxp_buyer}}" class="btn btn-success">edit</a>

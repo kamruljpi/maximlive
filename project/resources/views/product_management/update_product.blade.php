@@ -431,27 +431,20 @@
                                                             </div>
                                                         @endif
 
-                                                        <div class="row">
-                                                            <div class="col-sm-6"></div>
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group custom-search-form">
-                                                                    <input type="text" name="searchFld" class="form-control keyup_preloder" placeholder="Search" id="user_search">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
                                                         @foreach($supplierPrices as $supplierPrice)
-                                                            <input type="hidden" name="supplie_price_id[]" value="{{ $supplierPrice->supplier_price_id  }}" >
-                                                            <input type="hidden" name="supplier_id[]" value="{{ $supplierPrice->supplier_id  }}" >
-                                                            <input type="hidden" name="price_id[]" value="{{ $supplierPrice->price_id  }}" >
+                                                            @if(!empty($supplierPrice->supplier->name))
+                                                                <input type="hidden" name="supplie_price_id[]" value="{{ $supplierPrice->supplier_price_id  }}" >
+                                                                <input type="hidden" name="supplier_id[]" value="{{ $supplierPrice->supplier_id  }}" >
+                                                                <input type="hidden" name="price_id[]" value="{{ $supplierPrice->price_id  }}" >
 
-                                                            <div class="col-md-5 col-md-offset-2">
-                                                                <input type="text" class="form-control" value="{{ $supplierPrice->supplier->name  }}" readonly>
-                                                            </div>
+                                                                <div class="col-md-5 col-md-offset-2">
+                                                                    <input type="text" class="form-control" value="{{ $supplierPrice->supplier->name  }}" readonly>
+                                                                </div>
 
-                                                            <div class="col-md-4">
-                                                                <input type="text" class="form-control supplier_price" name="supplier_price[]" value="{{ $supplierPrice->supplier_price}}" placeholder="Enter Price">
-                                                            </div>
+                                                                <div class="col-md-4">
+                                                                    <input type="text" class="form-control supplier_price" name="supplier_price[]" value="{{ $supplierPrice->supplier_price}}" placeholder="Enter Price">
+                                                                </div>
+                                                            @endif
                                                         @endforeach
 
                                                         @foreach($supplierList as $supplier)

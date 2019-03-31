@@ -179,13 +179,13 @@
                                                 
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE) )
 
-                                                <input type="hidden" name="order_status[]" value="Processed to supplier">
+                                                <input type="hidden" name="order_status[]" value="Partials Goods Receives">
 
                                                 <p class="{{ $value->booking_status }}">Partials Goods Receives</p>
 
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE) )
 
-                                                <input type="hidden" name="order_status[]" value="Processed to supplier">
+                                                <input type="hidden" name="order_status[]" value="Goods Receives">
 
                                                 <p class="{{ $value->booking_status }}">Goods Receives</p>
                                             @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) )
@@ -243,14 +243,14 @@
                                             <input name="item_code[]" value="{{$valuelist->item_code}}" type="hidden">{{$valuelist->item_code}}
                                         </td>
                                         <td>
-                                            <input name="item_code[]" value="{{$valuelist->item_size_width_height}}" type="hidden">
+                                            <input name="item_size[]" value="{{$valuelist->item_size_width_height}}" type="hidden">
                                             {{ ($valuelist->item_size_width_height!= '')? '('. $valuelist->item_size_width_height .')mm': 'N/A' }}
                                         </td>
                                         <td>
                                             <input name="erp_code[]" value="{{$valuelist->erp_code}}" type="hidden">{{$valuelist->erp_code}}
                                         </td>
                                         <td>
-                                            <input name="item_size[]" value="{{$valuelist->item_size}}" type="hidden">{{$valuelist->item_size}}
+                                            <input name="size_range[]" value="{{$valuelist->item_size}}" type="hidden">{{$valuelist->item_size}}
                                         </td>
                                         <td>
                                             <input name="item_description[]" value="{{$valuelist->item_description}}" type="hidden">{{$valuelist->item_description}}

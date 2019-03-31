@@ -227,7 +227,11 @@
                                         Request sent ({{ucwords($values->jobid_accpeted->first_name)}}) 
                                     </label>
 
-                                @elseif($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id == $values->current_status_accepted_user_id)
+                                @elseif($values->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_OPEN && Auth::user()->user_id == $values->current_status_accepted_user_id 
+                                    && $values->job_id_current_status !== MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE
+                                    && $values->job_id_current_status !== MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE
+                                    && $values->job_id_current_status !== MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE
+                                    )
 
                                     <a href="{{Route('os_mrf_jobid_cancel')}}/{{$values->job_id}}" class="btn btn-success">
                                         Cancel
@@ -239,6 +243,18 @@
 
                                     <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">
                                         {{ ucwords($values->jobid_accpeted->first_name) }} {{ ucwords($values->jobid_accpeted->last_name) }} (Accpeted)
+                                    </label>
+
+                                @elseif($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE)
+
+                                    <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">
+                                        Goods Receive
+                                    </label>
+
+                                @elseif($values->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE)
+
+                                    <label style="font-weight: bold;background-color: #F1F1F1;padding: 3px;">
+                                       Partial Goods Receive
                                     </label>
                                 @else
                                     <div style="z-index: 9999;">

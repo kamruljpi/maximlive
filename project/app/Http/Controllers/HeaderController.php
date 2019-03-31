@@ -64,7 +64,7 @@ class HeaderController extends Controller
              }
          }
         }
-        $this->print_me($this->logo);
+        // $this->print_me($this->logo);
         $page = new MxpHeader();
         $page->header_type  = $request->header_type;
         $page->header_title  = $request->header_title;

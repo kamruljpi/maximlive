@@ -26,6 +26,7 @@ class StoreController extends Controller
 
     	return view('maxim.product.management',compact('ipo_details'));
     }
+
     public function ipoDetails($id){
         $ipo_details = DB::table("mxp_ipo")
             ->where('mxp_ipo.is_deleted',BookingFulgs::IS_NOT_DELETED)
@@ -37,12 +38,14 @@ class StoreController extends Controller
         if(isset($ipo_details) && !empty($ipo_details)) {
             foreach ($ipo_details as &$details) {
                 $ipo_quantitys = (DB::table('mxp_store')->select(DB::Raw('sum(item_quantity) as ipo_quantitys'))->where([['product_id',$details->ipo_id],['job_id',$details->job_id],['is_type','ipo']])->first())->ipo_quantitys;
+
                 $details->left_quantity = $ipo_quantitys;
             }
         }
 
         return $ipo_details;
     }
+
     public function mrfDetails($id){
         $mxp_mrf_details = DB::table("mxp_mrf_table")
             ->where('mxp_mrf_table.is_deleted',BookingFulgs::IS_NOT_DELETED)
@@ -54,13 +57,15 @@ class StoreController extends Controller
 
         if(isset($mxp_mrf_details) && !empty($mxp_mrf_details)) {
             foreach ($mxp_mrf_details as &$details) {
-                $mrf_quantitys = (DB::table('mxp_store')->select(DB::Raw('sum(item_quantity) as mrf_quantitys'))->where([['product_id',$details->ipo_id],['job_id',$details->job_id],['is_type','mrf']])->first())->mrf_quantitys;
-                $details->left_quantity = $mrf_quantitys;
+                $mrf_quantitys = (DB::table('mxp_store')->select(DB::Raw('sum(item_quantity) as mrf_quantitys'))->where([['product_id',$details->mrf_id],['job_id',$details->job_id],['is_type','mrf']])->first())->mrf_quantitys;
+
+                $details->store_quantity = $mrf_quantitys;
             }
         }
 
         return $mxp_mrf_details;
     }
+
     public function ipoStore(Request $request){
 
     	$datas = $request->all();
@@ -127,7 +132,7 @@ class StoreController extends Controller
             return redirect()->back()->withInput($request->input())->withErrors("Your entered Quantity is 0.");
         }
 
-        StatusMessage::create('messages', 'This '.$request->item_code.' Item Code '.$request->receive_qty.' Quantity Successfully received.');
+        StatusMessage::create('message', 'This '.$request->item_code.' Item Code '.$request->receive_qty.' Quantity Successfully received.');
 
     	return redirect()->route('ipo_list_view');
     }
@@ -174,14 +179,8 @@ class StoreController extends Controller
 
             $mrf_details = $this->mrfDetails($request->job_id);
 
-            if(($mrf_details[0]->mrf_quantity - $mrf_details[0]->left_quantity) == $request->receive_qty ){
-                MxpMrf::where('job_id', $request->job_id)->update([
-                  'job_id_current_status' => MrfFlugs::ACCEPTED_MAESSAGE
-                ]);
-            }
-
             if(!empty($request->receive_qty)) {
-                if($request->receive_qty <= ($mrf_details[0]->mrf_quantity - $mrf_details[0]->left_quantity)){
+                if($request->receive_qty <= ($mrf_details[0]->mrf_quantity - $mrf_details[0]->store_quantity)){
                    if(isset($request->job_id) && !empty($request->job_id)){
                         $mrf_store = new MxpStore();
                         $mrf_store->job_id =$request->job_id;
@@ -197,7 +196,11 @@ class StoreController extends Controller
                         $mrf_store->receive_date = Carbon\Carbon::now();
                         $mrf_store->user_id = Auth::user()->user_id;
                         $mrf_store->status = MrfFlugs::ACCEPTED_MAESSAGE;
-                        $mrf_store->save(); 
+                        $mrf_store->save();
+
+                        $updatesss = MxpMrf::where('job_id',$request->job_id)->first();
+                        $updatesss->job_id_current_status = MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE;
+                        $updatesss->save();
                    }
                 }else{
                     return redirect()->back()->withInput($request->input())->withErrors("Available Quantity is greater than input Quantity.");
@@ -206,9 +209,21 @@ class StoreController extends Controller
                 return redirect()->back()->withInput($request->input())->withErrors("Your entered Quantity is 0.");
             }
 
+            $abc_ = $mrf_details[0]->store_quantity + $request->receive_qty ;
+
+            if($mrf_details[0]->mrf_quantity == $mrf_details[0]->store_quantity) {
+                MxpMrf::where('job_id', $request->job_id)->update([
+                  'job_id_current_status' => MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE
+                ]);
+            }else if($mrf_details[0]->mrf_quantity == $abc_) {
+                MxpMrf::where('job_id', $request->job_id)->update([
+                  'job_id_current_status' => MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE
+                ]);
+            }
+
             NotificationController::postNotification(Notification::GOODS_RECEIVE, $request->job_id);
 
-            StatusMessage::create('messages', 'This '.$request->item_code.' Item Code '.$request->receive_qty.' Quantity Successfully received.');
+            StatusMessage::create('message', 'This '.$request->item_code.' Item Code '.$request->receive_qty.' Quantity Successfully received.');
 
             return redirect()->back();
     }

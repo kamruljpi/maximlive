@@ -80,7 +80,11 @@ class MrfListController extends Controller
 
             // Check in available job id
             $request_mid = $request->mid;
-            $mrfDetails->available_jobs = MxpMrf::where('job_id_current_status','!=',MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS)
+            $mrfDetails->available_jobs = MxpMrf::where([
+                        ['job_id_current_status','!=',MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS],
+                        ['job_id_current_status','!=',MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE],
+                        ['job_id_current_status','!=',MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE],
+                    ])
                     ->where(function($query) use ($mrf_ids,$request_mid){
                         $query->where('mrf_id',$request_mid)->orWhereIn('mrf_id',$mrf_ids);
                     })                    

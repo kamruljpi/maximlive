@@ -13,4 +13,7 @@ class MrfFlugs
 	const JOBID_CURRENT_STATUS_OPEN = 'open';
 	const JOBID_CURRENT_STATUS_ACCEPT = 'proccess';
 	const JOBID_CURRENT_STATUS_WAITING_FOR_GOODS = 'waiting_for_goods';
+	
+	const JOBID_CURRENT_STATUS_GOODS_RECEIVE = 'good_receives';
+	const JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE = 'partial_good_receives';
 }

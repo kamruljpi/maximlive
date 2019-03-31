@@ -22,12 +22,20 @@ class RoleManagement extends Controller
         return view('role_management.add_role',['companies' => $companies]);
     }
     public function addRole(Request $request)
-    {            
+    {         
+        $va = [
+            'company_ids.required' => 'Company Field Required.',
+            'company_ids.min' => 'Company Field Required.',
+            'role_name.required' => 'Role Name Field Required.',
+            'role_name.min' => 'Role Name Field Min 1 digit.',
+            'is_active.required' => 'Is Active Field Required.',
+        ];
+        
         $this->validate($request, [
             'company_ids'=> 'required|min:1',
-            'role_name' => 'required|min:3',
+            'role_name' => 'required|min:1',
             'is_active' => 'required|min:1|max:1'
-            ]);
+            ],$va);
 
         $temp_group_id = self::getRandomGroupId();
 

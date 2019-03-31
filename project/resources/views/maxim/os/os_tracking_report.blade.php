@@ -167,13 +167,13 @@
 
                                         <p class="waiting_for_goods">Partial Goods Receives</p>
 
-                                        <input type="hidden" name="order_status[]" value="Processed to supplier">
+                                        <input type="hidden" name="order_status[]" value="Partial Goods Receives">
 
                                     @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT ) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE))
 
                                         <p class="waiting_for_goods">Goods Receives</p>
 
-                                        <input type="hidden" name="order_status[]" value="Processed to supplier">
+                                        <input type="hidden" name="order_status[]" value="Goods Receives">
 
                                     @else
 
@@ -207,9 +207,9 @@
 
                                 <td><input name="matarial[]" value="{{$value->os_po->material}}" type="hidden">{{$value->os_po->material}}</td>
 
-                                <td><input name="shipmentDate[]" value="{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}</td>
+                                <td><input name="order_date[]" value="{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}</td>
 
-                                <td><input name="shipmentDate[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
+                                <td><input name="requested_shipment_date[]" value="{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->shipmentDate)->format('d-m-Y')}}</td>
 
                                 <td><input name="mrf_quantity[]" value="{{$value->mrf_quantity}}" type="hidden">{{$value->mrf_quantity}}</td>
 

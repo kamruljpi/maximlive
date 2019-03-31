@@ -41,8 +41,11 @@ class CompanyManagement extends Controller
 	}
 
 	public function companyList(){
-		  
-        $companyList = MxpCompany::get()->where('group_id', Auth::user()->user_id);
+		
+        // $group_id = Auth::user()->user_id;
+        $group_id = [49,Auth::user()->user_id];
+        $companyList = MxpCompany::get()->whereIn('group_id', $group_id);
+        
         return view('company.company_list', compact('companyList'));
 	}
 

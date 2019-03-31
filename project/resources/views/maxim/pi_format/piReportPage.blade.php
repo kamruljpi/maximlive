@@ -291,7 +291,7 @@
 				<li>4. Payment Terms：BBLC/ CHAQUE/ CASH/ FDD BEFORE SHIPMENT</li>
 				<li>i) Payment : By Irrevocable Letter of Credit (L/C) to be opened in our favor to be Advised through " Eastern bank Ltd, Bangladesh ,Head Office,100 Gulshan Avenue,Gulshan-02,Dhaka-1212,Bangladesh  and Original L/C must be received to Our Bank. SWIFT CODE : EBLDBDDH </li>
 				<li>ii) Bill of Exchange will be Signed by the Applicant before Submitting to the Applicant's Bank.</li>
-				<li>iii) Payment to be made in US Dollar within {{((isset($bookingDetails[0]) && !empty($bookingDetails[0]->payment_days)) ? $bookingDetails[0]->payment_days : '90/60/45/30/0')}} days from the Date of Delivery not Acceptance or At Sight .</li>
+				<li>iii) Payment to be made in US Dollar within {{((isset($bookingDetails[0])) ? (!empty($bookingDetails[0]->payment_days) ? $bookingDetails[0]->payment_days: ($bookingDetails[0]->payment_days =='0' ? $bookingDetails[0]->payment_days :'90/60/45/30/0')): '90/60/45/30/0')}} days from the Date of Delivery not Acceptance or At Sight .</li>
 				<li>iv) Payment reimbursement proceeds through FDD/Cheque in Foreign Currency (US Dollar) Drawn on Bangladesh Bank.	</li>								
 				<li style="text-decoration: underline;">v) Overdue interest to be paid for delayed period at 15% p@ from the date of Maturity .</li>		
 				<li style="text-decoration: underline;">vi) All charge (Swift,Payment ,Reimbursement,Handling fee,etc) will bear by applicant.</li>							

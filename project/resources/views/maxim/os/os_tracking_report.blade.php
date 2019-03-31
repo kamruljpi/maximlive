@@ -141,16 +141,17 @@
                             ?>
                             <tr id="booking_list_table">
                                 <td>
-                                    <input name="job_id[]" value="{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $valuelist->job_id }}" type="hidden">
+                                    <input name="job_id[]" value="{{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $value->job_id }}" type="hidden">
                                     {{ str_repeat(JobIdFlugs::STR_REPEAT,$idstrcount) }}{{ $value->job_id }}
                                 </td>
                                 <td>
                                     <input name="category[]" value=" {{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}" hidden>{{ucfirst(str_replace('_',' ',$value->booking_details->booking_category))}}</td>
                                 </td>
                                 <td class="abcdc">
-                                    @if($value->mrf_status == MrfFlugs::OPEN_MRF && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS
-                                        || $value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS
-                                        || $value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS)
+                                    @if($value->mrf_status == MrfFlugs::OPEN_MRF && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE
+                                        || $value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE
+                                        || $value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE && $value->job_id_current_status != MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE
+                                        )
 
                                         <input type="hidden" name="order_status[]" value="Available">
 
@@ -159,6 +160,18 @@
                                     @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT ) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_WAITING_FOR_GOODS))
 
                                         <p class="{{ $value->job_id_current_status }}">Waiting for Goods</p>
+
+                                        <input type="hidden" name="order_status[]" value="Processed to supplier">
+
+                                    @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT ) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE))
+
+                                        <p class="waiting_for_goods">Partial Goods Receives</p>
+
+                                        <input type="hidden" name="order_status[]" value="Processed to supplier">
+
+                                    @elseif( ($value->mrf_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT ) && ($value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE))
+
+                                        <p class="waiting_for_goods">Goods Receives</p>
 
                                         <input type="hidden" name="order_status[]" value="Processed to supplier">
 

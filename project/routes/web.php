@@ -1082,6 +1082,7 @@ include('ipo.php');
 include('os/os_route.php');
 include('history/restore.php');
 include('location.php');
+include('stage.php');
 
 
 Route::get('itemupload',

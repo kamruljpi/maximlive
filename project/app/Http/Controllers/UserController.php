@@ -23,12 +23,13 @@ class UserController extends Controller {
 
 		$roleManage = new RoleManagement();
 
-		$group_id = $request->session()->get('group_id');
+		// $group_id = $request->session()->get('group_id');
+		$group_id = [49,$request->session()->get('group_id')];
 
 		if ($request->session()->get('user_type') == "company_user") {
 			$companyList = MxpCompany::get()->where('id', Auth::user()->company_id);
 		} else {
-			$companyList = MxpCompany::get()->where('group_id', $group_id);
+			$companyList = MxpCompany::get()->whereIn('group_id', $group_id);
 		}
 		$buyers = buyer::all();
 		return view('user_management.create_user', compact('companyList','buyers'));
@@ -67,8 +68,8 @@ class UserController extends Controller {
 		$createUser = new MxpCompanyUser();
 		$createUser->first_name = $request->personal_name;
 		$createUser->type = "company_user";
-		// $createUser->group_id     = Auth::user()->user_id;
-		$createUser->group_id = $group_id;
+		$createUser->group_id     = 49;
+		// $createUser->group_id = $group_id;
 		$createUser->company_id = $request->company_id;
 		$createUser->email = $request->email;
 		$createUser->password = bcrypt($request->password);

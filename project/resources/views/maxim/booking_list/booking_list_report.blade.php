@@ -193,6 +193,18 @@
 
                                                     <p class="{{ $value->booking_status }}">Processed to supplier</p>
 
+                                                @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_PARTIAL_GOODS_RECEIVE) )
+
+                                                    <input type="hidden" name="order_status[]" value="Processed to supplier">
+
+                                                    <p class="{{ $value->booking_status }}">Partials Goods Receives</p>
+
+                                                @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_GOODS_RECEIVE) )
+
+                                                    <input type="hidden" name="order_status[]" value="Processed to supplier">
+
+                                                    <p class="{{ $value->booking_status }}">Goods Receives</p>
+
                                                 @elseif( ($value->booking_status == BookingFulgs::BOOKING_PROCESS_FLUG) && ($valuelist->mrf->mrf_status == MrfFlugs::ACCEPT_MRF) && ($valuelist->mrf->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT) )
                                                 
                                                     <input type="hidden" name="order_status[]" value="Mrf Accepted" >

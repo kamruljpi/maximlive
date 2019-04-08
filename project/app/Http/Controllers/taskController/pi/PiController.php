@@ -26,6 +26,10 @@ class PiController extends Controller
 	public function piGenerate(Request $request){
 		$data = $request->all();
 
+		$job_ids = isset($data['job_id']) ? $data['job_id'] : '';
+
+		$job_ids = array_unique($job_ids);
+
 		$validMassage = [
 		    'payment_days.required' => 'Payment days required.'
 		];
@@ -38,8 +42,7 @@ class PiController extends Controller
 		    return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
 		}
 
-		// $this->print_me($data);
-
+		// This section set pi type 
 
 		if($request->is_type === BookingFulgs::IS_PI_NON_FSC_TYPE){
 			$is_type = BookingFulgs::IS_PI_NON_FSC_TYPE;
@@ -47,36 +50,36 @@ class PiController extends Controller
 			$is_type = BookingFulgs::IS_PI_FSC_TYPE;
 		}
 
-		if (empty($data['job_id'])) {
+		// this section check empty job id
+		if (empty($job_ids)) {
 			StatusMessage::create('empty_booking_data', 'Have not checked any Item !');
 			return \Redirect()->Route('task_dashboard_view');
 		}
 
-		$getDbValue = [];
-		foreach ($data as $key => $dataValue) {
-			foreach ($dataValue as $values) {
-				$getDbValue[] = DB::table('mxp_booking')->where([['id',$values],['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE]])->get();
-			}
-		}
+		// this section get avaiable job id value in booking table
 		$pi_details = [];
-		foreach ($getDbValue as $key => $aaavalue) {
-			foreach ($aaavalue as $key => $bbbvalue) {
-				$pi_details[] =  $bbbvalue;
+		if(!empty($job_ids)) {
+			foreach ($job_ids as $key => $job_id) {
+				$pi_details[$key] = DB::table('mxp_booking')->where([['id',$job_id],['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE]])->first();
 			}
 		}
+
+		// this section check empty booking details
 		if (empty($pi_details)) {
 			StatusMessage::create('empty_booking_data', 'Are you sure, Someone not created This Order PI!');
 			return \Redirect()->Route('task_dashboard_view');
 		}
 
-		foreach ($data as $key => $dataValue) {
-			foreach ($dataValue as $values) {
-				$updateBookingtable = MxpBooking::find($values);
+		// This section update booking table type
+		if(!empty($job_ids)) {
+			foreach ($job_ids as $key => $job_id) {
+				$updateBookingtable = MxpBooking::find($job_id);
 				$updateBookingtable->is_pi_type = $is_type;
 				$updateBookingtable->save();
 			}
 		}
 
+		// this section get buyer details
 	    $buyerDetails = DB::table('mxp_bookingbuyer_details')
 	    	->where('booking_order_id',$pi_details[0]->booking_order_id)
 	    	->first();
@@ -123,29 +126,46 @@ class PiController extends Controller
 			}
 		}
 
-		return \Redirect::route('refresh_pi_view',['is_type' => $is_type,'p_id' => $customid]);
+		return \Redirect::route('refresh_pi_view',['is_type' => $is_type,'p_id' => $customid,'bid' => $piValues->booking_order_id]);
 	}
 
 	public function redirectPiReport(Request $request){
 		$companyInfo = DB::table('mxp_header')->where('header_type',HeaderType::PI)->get();
-		$bookingDetails = MxpPi::where([
-					['p_id',$request->p_id],
-					['is_type',$request->is_type],
-					['is_deleted',BookingFulgs::IS_NOT_DELETED]
-				])
-				->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
-					DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
-					DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
-					DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
-				->groupBy('item_code')
-				->groupBy('poCatNo')
-				->orderBy('poCatNo')
-				->get();
-			
-        $footerData = DB::table('mxp_reportfooter')->where('status', 1)->get();
 		$buyerDetails = DB::table('mxp_bookingbuyer_details')
-	    	->where('booking_order_id',$bookingDetails[0]->booking_order_id)
+	    	->where('booking_order_id',$request->bid)
 	    	->first();
+
+		if($buyerDetails->buyer_name == 'Gymboree') {
+
+			$bookingDetails = MxpPi::where([
+						['p_id',$request->p_id],
+						['is_type',$request->is_type],
+						['is_deleted',BookingFulgs::IS_NOT_DELETED]
+					])
+					->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
+						DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
+						DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
+						DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
+					->groupBy('item_code')
+					->groupBy('poCatNo')
+					->orderBy('poCatNo')
+					->get();
+		}else{
+			$bookingDetails = MxpPi::where([
+						['p_id',$request->p_id],
+						['is_type',$request->is_type],
+						['is_deleted',BookingFulgs::IS_NOT_DELETED]
+					])
+					->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
+						DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
+						DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
+						DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
+					->groupBy('job_no')
+					->orderBy('job_no','ASC')
+					->get();
+		}
+
+        $footerData = DB::table('mxp_reportfooter')->where('status', 1)->get();	
 	    $is_type = $request->is_type;
 		$getUserDetails = $this->getUserDetails($bookingDetails[0]->user_id);
 		

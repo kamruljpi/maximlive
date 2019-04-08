@@ -3,6 +3,10 @@
 @section('print-body')
 	<?php
     	use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+
+    	// print_r("<pre>");
+    	// print_r($buyerDetails);
+    	// print_r("</pre>");
 	?>
 
     <style type="text/css">
@@ -112,6 +116,7 @@
 			<ul>
 				<li>Production Order: {{ $ipoDetails[0]->ipo_id }}</li>
 				<li>Brand: {{$buyerDetails->buyer_name}}</li>
+				<li>Vendor name: {{$buyerDetails->Company_name}}</li>
 			</ul>
 		</div>
 		
@@ -126,6 +131,13 @@
 					</td>
 				</tr>
 				@endif
+				<tr>
+					<td colspan="2">
+						<div style="text-align: right;">
+							<p style="padding-left :5px;">Requested Shipment date: {{ $ipoDetails[0]->shipmentDate }}</p>
+						</div>
+					</td>
+				</tr>
 				<tr>
 					<td colspan="2">
 						<div style="text-align: right;">

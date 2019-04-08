@@ -1,7 +1,11 @@
 @extends('maxim.layouts.layouts')
 @section('title','MRF Maxim')
 @section('print-body')
-
+<?php 
+	// print_r("<pre>");
+	// print_r($mrfDeatils[0]);
+	// print_r("</pre>");
+?>
 <center><a href="#" onclick="myFunction()"  class="print">Print & Preview</a></center>
 
 @foreach($companyInfo as $value)
@@ -48,9 +52,9 @@
 			<ul>
 				<li>Order Date : {{Carbon\Carbon::parse($mrfDeatils[0]->created_at)->format('d-m-Y')}}</li>
 				<li>Buyer : {{$buyerDetails->buyer_name}}</li>
-				{{-- <li>Company Name  : {{$buyerDetails->Company_name}}</li>
-				<li>Address : {{$buyerDetails->address_part1_invoice}}</li>
-				<li> {{$buyerDetails->address_part2_invoice}}</li>
+				<li>Vendor Name  : {{$buyerDetails->Company_name}}</li>
+				{{--<li>Address : {{$buyerDetails->address_part1_invoice}}</li>
+				 <li> {{$buyerDetails->address_part2_invoice}}</li>
 				<li>{{($formatTypes == 1001 )?'Contact ' :'Attn' }} : {{$buyerDetails->attention_invoice}}</li>
 				<li>{{($formatTypes == 1001 )?'Contact No ' :'Cell No' }} : {{$buyerDetails->mobile_invoice}}</li> --}}
 			</ul>
@@ -75,6 +79,14 @@
 							<td colspan="2">
 								<div style="text-align: right;">
 									<p style="padding-left :5px;"> MRF No : {{$billdata->mrf_id}}</p>
+								</div>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="2">
+								<div style="text-align: right;">
+									<p style="padding-left :5px;"> Requested Shipment Date : {{$billdata->shipmentDate}}</p>
 								</div>
 							</td>
 						</tr>

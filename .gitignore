@@ -4,7 +4,7 @@ project/public/storage
 project/storage/
 project/storage/*.key
 
-project/vendor
+project/vendor/
 project/.idea
 /.idea
 project/.vscode

@@ -46,19 +46,41 @@ class PiReverseController extends Controller
 		$item_price = isset($request->item_price) ? $request->item_price : '';
 		$others_color = isset($request->others_color) ? $request->others_color : '';
 
+
+		// item_code add space after comma (", ") 
+		// $str_item_code = str_replace('/', ', ', $item_code);
+		// item_code add space after plus ("+ ") 
+		// $str_item_code = str_replace('+', '+ ', $str_item_code);
+
+		// oos_number add space after comma (", ") 
+		$str_oos_number = str_replace(',', ', ', $oos_number);
+		// oos_number add space after plus ("+ ") 
+		$str_oos_number = str_replace('+', '+ ', $str_oos_number);
+
+		// poCatNo add space after comma (", ") 
+		$str_poCatNo = str_replace(',', ', ', $poCatNo);
+		// poCatNo add space after plus ("+ ")
+		$str_poCatNo = str_replace('+', '+ ', $str_poCatNo);
+
+		// style add space after comma (", ") 
+		$str_style = str_replace(',', ', ', $style);
+		// style add space after plus ("+ ")
+		$str_style = str_replace('+', '+ ', $str_style);
+
+
 		if(!empty($job_id)) {
 			$mxp_pi = MxpPi::where('job_no',$job_id)->first();
 			$mxp_pi->user_id = Auth::user()->user_id;
 			// $mxp_pi->erp_code = $erp;
-			// $mxp_pi->item_code = $item_code;
+			// $mxp_pi->item_code = $str_item_code;
 			// $mxp_pi->item_description = $item_description;
-			$mxp_pi->oos_number = $oos_number;
+			$mxp_pi->oos_number = $str_oos_number;
 			// $mxp_pi->item_size = $item_size;
 			// $mxp_pi->item_price = $item_price;
 			// $mxp_pi->gmts_color = $gmts_color;
-			$mxp_pi->poCatNo = $poCatNo;
+			$mxp_pi->poCatNo = $str_poCatNo;
 			$mxp_pi->sku = $sku;
-			$mxp_pi->style = $style;			
+			$mxp_pi->style = $str_style;			
 			$mxp_pi->item_quantity = $item_qty;
 			$mxp_pi->last_action_at = LastActionFlugs::REVERSE_ACTION;
 			$mxp_pi->save();

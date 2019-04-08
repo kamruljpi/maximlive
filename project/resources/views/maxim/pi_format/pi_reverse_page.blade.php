@@ -55,11 +55,9 @@
 	        <div class="panel panel-default col-sm-5">
 	            <br>
 	            @if($buyerDetails->booking_category)
-	            {{-- <p>Category: <b>{{ucfirst(str_replace('_',' ',$buyerDetails->booking_category))}}</b></p> --}}
 	            @endif
-	            {{-- <p>Booking No:<b> {{ $buyerDetails->booking_order_id }}</b></p> --}}
+
 	            <p>PI No:<b> {{ $piDetails[0]->p_id }}</b></p>
-	            {{-- <p>Booking Status:<b> {{ $buyerDetails->booking_status }}</b></p> --}}
 	            <p>Oreder Date:<b> {{ Carbon::Parse($buyerDetails->created_at)->format('d-m-Y') }}</b></p>
 	            <p>Shipment Date:<b> {{ $buyerDetails->shipmentDate }}</b></p>
 	        </div>
@@ -118,13 +116,10 @@
 		    			<td>{{$pi_value->sku}}</td>
 		    			<td>{{$pi_value->item_quantity}}</td>
 		    			<td>
-		    				{{-- <div style="float: left;width: 40%;"> --}}
-		    					<a href="{{Route('pi_reverse_edit_view',$pi_value->job_no)}}" class="btn btn-primary" >Edit</a>
-		    				{{-- </div> --}}
 
-		    				{{-- <div style="float: left;width: 40%; padding-right: : 5px;"> --}}
-		    					<a href="{{Route('pi_delete_action',$pi_value->job_no)}}/{{$pi_value->p_id}}" class="btn btn-primary deleteButton" >Cancel</a>
-		    				{{-- </div> --}}
+		    					<a href="{{Route('pi_reverse_edit_view',$pi_value->job_no)}}" class="btn btn-success" style="padding:10px;">Edit</a>
+
+		    					<a href="{{Route('pi_delete_action',$pi_value->job_no)}}/{{$pi_value->p_id}}" class="btn btn-danger deleteButton" style="padding:10px;">Cancel</a>
 		    			</td>
 		    		</tr>
 		    	@endforeach

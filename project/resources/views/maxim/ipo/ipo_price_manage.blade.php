@@ -22,43 +22,8 @@
 @if(Session::has('erro_challan'))
     @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('erro_challan') ))
 @endif
-@if(sizeof($ipoListValue) >= 1)
-	<div class="panel showMrfList">
-		<div class="panel-heading">IPO list</div>
-		<div class="panel-body">
-			<table class="table table-striped table-bordered">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Booking Id</th>
-						<th>IPO Id</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					@php($i=1)
-					@foreach($ipoListValue as $details)
-					<tr>
-						<td>{{$i++}}</td>
-						<td>{{$details->booking_order_id}}</td>
-						<td>{{$details->ipo_id}}</td>
-						<td>
-							<form action="{{Route('ipo_list_action_task') }}" role="form" target="_blank">
-								<input type="hidden" name="ipoid" value="{{$details->ipo_id}}">
-								<input type="hidden" name="bid" value="{{$details->booking_order_id}}">
-								<button class="btn btn-success" >View</button>
-							</form>
-						</td>
-					</tr>
-					@endforeach
-				</tbody>
-			</table>
-		</div>
-	</div>
-@endif
 
-<!-- <form action="{{ Route('task_action') }}" method="POST"> -->
-<form action="{{ Route('task_ipo_action') }}" target="_blank">
+<form action="{{ Route('task_ipo_action') }}" target="_blank" method="POST">
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<input type="hidden" name="booking_order_id" value="{{$sentBillId[0]->booking_order_id}}">
 	<table class="table table-bordered mainBody">

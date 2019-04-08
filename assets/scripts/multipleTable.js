@@ -241,13 +241,19 @@ $(document).ready(function(){
                   var priceDetails = ajaxFunc("/get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
 
                   // console.log(priceDetails.responseJSON);
-                  if(priceDetails.responseJSON.vendor_com_price != null){
-                      $('.'+item_parent_class+' .item_price').eq(increI).val(priceDetails.responseJSON.vendor_com_price);
-                      $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
-                  }
-                  else{
-                      $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
-                      $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                  if(typeof priceDetails.responseJSON != "undefined") {
+                      
+                      if(priceDetails.responseJSON.vendor_com_price != null){
+                          $('.'+item_parent_class+' .item_price').eq(increI).val(priceDetails.responseJSON.vendor_com_price);
+                          $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                      }
+                      else{
+                          $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
+                          $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                      }
+                  }else{
+                    $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
+                    $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
                   }
 
                   increI++;

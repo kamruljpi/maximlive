@@ -34,9 +34,6 @@ class TaskController extends Controller
 
 	public function getItemCode() {
 		$results = array();
-		// $productDetails = DB::select("SELECT mp.product_code FROM mxp_product mp
-  //       LEFT JOIN mxp_productsize mps ON (mps.product_code = mp.product_code)
-  //       LEFT JOIN mxp_gmts_color mgs ON (mgs.item_code = mps.product_code) GROUP BY mps.product_code, mgs.item_code");
 
 		/** buyer wiase booking value filter **/
 
@@ -66,16 +63,11 @@ class TaskController extends Controller
 	}
 	public function gettaskActionOrsubmited(Request $request) {
 
-		// if()
-		// $this->print_me($request->all());
-
 		return \Redirect()->Route('dashboard_view');
 	}
 	public function taskActionOrsubmited(Request $request) {
 		$roleManage = new RoleManagement();
 		$datas = $request->all();
-
-		// $this->print_me($datas);
 
 		$taskType = isset($request->taskType) ? $request->taskType : '';
 		if ($taskType === 'booking' || $taskType === 'FSC Booking') {
@@ -95,11 +87,20 @@ class TaskController extends Controller
 
 		} elseif ($taskType === 'PI' || $taskType === 'FSC PI') {
 
-			$booking_id = rtrim($request->bookingIdList, ",");
+			// there are was a multiple PI id
+			$booking_id_1 = isset($request->bookingIdList) ? $request->bookingIdList : '' ;
+			// there was a single PI id
+			$booking_id_2 = isset($request->bookingId) ? $request->bookingId : '' ;
+
+			// if $booking_id_1 this field is empty.
+			$bookind_idss = !empty($booking_id_1) ? $booking_id_1 : $booking_id_2 ;
+
+			$booking_id = rtrim($bookind_idss, ",");
 			$booking_id = explode(' , ', $booking_id);
 			$buyerName = '';
 			$companyName = '';
 			$iteration = 0;
+
 			foreach ($booking_id as $bookingid) {
 				$vendorDetails = MxpBookingBuyerDetails::where([['booking_order_id',$bookingid],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
 				if (! $vendorDetails->Company_name) {
@@ -174,10 +175,15 @@ class TaskController extends Controller
 
 		} elseif ($taskType === 'MRF') {
 
-			// $this->print_me($request->all());
+			// there was a multiple mrf Id
+			$mrf_id_1 = isset($request->mrfIdList) ? $request->mrfIdList : '' ;
+			//there was a single mrf Id
+			$mrf_id_2 = isset($request->mrfId) ? $request->mrfId : '' ;
 
-			$mrfIdList = isset($request->mrfIdList) ? $request->mrfIdList : '';
-			$mrf_ids = rtrim($mrfIdList, ",");
+			// if $mrf_id_1 one field is empty
+			$mrf_idsss = !empty($mrf_id_1) ? $mrf_id_1 : $mrf_id_2 ;
+
+			$mrf_ids = rtrim($mrf_idsss, ",");
 			$mrf_ids = explode(' , ', $mrf_ids);
 
 			foreach ($mrf_ids as $mrf_id) {

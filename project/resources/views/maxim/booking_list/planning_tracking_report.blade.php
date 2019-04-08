@@ -192,9 +192,10 @@
                                             
                                                 <input type="hidden" name="order_status[]" value="Mrf Accepted" >
 
-                                                <span class="{{ $value->booking_status }}">Mrf Accepted</span>
+                                                <p class="{{ $value->booking_status }}">Mrf Accepted</p>
                                         
                                             @else
+                                                <input type="hidden" name="order_status[]" value="{{$value->booking_status}}" >
                                                 <span class="{{ $value->booking_status }}">{{ $value->booking_status }} </span>
                                             @endif
                                         </td>
@@ -266,7 +267,7 @@
                         @else
                             <tr>
                                 <td colspan="19">
-                                    <center>Empty Value</center>
+                                    <center>Data not Found.</center>
                                 </td>
                             </tr>
                         @endif

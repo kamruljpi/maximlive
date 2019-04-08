@@ -45,15 +45,15 @@ class BookingController extends Controller
     }
 
     public function getVendorPrice(Request $request){
-        $price  = VendorPrice::where('product_id',$request->productId)
-            ->Where('party_table_id', $request->company_id)
-            ->orderBy('price_id', 'DESC')
-            ->first();
+        $price  = VendorPrice::where([
+                  ['product_id',$request->productId],
+                  ['party_table_id',$request->company_id]
+                ])
+                ->whereNotNull('vendor_com_price')
+                ->orderBy('price_id', 'DESC')
+                ->first();
 
-        if (count($price) > 0)
-            return $price;
-        else
-            return new MxpBooking();
+      return $price;
     }
 
     public function getordercode()
@@ -148,7 +148,11 @@ class BookingController extends Controller
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
       $id = "BK"."-";
       $date = date('dmY') ;
-      $customid = $id.$date."-".$companySortName."-".$count;
+
+      $company_sort_name = str_replace('/', '', $companySortName);
+      $company_sort_name =  trim($company_sort_name, '/');
+      
+      $customid = $id.$date."-".$company_sort_name."-".$count;
 
       /** it's check draft booking id and remove draft value from draft table
        * and store booking in booking main table
@@ -227,9 +231,11 @@ class BookingController extends Controller
 
           // poCatNo add comma and space (", ") 
           $str_poCatNo = str_replace(',', ', ', $poCatNo[$i]);
+          $str_poCatNo = str_replace('+', '+ ', $str_poCatNo);
 
           // style add comma and space (", ") 
           $str_style = str_replace(',', ', ', $style[$i]);
+          $str_style = str_replace('+', '+ ', $str_style);
 
           $insertBooking = new MxpBooking();
           $insertBooking->user_id           = Auth::user()->user_id;
@@ -467,9 +473,11 @@ class BookingController extends Controller
 
     // poCatNo add comma and space (", ") 
     $str_poCatNo = str_replace(',', ', ', $request->poCatNo);
+    $str_poCatNo = str_replace('+', '+ ', $str_poCatNo);
 
     // style add comma and space (", ") 
     $str_style = str_replace(',', ', ', $request->style);
+    $str_style = str_replace('+', '+ ', $str_style);
       
     if(!empty($mxp_pi)) {
       $mxp_pi->item_description = $request->item_description;

@@ -212,6 +212,7 @@
                                                     <p class="{{ $value->booking_status }}">Mrf Accepted</p>
                                                  
                                                 @else
+                                                    <input type="hidden" name="order_status[]" value="{{$value->booking_status}}" >
                                                     <span class="{{ $value->booking_status }}">{{ $value->booking_status }} </span>    
                                                 @endif
                                             </td>

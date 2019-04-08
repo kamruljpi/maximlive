@@ -19,6 +19,11 @@ Route::group(['middleware' => 'auth','namespace' => 'taskController\Os'], functi
     Route::get('os/po/report/view/{poid?}','Po\PoListController@getPoReport')->name('os_po_report_view');
 
     Route::any('os/advance/search/list','OsTrackingController@getAdvanceSearchOsList')->name('os_advance_search_list');
+
+
+    Route::any('os/single/search/list','Po\PoListController@opListView')->name('os_po_single_search');
+    Route::any('os/po/advance/search/list','Po\PoListController@spoListAdvanceSearch')->name('os_po_list_advance_search');
+    
 });
     Route::get('/os_tracking_report/','Po\PoController@getOsMrfValues')->name('get_ospo_by_id');
 });

@@ -1083,6 +1083,7 @@ include('os/os_route.php');
 include('history/restore.php');
 include('location.php');
 include('stage.php');
+include('warehouse.php');
 
 
 Route::get('itemupload',

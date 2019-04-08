@@ -235,8 +235,8 @@
                     <?php $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($bookedItem->id)); ?>
                     <tr style="" class="{{ (!empty($bookedItem->ipo_quantity))? 'impomrf' :  (!empty($bookedItem->mrf_quantity))? 'impomrf' : '' }} ">
                         <label for="job_id">
-                            <td width="3.5%">
-                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
+                            <td width="4.5%">
+                                <input type="checkbox" name="job_id[]" value="{{$bookedItem->id}}" class="form-control" id="select_check" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG || $bookingDetails->booking_status == BookingFulgs::ON_HOLD_FLUG) ? 'disabled' : ($bookedItem->left_mrf_ipo_quantity <= 0)?'disabled' :''}}>
                             </td>
                             <td>{{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $bookedItem->id }}</td>
                             <td>{{$bookedItem->erp_code}}</td>
@@ -269,12 +269,12 @@
             <div class="col-md-4">
                 <div class="form-group pull-right">
                     <label class="radio-inline">
-                        <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>IPO
+                        <input type="radio" name="ipo_or_mrf" value="ipo" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG || $bookingDetails->booking_status == BookingFulgs::ON_HOLD_FLUG) ? 'disabled' : ''}}>IPO
                     </label>
                     <label class="radio-inline">
-                        <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>MRF
+                        <input type="radio" name="ipo_or_mrf" value="mrf" style="margin: 2px -30px 0px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG || $bookingDetails->booking_status == BookingFulgs::ON_HOLD_FLUG) ? 'disabled' : ''}}>MRF
                     </label>
-                    <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG) ? 'disabled' : ''}}>
+                    <button type="submit" class="btn btn-primary" style="margin-left: 10px" {{($bookingDetails->booking_status == BookingFulgs::BOOKED_FLUG || $bookingDetails->booking_status == BookingFulgs::ON_HOLD_FLUG) ? 'disabled' : ''}}>
                         Submit
                     </button>
                 </div>

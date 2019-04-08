@@ -1,9 +1,9 @@
 @extends('maxim.layouts.layouts')
 @section('title','Production Order')
 @section('print-body')
-<?php 
-    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
-?>
+	<?php 
+	    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+	?>
     <style type="text/css">
         .body-top .body-list label{
             font-size: 16px;
@@ -193,7 +193,11 @@
 	        	<?php 
 	        		$TotalPoQty += $details->mrf_quantity; 
 	        		$jobId = (JobIdFlugs::JOBID_LENGTH - strlen($details->job_id));
-	        		$p = ($details->mrf_quantity * $details->supplier_price);
+
+	        		$supplier_price = str_replace('$', '', $details->supplier_price);
+                	$supplier_price = trim($supplier_price, '$');
+
+	        		$p = ($details->mrf_quantity * $supplier_price);
 	        		$TotalPoPrice += $p;
 	        	?>
 	        	<tr>
@@ -219,7 +223,7 @@
 			        		echo $increase_qty;
 			        	?>
 			        </td>-->
-			        <td>{{(!empty($details->supplier_price))?'$'.$details->supplier_price:''}}</td>
+			        <td>{{(!empty($details->supplier_price))?'$'.$supplier_price:''}}</td>
 			        <td>{{(!empty($details->mrf_quantity*$details->supplier_price))?'$'.$details->mrf_quantity*$details->supplier_price:''}}</td>
 	        	</tr>
         	@endforeach

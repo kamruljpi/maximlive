@@ -61,6 +61,7 @@ class MrfListController extends Controller
                 ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
                 ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mbd.booking_category','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name','mp.other_colors','mp.material')
                 ->whereIn('mxp_mrf_table.mrf_id',$mrf_ids)
+                ->groupBy('mxp_mrf_table.job_id')
                 ->get();
 
         } else { /** now this condition is not work **/
@@ -73,6 +74,7 @@ class MrfListController extends Controller
                     ->join('mxp_users as mu','mu.user_id','mxp_mrf_table.user_id')
                     ->select('mxp_mrf_table.*','mbd.buyer_name','mbd.Company_name','mbd.booking_category','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','mu.first_name','mu.last_name','mp.other_colors','mp.material')
                     ->where('mxp_mrf_table.mrf_id',$request->mid)
+                    ->groupBy('mxp_mrf_table.job_id')
                     ->get();
         }
 

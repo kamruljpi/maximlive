@@ -122,9 +122,11 @@ ul li {
     /*table th#poCatNo {
       min-width: 180px !important;
     }*/
-    table th#erp_code {
+
+    /*table th#erp_code {
       min-width: 190px !important;
-    }
+    }*/
+    
     /*.fixed_footer {page-break-before: always;}*/
 
     input[type="checkbox"]

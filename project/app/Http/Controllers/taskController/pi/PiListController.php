@@ -53,6 +53,7 @@ class PiListController extends Controller
 
         /** End**/ 
 
+        // use trait class
         $this->addBuyerDetails($piDetails);
 
 		return view('maxim.pi_format.list.pi_list',compact('piDetails'));
@@ -83,20 +84,20 @@ class PiListController extends Controller
 				->groupBy('poCatNo')
 				->orderBy('poCatNo','ASC')
 				->get();
-			}else {
-				$bookingDetails = MxpPi::where([
-							['is_deleted',BookingFulgs::IS_NOT_DELETED],
-							['p_id',$request->pid],
-							['is_type',$is_type],
-						])
-						->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
-							DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
-							DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
-							DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
-						->groupBy('job_no')
-						->orderBy('job_no','ASC')
-						->get();
-			}
+		}else {
+			$bookingDetails = MxpPi::where([
+						['is_deleted',BookingFulgs::IS_NOT_DELETED],
+						['p_id',$request->pid],
+						['is_type',$is_type],
+					])
+					->select('*',DB::Raw('sum(item_quantity) as item_quantity'),
+						DB::Raw('GROUP_CONCAT(DISTINCT style SEPARATOR ", ") as style'),
+						DB::Raw('GROUP_CONCAT(DISTINCT item_description SEPARATOR ", ") as item_description'),
+						DB::Raw('GROUP_CONCAT(DISTINCT oos_number SEPARATOR ", ") as oos_number'))
+					->groupBy('job_no')
+					->orderBy('job_no','ASC')
+					->get();
+		}
 		
 				
 		$companyInfo = DB::table('mxp_header')->where('header_type', HeaderType::PI)->get();
@@ -114,6 +115,9 @@ class PiListController extends Controller
 
 		$p_id = isset($request->p_id) ? $request->p_id : '' ;
 		$piDetails = $this->piSearchById($p_id);
+
+		// use trait class
+		$this->addBuyerDetails($piDetails);
 
 		return view('maxim.pi_format.list.pi_list',compact('piDetails'));
 	}

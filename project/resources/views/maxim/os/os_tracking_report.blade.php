@@ -177,9 +177,8 @@
 
                                     @else
 
-                                        <input type="hidden" name="order_status[]" value="N/A">
-
-                                        {{ $value->mrf_status }}
+                                        <input type="hidden" name="order_status[]" value="{{ $value->mrf_status }}">
+                                        <p class="{{ $value->mrf_status }}">{{ $value->mrf_status }}</p>
 
                                     @endif
                                 </td>

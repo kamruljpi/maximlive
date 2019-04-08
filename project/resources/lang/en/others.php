@@ -316,5 +316,11 @@ return [
 'mxp_menu_planning_tracking_report' => 'Planning Tracking Report',
 'mxp_menu_os_tracking_list' => 'OS Tracking Report',
 'mxp_menu_draft_booking' => 'Draft Booking List',
+'mxp_menu_purchase_list_view' => 'Purchase List',
+'mxp_menu_raw_item' => 'Raw Item',
+'mxp_menu_warehouse_production' => 'Warehouse Production',
+'mxp_menu_issue_from_warehouse' => 'Issue from Warehouse',
+'mxp_menu_received_for_production' => 'Received for Production',
+'mxp_menu_final_production' => 'Final Production',
 
 ];

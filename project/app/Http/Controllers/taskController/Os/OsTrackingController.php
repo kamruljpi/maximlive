@@ -100,6 +100,7 @@ class OsTrackingController extends Controller
 
         $bookingLists = MxpMrf::where('mxp_mrf_table.is_deleted', BookingFulgs::IS_NOT_DELETED)
                 ->select($this->mrf())
+                ->groupBy('mxp_mrf_table.job_id')
                 ->orderBy('mxp_mrf_table.job_id','DESC');
 
         /* only os_po_id input value*/

@@ -262,6 +262,7 @@ return array(
     'CreateMxpPurchaseOrderWhTable' => $baseDir . '/database/migrations/2019_04_03_101640_create_mxp_purchase_order_wh_table.php',
     'CreateMxpPurchaseOrdersTable' => $baseDir . '/database/migrations/old/2018_07_30_070914_create_mxp_purchase_orders_table.php',
     'CreateMxpRawItemTable' => $baseDir . '/database/migrations/2019_04_01_151255_create_mxp_raw_item_table.php',
+    'CreateMxpRequisitionTable' => $baseDir . '/database/migrations/2019_04_09_161746_create_mxp_requisition_table.php',
     'CreateMxpStageTable' => $baseDir . '/database/migrations/2019_03_27_165812_create_mxp_stage_table.php',
     'CreateMxpStoreTable' => $baseDir . '/database/migrations/2019_01_06_070059_create_mxp_store_table.php',
     'CreateMxpSupplierPricesTable' => $baseDir . '/database/migrations/old/2018_07_20_062001_create_mxp_supplier_prices_table.php',

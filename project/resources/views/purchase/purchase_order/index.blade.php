@@ -80,18 +80,3 @@
         </div>
     </div>
 @endsection
-@section('LoadScript')
-  <script type="text/javascript">
-      $('#search').on('keyup',function(){
-          $value = $(this).val();
-          $.ajax({
-              type : 'get',
-              url : '{{ Route('buyer_simple_searchs') }}',
-              data:{'search':$value},
-              success:function(data){
-                  $('tbody').html(data);
-              }
-          });
-      })
-  </script>
-@endsection

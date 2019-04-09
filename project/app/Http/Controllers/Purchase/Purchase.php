@@ -22,11 +22,17 @@ class Purchase extends Controller
      */
     public function index()
     {
-        $details = MxpPurchaseOrderWh::where([
-                    ['is_deleted', BookingFulgs::IS_NOT_DELETED],
-                    ['status', PurchaseFlugs::PURCHASE]
+        $details = MxpPurchaseOrderWh::join('mxp_purchase_order_item_wh as mporw','mporw.purchase_order_wh_id','mxp_purchase_order_wh.id_purchase_order_wh')
+                ->where([
+                    ['mporw.is_deleted', BookingFulgs::IS_NOT_DELETED],
+                    ['mxp_purchase_order_wh.is_deleted', BookingFulgs::IS_NOT_DELETED],
+                    ['mxp_purchase_order_wh.status', PurchaseFlugs::PURCHASE]
                 ])
+                ->select('mxp_purchase_order_wh.*',DB::Raw('SUM(mporw.item_qty) as item_total_qty'))
+                ->groupBy('mporw.purchase_order_wh_id')
                 ->paginate(20);
+
+        // $this->print_me($details);
 
         return view('purchase.purchase.index',compact('details'));
     }
@@ -135,7 +141,23 @@ class Purchase extends Controller
      */
     public function show($id)
     {
-        //
+        $details = MxpPurchaseOrderWh::where([
+                    ['is_deleted', BookingFulgs::IS_NOT_DELETED],
+                    ['status', PurchaseFlugs::PURCHASE],
+                    ['id_purchase_order_wh', $id]
+                ])
+                ->first();
+        if(! empty($details)) {
+            $details->item_details = MxpPurchaseOrderItemWh::where([
+                ['is_deleted', BookingFulgs::IS_NOT_DELETED],
+                ['purchase_order_wh_id', $details->id_purchase_order_wh]
+            ])
+            ->get();
+        }
+        
+        // $this->print_me($details);
+
+        return view('purchase.purchase.show',compact('details'));
     }
 
     /**

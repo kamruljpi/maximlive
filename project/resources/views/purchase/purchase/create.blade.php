@@ -90,7 +90,7 @@
 											</td>
 											<td>
 												<div class="form-group">
-													<input type="number" name="item_qty[]" class="form-control item_qty" placeholder="Qty">
+													<input type="text" name="item_qty[]" class="form-control item_qty" placeholder="Qty">
 												</div>
 											</td>
 											<td>
@@ -124,7 +124,7 @@
 										</td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="number" name="in_all_total_price" class="form-control" placeholder="Total Price">
+												<input type="number" name="in_all_total_price" class="form-control in_all_total_price" placeholder="Total Price">
 											</div>
 										</td>
 									</tr>

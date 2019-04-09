@@ -42,11 +42,11 @@
 	                <thead>
 	                    <tr>
 	                    	<th>Sr#</th>
-                            <th>ID</th>
+                            <th>Purchase Voucher</th>
                             <th>Date</th>
-                            {{-- <th>Account Name</th> --}}
+                            <th>Total Qty</th>
                             <th>Discount</th>
-                            <th>Total</th>
+                            <th>Total Price</th>
                             <th>Payment Method</th>
 	                        <th>Manage</th>
 	                    </tr>
@@ -57,22 +57,20 @@
                             @foreach($details as $detail)                  
                                 <tr>                        	
                                 	<td>{{$j++}}</td>
-                                    <td>{{$detail->purchase_voucher}}</td>         	            	
-                                    <td>{{$detail->order_date}}</td>                                
-                                    <td>{{$detail->discount}}</td>                              
+                                    <td>{{$detail->purchase_voucher}}</td>
+                                    <td>{{$detail->order_date}}</td>
+                                    <td>{{$detail->item_total_qty}}</td>
+                                    <td>{{$detail->discount}}</td>
                                     <td>{{$detail->in_all_total_price}}</td>
-                                    <td>{{$detail->paying_by}}</td>                              
+                                    <td>{{$detail->paying_by}}</td>
                                 	<td>
-                                        <a href="{{ Route('stage_edit_view')}}/{{$detail->id_stage}}" class="btn btn-success">edit</a>
-
-                                        <a href="{{ Route('stage_delete_action')}}/{{$detail->id_stage}}" class="btn btn-danger">delete</a>
-                                        
+                                        <a href="{{Route('purchase_show_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-success">Show</a>
                                 	</td>
                                 </tr>                    
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="4">
+                                <td colspan="8">
                                     <div style="text-align: center;font-size: 16px;font-weight: bold;"> Data not found.</div>
                                 </td>
                             </tr>                 
@@ -86,19 +84,4 @@
             <div class="col-sm-1"></div>
         </div>
     </div>
-@endsection
-@section('LoadScript')
-  <script type="text/javascript">
-      $('#search').on('keyup',function(){
-          $value = $(this).val();
-          $.ajax({
-              type : 'get',
-              url : '{{ Route('buyer_simple_searchs') }}',
-              data:{'search':$value},
-              success:function(data){
-                  $('tbody').html(data);
-              }
-          });
-      })
-  </script>
 @endsection

@@ -1,3 +1,6 @@
+var in_all_total_price = 0;
+var total_price_2 = 0;
+
 var purchase = (function(){
   return {
         init: function () {
@@ -37,6 +40,7 @@ var purchase = (function(){
 
         	$("#add_new_field").click(function () {
 
+                total_price_2 = 0 ;
                 var clone = $('.idclone .tr_clone:last').clone(true);
 
                 clone.addClass('tr_clone_'+incre).removeClass('tr_clone').appendTo(".idclone");
@@ -125,16 +129,33 @@ var raw_item_code_event = (function(){
 var item_qty_event = (function(){
   return {
         init: function () {
+            
             $('.tr_clone').on('keyup','.item_qty',function(){
 
                 var item_qty = $(this).val();
                 var item_parent_class = $(this).parent().parent().parent().prop('className');
 
                 var item_price = $('.'+item_parent_class+' .price').val();
+
                 var total_price = item_qty * item_price ;
 
+                total_price_2 += total_price ;
+
+                if(total_price == 0){
+                    in_all_total_price = (in_all_total_price - total_price_2);
+                    total_price_2 = 0;
+                }else{
+                    in_all_total_price += total_price;
+                }
+
                 $('.'+item_parent_class+' .total_price').val(total_price);
+                $('.in_all_total_price').val(in_all_total_price);
+
+                console.log('total_price :'+total_price);
+                console.log('total_price_2 :'+total_price_2);
+                console.log('in_all_total_price :'+in_all_total_price);
             });
+
         }
     };
 })();

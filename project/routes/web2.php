@@ -51,7 +51,7 @@ Route::group(['middleware' => 'auth'], function(){
    		Route::get('opening/stock', 'OpeningStockController@index')->name('opening_stock_view');
       Route::post('store/opening/stock', 'OpeningStockController@store')->name('store_opening_stock_action');
 
-   		Route::get('store/opening/product', 'OpeningProductController@index')->name('store_opening_product_action');
+   		Route::get('store/opening/product', 'OpeningProductController@index')->name('store_opening_product_view');
       Route::post('store/opening/product', 'OpeningProductController@productStore')->name('store_product_entry_action');
 
       Route::get('stored/product', 'OpeningProductController@storedProduct')->name('stored_product');
@@ -70,6 +70,16 @@ Route::group(['middleware' => 'auth'], function(){
 
    Route::get('get/item/waise/color/size', 'OpeningStockController@getColorSizeByitemCode')->name('get_item_waise_color_size');
    Route::get('get/product', 'OpeningProductController@getProduct')->name('get_product_action');
+});
+
+Route::group(['middleware' => 'auth'], function(){
+    Route::get('zone/list', 'ZoneController@zoneList')->name('zone_list');
+    Route::get('zone/add', 'ZoneController@zoneAdd')->name('zone_add_view');
+    Route::post('zone/add', 'ZoneController@zoneStore')->name('zone_store_action');
+    Route::get('zone/edit/{zone_id}', 'ZoneController@zoneView')->name('zone_view');
+    Route::post('zone/update', 'ZoneController@zoneUpdate')->name('zone_update_action');
+    Route::get('zone/delete/{zone_id}', 'ZoneController@zoneDelete')->name('zone_delete');
+    Route::get('zone/details', 'ZoneController@getZoneByLocId')->name('zone_details_by_id');
 });
 
 /** End **/

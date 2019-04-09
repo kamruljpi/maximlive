@@ -312,6 +312,7 @@ return [
 'mxp_menu_stored_ipo_list' => 'Accepted Ipo List',
 'mxp_menu_stored_mrf_list' => 'Accepted Mrf List',
 'mxp_menu_opening_stock_view' => 'Opening Product Stock',
+'mxp_menu_opening_product_action' => 'Product Entry',
 'mxp_menu_stored_product_list' => 'Stored Product List',
 'mxp_menu_planning_tracking_report' => 'Planning Tracking Report',
 'mxp_menu_os_tracking_list' => 'OS Tracking Report',
@@ -322,5 +323,6 @@ return [
 'mxp_menu_issue_from_warehouse' => 'Issue from Warehouse',
 'mxp_menu_received_for_production' => 'Received for Production',
 'mxp_menu_final_production' => 'Final Production',
+'mxp_menu_zone_list_view' => 'Zone List',
 
 ];

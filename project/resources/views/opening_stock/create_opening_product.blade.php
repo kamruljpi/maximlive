@@ -33,84 +33,9 @@
 	                    @endforeach
 	                </div>
 	            @endif
-	            <div class="panel panel-default">
+	            <div class="panel panel-default product_entry">
 	                <!-- <div class="panel-heading">Create Location</div> -->
 	                <div class="panel-body">
-	                    {{-- <form class="form-horizontal" action="{{ Route('store_opening_stock_action') }}" role="form" method="POST" >
-
-	                        {{csrf_field()}}
-
-	                        <div class="row">
-	                        	<div class="col-sm-3">
-	                        		<div class="form-group">
-	                        			<label class="col-sm-12">Product Id</label>
-	                        			<div class="col-sm-12">
-	                                        <select class="select_2" name="product_id" id="product_id">
-	                                            <option value="">-- Select --</option>
-	                                            @foreach($product as $item)
-	                                            	<option value="{{$item->id}}">{{$item->product_id}}</option>
-	                                            @endforeach
-	                                        </select>
-	                                    </div>
-                                    </div>
-	                        	</div>
-
-	                        	<div class="col-sm-3">
-	                        		<div class="form-group">
-	                        			<label class="col-sm-12">Booking Id</label>
-	                        			<div class="col-sm-12">
-	                                        <input type="text" name="booking_order_id" id="booking_order_id" class="form-control">
-	                                    </div>
-                                    </div>
-	                        	</div>
-	                        	<div class="col-sm-3">
-	                        		<div class="form-group">
-	                        			<label class="col-sm-12">Item Code</label>
-	                        			<div class="col-sm-12">
-	                                        <input type="text" name="item_code" id="item_code"class="form-control">
-	                                    </div>
-                                    </div>
-	                        	</div>
-	                        	<div class="col-sm-3">
-	                        		<div class="form-group">
-	                        			<label class="col-sm-12">Erp Code</label>
-	                        			<div class="col-sm-12">
-	                                        <input type="text" name="erp_code" id="erp_code" class="form-control">
-	                                    </div>
-                                    </div>
-	                        	</div>
-
-	                        	<div class="col-sm-3">
-	                        		<div class="form-group">
-	                        			<label class="col-sm-12">Item Quantity</label>
-	                        			<div class="col-sm-12">
-	                                        <input type="text" name="item_quantity" id="item_quantity" class="form-control">
-	                                    </div>
-                                    </div>
-	                        	</div>
-
-	                        	<div class="col-sm-3">
-	                        		<div class="form-group">
-	                        			<label class="col-sm-12">Warehouse Type</label>
-	                        			<div class="col-sm-12">
-	                                        <select class="select_2" name="warehouse_type" id="warehouse_type">
-	                                            <option value="">-- Select --</option>
-	                                            @foreach($product as $item)
-	                                            	<option value="{{$item->id}}">{{$item->product_id}}</option>
-	                                            @endforeach
-	                                        </select>
-	                                    </div>
-                                    </div>
-	                        	</div>
-
-	                        </div>
-
-	                        <div class="form-group">
-	                            <div class="col-sm-3 col-sm-offset-9 col-xs-offset-9">
-	                                <button type="submit" class="btn btn-primary form-control">Add</button>
-	                            </div>
-	                        </div>                        
-	                    </form> --}}
 	                    <div class="">
 	                    	<table class="table table-striped table-bordered">
 	                    		<thead>
@@ -124,6 +49,7 @@
 	                    				<th>Item Color</th>
 	                    				<th>Item Quantity</th>
 	                    				<th>Location</th>
+	                    				<th>Zone</th>
 	                    				<th>Warehouse In Type</th>
 	                    				<th>Action</th>
                     				</tr>
@@ -144,13 +70,18 @@
 		                    				<td><input type="hidden" name="item_color" value="{{ $item->item_color }}">{{ $item->item_color }}</td>
 		                    				<td><input type="hidden" name="item_quantity" value="{{ $item->item_quantity }}">{{ $item->item_quantity }}</td>
 		                    				<td>
-		                    					<select class="form-control" name="location">
+		                    					<select class="form-control location" name="location"id="location">
 		                    						<option value="n/a">-- Select --</option>
 		                    						@foreach($location as $loc)
 		                    					    	<option value="{{$loc->id_location}}">{{ $loc->location}}</option>
 		                    					    @endforeach
 		                    					</select>
 		                    				</td>
+											<td>
+												<select class="form-control zone" name="zone" id="zone">
+													<option value="n/a">-- Select --</option>
+												</select>
+											</td>
 		                    				<td>
 		                    					<select class="form-control" name="warehouse">
 		                    						<option value="n/a">-- Select --</option>

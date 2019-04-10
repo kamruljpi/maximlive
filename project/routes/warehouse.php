@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth','namespace' => 'Purchase'], function () {
 	Route::get('create_purchase', 'Purchase@create')->name('purchase_create_view');
 	Route::post('store_purchase', 'Purchase@store')->name('purchase_store_action');
 	Route::get('show_purchase/{id?}', 'Purchase@show')->name('purchase_show_view');
+	Route::post('store/show_purchase/{id?}', 'Purchase@showStore')->name('purchase_show_store_action');
 
 });
 

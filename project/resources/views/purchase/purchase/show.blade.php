@@ -37,7 +37,7 @@
 
 					<div class="panel-heading">ADD</div>
 
-					<form action="{{ Route('purchase_store_action')}}" method="POST">
+					<form action="{{ Route('purchase_show_store_action',['id' => $details->id_purchase_order_wh])}}" method="POST">
 						{{csrf_field()}}
 
 						<div class="panel-body">
@@ -71,8 +71,8 @@
 								</div>
 							</div>
 
-							<div class="add_new_field" style="padding-top: 10px;clear: both;">
-								<table class="table table-bordered" id="copy_table">
+							<div style="padding-top: 10px;clear: both;">
+								<table class="table table-bordered">
 									<thead>
 										<th>Product</th>
 										<th>Quantity</th>
@@ -81,12 +81,13 @@
 										<th>Location</th>
 										<th>Zone</th>
 										<th>Warehouse in type</th>
+										<th>Action</th>
 									</thead>
-									<tbody class="idclone">
+									<tbody class="tbody_tr">
 
 										@if(isset($details->item_details) && ! empty($details->item_details))
-											@foreach($details->item_details as $item)
-												<tr>
+											@foreach($details->item_details as $keys => $item)
+												<tr class="tr_{{$keys}}">
 													<td>
 														<div class="form-group item_code_parent">
 															<input type="hidden" name="raw_item_id[]" class="raw_item_id" readonly="true" value="{{$item->raw_item_id}}">
@@ -110,23 +111,37 @@
 													</td>
 													<td>
 														<div class="form-group">
-															<select class="form-control">
+															<select class="form-control location_id" name="location_id[]" required="true">
+																<option value=" ">--Select--</option>
+
+																@foreach($locations as $location)
+																	<option value="{{$location->id_location}}"> {{$location->location}} </option>
+																@endforeach
+															</select>
+														</div>
+													</td>
+													<td>
+														<div class="form-group">
+															<select class="form-control zone_id" name="zone_id[]">
 																<option value=" ">--Select--</option>
 															</select>
 														</div>
 													</td>
 													<td>
 														<div class="form-group">
-															<select class="form-control">
+															<select class="form-control" name="warehouse_type_id[]" required="true">
 																<option value=" ">--Select--</option>
+
+																@foreach($warehouse_in_types as $types)
+																	<option value="{{$types->id_warehouse_type}}"> {{$types->warehouse_type}} </option>
+																@endforeach
+
 															</select>
 														</div>
 													</td>
 													<td>
 														<div class="form-group">
-															<select class="form-control">
-																<option value=" ">--Select--</option>
-															</select>
+															<button class="btn btn-primary">Save</button>
 														</div>
 													</td>
 												</tr>
@@ -141,13 +156,6 @@
 									</tbody>
 								</table>
 							</div>
-
-							{{-- <div class="form-group">
-								<button class="btn btn-danger" style="float: right;" id="add_new_field"><i class="fa fa-plus" style="padding-right: 5px;"></i>Add New</button>
-							</div> --}}
-
-							{{-- <div style="clear:both;"></div>
-							<hr> --}}
 
 							<table class="table table-bordered">
 								<tbody>
@@ -217,4 +225,40 @@
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+		  $('.tbody_tr').on('change','.location_id',function(){
+		  		var selected = $(this).val();
+		  		var item_parent_class = $.trim($(this).parent().parent().parent().prop('className'));
+
+		  		$.ajax({
+		  		    url:baseURL+"/zone/details",
+		  		    type:"GET",
+		  		    data:{selected},
+		  		    datatype: 'json',
+		  		    cache: false,
+		  		    async: false,
+		  			success:function(result){
+			  		    var myObj3 = JSON.parse(result);
+
+			  		    $('.'+item_parent_class+' .zone_id').html($('<option>', {
+			  		        value: "",
+			  		        text : "--Select--"
+			  		    }));
+			  		    
+			  		    if(myObj3 != null) {
+			  		    	var i;
+			  		    	for (i = 0; i < myObj3.length; i++) {
+			  		    	    $(".zone_id").append('<option value="'+myObj3[i].zone_id+'">'+myObj3[i].zone_name+'</option>');
+			  		    	}
+			  		    }
+		  		    },
+		  		    error:function(result){
+		  		        alert("ERROR > "+result);
+		  		    }
+		  		});
+		  });
+		});
+	</script>
 @endsection

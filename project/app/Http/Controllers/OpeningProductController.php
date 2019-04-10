@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Model\Location\MxpLocation;
+use App\MxpZone;
 use Illuminate\Http\Request;
 use App\MxpWarehouseType;
 use App\MxpProduct;
@@ -40,6 +41,7 @@ class OpeningProductController extends Controller
         if(isset($product) && !empty($product)) {
             foreach ($product as &$value) {
                 $value->location = (MxpLocation::find( $value->location_id))->location;
+                $value->zone = (MxpZone::find( $value->zone_id))->zone_name;
                 $value->warehouse = (MxpWarehouseType::find( $value->warehouse_type_id))->warehouse_type;
             }
         }
@@ -217,7 +219,8 @@ class OpeningProductController extends Controller
     public function productStore(Request $request)
     {
     		$validMessages = [
-    		      'product_id.required' => 'Product Id field is required.',
+    		      'zone.required' => 'Zone field is required.',
+    		      'product_id.required' => 'Product id field is required.',
     		      'warehouse.required' => 'warehouse field is required',
     		      'location.required' => 'location field is required',
     		      ];
@@ -225,6 +228,7 @@ class OpeningProductController extends Controller
 
     		$validator = Validator::make($datas, 
     		      [
+    		    'zone' => 'required',
     		    'product_id' => 'required',
     		    'location' => 'required',
     		    'warehouse' => 'required',
@@ -238,11 +242,11 @@ class OpeningProductController extends Controller
 
     		
 	        if(isset($request->product_id) && !empty($request->product_id)){
-
 	            MxpStore::where('store_id', $request->product_id)
 	            	->update([
 	            		'stock_type' => 1,
 	            		'location_id' => $request->location,
+	            		'zone_id' => $request->zone,
 	            		'warehouse_type_id' => $request->warehouse,
 	            		'warehouse_entry_date' => Carbon\Carbon::now() ,
 	            		'warehouse_user_id' => Auth::user()->user_id ,

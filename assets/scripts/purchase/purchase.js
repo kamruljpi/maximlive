@@ -109,10 +109,9 @@ var raw_item_code_event = (function(){
         		    	var myObj = JSON.parse(result);
 
         		    	if(myObj != '' && myObj != null){
-
-        		    		$('.'+item_parent_class+' .price').val(myObj.price);
-                    $('.'+item_parent_class+' .raw_item_id').val(myObj.id_raw_item);
-                    $('.'+item_parent_class+' .item_qty').val('0');
+                            $('.'+item_parent_class+' .price').val(myObj.price);
+                            $('.'+item_parent_class+' .raw_item_id').val(myObj.id_raw_item);
+                            $('.'+item_parent_class+' .item_qty').val('0');
                             
         		    	}
         		    },
@@ -130,9 +129,10 @@ var item_qty_event = (function(){
   return {
         init: function () {
             
-            $('.tr_clone').on('keyup','.item_qty',function(){
+            $('.add_new_field').on('keyup','.item_qty',function(){
 
                 var item_qty = $(this).val();
+
                 var item_parent_class = $(this).parent().parent().parent().prop('className');
 
                 var item_price = $('.'+item_parent_class+' .price').val();

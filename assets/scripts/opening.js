@@ -5,6 +5,8 @@ var opening = (function() {
 
             $(".product_entry").on("change", "#location", function () {
                 var selected = $(this).val();
+                var item_parent_class = $.trim($(this).parent().parent().prop('className'));
+
                 $.ajax({
                     url:baseURL+"/zone/details",
                     type:"GET",
@@ -15,8 +17,13 @@ var opening = (function() {
                 success:function(result){
                     var myObj3 = JSON.parse(result);
                     var i;
+                    console.log(myObj3);
+                    $('.'+item_parent_class+' .zone').html($('<option>', {
+                        value: "",
+                        text : "select"
+                    }));
                     for (i = 0; i < myObj3.length; i++) {
-                        $("#zone ").html('<option value="'+myObj3[i].zone_id+'">'+myObj3[i].zone_name+'</option>');
+                        $("#zone").append('<option value="'+myObj3[i].zone_id+'">'+myObj3[i].zone_name+'</option>');
                     }
                     if(myObj3 != null) {
 

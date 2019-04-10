@@ -117,6 +117,7 @@
 	                    				<th>Item Color</th>
 	                    				<th>Item Quantity</th>
 	                    				<th>Location</th>
+	                    				<th>Zone</th>
 	                    				<th>Warehouse In Type</th>
 	                    				<th>Action</th>
                     				</tr>
@@ -134,6 +135,7 @@
 			                    				<td>{{ $item->item_color }}</td>
 			                    				<td>{{ $item->item_quantity }}</td>
 			                    				<td>{{ $item->location }}</td>
+			                    				<td>{{ $item->zone }}</td>
 			                    				<td>{{ $item->warehouse }}</td>
 			                    				<td>
 			                    					<button class="btn btn-success">

@@ -147,7 +147,7 @@ class BookingController extends Controller
       $cc = $cc_1 + $cc_3;
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
       $id = "BK"."-";
-      $date = date('dmY') ;
+      $date = date('dmY');
 
       $company_sort_name = str_replace('/', '', $companySortName);
       $company_sort_name =  trim($company_sort_name, '/');

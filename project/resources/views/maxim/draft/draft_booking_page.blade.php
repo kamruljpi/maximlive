@@ -61,6 +61,10 @@
   @if(Session::has('errorss'))
       @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('errorss') ))
   @endif
+  
+  @if(Session::has('err_messages'))
+      @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('err_messages') ))
+  @endif
 
   <form class="" action="{{ Route('booking_order_action') }}" role="form" method="POST" enctype="multipart/form-data" >
     <input type="hidden" name="_token" value="{{ csrf_token() }}">

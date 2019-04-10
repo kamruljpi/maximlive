@@ -1107,3 +1107,23 @@ Route::post('itemupload/actionfinal', [
     'as' => 'itemuploadactionfinal',
     'uses' => 'BulkUploadController@itemuploadactionfinal'
 ]);
+
+    /****************************************************
+     * Booking Bulk Upload Routes
+     ****************************************************/
+
+Route::post('booking/bulk_upload', [
+    'as' => 'booking_bulk_upload',
+    'uses' => 'taskController\BulkBookingController@bookingBulkUpload'
+]);
+
+Route::any('orderuploadactionview',
+[
+    'as'=>'orderuploadactionview',
+    'uses'=>'taskController\BulkBookingController@uploadactionview'
+]);
+
+Route::post('orderupload/actionfinal', [
+    'as' => 'orderuploadactionfinal',
+    'uses' => 'taskController\BulkBookingController@orderuploadactionfinal'
+]);

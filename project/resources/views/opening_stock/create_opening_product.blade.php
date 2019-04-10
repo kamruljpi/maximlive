@@ -60,7 +60,7 @@
 	                    			<form action="{{ route('store_product_entry_action') }}" method="POST">
 	                    				<input type="hidden" name="product_id" value="{{ $item->store_id }}">
 	                    				{{ csrf_field() }}
-		                    			<tr>
+		                    			<tr class="tr_clone">
 		                    				<td>PSE-{{ $item->store_id }}</td>
 		                    				<td> {{ $item->product_id }}</td>
 		                    				<td><input type="hidden" name="booking_order_id" value="{{ $item->booking_order_id }}">{{ $item->booking_order_id }}</td>

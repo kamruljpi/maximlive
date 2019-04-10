@@ -54,14 +54,7 @@
       @include('widgets.alert', array('class'=>'danger', 'message'=> Session::get('error_code') ))
   @endif
 
-  <form class="" action="{{ Route('booking_order_action') }}" role="form" method="POST" enctype="multipart/form-data" target="_blank">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <input type="hidden" name="buyerDetails" value="{{$buyerDetails}}">
-    @if($taskType == $general)
-      <input type="hidden" name="is_type" value="general">
-    @elseif($taskType == $fsc)
-    <input type="hidden" name="is_type" value="fsc">
-    @endif
+  
     <div class="col-md-12" style="margin-top: 10px;">
       <div class="pull-left">
         <div class="form-group button_add pull-right">
@@ -73,8 +66,86 @@
           </label>
         </div>
       </div>
+      <div class="btn btn-default btn btn-success pull-right">
+         <button id="booking_item_files" class="booking_item_files">Upload Bulk Item</button>
+      </div>
     </div>
-
+    <div class="bulk_order_upload d_none" id="bulk_order_upload">
+      <div id="bulk_order_content" class="bulk_order_content">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3>
+                  Bulk Order Upload
+                </h3>
+              </div>
+              <div class="panel-body">
+                <form action="{{Route('booking_bulk_upload')}}" method="post" enctype="multipart/form-data">
+                  {{csrf_field()}}
+                  <input type="hidden" name="buyerDetails" value="{{$buyerDetails}}">
+                  <div class="form-group row">
+                    <label class="col-sm-3 control-label" for="bulkupload"> <span class="pull-right">Bulk Order file :</span></label>
+                    <div class="col-sm-5">
+                      <input type="file" name="booking_bulk_file" class="form-control-file" id="bulkupload">
+                    </div>
+                    <div class="col-sm-4">
+                      <button type="submit" class="btn btn-primary" style="margin-right: 15px;">
+                          <span class="pull-left">
+                            Upload Order
+                          </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label class="col-sm-4">
+                        <span class="pull-right" style="padding-top: 8px">Preferred File Format :</span>
+                      </label>
+                      <div class="col-sm-6">
+                        <a href="{{ asset('excel/order_bulk_demo_file.xlsx') }}">Download Excel <i class="fa fa-download"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+      </div>
+      <script>
+        $("#booking_item_files").on("click",function(){
+          if($("#bulk_order_upload").hasClass("d_block")){
+            $("#bulk_order_upload").removeClass("d_block");
+            $("#bulk_order_upload").addClass("d_none");
+          }else{
+            $("#bulk_order_upload").removeClass("d_none");
+            $("#bulk_order_upload").addClass("d_block");
+          }          
+        });
+      </script>
+      <style>
+        button#booking_item_files {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            cursor: inherit;
+        }
+        .d_none{
+          display:none;
+        }
+        .d_block{
+          display:block;
+        }
+      </style>
+    </div>
+    <form class="" action="{{ Route('booking_order_action') }}" role="form" method="POST" enctype="multipart/form-data" target="_blank">
+      <input type="hidden" name="_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="buyerDetails" value="{{$buyerDetails}}">
+      @if($taskType == $general)
+        <input type="hidden" name="is_type" value="general">
+      @elseif($taskType == $fsc)
+      <input type="hidden" name="is_type" value="fsc">
+      @endif
     <div class="top-div">
       <div class="row">
         <div class="col-md-4 col-xs-4">

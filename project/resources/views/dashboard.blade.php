@@ -9,6 +9,11 @@
 			        @endforeach
 			    </div>
 			@endif
+			@if(session()->has('bulkerror'))
+				<div class="alert alert-danger">
+					{!! session('bulkerror') !!}
+				</div>
+			@endif
 			<div class="panel panel-default">
 			  	<div class="panel-body">
 			  		<div class="header">

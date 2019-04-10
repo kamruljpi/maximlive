@@ -433,7 +433,6 @@ class BulkUploadController extends Controller
         $temp_array = array();
         $i = 0;
         $key_array = array();
-
         foreach($array as $val) {
             if(isset($val[$key])){
                 if (!in_array($val[$key], $key_array)) {

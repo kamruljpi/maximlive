@@ -64,7 +64,7 @@ class PiController extends Controller
 			}
 		}
 
-		// this section check empty booking details
+		// this section check empty PI details
 		if (empty($pi_details)) {
 			StatusMessage::create('empty_booking_data', 'Are you sure, Someone not created This Order PI!');
 			return \Redirect()->Route('task_dashboard_view');

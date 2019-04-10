@@ -207,7 +207,7 @@ class TaskController extends Controller
 
 		} elseif ($taskType === 'challan') { // it's not working now. 
 		
-			// return "Coming soon ";
+			return "Coming soon ";
 		
 			$validMessages = [
 				'bookingIdList.required' => 'Booking Id field is required.',

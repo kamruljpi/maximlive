@@ -90,12 +90,12 @@
 											</td>
 											<td>
 												<div class="form-group">
-													<input type="text" name="item_qty[]" class="form-control item_qty" placeholder="Qty">
+													<input type="text" name="item_qty[]" class="form-control item_qty" placeholder="Qty" value="0">
 												</div>
 											</td>
 											<td>
 												<div class="form-group">
-													<input type="text" name="price[]" class="form-control price" placeholder="Purchase Price">
+													<input type="text" name="price[]" class="form-control price purchase_price" placeholder="Purchase Price" value="0">
 												</div>
 											</td>
 											<td>
@@ -116,11 +116,11 @@
 							<div style="clear:both;"></div>
 							<hr>
 
-							<table class="table table-bordered">
+							<table class="table table-bordered" id="TableFooter">
 								<tbody>
 									<tr>
 										<td colspan="">
-											<div style="text-align: center; font-size: 17px;">Total Price</div>
+											<div style="text-align: center; font-size: 17px;" >Total Price</div>
 										</td>
 										<td width="30%">
 											<div class="form-group">
@@ -134,7 +134,7 @@
 										</td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="number" name="discount" class="form-control" placeholder="Discount">
+												<input type="number" name="discount" class="form-control discount" value="0">
 											</div>
 										</td>
 									</tr>
@@ -142,7 +142,15 @@
 										<td colspan=""><div style="text-align: center; font-size: 17px;">Vat</div></td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="number" name="vat" class="form-control" placeholder="Vat">
+												<input type="number" name="vat" class="form-control vat" value="0">
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td colspan=""><div style="text-align: center; font-size: 17px;">Grand Total</div></td>
+										<td width="30%">
+											<div class="form-group">
+												<input type="number" name="grand_total" class="form-control grand_total" value="0" >
 											</div>
 										</td>
 									</tr>

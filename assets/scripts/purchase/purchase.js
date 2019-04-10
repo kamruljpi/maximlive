@@ -125,41 +125,6 @@ var raw_item_code_event = (function(){
     };
 })();
 
-var item_qty_event = (function(){
-  return {
-        init: function () {
-            
-            $('.add_new_field').on('keyup','.item_qty',function(){
-
-                var item_qty = $(this).val();
-
-                var item_parent_class = $(this).parent().parent().parent().prop('className');
-
-                var item_price = $('.'+item_parent_class+' .price').val();
-
-                var total_price = item_qty * item_price ;
-
-                total_price_2 += total_price ;
-
-                if(total_price == 0){
-                    in_all_total_price = (in_all_total_price - total_price_2);
-                    total_price_2 = 0;
-                }else{
-                    in_all_total_price += total_price;
-                }
-
-                $('.'+item_parent_class+' .total_price').val(total_price);
-                $('.in_all_total_price').val(in_all_total_price);
-
-                console.log('total_price :'+total_price);
-                console.log('total_price_2 :'+total_price_2);
-                console.log('in_all_total_price :'+in_all_total_price);
-            });
-
-        }
-    };
-})();
-
 
 var item_price_event = (function(){
   return {
@@ -177,10 +142,54 @@ var item_price_event = (function(){
         }
     };
 })();
+var main = function () {
+    $('.add_new_field').on('keyup','.item_qty',function(){
+        var tt = 0;
+        var item_qty = $(this).val();
+        var item_parent_class = $(this).parent().parent().parent().prop('className');
+
+        var item_price = $('.'+item_parent_class+' .price').val();
+
+        var total_price = item_qty * item_price ;
+
+        $('.'+item_parent_class+' .total_price').val(total_price);
+
+        $(".total_price").each(function(a,b){
+            tt += parseFloat($(this).val());
+            $(".in_all_total_price").val(parseFloat(tt));
+            $('.grand_total').val(parseFloat(tt));
+        });
+
+    });
+
+};
+
+var grand_total = function(){
+    $('#TableFooter').on('keyup', '.discount', function () {
+       var discount = parseFloat($('.discount').val() );
+       var total = parseFloat($('.in_all_total_price').val() );
+       if (discount >= 0){
+           var grand_total = parseFloat(total - discount);
+           $('.grand_total').val(grand_total);
+       }
+
+    });
+    $('#TableFooter').on('keyup', '.vat', function () {
+
+        var vat = parseFloat($('.vat').val() );
+        var total = parseFloat($('.in_all_total_price').val() );
+        if (vat >= 0){
+            var grand_total = parseFloat(total + vat);
+            $('.grand_total').val(grand_total);
+        }
+    });
+}
 
 $(document).ready(function(){
+    main();
+    grand_total();
   purchase.init();
   raw_item_code_event.init();
-  item_qty_event.init();
+  // item_qty_event.init();
   item_price_event.init();
 });

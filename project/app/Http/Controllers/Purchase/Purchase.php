@@ -8,7 +8,9 @@ use App\Http\Controllers\Purchase\PurchaseFlugs;
 use App\Model\Purchase\MxpPurchaseOrderItemWh;
 use App\Model\Purchase\MxpPurchaseOrderWh;
 use App\Http\Controllers\Controller;
+use App\Model\Location\MxpLocation;
 use Illuminate\Http\Request;
+use App\MxpWarehouseType;
 use Session;
 use Auth;
 use DB;
@@ -154,10 +156,22 @@ class Purchase extends Controller
             ])
             ->get();
         }
-        
+
+        $locations = MxpLocation::where([
+                        ['is_deleted', BookingFulgs::IS_NOT_DELETED],
+                        ['status',1]
+                    ])
+                    ->get();
+
+
+        $warehouse_in_types = MxpWarehouseType::where([
+                        ['is_deleted', BookingFulgs::IS_NOT_DELETED],
+                        ['warehouse_in_out_type', 'in'],
+                    ])
+                    ->get();
         // $this->print_me($details);
 
-        return view('purchase.purchase.show',compact('details'));
+        return view('purchase.purchase.show',compact('details','locations','warehouse_in_types'));
     }
 
     /**
@@ -181,6 +195,58 @@ class Purchase extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function showStore(Request $request)
+    {
+
+        return $request->datas ;
+        // $order_date = isset($request->order_date) ? $request->order_date : '';
+        // $purchase_voucher = isset($request->purchase_voucher) ? $request->purchase_voucher : '';
+        // $bilty_no = isset($request->bilty_no) ? $request->bilty_no : '';
+        // $description = isset($request->description) ? $request->description : '';
+
+        $id_purchase_order_wh = isset($id) ? $id : '';
+        
+        $raw_item_id = isset($request->raw_item_id) ? $request->raw_item_id : [];
+        $item_code = isset($request->item_code) ? $request->item_code : [];
+        $item_qty = isset($request->item_qty) ? $request->item_qty : [];
+        $price = isset($request->price) ? $request->price : [];
+        $item_total_price = isset($request->item_total_price) ? $request->item_total_price : [];
+        $location_id = isset($request->location_id) ? $request->location_id : [];
+        $zone_id = isset($request->zone_id) ? $request->zone_id : [];
+        $warehouse_type_id = isset($request->warehouse_type_id) ? $request->warehouse_type_id : [];
+
+        // $in_all_total_price = isset($request->in_all_total_price) ? $request->in_all_total_price : '';
+        // $discount = isset($request->discount) ? $request->discount : '';
+        // $vat = isset($request->vat) ? $request->vat : '';
+        // $payment_status = isset($request->payment_status) ? $request->payment_status : '';
+        // $paying_by = isset($request->paying_by) ? $request->paying_by : '';
+
+        // $item_details = [];
+
+        // if(! empty($raw_item_id)) {
+        //     foreach ($raw_item_id as $keys => $item_id) {
+        //         if(! empty($item_id)) {
+        //             $item_details[$keys]['raw_item_id'] = $item_id;
+        //             $item_details[$keys]['item_code'] = $item_code[$keys];
+        //             $item_details[$keys]['item_qty'] = $item_qty[$keys];
+        //             $item_details[$keys]['price'] = $price[$keys];
+        //             $item_details[$keys]['item_total_price'] = $item_total_price[$keys];
+        //             $item_details[$keys]['location_id'] = $location_id[$keys];
+        //             $item_details[$keys]['zone_id'] = $zone_id[$keys];
+        //             $item_details[$keys]['warehouse_type_id'] = $warehouse_type_id[$keys];
+        //         }                
+        //     }
+        // }
+        $this->print_me($item_details);
     }
 
     /**

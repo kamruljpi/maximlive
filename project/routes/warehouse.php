@@ -22,6 +22,8 @@ Route::group(['middleware' => 'auth','namespace' => 'Purchase'], function () {
 	Route::post('store_purchase', 'Purchase@store')->name('purchase_store_action');
 	Route::get('show_purchase/{id?}', 'Purchase@show')->name('purchase_show_view');
 
+	Route::any('store/show_purchase', 'Purchase@showStore')->name('purchase_show_store_action');
+
 });
 
 Route::group(['middleware' => 'auth'], function () {

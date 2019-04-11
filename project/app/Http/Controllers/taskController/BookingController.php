@@ -41,7 +41,7 @@ class BookingController extends Controller
     public function orderInputDetails(Request $request){
       // return json_encode(DB::select('Call getProductSizeQuantityWithConcat("'.$request->item.'")'));
 
-      return json_encode($this->getItemDetails($request->item));
+      return json_encode($this->getItemDetails($request->item,$request->buyer_company_id));
     }
 
     public function getVendorPrice(Request $request){
@@ -386,7 +386,7 @@ class BookingController extends Controller
 
     
 
-    public function getItemDetails($item_code){
+    public function getItemDetails($item_code,$buyer_company_id = null){
       $buyerList = $this->getUserByerList();
 
       /** increase group_concat_max_len **/
@@ -423,7 +423,22 @@ class BookingController extends Controller
       }else{
             $value = [];
       }
+
+      if(isset($value) && !empty($value)){
+        foreach ($value as &$vvalue) {
+          $vendor_details = self::getCompanyPrice($vvalue->product_id,$buyer_company_id);
+          if(isset($vendor_details->vendor_com_price) && !empty($vendor_details->vendor_com_price)){
+            $vvalue->unit_price = $vendor_details->vendor_com_price;
+          }
+        }
+      }
+      
     return $value;
+  }
+
+  public static function getCompanyPrice($product_id, $party_table_id){
+    $results = DB::table('mxp_vendor_prices')->select('vendor_com_price')->where([['product_id','=',$product_id],['party_table_id','=',$party_table_id],['vendor_com_price','!=','N/A']])->whereNotNull('vendor_com_price')->first();
+    return $results;
   }
 
   public function updateBookingView(Request $request){

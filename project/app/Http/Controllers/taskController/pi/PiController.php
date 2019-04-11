@@ -60,7 +60,7 @@ class PiController extends Controller
 		$pi_details = [];
 		if(!empty($job_ids)) {
 			foreach ($job_ids as $key => $job_id) {
-				$pi_details[$key] = DB::table('mxp_booking')->where([['id',$job_id],['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE]])->first();
+				$pi_details[$job_id] = DB::table('mxp_booking')->where([['id',$job_id],['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE]])->first();
 			}
 		}
 
@@ -80,14 +80,23 @@ class PiController extends Controller
 		}
 
 		// this section get buyer details
-	    $buyerDetails = DB::table('mxp_bookingbuyer_details')
-	    	->where('booking_order_id',$pi_details[0]->booking_order_id)
-	    	->first();
+		$i = 0;
+		$pibooking_order_id = '';
+		foreach ($pi_details as $pi_detailskey => $pi_detailsvalue) {
+			if($i == 0){
+				$buyerDetails = DB::table('mxp_bookingbuyer_details')
+					->where('booking_order_id',$pi_detailsvalue->booking_order_id)
+					->first();
+				$pibooking_order_id = $pi_detailsvalue->booking_order_id;
+			}
+			$i++;
+		}
+	    
 
 	    $cc = MxpPI::select('p_id')->groupBy('p_id')->get();
       	$cc = count($cc);
 		$count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
-		$date = date('dmY') ;
+		$date = date('dmY');
 
 		if($request->is_type === BookingFulgs::IS_PI_FSC_TYPE){
 			$customid = "fsc-".$date.$count;
@@ -97,36 +106,36 @@ class PiController extends Controller
 
 		if(isset($pi_details) && !empty($pi_details)) {
 			foreach ($pi_details as $piValues) {
-
-				$piDetails = new MxpPi();
-				$piDetails->p_id = $customid;
-				$piDetails->job_no = $piValues->id;
-				$piDetails->user_id = Auth::user()->user_id;
-				$piDetails->booking_order_id = $piValues->booking_order_id;
-				$piDetails->erp_code = $piValues->erp_code;
-				$piDetails->item_code = $piValues->item_code;
-				$piDetails->item_size = $piValues->item_size;
-				$piDetails->item_description = $piValues->item_description;
-				$piDetails->item_quantity = $piValues->item_quantity;
-				$piDetails->item_price = $piValues->item_price;
-				$piDetails->matarial = $piValues->matarial;
-				$piDetails->gmts_color = $piValues->gmts_color;
-				$piDetails->others_color = $piValues->others_color;
-				$piDetails->orderDate = $piValues->orderDate;
-				$piDetails->orderNo = $piValues->orderNo;
-				$piDetails->shipmentDate = $piValues->shipmentDate;
-				$piDetails->poCatNo = $piValues->poCatNo;
-				$piDetails->oos_number = $piValues->oos_number;
-				$piDetails->sku = $piValues->sku;
-				$piDetails->style = $piValues->style;
-				$piDetails->payment_days = $request->payment_days;
-				$piDetails->is_type = $is_type;
-				$piDetails->last_action_at = LastActionFlugs::CREATE_ACTION;
-				$piDetails->save();
+				if(!empty($piValues->item_code)){
+					$piDetails = new MxpPi();
+					$piDetails->p_id = $customid;
+					$piDetails->job_no = $piValues->id;
+					$piDetails->user_id = Auth::user()->user_id;
+					$piDetails->booking_order_id = $piValues->booking_order_id;
+					$piDetails->erp_code = $piValues->erp_code;
+					$piDetails->item_code = $piValues->item_code;
+					$piDetails->item_size = $piValues->item_size;
+					$piDetails->item_description = $piValues->item_description;
+					$piDetails->item_quantity = $piValues->item_quantity;
+					$piDetails->item_price = $piValues->item_price;
+					$piDetails->matarial = $piValues->matarial;
+					$piDetails->gmts_color = $piValues->gmts_color;
+					$piDetails->others_color = $piValues->others_color;
+					$piDetails->orderDate = $piValues->orderDate;
+					$piDetails->orderNo = $piValues->orderNo;
+					$piDetails->shipmentDate = $piValues->shipmentDate;
+					$piDetails->poCatNo = $piValues->poCatNo;
+					$piDetails->oos_number = $piValues->oos_number;
+					$piDetails->sku = $piValues->sku;
+					$piDetails->style = $piValues->style;
+					$piDetails->payment_days = $request->payment_days;
+					$piDetails->is_type = $is_type;
+					$piDetails->last_action_at = LastActionFlugs::CREATE_ACTION;
+					$piDetails->save();
+				}
 			}
 		}
-
-		return \Redirect::route('refresh_pi_view',['is_type' => $is_type,'p_id' => $customid,'bid' => $piValues->booking_order_id]);
+		return \Redirect::route('refresh_pi_view',['is_type' => $is_type,'p_id' => $customid,'bid' => $pibooking_order_id]);
 	}
 
 	public function redirectPiReport(Request $request){

@@ -133,12 +133,13 @@ $(document).ready(function(){
   $('#page-wrapper').on('change','.item_code', function(){
       // console.log(parentLii);
       var item_code = encodeURIComponent($(this).val());
+      var buyer_company_id = $('[name="companyIdForBookingOrder"]').val();
       var item_parent_class = $(this).data('parent');
 
       $.ajax({
           type: "GET",
           url: baseURL+"/get/product/details/booking",
-          data: "item="+item_code,
+          data: "item="+item_code+"&buyer_company_id="+buyer_company_id,
           datatype: 'json',
           cache: true,
           async: true,
@@ -237,24 +238,24 @@ $(document).ready(function(){
                   $('.'+item_parent_class+' .others_color').eq(increI).val(myObj[ij].others_color);
                   $('.'+item_parent_class+' .item_description').eq(increI).val(myObj[ij].product_description);
 
-                  var company_id = $("input[name=companyIdForBookingOrder]").val();
-                  var priceDetails = ajaxFunc("/get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
+                  // var company_id = $("input[name=companyIdForBookingOrder]").val();
+                  // var priceDetails = ajaxFunc("/get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
 
                   // console.log(priceDetails.responseJSON);
-                  if(typeof priceDetails.responseJSON != "undefined") {
+                  // if(typeof priceDetails.responseJSON != "undefined") {
                       
-                      if(priceDetails.responseJSON.vendor_com_price != null){
-                          $('.'+item_parent_class+' .item_price').eq(increI).val(priceDetails.responseJSON.vendor_com_price);
-                          $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
-                      }
-                      else{
-                          $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
-                          $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
-                      }
-                  }else{
+                  //     if(priceDetails.responseJSON.vendor_com_price != null){
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).val(priceDetails.responseJSON.vendor_com_price);
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                  //     }
+                  //     else{
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                  //     }
+                  // }else{
                     $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
                     $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
-                  }
+                  // }
 
                   increI++;
                 }

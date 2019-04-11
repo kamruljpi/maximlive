@@ -29,6 +29,7 @@ class TrackingExportToExcel extends Controller
                 }
             }
         }
+       
         $today = Carbon\Carbon::today()->format('d-m-y');
         $this->excel->create($today.'-Tracking Report' ,function($excel) use ($data){
             $excel->sheet('Sheet 1',function($sheet) use ($data){
@@ -37,7 +38,6 @@ class TrackingExportToExcel extends Controller
                     'D' => '0.00',
                     'E' => 'dd-mm-yyyy',
                 ));
-
                 $sheet->fromArray($data);
             });
         })->download('xlsx');

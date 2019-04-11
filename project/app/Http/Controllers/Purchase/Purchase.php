@@ -204,9 +204,10 @@ class Purchase extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showStore(Request $request, $id)
+    public function showStore(Request $request)
     {
 
+        return $request->datas ;
         // $order_date = isset($request->order_date) ? $request->order_date : '';
         // $purchase_voucher = isset($request->purchase_voucher) ? $request->purchase_voucher : '';
         // $bilty_no = isset($request->bilty_no) ? $request->bilty_no : '';
@@ -229,22 +230,22 @@ class Purchase extends Controller
         // $payment_status = isset($request->payment_status) ? $request->payment_status : '';
         // $paying_by = isset($request->paying_by) ? $request->paying_by : '';
 
-        $item_details = [];
+        // $item_details = [];
 
-        if(! empty($raw_item_id)) {
-            foreach ($raw_item_id as $keys => $item_id) {
-                if(! empty($item_id)) {
-                    $item_details[$keys]['raw_item_id'] = $item_id;
-                    $item_details[$keys]['item_code'] = $item_code[$keys];
-                    $item_details[$keys]['item_qty'] = $item_qty[$keys];
-                    $item_details[$keys]['price'] = $price[$keys];
-                    $item_details[$keys]['item_total_price'] = $item_total_price[$keys];
-                    $item_details[$keys]['location_id'] = $location_id[$keys];
-                    $item_details[$keys]['zone_id'] = $zone_id[$keys];
-                    $item_details[$keys]['warehouse_type_id'] = $warehouse_type_id[$keys];
-                }                
-            }
-        }
+        // if(! empty($raw_item_id)) {
+        //     foreach ($raw_item_id as $keys => $item_id) {
+        //         if(! empty($item_id)) {
+        //             $item_details[$keys]['raw_item_id'] = $item_id;
+        //             $item_details[$keys]['item_code'] = $item_code[$keys];
+        //             $item_details[$keys]['item_qty'] = $item_qty[$keys];
+        //             $item_details[$keys]['price'] = $price[$keys];
+        //             $item_details[$keys]['item_total_price'] = $item_total_price[$keys];
+        //             $item_details[$keys]['location_id'] = $location_id[$keys];
+        //             $item_details[$keys]['zone_id'] = $zone_id[$keys];
+        //             $item_details[$keys]['warehouse_type_id'] = $warehouse_type_id[$keys];
+        //         }                
+        //     }
+        // }
         $this->print_me($item_details);
     }
 

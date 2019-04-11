@@ -48,25 +48,11 @@
 										<input type="date" name="order_date" class="form-control" readonly="true" value="{{$details->order_date}}">
 									</div>
 								</div>
-
-								<div class="form-group">
-									<label class="col-sm-6 date-label"><span>Bilty No</span></label>
-									<div class="col-sm-6">
-										<input type="text" name="bilty_no" class="form-control" placeholder="Enter bilty no" readonly="true" value="{{$details->bilty_no}}">
-									</div>
-								</div>
 								
 								<div class="form-group">
 									<label class="col-sm-6 date-label"><span>Purchase Voucher #</span></label>
 									<div class="col-sm-6">
-										<input type="text" name="purchase_voucher" class="form-control" placeholder="P-V # 00001" readonly="true" value="{{$details->order_date}}">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-sm-6 date-label"><span>Description</span></label>
-									<div class="col-sm-6">
-										<textarea name="description" class="form-control" style="width:90% !important" readonly="true">{{$details->description}}</textarea>
+										<input type="text" name="purchase_voucher" class="form-control" placeholder="P-V # 00001" readonly="true" value="{{$details->purchase_voucher}}">
 									</div>
 								</div>
 							</div>
@@ -84,7 +70,7 @@
 										<th>Action</th>
 									</thead>
 									<tbody class="tbody_tr">
-
+										<input type="hidden" name="id_purchase_order_wh">
 										@if(isset($details->item_details) && ! empty($details->item_details))
 											@foreach($details->item_details as $keys => $item)
 												<tr class="tr_{{$keys}}">
@@ -129,7 +115,7 @@
 													</td>
 													<td>
 														<div class="form-group">
-															<select class="form-control" name="warehouse_type_id[]" required="true">
+															<select class="form-control warehouse_type_id" name="warehouse_type_id[]" required="true">
 																<option value=" ">--Select--</option>
 
 																@foreach($warehouse_in_types as $types)
@@ -141,7 +127,7 @@
 													</td>
 													<td>
 														<div class="form-group">
-															<button class="btn btn-primary">Save</button>
+															<button class="btn btn-primary click_preloder store_purchase_submit">Save</button>
 														</div>
 													</td>
 												</tr>
@@ -156,69 +142,6 @@
 									</tbody>
 								</table>
 							</div>
-
-							<table class="table table-bordered">
-								<tbody>
-									<tr>
-										<td colspan="">
-											<div style="text-align: center; font-size: 17px;">Total Price</div>
-										</td>
-										<td width="30%">
-											<div class="form-group">
-												<input type="number" name="in_all_total_price" class="form-control" placeholder="Total Price" readonly="true" value="{{$details->in_all_total_price}}">
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="">
-											<div style="text-align: center; font-size: 17px;">Discount</div>
-										</td>
-										<td width="30%">
-											<div class="form-group">
-												<input type="number" name="discount" class="form-control" placeholder="Discount" readonly="true" value="{{$details->discount}}">
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td colspan=""><div style="text-align: center; font-size: 17px;">Vat</div></td>
-										<td width="30%">
-											<div class="form-group">
-												<input type="number" name="vat" class="form-control" placeholder="Vat" readonly="true" value="{{$details->vat}}">
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td colspan=""><div style="text-align: center; font-size: 17px;">Payment Status</div></td>
-										<td width="30%">
-											<div class="form-group">
-												<select class="form-control" name="payment_status" readonly="true">
-													<option value=" ">--Select--</option>
-													<option value="pendding" {{($details->payment_status == 'pendding') ? 'selected' : ''}}>Pendding</option>
-													<option value="confirmed" {{($details->payment_status == 'confirmed') ? 'selected' : ''}}>Confirmed</option>
-												</select>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td colspan=""><div style="text-align: center; font-size: 17px;">Paying By</div></td>
-										<td width="30%">
-											<div class="form-group">
-												<select class="form-control" name="paying_by" readonly>
-													<option value=" ">--Select--</option>
-													<option value="cash" {{($details->paying_by == 'cash') ? 'selected' : ''}}>Cash</option>
-													<option value="bank" {{($details->paying_by == 'bank') ? 'selected' : ''}}>Bank</option>
-												</select>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-
-							<div class="col-sm-4 col-sm-offset-4">
-								<div class="form-group">
-									<button class="form-control btn btn-primary">Confirm Add New Purchase</button>
-								</div>
-							</div>
 						</div>
 					</form>
 				</div>
@@ -226,39 +149,8 @@
 		</div>
 	</div>
 
-	<script type="text/javascript">
-		$(document).ready(function(){
-		  $('.tbody_tr').on('change','.location_id',function(){
-		  		var selected = $(this).val();
-		  		var item_parent_class = $.trim($(this).parent().parent().parent().prop('className'));
+@endsection
 
-		  		$.ajax({
-		  		    url:baseURL+"/zone/details",
-		  		    type:"GET",
-		  		    data:{selected},
-		  		    datatype: 'json',
-		  		    cache: false,
-		  		    async: false,
-		  			success:function(result){
-			  		    var myObj3 = JSON.parse(result);
-
-			  		    $('.'+item_parent_class+' .zone_id').html($('<option>', {
-			  		        value: "",
-			  		        text : "--Select--"
-			  		    }));
-			  		    
-			  		    if(myObj3 != null) {
-			  		    	var i;
-			  		    	for (i = 0; i < myObj3.length; i++) {
-			  		    	    $(".zone_id").append('<option value="'+myObj3[i].zone_id+'">'+myObj3[i].zone_name+'</option>');
-			  		    	}
-			  		    }
-		  		    },
-		  		    error:function(result){
-		  		        alert("ERROR > "+result);
-		  		    }
-		  		});
-		  });
-		});
-	</script>
+@section('LoadScript')
+    <script src="{{ asset('assets/scripts/purchase/purchase_show.js') }}"></script>
 @endsection

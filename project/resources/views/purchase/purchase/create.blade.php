@@ -66,10 +66,13 @@
 								<div class="form-group">
 									<label class="col-sm-6 date-label"><span>Description</span></label>
 									<div class="col-sm-6">
-										<input type="text" name="description" class="form-control" placeholder="Description">
+
+										<textarea name="description" class="form-control" style="width: 90%;"></textarea>
 									</div>
 								</div>
 							</div>
+
+							<div style="clear:both;padding-bottom: 5px;"></div>
 
 							<div class="add_new_field">
 								<table class="table table-bordered" id="copy_table">
@@ -124,7 +127,7 @@
 										</td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="number" name="in_all_total_price" class="form-control in_all_total_price" placeholder="Total Price">
+												<input type="text" name="in_all_total_price" class="form-control in_all_total_price" placeholder="Total Price">
 											</div>
 										</td>
 									</tr>
@@ -134,7 +137,7 @@
 										</td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="number" name="discount" class="form-control discount" value="0">
+												<input type="text" name="discount" class="form-control discount" value="0">
 											</div>
 										</td>
 									</tr>
@@ -142,7 +145,7 @@
 										<td colspan=""><div style="text-align: center; font-size: 17px;">Vat</div></td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="number" name="vat" class="form-control vat" value="0">
+												<input type="text" name="vat" class="form-control vat" value="0">
 											</div>
 										</td>
 									</tr>
@@ -150,7 +153,7 @@
 										<td colspan=""><div style="text-align: center; font-size: 17px;">Grand Total</div></td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="number" name="grand_total" class="form-control grand_total" value="0" >
+												<input type="text" name="grand_total" class="form-control grand_total" value="0" >
 											</div>
 										</td>
 									</tr>
@@ -166,7 +169,7 @@
 											</div>
 										</td>
 									</tr>
-									<tr>
+									{{-- <tr>
 										<td colspan=""><div style="text-align: center; font-size: 17px;">Paying By</div></td>
 										<td width="30%">
 											<div class="form-group">
@@ -177,7 +180,7 @@
 												</select>
 											</div>
 										</td>
-									</tr>
+									</tr> --}}
 								</tbody>
 							</table>
 

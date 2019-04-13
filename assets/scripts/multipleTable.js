@@ -136,16 +136,22 @@ $(document).ready(function(){
       var buyer_company_id = $('[name="companyIdForBookingOrder"]').val();
       var item_parent_class = $(this).data('parent');
 
+      var time = new Date();
+      var times = time.getTime();
+
       $.ajax({
           type: "GET",
           url: baseURL+"/get/product/details/booking",
-          data: "item="+item_code+"&buyer_company_id="+buyer_company_id,
+          data: "item="+item_code+"&buyer_company_id="+buyer_company_id+"&times="+times,
           datatype: 'json',
           cache: true,
           async: true,
           success: function(result) {
               var myObj = JSON.parse(result);
-              // console.log(myObj);
+              console.log(myObj);
+
+              return false ;
+              
               if(myObj.length == 0)
               {
                 alert('Please check the Item code or Mismatch Item code. There are no data found. Please contact with PID team.');

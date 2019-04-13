@@ -123,6 +123,7 @@
                             <th width="">ERP Code</th>
                             <th>Size Range</th>
                             <th>Item Description</th>
+                            <th>Style</th>
                             <th>Sku</th>
                             <th>Quantity</th>
                         </tr>
@@ -256,6 +257,8 @@
                                         <td>
                                             <input name="item_description[]" value="{{$valuelist->item_description}}" type="hidden">{{$valuelist->item_description}}
                                         </td>
+                                        <td><input name="style[]" value="{{$valuelist->style}}" hidden>{{$valuelist->style}}</td>
+
                                         <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
                                         <td>
                                             <input name="item_quantity[]" value="{{$valuelist->item_quantity}}" type="hidden">
@@ -266,14 +269,14 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="19">
+                                <td colspan="20">
                                     <center>Data not Found.</center>
                                 </td>
                             </tr>
                         @endif
 
                         <tr>
-                            <td colspan="16"></td>
+                            <td colspan="17"></td>
                             <td colspan="2"><strong style="font-size: 12px;">Total Qty:</strong></td>
                             <td><strong><input name="total_qty" value="" type="hidden">{{$total_qty}}</strong></td>
                         </tr>

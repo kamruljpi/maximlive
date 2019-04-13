@@ -11,12 +11,15 @@ use App\Http\Controllers\Controller;
 use App\Model\Location\MxpLocation;
 use Illuminate\Http\Request;
 use App\MxpWarehouseType;
+use App\MxpStore;
 use Session;
 use Auth;
 use DB;
 
 class Purchase extends Controller
 {
+    const LAST_ACTION_PURCHASE_STORE = 'purchase_store';
+
     /**
      * Display a listing of the resource.
      *
@@ -206,47 +209,36 @@ class Purchase extends Controller
      */
     public function showStore(Request $request)
     {
-
-        return $request->datas ;
-        // $order_date = isset($request->order_date) ? $request->order_date : '';
-        // $purchase_voucher = isset($request->purchase_voucher) ? $request->purchase_voucher : '';
-        // $bilty_no = isset($request->bilty_no) ? $request->bilty_no : '';
-        // $description = isset($request->description) ? $request->description : '';
+        $datas = isset($request->datas) ? $request->datas : [] ;
 
         $id_purchase_order_wh = isset($id) ? $id : '';
         
-        $raw_item_id = isset($request->raw_item_id) ? $request->raw_item_id : [];
-        $item_code = isset($request->item_code) ? $request->item_code : [];
-        $item_qty = isset($request->item_qty) ? $request->item_qty : [];
-        $price = isset($request->price) ? $request->price : [];
-        $item_total_price = isset($request->item_total_price) ? $request->item_total_price : [];
-        $location_id = isset($request->location_id) ? $request->location_id : [];
-        $zone_id = isset($request->zone_id) ? $request->zone_id : [];
-        $warehouse_type_id = isset($request->warehouse_type_id) ? $request->warehouse_type_id : [];
+        $item_parent_class = isset($datas['item_parent_class']) ? $datas['item_parent_class'] : '';
 
-        // $in_all_total_price = isset($request->in_all_total_price) ? $request->in_all_total_price : '';
-        // $discount = isset($request->discount) ? $request->discount : '';
-        // $vat = isset($request->vat) ? $request->vat : '';
-        // $payment_status = isset($request->payment_status) ? $request->payment_status : '';
-        // $paying_by = isset($request->paying_by) ? $request->paying_by : '';
+        $id_purchase_order_wh = isset($datas['id_purchase_order_wh']) ? $datas['id_purchase_order_wh'] : '';
 
-        // $item_details = [];
+        $raw_item_id = isset($datas['raw_item_id']) ? $datas['raw_item_id'] : '';
+        $item_code = isset($datas['raw_item_code']) ? $datas['raw_item_code'] : '';
+        $item_qty = isset($datas['item_qty']) ? $datas['item_qty'] : '';
+        $price = isset($datas['price']) ? $datas['price'] : '';
+        $item_total_price = isset($datas['total_price']) ? $datas['total_price'] : '';
+        $location_id = isset($datas['location_id']) ? $datas['location_id'] : '';
+        $zone_id = isset($datas['zone_id']) ? $datas['zone_id'] : '';
+        $warehouse_type_id = isset($datas['warehouse_type_id']) ? $datas['warehouse_type_id'] : '';
 
-        // if(! empty($raw_item_id)) {
-        //     foreach ($raw_item_id as $keys => $item_id) {
-        //         if(! empty($item_id)) {
-        //             $item_details[$keys]['raw_item_id'] = $item_id;
-        //             $item_details[$keys]['item_code'] = $item_code[$keys];
-        //             $item_details[$keys]['item_qty'] = $item_qty[$keys];
-        //             $item_details[$keys]['price'] = $price[$keys];
-        //             $item_details[$keys]['item_total_price'] = $item_total_price[$keys];
-        //             $item_details[$keys]['location_id'] = $location_id[$keys];
-        //             $item_details[$keys]['zone_id'] = $zone_id[$keys];
-        //             $item_details[$keys]['warehouse_type_id'] = $warehouse_type_id[$keys];
-        //         }                
-        //     }
-        // }
-        $this->print_me($item_details);
+        $show_store = new MxpStore();
+        $show_store->user_id = Auth::user()->user_id;
+        $show_store->product_id = $raw_item_id;
+        $show_store->item_code = $item_code;
+        $show_store->item_quantity = $item_qty;
+        $show_store->location_id = $location_id;
+        $show_store->zone_id = $zone_id;
+        $show_store->warehouse_type_id = $warehouse_type_id;
+        $show_store->last_action_at = self::LAST_ACTION_PURCHASE_STORE;
+        $show_store->save();
+
+        // $this->print_me($id_purchase_order_wh);
+        return json_encode($id_purchase_order_wh);
     }
 
     /**

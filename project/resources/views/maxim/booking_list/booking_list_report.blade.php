@@ -130,6 +130,7 @@
                             <th width="">ERP Code</th>
                             <th>Size Range</th>
                             <th>Item Description</th>
+                            <th>Style</th>
                             <th>Sku</th>
                             <th>Quantity</th>
                             <th>Price/Pcs.</th>
@@ -254,7 +255,10 @@
                                             </td>
                                             <td><input name="item_description[]" value="{{$valuelist->item_description}}" hidden>{{$valuelist->item_description}}</td>
 
+                                            <td><input name="style[]" value="{{$valuelist->style}}" hidden>{{$valuelist->style}}</td>
+
                                             <td><input name="sku[]" value="{{$valuelist->sku}}" hidden>{{$valuelist->sku}}</td>
+
                                             <td><input name="item_quantity[]" value="{{$valuelist->item_quantity}}" hidden>{{$valuelist->item_quantity}}</td>
                                             <td><input name="item_price[]" value="{{$str_item_price}}" hidden>{{(strtolower($valuelist->item_price) != 'n/a'? '$'.$valuelist->item_price : $valuelist->item_price)}}</td>
                                             <td><input name="total_price[]" value="{{ $valuelist->item_quantity*$str_item_price }}" hidden>${{ $valuelist->item_quantity*$str_item_price }}</td>
@@ -269,7 +273,7 @@
                                 </tr>
                             @endif
                             <tr>
-                                <td colspan="20"></td>
+                                <td colspan="21"></td>
                                 <td colspan="2"><strong style="font-size: 12px;">Total Price:</strong></td>
                                 <td><strong><input name="total" value="{{ round($fullTotalAmount,2) }}" hidden>${{ round($fullTotalAmount,2) }}</strong></td>
                             </tr>

@@ -9,6 +9,7 @@ use App\Model\Purchase\MxpPurchaseOrderItemWh;
 use App\Model\Purchase\MxpPurchaseOrderWh;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\User;
 use Session;
 use Auth;
 use DB;
@@ -27,6 +28,17 @@ class PurchaseOrder extends Controller
                     ['status', PurchaseFlugs::PURCHASE_ORDER]
                 ])
                 ->paginate(20);
+
+        if(!empty($details)) {
+
+            foreach ($details as &$de_value) {
+                $user_details = User::where('user_id',$de_value->user_id)->select('first_name', 'middle_name', 'last_name')->first();
+
+                if(isset($user_details) && !empty($user_details)) {
+                    $de_value->created_user_name = $user_details->first_name.' '. $user_details->last_name.' '. $user_details->middle_name ;
+                }
+            }
+        }
 
         return view('purchase.purchase_order.index',compact('details'));
     }
@@ -115,7 +127,23 @@ class PurchaseOrder extends Controller
      */
     public function show($id)
     {
-        //
+        $details = MxpPurchaseOrderWh::where([
+                    ['id_purchase_order_wh',$id],
+                    ['is_deleted',BookingFulgs::IS_DELETED],
+                ])
+                ->first();
+
+        if(! empty($details)) {
+            foreach ($details as &$de_value) {
+                $de_value->item_details = MxpPurchaseOrderItemWh::where([
+                        ['purchase_order_wh_id',$de_value->id_purchase_order_wh],
+                        ['is_deleted',BookingFulgs::IS_DELETED],
+                    ])
+                    ->get();
+            }
+        }
+
+        return view('purchase.purchase_order.show',compact('details'));
     }
 
     /**
@@ -149,6 +177,18 @@ class PurchaseOrder extends Controller
      */
     public function destroy($id)
     {
-        //
+        $destroy = MxpPurchaseOrderWh::find($id);
+        $destroy->is_deleted = BookingFulgs::IS_DELETED;
+        $destroy->deleted_user_id = Auth::user()->user_id;
+        $destroy->last_action_at = LastActionFlugs::DELETE_ACTION;
+        $destroy->save();
+
+        Session::flash('delete','This '.$destroy->purchase_order_no.' Purchase Order successfully deleted');
+
+        return \Redirect()->Route('purchase_order_view');
+    }
+
+    public function report($id) {
+        return "report view" ;
     }
 }

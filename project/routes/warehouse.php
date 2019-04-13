@@ -11,6 +11,10 @@ Route::group(['middleware' => 'auth','namespace' => 'Purchase'], function () {
 	                                  ->name('purchase_order_create_view');
 	Route::post('store/purchase_order', 'PurchaseOrder@store')
 	                                  ->name('purchase_order_store_action');
+	Route::get('report/purchase_order/{id?}', 'PurchaseOrder@report')
+	                                  ->name('purchase_order_report_view');
+	Route::get('delete/purchase_order/{id?}', 'PurchaseOrder@destroy')
+	                                  ->name('purchase_order_delete_action');
 
 
 	/*******************************************************************

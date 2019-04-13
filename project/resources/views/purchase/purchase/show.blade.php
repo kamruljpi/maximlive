@@ -70,7 +70,7 @@
 										<th>Action</th>
 									</thead>
 									<tbody class="tbody_tr">
-										<input type="hidden" name="id_purchase_order_wh">
+										<input type="hidden" name="id_purchase_order_wh" value="{{$details->id_purchase_order_wh}}">
 										@if(isset($details->item_details) && ! empty($details->item_details))
 											@foreach($details->item_details as $keys => $item)
 												<tr class="tr_{{$keys}}">

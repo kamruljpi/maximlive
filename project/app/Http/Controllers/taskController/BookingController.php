@@ -41,6 +41,8 @@ class BookingController extends Controller
     public function orderInputDetails(Request $request){
       // return json_encode(DB::select('Call getProductSizeQuantityWithConcat("'.$request->item.'")'));
 
+      return json_encode($request->all());
+      
       return json_encode($this->getItemDetails($request->item,$request->buyer_company_id));
     }
 

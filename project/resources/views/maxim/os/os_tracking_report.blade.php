@@ -5,6 +5,10 @@
     use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
     use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
     use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
+
+    // print_r("<pre>");
+   //  print_r($bookingList);
+    // die();
 ?>
 <style type="text/css">
     .b1{
@@ -117,6 +121,8 @@
                         <th>ERP Code</th>
                         <th>Size Range</th>                        
                         <th>Description</th>
+                        <th>Style</th>
+                        <th>Sku</th>
                         <th>Material</th>
                         <th width="10%">Order Date</th>
                         <th>Requested Shipment Date</th>
@@ -204,6 +210,10 @@
                                 
                                 <td><input name="item_description[]" value="{{$value->item_description}}" type="hidden">{{$value->item_description}}</td>
 
+                                <td><input name="style[]" value="{{$value->booking_values->style}}" hidden>{{$value->booking_values->style}}</td>
+
+                                <td><input name="sku[]" value="{{$value->booking_values->sku}}" hidden>{{$value->booking_values->sku}}</td>
+
                                 <td><input name="matarial[]" value="{{$value->os_po->material}}" type="hidden">{{$value->os_po->material}}</td>
 
                                 <td><input name="order_date[]" value="{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}" type="hidden">{{Carbon\Carbon::parse($value->orderDate)->format('d-m-Y')}}</td>
@@ -219,11 +229,11 @@
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="21"><center>Empty Value</center></td>
+                            <td colspan="23"><center>Empty Value</center></td>
                         </tr>
                     @endif
                     <tr>
-                        <td colspan="17"><strong style="font-size: 16px; float: right;"> All Total</strong></td>
+                        <td colspan="19"><strong style="font-size: 16px; float: right;"> All Total</strong></td>
                         {{-- <td colspan="2"></strong></td> --}}
                         <td><strong><input name="total_qty" value="" type="hidden"><strong style="">Qty:{{$total_qty}}</strong></td>
 

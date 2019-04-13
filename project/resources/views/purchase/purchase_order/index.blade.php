@@ -42,8 +42,9 @@
 	                <thead>
 	                    <tr>
 	                    	<th>Sr#</th>
+                            <th>User</th>
                             <th>Purchase Order No</th>
-                            <th>Date</th>
+                            <th>Created Date</th>
 	                        <th>Manage</th>
 	                    </tr>
 	                </thead>
@@ -53,19 +54,44 @@
                             @foreach($details as $detail)                  
                                 <tr>                        	
                                 	<td>{{$j++}}</td>
-                                    <td>{{$detail->purchase_order_no}}</td> 	            	
-                                    <td>{{$detail->order_date}}</td>                     
-                                	<td>
-                                        {{-- <a href="{{ Route('stage_edit_view')}}/{{$detail->id_stage}}" class="btn btn-success">edit</a>
+                                    <td>{{$detail->created_user_name}}</td> 	            	
+                                    <td>{{$detail->purchase_order_no}}</td>
+                                    <?php 
+                                        $str_date = str_replace('/', '-', $detail->created_at);
+                                        $created_at = new DateTime($str_date, new DateTimezone('Asia/Dhaka'));
+                                    ?>                   
+                                    <td>{{$created_at->format('d-m-Y, g:i a')}}</td>                     
+                                	<td width="23%">
+                                        <div style="padding: 1px; float: left;">
+                                            <a href="{{Route('purchase_order_delete_action')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-danger deleteButton" title="Delete">
+                                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
 
-                                        <a href="{{ Route('stage_delete_action')}}/{{$detail->id_stage}}" class="btn btn-danger">delete</a> --}}
+                                        <div style="padding: 1px; float: left;">
+                                            <a href="{{Route('purchase_order_report_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-success" title="Show Report">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        </div>
+
+                                        <div style="padding: 1px; float: left;">
+                                            <a href="#" class="btn btn-success" title="Accept">
+                                                <i class="fa fa-check"></i>
+                                            </a>
+                                        </div>
+
+                                        <div style="padding: 1px; float: left;">
+                                            <a href="#" class="btn btn-success" title="Reject">
+                                                <i class="fa fa-ban"></i>
+                                            </a>
+                                        </div>
                                         
                                 	</td>
                                 </tr>                    
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="4">
+                                <td colspan="5">
                                     <div style="text-align: center;font-size: 16px;font-weight: bold;"> Data not found.</div>
                                 </td>
                             </tr>                  

@@ -44,7 +44,9 @@ class PoController extends Controller
 			}
 
 			if($jobid_value->mrf_status == MrfFlugs::OPEN_MRF){
+
 				return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $mrf_ids])->with('mrfIdList', $mrf_ids)->with('data','Please accpet Selected Job Id.');
+
 			}
 			
 			if(!empty($check_open)){

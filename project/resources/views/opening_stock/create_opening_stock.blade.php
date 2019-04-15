@@ -42,9 +42,9 @@
 	                    @endforeach
 	                </div>
 	            @endif
-	            <div class="panel panel-default">
+	            <div class="panel panel-default ">
 	                <!-- <div class="panel-heading">Create Location</div> -->
-	                <div class="panel-body">
+	                <div class="panel-body product_entry">
 	                    <form class="form-horizontal" action="{{ Route('store_opening_stock_action') }}" role="form" method="POST" >
 
 	                        {{csrf_field()}}
@@ -98,7 +98,7 @@
 	                     			<div class="form-group">
 		                        		<label class="col-sm-12 label-control">Location</label>
 		                        		<div class="col-sm-12">
-		                        		    <select class="select_2" name="location_id" id="">
+		                        		    <select class="select_2 " name="location_id" id="location">
 		                        		    	
 		                        		        <option value="">-- Select --</option>
 		                        		        @foreach($locations as $location)
@@ -108,6 +108,16 @@
 		                        		</div>
 	                        		</div>
 	                     		</div>
+								<div class="col-sm-3">
+									<div class="form-group">
+										<label class="col-sm-12 label-control">Zone</label>
+										<div class="col-sm-12">
+											<select class="select_2 zone" name="zone_id" id="zone_id">
+												<option value="">-- Select --</option>
+											</select>
+										</div>
+									</div>
+								</div>
 	                     		<div class="col-sm-3">
 	                     			<div class="form-group">
 		                        		<label class="col-sm-12 label-control">Warehouse in type</label>
@@ -122,7 +132,7 @@
 	                        		</div>
 	                     		</div>
 	                     		<div class="form-group">
-	                     		    <div class="col-sm-3" style="padding-top:22px;">
+	                     		    <div class="col-sm-2" style="padding-top:22px;">
 	                     		        <button type="submit" class="btn btn-primary form-control">Add</button>
 	                     		    </div>
 	                     		</div> 
@@ -153,6 +163,7 @@
 	          cache: true,
 	          async: true,
 	          success: function(result) {
+	              console.log(result.colors);
 	              $('#item_color').html(result.colors);
 	              $('#size_range').html(result.sizes);
 	    	  },error:function(result){
@@ -160,6 +171,41 @@
     	      }
 
     	      });
-	    });	    
+	    });
+
+        $('#location').on('change',function(){
+            var selected = $(this).val();
+            var item_parent_class = $.trim($(this).parent().parent().prop('className'));
+
+            $.ajax({
+                url:baseURL+"/zone/details",
+                type:"GET",
+                data:{selected},
+                datatype: 'json',
+                cache: false,
+                async: false,
+                success:function(result){
+                    var myObj3 = JSON.parse(result);
+                    var i;
+                    console.log(myObj3);
+                    $('.'+item_parent_class+' .zone').html($('<option>', {
+                        value: "",
+                        text : "--select--"
+                    }));
+                    console.log(myObj3.length);
+                    for (i = 0; i < myObj3.length; i++) {
+                        $(".zone").append('<option value="'+myObj3[i].zone_id+'">'+myObj3[i].zone_name+'</option>');
+                    }
+                    if(myObj3 != null) {
+
+                    } else
+                        alert("Something went wrong.");
+                },
+
+                error:function(result){
+                    alert("ERROR > "+result);
+                }
+            });
+        });
 	</script>
 @endsection

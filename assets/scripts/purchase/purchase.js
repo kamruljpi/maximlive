@@ -159,6 +159,40 @@ var raw_item_code_event = (function(){
     };
 })();
 
+var w_raw_code_event = (function () {
+    return {
+        init: function () {
+            $('.new_table').on('change','.w_raw_item_code',function(){
+                var item_code = encodeURIComponent($(this).val());
+                var item_parent_class = $(this).parent().parent().parent().parent().prop('className');
+
+                $.ajax({
+                    type: "GET",
+                    url: baseURL+"/get/raw_item/details_by_code",
+                    data: "item_code="+item_code,
+                    datatype: 'json',
+                    cache: true,
+                    async: true,
+                    success: function(result) {
+                        var myObj = JSON.parse(result);
+
+                        if(myObj != '' && myObj != null){
+                            $('.'+item_parent_class+' .price').val(myObj.price);
+                            $('.'+item_parent_class+' .w_raw_item_id').val(myObj.id_raw_item);
+                            $('.'+item_parent_class+' .item_qty').val('0');
+
+                        }
+                    },
+                    error:function(result){
+                        alert("Something is wrong.");
+                    }
+
+                });
+            });
+        }
+    }
+})();
+
 
 var item_price_event = (function(){
   return {
@@ -262,6 +296,7 @@ $(document).ready(function(){
     grand_total();
   purchase.init();
   raw_item_code_event.init();
+    w_raw_code_event.init();
   // item_qty_event.init();
   item_price_event.init();
 });

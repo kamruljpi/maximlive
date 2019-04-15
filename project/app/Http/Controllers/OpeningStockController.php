@@ -33,12 +33,13 @@ class OpeningStockController extends Controller
             'size_range.required' => 'Size Range field is required.',
             'quantity.required' => 'Quantity field is required.',
             'location_id.required' => 'Location field is required.',
+            'zone_id.required' => 'Zone field is required.',
             'id_warehouse_type.required' => 'Warehouse type field is required.',
             ];
     	$validator = Validator::make($datas, 
             [
     			'item_code' => 'required',
-    			// 'color' => 'required',
+    			 'zone_id' => 'required',
     			'size_range' => 'required',
     			'quantity' => 'required',
     			'location_id' => 'required',
@@ -59,6 +60,7 @@ class OpeningStockController extends Controller
 		$store->item_quantity = $request->quantity;
 
 		$store->location_id = $request->location_id;
+		$store->zone_id = $request->zone_id;
 		$store->warehouse_type_id = $request->id_warehouse_type;
 
 		$store->last_action_at = 'create';

@@ -70,20 +70,20 @@
 		                    				<td><input type="hidden" name="item_color" value="{{ $item->item_color }}">{{ $item->item_color }}</td>
 		                    				<td><input type="hidden" name="item_quantity" value="{{ $item->item_quantity }}">{{ $item->item_quantity }}</td>
 		                    				<td>
-		                    					<select class="form-control location" name="location"id="location">
-		                    						<option value="n/a">-- Select --</option>
+		                    					<select class="select_2 form-control location" name="location" id="location">
+		                    						<option value="">-- Select --</option>
 		                    						@foreach($location as $loc)
 		                    					    	<option value="{{$loc->id_location}}">{{ $loc->location}}</option>
 		                    					    @endforeach
 		                    					</select>
 		                    				</td>
 											<td>
-												<select class="form-control zone" name="zone" id="zone">
+												<select class="select_2 form-control zone" name="zone" id="zone">
 													<option value="n/a">-- Select --</option>
 												</select>
 											</td>
 		                    				<td>
-		                    					<select class="form-control" name="warehouse">
+		                    					<select class="select_2 form-control" name="warehouse">
 		                    						<option value="n/a">-- Select --</option>
 		                    					    @foreach($warehouse as $ware)
 		                    					    	<option value="{{$ware->id_warehouse_type}}">{{ $ware->warehouse_type }}</option>
@@ -108,11 +108,9 @@
 	        </div>	
 	    </div>
 	</div>
-
 	<script type="text/javascript">
-	    $(".select_2").select2();	    
+        $(".select_2").select2();
 	</script>
-
 	<script type="text/javascript">
 
 	    $('#product_id').on('change',function(){

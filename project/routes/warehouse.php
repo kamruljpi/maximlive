@@ -87,8 +87,11 @@ Route::group(['middleware' => 'auth','namespace' => 'Production'], function () {
      *****************************************************************/
 
 	Route::get('final_production','FinalProduction@index')->name('final_production_view');
-	Route::get('create/final_product', 'FinalProduction@create')
-									->name('final_product_create_view');
+	Route::get('create/final_product', 'FinalProduction@create')->name('final_product_create_view');
+	Route::post('store/final_product', 'FinalProduction@store')->name('final_product_store_action');
+	Route::get('view/final_product/{product_id}', 'FinalProduction@show')->name('final_product_view');
+	Route::any('update/final/product', 'FinalProduction@edit')->name('warehouse_final_product_update');
+	Route::get('delete/final_product/{product_id}', 'FinalProduction@destroy')->name('final_product_delete_action');
 
 	// Ajax
 	Route::any('get/product_details', 'FinalProduction@getProductDetails');

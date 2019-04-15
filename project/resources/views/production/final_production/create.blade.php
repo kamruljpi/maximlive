@@ -30,13 +30,22 @@
 				</div>
 			</div>
 		</div>
+        @if(count( $errors ) > 0)
+            @foreach ($errors->all() as $error)
+                <div><p class="text-danger">{{ $error }}</p></div>
+            @endforeach
+        @endif
+		@if(Session::has('store'))
+			@include('widgets.alert', array('class'=>'success', 'message'=> Session::get('store') ))
+		@endif
+
 		<div class="row">
 			<div class="col-md-12 col-md-offset-0">
 				<div class="panel panel-default custom">
 
 					<div class="panel-heading">ADD</div>
 
-					<form action="{{ Route('purchase_store_action')}}" method="POST">
+					<form action="{{ Route('final_product_store_action')}}" method="POST">
 						{{csrf_field()}}
 
 						<div class="panel-body">
@@ -45,23 +54,14 @@
 								<div class="form-group">
 									<label class="col-sm-6 date-label"><span>Date</span></label>
 									<div class="col-sm-6">
-										<input type="date" name="order_date" class="form-control">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label class="col-sm-6 date-label"><span>Select Section</span></label>
-									<div class="col-sm-6">
-										<select class="form-control" name="">
-											<option value=" ">--Select--</option>
-										</select>
+										<input type="date" name="order_date" class="form-control" required>
 									</div>
 								</div>
 								
 								<div class="form-group">
 									<label class="col-sm-6 date-label"><span>Description</span></label>
 									<div class="col-sm-6">
-										<input type="text" name="description" class="form-control" placeholder="Description">
+										<textarea type="text" name="description" class="form-control"></textarea>
 									</div>
 								</div>
 							</div>
@@ -85,26 +85,26 @@
 												<td>
 													<div class="form-group p_item_code_parent">
 														<input type="hidden" name="p_item_id[]" class="p_item_id" >
-														<input type="text" id="p_item_code" name="p_item_code[]" class="form-control p_item_code" placeholder="Item Code">
+														<input type="text" id="p_item_code" name="p_item_code[]" class="form-control p_item_code" placeholder="Item Code" required>
 													</div>
 												</td>
 												<td>
 													<div class="form-group">
-														<select class="form-control p_size_range" name="p_size_range">
+														<select class="form-control p_size_range" name="p_size_range[]"required>
 															<option value=" ">--Select--</option>
 														</select>
 													</div>
 												</td>
 												<td>
 													<div class="form-group">
-														<select class="form-control p_gmt_color" name="p_gmt_color">
+														<select class="form-control p_gmt_color" name="p_gmt_color[]">
 															<option value=" ">--Select--</option>
 														</select>
 													</div>
 												</td>
 												<td>
 													<div class="form-group">
-														<input type="number" name="p_item_qty[]" class="form-control p_item_qty" value="0" placeholder="Qty">
+														<input type="text" name="p_item_qty[]" class="form-control p_item_qty" value="0" placeholder="Qty">
 													</div>
 												</td>
 												<td><button class="btn btn-danger remove_field" disabled="true">X</button></td>
@@ -132,7 +132,7 @@
 											<th width="20%">Raw Material</th>
 											<th>Quantity</th>
 											<th>Total Instock</th>
-											<th>Remaining insto</th>
+											<th>Remaining instock</th>
 											<th>Action</th>
 										</thead>
 										<tbody class="idclone">
@@ -140,22 +140,22 @@
 												<td>
 													<div class="form-group item_code_parent">
 														<input type="hidden" name="raw_item_id[]" class="raw_item_id" >
-														<input type="text" name="item_code[]" class="form-control raw_item_code" placeholder="Item Code">
+														<input type="text" name="raw_item_code[]" required class="form-control raw_item_code" placeholder="Item Code">
 													</div>
 												</td>
 												<td>
 													<div class="form-group">
-														<input type="number" name="item_qty[]" class="form-control item_qty" placeholder="Qty" value="0">
+														<input type="text" name="raw_item_qty[]" required class="form-control item_qty" placeholder="Qty" value="0">
 													</div>
 												</td>
 												<td>
 													<div class="form-group">
-														<input type="text" name="" class="form-control total_instock" placeholder="Total Instock">
+														<input type="text" name="raw_total_stock[]" class="form-control total_instock" placeholder="Total Instock">
 													</div>
 												</td>
 												<td>
 													<div class="form-group">
-														<input type="text" name="item_total_price[]" class="form-control remaining_insto" placeholder="Remaining insto" readonly>
+														<input type="text" name="raw_item_total_price[]" class="form-control remaining_instock" placeholder="Remaining instock" readonly>
 													</div>
 												</td>
 												<td><button class="btn btn-danger remove_field" disabled="true">X</button></td>
@@ -172,6 +172,56 @@
 								</div>
 							</div>
 
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Waste Raw Materials Used :</label>
+                                </div>
+                                <div class="add_new_field" style="padding: 10px;">
+                                    <table class="table table-bordered" id="copy_table">
+                                        <thead>
+                                        <th width="20%">Raw Material</th>
+                                        <th>Quantity</th>
+                                        <th>Total Instock</th>
+                                        <th>Remaining instock</th>
+                                        <th>Action</th>
+                                        </thead>
+                                        <tbody class="idclone new_table">
+                                        <tr class="tr_clone tr_new">
+                                            <td>
+                                                <div class="form-group w_item_code_parent">
+                                                    <input type="hidden" name="w_raw_item_id[]" class="w_raw_item_id" >
+                                                    <input type="text" name="w_raw_item_code[]" required class="form-control w_raw_item_code" placeholder="Item Code">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" name="w_raw_item_qty[]" required class="form-control w_item_qty" placeholder="Qty" value="0">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" name="w_raw_total_stock[]" class="form-control w_total_instock" placeholder="Total Instock">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <input type="text" name="w_raw_item_total_price[]" class="form-control remaining_instock" placeholder="Remaining instock" readonly>
+                                                </div>
+                                            </td>
+                                            <td><button class="btn btn-danger remove_field" disabled="true">X</button></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="form-group" style="padding-right: 10px;">
+                                    <button class="btn btn-danger" type="button" style="float: right;" id="w_add_new_field">
+                                        <i class="fa fa-plus" style="padding-right: 5px;"></i>
+                                        Add New
+                                    </button>
+                                </div>
+                            </div>
+
 							<div class="col-sm-4 col-sm-offset-4">
 								<div class="form-group">
 									<button class="form-control btn btn-primary">Confirm Add Final Product</button>
@@ -187,4 +237,5 @@
 
 @section('LoadScript')
     <script src="{{ asset('assets/scripts/purchase/final_product.js') }}"></script>
+{{--    <script src="{{ asset('assets/scripts/purchase/purchase.js') }}"></script>--}}
 @endsection

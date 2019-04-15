@@ -196,6 +196,9 @@ return array(
     'App\\MxpProduct' => $baseDir . '/app/MxpProduct.php',
     'App\\MxpProductGroup' => $baseDir . '/app/MxpProductGroup.php',
     'App\\MxpProductSize' => $baseDir . '/app/MxpProductSize.php',
+    'App\\MxpProductionFinishedItem' => $baseDir . '/app/MxpProductionFinishedItem.php',
+    'App\\MxpProductionRawItem' => $baseDir . '/app/MxpProductionRawItem.php',
+    'App\\MxpProductions' => $baseDir . '/app/MxpProductions.php',
     'App\\MxpProductsColors' => $baseDir . '/app/MxpProductsColors.php',
     'App\\MxpProductsSizes' => $baseDir . '/app/MxpProductsSizes.php',
     'App\\MxpReportFooter' => $baseDir . '/app/MxpReportFooter.php',
@@ -260,6 +263,7 @@ return array(
     'CreateMxpIpoTable' => $baseDir . '/database/migrations/old/2018_05_07_060534_create_mxp_ipo_table.php',
     'CreateMxpItemDescriptionTable' => $baseDir . '/database/migrations/aaa/2018_09_12_090059_create_mxp_item_description_table.php',
     'CreateMxpMRFTable' => $baseDir . '/database/migrations/old/2018_07_10_081809_create_mxp_MRF_table.php',
+
     'CreateMxpPiTable' => $baseDir . '/database/migrations/aaa/2018_09_12_060437_create_mxp_pi_table.php',
     'CreateMxpProductsColorsTable' => $baseDir . '/database/migrations/old/2018_07_12_113057_create_mxp_products_colors_table.php',
     'CreateMxpProductsSizesTable' => $baseDir . '/database/migrations/old/2018_07_12_113042_create_mxp_products_sizes_table.php',

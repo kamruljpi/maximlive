@@ -185,8 +185,8 @@
                                         <th>Remaining instock</th>
                                         <th>Action</th>
                                         </thead>
-                                        <tbody class="idclone new_table">
-                                        <tr class="tr_clone tr_new">
+                                        <tbody class="new_table">
+                                        <tr class="tr_new">
                                             <td>
                                                 <div class="form-group w_item_code_parent">
                                                     <input type="hidden" name="w_raw_item_id[]" class="w_raw_item_id" >

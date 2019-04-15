@@ -127,7 +127,7 @@
                   @else
                     <td>
                         <a href="{{ Route('update_product_view')}}/{{$product->product_id}}" class="btn btn-success">edit</a>
-                        <a href="{{ Route('delete_product_action')}}/{{$product->product_id}}" class="btn btn-danger">delete</a>
+                        <a href="{{ Route('delete_product_action')}}/{{$product->product_id}}" class="btn btn-danger deleteButton">delete</a>
                     </td>
                   @endif
                 </tr>

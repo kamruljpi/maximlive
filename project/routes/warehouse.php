@@ -11,6 +11,16 @@ Route::group(['middleware' => 'auth','namespace' => 'Purchase'], function () {
 	                                  ->name('purchase_order_create_view');
 	Route::post('store/purchase_order', 'PurchaseOrder@store')
 	                                  ->name('purchase_order_store_action');
+	Route::get('report/purchase_order/{id?}', 'PurchaseOrder@report')
+	                                  ->name('purchase_order_report_view');
+	Route::get('edit/purchase_order/{id?}', 'PurchaseOrder@edit')
+	                                  ->name('purchase_order_edit_view');
+	                                  
+	Route::get('delete/purchase_order/{id?}', 'PurchaseOrder@destroy')
+	                                  ->name('purchase_order_delete_action');
+
+	Route::get('reject/purchase_order/{id?}', 'PurchaseOrder@reject')
+	                                  ->name('purchase_order_reject_action');
 
 
 	/*******************************************************************
@@ -21,7 +31,11 @@ Route::group(['middleware' => 'auth','namespace' => 'Purchase'], function () {
 	Route::get('create_purchase', 'Purchase@create')->name('purchase_create_view');
 	Route::post('store_purchase', 'Purchase@store')->name('purchase_store_action');
 	Route::get('show_purchase/{id?}', 'Purchase@show')->name('purchase_show_view');
+	Route::post('store/purchase/purchase_order/{id?}', 'Purchase@storePurchaseOrder')->name('purchase_from_purchase_order_action');
 
+
+	// ajax request
+	
 	Route::any('store/show_purchase', 'Purchase@showStore')->name('purchase_show_store_action');
 
 });

@@ -24,6 +24,7 @@ class CreateMxpPurchaseOrderItemWhTable extends Migration
             $table->string('price')->nullable();
             $table->string('total_price')->nullable();
             $table->integer('is_deleted')->default('0');
+            $table->integer('deleted_user_id')->nullable();
             $table->string('last_action_at')->nullable();
             $table->timestamps();
         });

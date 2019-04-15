@@ -36,7 +36,7 @@ class OsTrackingController extends Controller
                         ['is_deleted', BookingFulgs::IS_NOT_DELETED],
                         ['id',$bookingList_value->job_id]
                     ])
-                    ->select('sku','item_size_width_height')
+                    ->select('sku','style','item_size_width_height')
                     ->first();
 
                 $bookingList_value->os_po = DB::table('mxp_os_po')

@@ -60,7 +60,7 @@
 							<div class="form-group">
 								<label class="col-sm-12 label-control">Requested Shipment Date</label>
 								<div class="col-sm-12">
-									<input id="datePickerDate" class="form-control" type="Date" name="shipment_date" required>
+									<input id="datePickerDate" class="form-control" type="Date" name="shipment_date" required value="{{$jobid_values[0]->shipmentDate}}">
 								</div>
 							</div>
 						</div>						

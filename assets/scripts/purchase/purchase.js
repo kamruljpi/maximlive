@@ -1,9 +1,41 @@
-var in_all_total_price = 0;
-var total_price_2 = 0;
 
 var purchase = (function(){
   return {
         init: function () {
+
+            // when purchase_order revert on purchase 
+            // page then need this code to get autocomplete raw item value
+
+            var getRawItemOptionValueEditPage = {
+
+              url: function(phrase) {
+                return baseURL+"/get/raw_item_code";
+              },
+
+              getValue: function(element) {
+                return element.name;
+              },
+
+              list: {
+                  match: {
+                      enabled: true
+                  },
+              },
+
+              ajaxSettings: {
+                dataType: "json",
+                method: "GET",
+                data: {
+                  dataType: "json"
+                }
+              },
+
+              requestDelay: 400
+            };
+
+            $('.abc').easyAutocomplete(getRawItemOptionValueEditPage);
+
+            //end
 
             // this section add copy and add new row
 
@@ -46,10 +78,10 @@ var purchase = (function(){
                 clone.addClass('tr_clone_'+incre).removeClass('tr_clone').appendTo(".idclone");
 
                 // remove value in clone field
-                $(".tr_clone_"+incre+" .price").val(' ');
+                $(".tr_clone_"+incre+" .price").val(0);
                 $(".tr_clone_"+incre+" .item_qty").val(0);
                 $(".tr_clone_"+incre+" .raw_item_id").val(' ');
-                $(".tr_clone_"+incre+" .total_price").val(' ');
+                $(".tr_clone_"+incre+" .total_price").val(0);
                 // end
 
                 $(".tr_clone_"+incre+" .raw_item_code").removeAttr('id');
@@ -85,7 +117,6 @@ var purchase = (function(){
         		}
         	});
 
-
             // End
         }
     };
@@ -94,9 +125,9 @@ var purchase = (function(){
 var raw_item_code_event = (function(){
   return {
         init: function () {
-        	$('.tr_clone').on('change','.raw_item_code',function(){
+        	$('.idclone').on('change','.raw_item_code',function(){
         		var item_code = encodeURIComponent($(this).val());
-        		var item_parent_class = $(this).parent().parent().parent().parent().prop('className');
+        		var item_parent_class = $.trim($(this).parent().parent().parent().parent().prop('className'));
 
         		$.ajax({
         		    type: "GET",
@@ -112,6 +143,9 @@ var raw_item_code_event = (function(){
                             $('.'+item_parent_class+' .price').val(myObj.price);
                             $('.'+item_parent_class+' .raw_item_id').val(myObj.id_raw_item);
                             $('.'+item_parent_class+' .item_qty').val('0');
+                            $('.'+item_parent_class+' .total_price').val('0');
+                            $('.in_all_total_price').val('0');
+                            $('.grand_total').val('0');
                             
         		    	}
         		    },
@@ -163,23 +197,59 @@ var w_raw_code_event = (function () {
 var item_price_event = (function(){
   return {
         init: function () {
-            $('.tr_clone').on('keyup','.price',function(){
-                
+            $('.idclone').on('keyup','.price',function(){
+                var tt = 0;
+
                 var item_price = $(this).val();
+
+                // empty check
+                if(item_price == '') {
+                  item_price = 0 ;
+                }
+
+                // dot (.) check
+                if(item_price == '.') {
+                  item_price = 0 ;
+                }
+
+                // if( Object.prototype.toString.call(myvar) == '[object String]' ) {
+                //    // a string
+                // }
+
                 var item_parent_class = $(this).parent().parent().parent().prop('className');
 
                 var item_qty = $('.'+item_parent_class+' .item_qty').val();
                 var total_price = item_qty * item_price ;
 
                 $('.'+item_parent_class+' .total_price').val(total_price);
+
+                $(".total_price").each(function(a,b){
+
+                    tt += parseFloat($(this).val());
+                    
+                    $(".in_all_total_price").val(parseFloat(tt));
+                    $('.grand_total').val(parseFloat(tt));
+                });
             });
         }
     };
 })();
+
 var main = function () {
-    $('.add_new_field').on('keyup','.item_qty',function(){
+    $('.idclone').on('keyup','.item_qty',function(){
         var tt = 0;
         var item_qty = $(this).val();
+
+        //empty check
+        if(item_qty == '') {
+          item_qty = 0 ;
+        }
+
+        // dot (.) check
+        if(item_qty == '.') {
+          item_qty = 0 ;
+        }
+
         var item_parent_class = $(this).parent().parent().parent().prop('className');
 
         var item_price = $('.'+item_parent_class+' .price').val();
@@ -189,7 +259,9 @@ var main = function () {
         $('.'+item_parent_class+' .total_price').val(total_price);
 
         $(".total_price").each(function(a,b){
+
             tt += parseFloat($(this).val());
+
             $(".in_all_total_price").val(parseFloat(tt));
             $('.grand_total').val(parseFloat(tt));
         });

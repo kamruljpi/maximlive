@@ -32,23 +32,24 @@
 						<div class="panel-body">
 							<div class="col-sm-10">
 								<div class="form-group">
-									<label class="col-sm-4 date-label"><span style="float: right;">Date</span></label>
+									<label class="col-sm-4 "><span style="float: right;">Date</span></label>
 									<div class="col-sm-6">
-										<input type="date" name="order_date" class="form-control" value="{{ old('order_date')}}">
+										<input type="date" name="order_date" class="form-control" value="{{ $details->order_date}}">
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-sm-4 date-label"><span style="float: right;">Purchase Order No</span></label>
 									<div class="col-sm-6">
-										<input type="text" name="purchase_order_no" class="form-control" placeholder="P-O # 00001" value="{{ old('purchase_order_no')}}">
+										<input type="text" name="purchase_order_no" class="form-control" placeholder="P-O # 00001" value="">
 									</div>
 								</div>
 
 								<div class="form-group">
 									<label class="col-sm-4 date-label"><span style="float: right;">Description</span></label>
 									<div class="col-sm-6">
-										<textarea name="description" class="form-control" style="width: 90%;"> {{old('description')}}</textarea>
+
+										<textarea name="description" class="form-control" style="width: 90%;"></textarea>
 									</div>
 								</div>
 							</div>

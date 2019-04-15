@@ -9,4 +9,6 @@ class LastActionFlugs
 	const DELETE_ACTION = 'deleted';
 	const RESTORED_ACTION = 'restored';
 	const REVERSE_ACTION = 'reverse';
+	const REJECTED_ACTION = 'rejected';
+	const PURCHASE_ORDER_ACTION = 'purchase_order_accepted';
 }

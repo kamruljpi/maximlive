@@ -37,14 +37,16 @@ class PoController extends Controller
 		if(isset($request->job_id) && !empty($request->job_id)){
 			$check_open = '';
 			foreach ($request->job_id as $key_value) {
-				$jobid_value = MxpMrf::where('job_id',$key_value)->select('job_id_current_status','mrf_status')->first();
+				$jobid_value = MxpMrf::where([['job_id',$key_value],['is_deleted',0]])->select('job_id','job_id_current_status','mrf_status')->first();
 				if ($jobid_value->job_id_current_status == MrfFlugs::JOBID_CURRENT_STATUS_OPEN) {
 					$check_open = MrfFlugs::JOBID_CURRENT_STATUS_OPEN;
 				}
 			}
 
 			if($jobid_value->mrf_status == MrfFlugs::OPEN_MRF){
-				return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $mrf_ids])->with('mrfIdList', $mrf_ids)->with('data','Please accept this order.');
+
+				return \Redirect()->Route('os_mrf_details_view',['mrfIdList' => $mrf_ids])->with('mrfIdList', $mrf_ids)->with('data','Please accpet Selected Job Id.');
+
 			}
 			
 			if(!empty($check_open)){
@@ -59,8 +61,9 @@ class PoController extends Controller
 					->join('mxp_booking as mb','mb.id','mxp_mrf_table.job_id')
 					->select('mxp_mrf_table.*','mp.product_id','mb.item_size_width_height','mb.oos_number','mb.season_code','mb.sku','mb.style','other_colors','material')
 					->where([
-						['job_id',$keyvalues],
-						['job_id_current_status',MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT]
+						['mxp_mrf_table.is_deleted',0],
+						['mxp_mrf_table.job_id',$keyvalues],
+						['mxp_mrf_table.job_id_current_status',MrfFlugs::JOBID_CURRENT_STATUS_ACCEPT]
 					])
 					->first();
 			}
@@ -81,8 +84,8 @@ class PoController extends Controller
 
 		!isset($jobid_values[0]->job_id) ? $jobid_values = [] :''; 
 
-		$increase_value = $request->po_increase;
-			
+		$increase_value = isset($request->po_increase) ? $request->po_increase : '';
+
 		return view('maxim.os.po.po_genarate',compact('jobid_values','supplier','increase_value'));
 	}
 
@@ -132,11 +135,11 @@ class PoController extends Controller
 					 	'supplier_price' => $datasValue['supplier_price'],
 					 	'material' => $datasValue['material'],
 					 	'initial_increase' => $datasValue['initial_increase'],
-					 	'order_date' => Carbon::today()->format('Y-m-d'),
+					 	'order_date' => Carbon::now()->format('Y-m-d'),
 					 	'shipment_date' => $shipment_date,
 					 	'last_action_at' => LastActionFlugs::CREATE_ACTION,
-					 	'created_at' => Carbon::today(),
-					 	'updated_at' => Carbon::today()
+					 	'created_at' => Carbon::now(),
+					 	'updated_at' => Carbon::now()
 				 	]
 				 );
 

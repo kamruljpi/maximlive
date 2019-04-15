@@ -10,6 +10,9 @@ class BookingFulgs
 	const IS_COMPLETE = 0;
 	// const IS_NOT_COMPLETE = 0;
 
+	const IS_REJECTED = 1 ;
+	const IS_NOT_REJECTED = 0 ;
+
 	const BOOKED_FLUG = 'Booked';
 	const ON_HOLD_FLUG = 'Hold';
 	const BOOKING_PROCESS_FLUG = 'Process';

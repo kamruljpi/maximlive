@@ -17,13 +17,13 @@ var opening = (function() {
                 success:function(result){
                     var myObj3 = JSON.parse(result);
                     var i;
-                    console.log(myObj3);
                     $('.'+item_parent_class+' .zone').html($('<option>', {
                         value: "",
                         text : "select"
                     }));
+
                     for (i = 0; i < myObj3.length; i++) {
-                        $("#zone").append('<option value="'+myObj3[i].zone_id+'">'+myObj3[i].zone_name+'</option>');
+                        $('.'+item_parent_class+' .zone').append('<option value="'+myObj3[i].zone_id+'">'+myObj3[i].zone_name+'</option>');
                     }
                     if(myObj3 != null) {
 

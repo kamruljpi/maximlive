@@ -42,7 +42,7 @@
 	                <thead>
                         <th>ID</th>
                         <th>Date</th>
-                        <th>Section</th>
+                        <th>Description</th>
                         <th>Manage</th>
 	                </thead>
                     <tbody>
@@ -51,12 +51,12 @@
                             @foreach($details as $detail)                  
                                 <tr>                        	
                                 	<td>{{$j++}}</td>
-                                    <td>{{$detail->purchase_order_no}}</td> 	            	
-                                    <td>{{$detail->order_date}}</td>                     
+                                    <td>{{$detail->production_date}}</td>
+                                    <td>{{$detail->description}}</td>
                                 	<td>
-                                        {{-- <a href="{{ Route('stage_edit_view')}}/{{$detail->id_stage}}" class="btn btn-success">edit</a>
+                                         <a href="{{ Route('final_product_view', ['product_id' => $detail->id_mxp_productions ])}}" class="btn btn-success"><i class="fa fa-eye"></i></a>
 
-                                        <a href="{{ Route('stage_delete_action')}}/{{$detail->id_stage}}" class="btn btn-danger">delete</a> --}}
+                                        <a href="{{ Route('final_product_delete_action', ['product_id' => $detail->id_mxp_productions ])}}" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>
                                         
                                 	</td>
                                 </tr>                    

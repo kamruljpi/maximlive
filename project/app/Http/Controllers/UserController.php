@@ -110,7 +110,13 @@ class UserController extends Controller {
 		$companyUser = ListGetController::companyUser($request, $request->id);
 
 		$selectedUser = $companyUser;
-		$buyers = buyer::where('is_deleted',0)->get();
+
+		// $buyers = buyer::where('is_deleted',0)->get();
+
+		// ignore deleted buyer 
+		// beacouse many item in input deleted buyer
+		$buyers = buyer::all();
+
 		$userbuyerlist = userbuyer::where("id_user",$request->id)->get();
 		$buyerSelectedList = [];
 		if(isset($userbuyerlist) & !empty($userbuyerlist)){

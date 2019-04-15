@@ -9,6 +9,8 @@ return array(
     'AddBookingStatusColumnAtMxpBookingBuyerDetails' => $baseDir . '/database/migrations/old/2018_07_23_103343_add_booking_status_column_at_mxp_bookingBuyer_details.php',
     'AddColToMxpMultipleChallan' => $baseDir . '/database/migrations/aaa/2018_08_13_073137_add_col_to_mxp_multipleChallan.php',
     'AddColumnInVendorPrice' => $baseDir . '/database/db/2018_07_18_094352_add_column_in_vendor_price.php',
+    'AddColumnMxpPurchaseItemTable' => $baseDir . '/database/migrations/2019_04_13_180118_add_column_mxp_purchase_item_table.php',
+    'AddColumnMxpPurchaseOrderTable' => $baseDir . '/database/migrations/2019_04_13_180048_add_column_mxp_purchase_order_table.php',
     'AddColumnToMxpUserTable' => $baseDir . '/database/UntitledFolder/2018_01_26_071103_add_column_to_mxp_user_table.php',
     'AddCompanyIdToRolesAndRoleMenus' => $baseDir . '/database/UntitledFolder/2018_01_26_060729_add_companyId_to_roles_and_role_menus.php',
     'AddFieldMxpBookingChallan' => $baseDir . '/database/migrations/aaa/2018_08_13_063411_add_field_mxp_booking_challan.php',

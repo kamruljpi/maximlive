@@ -41,6 +41,11 @@ Route::group(
         'uses'=>'taskController\BookingListController@getBookingListByBookingId'
     ));
 
+    Route::any('change/booking/status', [
+    'as' => 'change_booking_status',
+    'uses' => 'taskController\BookingListController@changeBookingStatus'
+]);
+
     Route::get('/booking_report_list_by_book_id/', array(
         'as'=>'booking_list_view_by_booking_id',
         'uses'=>'taskController\BookingListController@getBookingReportListByBookingId'
@@ -50,9 +55,25 @@ Route::group(
         'as'=>'booking_list_view_by_search',
         'uses'=>'taskController\BookingListController@getBookingListBySearch'
     ));
+    
     Route::post('/booking_list_book_search/', array(
         'as'=>'booking_list_view_book_search',
         'uses'=>'taskController\BookingListController@getBookingListbookSearch'
+    ));
+
+    Route::any('planning/advance/search/list', array(
+        'as'=>'planning_advance_search_list',
+        'uses'=>'taskController\BookingListController@getAdvanceSearchPlanningList'
+    ));
+
+    Route::post('/booking_list_advance_search_/', array(
+        'as'=>'booking_list_advance_search_',
+        'uses'=>'taskController\BookingListController@getbookingListAdvanceSearch_'
+    ));
+
+    Route::any('booking/advance/search/list', array(
+        'as'=>'booking_advance_search_list',
+        'uses'=>'taskController\BookingListController@getAdvanceSearchBookingList'
     ));
 
     Route::get('/challan_list_by_challan_id/', array(
@@ -140,6 +161,11 @@ Route::group(
             'as' => 'user_profile_action',
             'uses' => 'UserProfileController@profileUpdate',
         ]);
+
+        Route::get('/notifications', 'NotificationController@getAllNotificationView')->name('getNotification');
+        Route::get('/seenAll', 'NotificationController@setAllNotificationSeen')->name('notification_seen');
+
+        Route::get('/restricted', 'IpCheckCOntroller@restrictedView')->name('restricted');
 
         Route::group(['middleware' => 'routeAccess'], function () {
             Route::group(['prefix' => 'super-admin'], function () {
@@ -458,7 +484,7 @@ Route::group(['middleware' => 'auth'], function () {
                 'as'=>'party_create',
                 'uses'=>'PartyController@create'
             ]);
-        Route::post('party/create/hh',
+        Route::post('party/create',
             [
                 'as'=>'party_save_action',
                 'uses'=>'PartyController@store'
@@ -555,7 +581,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         /* product size routes*/
 
-        Route::get('view/product/list',
+        Route::get('view/product_size/list',
             [
                 'as'=>'product_size_view',
                 'uses'=>'ProductSizeController@sizeView'
@@ -851,10 +877,17 @@ Route::group(['middleware' => 'auth'], function () {
                 'as'=>'get_item_details',
                 'uses'=>'taskController\TaskController@getItemCode'
             ]);
+    
     Route::any('get/ordercode',
             [
                 'as'=>'get_order_details',
                 'uses'=>'taskController\BookingController@getordercode'
+            ]);
+
+    Route::any('get/mrf/id',
+            [
+                'as'=>'get_mrf_id',
+                'uses'=>'taskController\MrfListController@getMrfAllId'
             ]);
 
     Route::group(['middleware' => 'routeAccess'], function () {
@@ -882,15 +915,9 @@ Route::group(['middleware' => 'auth'], function () {
                 'uses'=>'taskController\BookingController@addBooking'
             ]);
 
-        // Route::get('booking/list/list',
-        //     [
-        //         'as'=>'booking_list_view',
-        //         'uses'=>'taskController\BookingController@addBooking'
-        //     ]);
-
         /** there are all booking list routes here **/
 
-        Route::get('booking/list/view',
+        Route::any('booking/list/view',
             [
                 'as'=>'booking_list_action_task',
                 'uses'=>'taskController\BookingListController@showBookingReport'
@@ -932,11 +959,18 @@ Route::group(['middleware' => 'auth'], function () {
 
         /** there are all IPO routes here **/
 
-        Route::post('task/ipo/action',
+        Route::any('task/ipo/action',
             [
                 'as'=>'task_ipo_action',
                 'uses'=>'taskController\Ipo\IpoController@storeIpo'
             ]);
+
+        // Route::get('task/ipo/actionview',
+        //     [
+        //         'as'=>'redirectviewpage',
+        //         'uses'=>'taskController\Ipo\IpoController@redirectviewpage'
+        //     ]);
+
         Route::get('ipo/report/view',
             [
                 'as'=>'ipo_list_action_task',
@@ -958,20 +992,20 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'routeAccess'], function () {
 
-            Route::get('booking/list/list',
+            Route::get('booking/list',
             [
                 'as'=>'booking_list_view',
                 'uses'=>'taskController\BookingListController@bookingListView'
             ]);
 
-//added in maxim-office
+            //added in maxim-office
             Route::get('booking/list/report',
             [
                 'as'=>'booking_list_report',
                 'uses'=>'taskController\BookingListController@bookingListReport'
             ]);
 
-            Route::get('mrf/list/list',
+            Route::get('mrf/list',
             [
                 'as'=>'mrf_list_view',
                 'uses'=>'taskController\MrfListController@mrfListView'
@@ -996,11 +1030,12 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'routeAccess'], function () {
 
-        Route::get('booking/list/detailsView/{booking_id?}',
+        Route::any('booking/list/detailsView/{booking_id?}',
             [
                 'as'=>'booking_list_details_view',
                 'uses'=>'taskController\BookingListController@detailsViewForm'
             ]);
+
 
         Route::get('booking/list/createIpo/{booking_id?}',
             [
@@ -1039,9 +1074,56 @@ include('ipo_route.php');
 include('BookingView.php');
 include('ajax.php');
 include('task.php');
+include('refresh.php');
+include('tracking.php');
+include('search.php');
+include('mrf.php');
+include('ipo.php');
+include('os/os_route.php');
+include('history/restore.php');
+include('location.php');
+include('stage.php');
+include('warehouse.php');
 
 
-//INSERT INTO `maxpronewerp`.`mxp_menu` (`name`, `route_name`, `description`, `parent_id`, `is_active`, `order_id`) VALUES ('Purchase Order', 'generate_purchase_order', 'purchase order list', '97', '1', '3');
-//INSERT INTO `maxpronewerp`.`mxp_user_role_menu` (`role_id`, `menu_id`, `company_id`, `is_active`) VALUES ('1', '108', '0', '1');
+Route::get('itemupload',
+[
+    'as'=>'itemupload',
+    'uses'=>'BulkUploadController@bulkUploadView'
+]);
 
+Route::any('itemuploadactionview',
+[
+    'as'=>'itemuploadactionview',
+    'uses'=>'BulkUploadController@uploadactionview'
+]);
 
+Route::get('itemupload/cancle', function(){
+    Session::flash('bulksuccess', 'Data insertion cancled');
+    return Redirect::route('itemupload');
+})->name('itemupload_cancle');
+
+Route::post('itemupload/actionfinal', [
+    'as' => 'itemuploadactionfinal',
+    'uses' => 'BulkUploadController@itemuploadactionfinal'
+]);
+
+    /****************************************************
+     * Booking Bulk Upload Routes
+     ****************************************************/
+
+Route::post('booking/bulk_upload', [
+    'as' => 'booking_bulk_upload',
+    'uses' => 'taskController\BulkBookingController@bookingBulkUpload'
+]);
+
+Route::any('orderuploadactionview',
+[
+    'as'=>'orderuploadactionview',
+    'uses'=>'taskController\BulkBookingController@uploadactionview'
+]);
+
+Route::post('orderupload/actionfinal', [
+    'as' => 'orderuploadactionfinal',
+    'uses' => 'taskController\BulkBookingController@orderuploadactionfinal'
+]);

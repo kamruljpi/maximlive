@@ -53,13 +53,13 @@
 				@foreach($challanDetails as $value)
 					<tr id="challan_list_table">
 						<td>{{$j++}}</td>
-						<td>{{$value->checking_ids_of_challan}}</td>
+						<td>{{$value->booking_order_id}}</td>
 						<td>{{$value->challan_id}}</td>
 						<td>{{Carbon\Carbon::parse($value->created_at)}}</td>
 						<td>
 							<form action="{{Route('challan_list_action_task') }}" role="form" target="_blank">
 								<input type="hidden" name="cid" value="{{$value->challan_id}}">
-								<input type="hidden" name="bid" value="{{$value->checking_id}}">
+								<input type="hidden" name="bid" value="{{$value->booking_order_id}}">
 								<button class="btn btn-success" target="_blank">View</button>
 							</form>
 						</td>

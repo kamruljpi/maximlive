@@ -5,18 +5,23 @@ namespace App\Http\Controllers\taskController\Ipo;
 use App\Http\Controllers\Message\ActionMessage;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
 use App\Model\MxpBookingChallan;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\MxpIpo;
 use Validator;
 use Auth;
 use DB;
+use Carbon;
+use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
+use App\Http\Controllers\Source\source;
 
 class IpoController extends Controller
 {
   public function ipoReportView(Request $request){
-    $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
+    $headerValue = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
     $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$request->bid)->get();
     $footerData =[];
     $ipoDetails = DB::table("mxp_ipo")->where([['ipo_id', $request->ipoid],['booking_order_id',$request->bid]])->get();
@@ -30,22 +35,26 @@ class IpoController extends Controller
     );
   }
 
-	function array_combine_($keys, $values){
-	    $result = array();
-	    foreach ($keys as $i => $k) {
-	        $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
-	    }
-	    array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
-	    return  $result;
-	}
+  function array_combine_($keys, $values){
+      $result = array();
+      foreach ($keys as $i => $k) {
+          $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
+      }
+      array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
+      return  $result;
+  }
 
     public function storeIpo(Request $request){
 
-		$datas = $request->all();
+    $datas = $request->all();
+    $errors = $this->checkQuantity($datas);
+    if(!empty($errors)){
+      return redirect()->back()->withInput($request->input())->withErrors($errors);
+    }
     $booking_order_id = $request->booking_order_id;
     $allId = $datas['ipo_id'];
     $product_qty = $datas['product_qty'];
-    $ipoIncrease = $datas['ipo_increase_percentage'];
+    $ipoIncrease = (!empty($datas['ipo_increase_percentage']) ? $datas['ipo_increase_percentage'] : 0);
 
        /**
       - This Array most important to create challan
@@ -68,9 +77,9 @@ class IpoController extends Controller
         $length = sizeof($product_qty);
         $count = 0;
         foreach ($product_qty as $value) {
-			if($value == 0 || $value < 0 ){
-				$count++;
-			}
+      if($value == 0 || $value < 0 ){
+        $count++;
+      }
         }
 
       if($count == $length){
@@ -83,8 +92,8 @@ class IpoController extends Controller
       - This Section create to concat all Get input
       - value by item id and store $tempValue Array.
       **/
-		
-		$temp = $this->array_combine_ ($allId ,$product_qty);
+    
+    $temp = $this->array_combine_ ($allId ,$product_qty);
 
 
       /**
@@ -93,10 +102,10 @@ class IpoController extends Controller
 
         $mrfQuantityDb = [];
         foreach ($temp as $key => $value) {
-        	$getMrfDbvalue = DB::select(" select ipo_quantity from mxp_booking_challan where id ='".$key."'");
-        	foreach ($getMrfDbvalue as $Mrfvalue) {
-          		$mrfQuantityDb[$key] = explode(',', $Mrfvalue->ipo_quantity);
-        	}
+          $getMrfDbvalue = DB::select(" select ipo_quantity from mxp_booking_challan where id ='".$key."'");
+          foreach ($getMrfDbvalue as $Mrfvalue) {
+              $mrfQuantityDb[$key] = explode(',', $Mrfvalue->ipo_quantity);
+          }
         }
       // self::print_me($mrfQuantityDb);
        $mrfInputValues = [];
@@ -241,21 +250,22 @@ class IpoController extends Controller
         $challanMinusValueInsert->update();
       }
 
-      $cc = MxpIpo::count();
+      $cc = MxpIpo::select('ipo_id')->groupBy('ipo_id')->get();
+      $cc = count($cc);
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
-      $id = "IPO"."-";
+      $id = "PO"."-";
       $date = date('dmY') ;
       $ipo_id = $id.$date."-".$count;
 
       $mainData = $this->increaseIpoValue($allId, $ipoIncrease,$mainData);
 
       foreach ($mainData as $key => $value) {
-      // $this->print_me($value);
         $getBookingChallanValue = DB::table("mxp_booking_challan")->where('id',$key)->get();
         foreach ($getBookingChallanValue as $bookingChallanValue) {
             $createIpo                   = new MxpIpo();
             $createIpo->user_id          = Auth::user()->user_id;
-      			$createIpo->ipo_id           = $ipo_id;
+            $createIpo->job_id           = $bookingChallanValue->job_id;
+            $createIpo->ipo_id           = $ipo_id;
             $createIpo->booking_order_id = $bookingChallanValue->booking_order_id;
             $createIpo->erp_code         = $bookingChallanValue->erp_code;
             $createIpo->item_code        = $bookingChallanValue->item_code;
@@ -263,42 +273,53 @@ class IpoController extends Controller
             $createIpo->item_description = $bookingChallanValue->item_description;
             $createIpo->item_quantity    = $value['item_quantity'];
             $createIpo->initial_increase = $value['increaseValue'];
-      			$createIpo->item_price       = $bookingChallanValue->item_price;
-      			$createIpo->matarial         = $bookingChallanValue->matarial;
-      			$createIpo->gmts_color       = $bookingChallanValue->gmts_color;
-      			$createIpo->others_color     = $bookingChallanValue->others_color;
-      			$createIpo->orderDate        = $bookingChallanValue->orderDate;
-      			$createIpo->orderNo          = $bookingChallanValue->orderNo;
-      			$createIpo->shipmentDate     = $bookingChallanValue->shipmentDate;
+            $createIpo->item_price       = $bookingChallanValue->item_price;
+            $createIpo->matarial         = $bookingChallanValue->matarial;
+            $createIpo->gmts_color       = $bookingChallanValue->gmts_color;
+            $createIpo->others_color     = $bookingChallanValue->others_color;
+            $createIpo->orderDate        = Carbon::now()->format('d-m-Y');
+            $createIpo->orderNo          = $bookingChallanValue->orderNo;
+            $createIpo->shipmentDate     = $bookingChallanValue->shipmentDate;
             $createIpo->poCatNo          = $bookingChallanValue->poCatNo;
             $createIpo->ipo_quantity     = $value['item_quantity'];
-      			$createIpo->sku              = $bookingChallanValue->sku;
-      			$createIpo->status           = ActionMessage::CREATE;
-      			$createIpo->save();
+            $createIpo->sku              = $bookingChallanValue->sku;
+            $createIpo->status           = ActionMessage::CREATE;
+            $createIpo->job_id_current_status  = MrfFlugs::OPEN_MRF;
+            $createIpo->ipo_status  = MrfFlugs::OPEN_MRF;
+            $createIpo->save();
         }
       }
 
-      $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
-      $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$booking_order_id)->get();
+      return \Redirect::route('refresh_ipo_view', ['ipo_id' => $ipo_id,'booking' => $booking_order_id]);
+    }
+    public function redirectIpoReport(Request $request)
+    {
+      $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
+      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
       $footerData =[];
-      $ipoDetails = DB::table("mxp_ipo")->where('ipo_id', $ipo_id)->get();
-
+      $ipoDetails = MxpIpo::join('mxp_booking as mp','mp.id','job_id')
+                  ->select('mxp_ipo.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku','mp.item_size_width_height')
+                  ->where('ipo_id',$request->ipo_id)
+                  ->get();
+    $object = new source();
+     $prepared_by = $object->getUserDetails($buyerDetails->booking_order_id);
+    //  $this->print_me($prepared_by);
       return view('maxim.ipo.ipoBillPage', [
-          'headerValue'  => $headerValue,
+          'companyInfo'  => $companyInfo,
           'initIncrease' => $request->ipoIncrease,
           'buyerDetails' => $buyerDetails,
-          'sentBillId'   => $ipoDetails,
-          'footerData'   => $footerData
+          'ipoDetails'   => $ipoDetails,
+          'footerData'   => $footerData,
+          'prepared_by'   => $prepared_by
         ]
       );
     }
 
-
-    public function increaseIpoValue(array $ipo_id = [], array $increase = [], array $maindata = null){
+    public function increaseIpoValue(array $ipo_id = [], array $increase = [], array $maindata = []){
       $ipoAndIncreaseValue = [];
       $temp = $this->array_combine_ ($ipo_id ,$increase);
       foreach ($temp as $key => $values) {
-        $ipoAndIncreaseValue[$key]['increaseValue']= implode(',', $values);
+        $ipoAndIncreaseValue[$key]['increaseValue']= (sizeof($temp[$key]) == 1)? $values :implode(',', $values);
       }
       foreach ($maindata as $keys => $valuess) {
         $ipoAndIncreaseValue[$keys]['item_quantity']= $valuess;
@@ -306,4 +327,49 @@ class IpoController extends Controller
       return $ipoAndIncreaseValue;
     }
 
+    protected function checkQuantity($data){
+      $errors = 'You try to invalid and grater than quantity.';
+      $datas['ipo_id'] = $data['ipo_id'];
+      $datas['product_qty'] = $data['product_qty'];
+      $oneArray = [];
+      foreach ($datas['ipo_id'] as $key => $value) {
+        $oneArray[$key]['ipo_id'] = $value;
+        $oneArray[$key]['product_qty'] = $datas['product_qty'][$key];
+      }      
+      // $this->print_me($oneArray);
+      $dbValue = [];
+      foreach ($oneArray as $key => $oneArrayValue) {
+        $idstrcount = (8 - strlen($oneArrayValue['ipo_id']));
+        $job_id_id = str_repeat('0',$idstrcount).$oneArrayValue['ipo_id'];
+        $dbValue = MxpBookingChallan::where('job_id',$oneArrayValue['ipo_id'])->select('left_mrf_ipo_quantity')->first();
+
+      // $this->print_me($dbValue->left_mrf_ipo_quantity);
+        if($oneArrayValue['product_qty'] > $dbValue->left_mrf_ipo_quantity)
+          $errors .= ' Job id '.$job_id_id.' available quantity '.$dbValue->left_mrf_ipo_quantity.' and entered quantity '.$oneArrayValue['product_qty'].'.';
+      }
+      if(isset($errors) && $errors === 'You try to invalid and grater than quantity.'){
+        $errors = '';
+      }
+      return $errors;
+    }
+
+    public function cancelIpo( $id ){
+
+        $ipo = MxpIpo::where('job_id', $id)->first();
+        $bc= MxpBookingChallan::where('job_id', $id)->first();
+
+        $bc->ipo_quantity = ($bc->ipo_quantity - $ipo->ipo_quantity == 0)? '': ($bc->ipo_quantity - $ipo->ipo_quantity) ;
+        $bc->left_mrf_ipo_quantity = $bc->item_quantity;
+
+        $bc->save();
+
+        MxpIpo::where('job_id', $id)->update([
+            'is_deleted' => BookingFulgs::IS_DELETED,
+            'deleted_user_id' => Auth::User()->user_id,
+            'deleted_date_at' =>  Carbon\Carbon::now(),
+            'last_action_at' =>  BookingFulgs::LAST_ACTION_DELETE,
+        ]);
+
+        return redirect()->back();
+    }
 }

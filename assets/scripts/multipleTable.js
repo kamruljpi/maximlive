@@ -132,21 +132,30 @@ $(document).ready(function(){
 
   $('#page-wrapper').on('change','.item_code', function(){
       // console.log(parentLii);
-      var item_code = $.trim($(this).val());
+      var item_code = encodeURIComponent($(this).val());
+      var buyer_company_id = $('[name="companyIdForBookingOrder"]').val();
       var item_parent_class = $(this).data('parent');
+
+      var time = new Date();
+      var times = time.getTime();
 
       $.ajax({
           type: "GET",
           url: baseURL+"/get/product/details/booking",
-          data: "item="+item_code,
+          data: "item="+item_code+"&buyer_company_id="+buyer_company_id+"&times="+times,
           datatype: 'json',
           cache: true,
           async: true,
           success: function(result) {
               var myObj = JSON.parse(result);
-              // console.log(myObj);
-              if(myObj.length === 0)
+              console.log(myObj);
+
+              return false ;
+              
+              if(myObj.length == 0)
               {
+                alert('Please check the Item code or Mismatch Item code. There are no data found. Please contact with PID team.');
+                
                 $('.'+item_parent_class+' .erpNo').attr("disabled","true");
                 $('.'+item_parent_class+' .itemSize').attr("disabled","true");
                 $('.'+item_parent_class+' .itemGmtsColor').attr("readonly","true");
@@ -170,7 +179,7 @@ $(document).ready(function(){
                   $('.'+item_parent_class+' .item_qty').eq(0).val('');                
 
                 
-              }else{
+              }else {
 
                 for(ik in myObj){
                   // $('.'+item_parent_class+' .erpNo').html($('<option>', {
@@ -186,7 +195,7 @@ $(document).ready(function(){
                   if (myObj[i].size === null) {
                       $('.'+item_parent_class+' .itemSize').html($('<option>', {
                       value: "",
-                      text : "empty Size"
+                      text : "Empty Size"
                       }));
 
                   }else{
@@ -196,14 +205,13 @@ $(document).ready(function(){
                     text : "Select Size"
                     }));
 
+                    var check_item_size = $("input[name=check_item_size]").val();
                     var sizes = myObj[i].size.split(',');
                         sizes = $.unique(sizes);
                     for(j in sizes){
-                      $('.'+item_parent_class+' .itemSize').append($('<option>', {
-                        value: sizes[j],
-                        text : sizes[j]
-                    }));
-                  }
+                      $('.'+item_parent_class+' .itemSize').append($('<option value="'+sizes[j]+'" '+((sizes[j] === check_item_size)?' selected':'')+'>'+sizes[j]+'</option>'));
+                    }
+
                   }             
                 }
 
@@ -220,13 +228,11 @@ $(document).ready(function(){
                     text : "Select colors"
                     }));
 
+                    var check_gmts_color = $("input[name=check_gmts_color]").val();
                     var colors = myObj[s].color.split(',');
                     var colors = $.unique(colors);
                     for(h in colors){
-                      $('.'+item_parent_class+' .itemGmtsColor').append($('<option>', {
-                        value: colors[h],
-                        text : colors[h]
-                    }));
+                      $('.'+item_parent_class+' .itemGmtsColor').append($('<option value="'+colors[h]+'" '+((colors[h] === check_gmts_color)?' selected':'')+'>'+colors[h]+'</option>'));
                     }
 
                     $('.'+item_parent_class+' .itemGmtsColor').removeAttr("readonly","false");
@@ -238,18 +244,24 @@ $(document).ready(function(){
                   $('.'+item_parent_class+' .others_color').eq(increI).val(myObj[ij].others_color);
                   $('.'+item_parent_class+' .item_description').eq(increI).val(myObj[ij].product_description);
 
-                  var company_id = $("input[name=companyIdForBookingOrder]").val();
-                  var priceDetails = ajaxFunc("/get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
+                  // var company_id = $("input[name=companyIdForBookingOrder]").val();
+                  // var priceDetails = ajaxFunc("/get/product/details/vedorPrice", "GET", {productId: myObj[ij].product_id, company_id: company_id});
 
-                  // console.log(myObj[ij]);
-                  if(priceDetails.responseJSON != ''){
-                      $('.'+item_parent_class+' .item_price').eq(increI).val(priceDetails.responseJSON.vendor_com_price);
-                      $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
-                  }
-                  else{
-                      $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
-                      $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
-                  }
+                  // console.log(priceDetails.responseJSON);
+                  // if(typeof priceDetails.responseJSON != "undefined") {
+                      
+                  //     if(priceDetails.responseJSON.vendor_com_price != null){
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).val(priceDetails.responseJSON.vendor_com_price);
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                  //     }
+                  //     else{
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
+                  //         $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                  //     }
+                  // }else{
+                    $('.'+item_parent_class+' .item_price').eq(increI).val(myObj[ij].unit_price);
+                    $('.'+item_parent_class+' .item_price').eq(increI).attr("readonly","true");
+                  // }
 
                   increI++;
                 }
@@ -337,14 +349,22 @@ $(document).ready(function(){
 
             if (taskType == 'challan'){
               $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
-              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +',');
+              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
               $("#bookingId").val("").focus();
+              $('#bookingIdList').removeClass('hidden');
             }
-            // else if(taskType == 'PI'){
-            //   $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
-            //   $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +',');
-            //   $("#bookingId").val("").focus();
-            // }
+            else if(taskType == 'PI'){
+              $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
+              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
+              $("#bookingId").val("").focus();
+              $('#bookingIdList').removeClass('hidden');
+            }
+            else if(taskType == 'FSC PI'){
+              $('#bookingIdList').append('<div class="challan_item"><span>'+t.val()+'</span><span class="challan_list_rmv"> x</span></div>');
+              $('#hiddenBookingIdList').val($('#hiddenBookingIdList').val()+ t.val() +' , ');
+              $("#bookingId").val("").focus();
+              $('#bookingIdList').removeClass('hidden');
+            }
         }
     },
 
@@ -366,14 +386,16 @@ $(document).ready(function(){
     $("#bookingIdList").on("click",".challan_list_rmv", function(){
         var order_item = $(this).parent(".challan_item").text();
         $(this).parent(".challan_item").remove();
-        // alert(order_item);
+        var order_item_1 = order_item.replace('x', ",");
         var order_items = $('#hiddenBookingIdList').val();
-        var order_items =  order_items.replace(' , '+order_item, "W3Schools");
+        var order_itemss =  order_items.replace(order_item_1, " ");
+        $('#hiddenBookingIdList').val(" ");
+        $('#hiddenBookingIdList').val(order_itemss);
     })
 });
 
 function isNotItemUserAccess(itemCode){
-  console.log(itemCode);
+  // console.log(itemCode);
   $.ajax({
       type: "GET",
       url: baseURL+"/get/item/check/user/access",
@@ -386,7 +408,7 @@ function isNotItemUserAccess(itemCode){
         if(resultsss == 'not_match'){
           alert("You haven\'t permission to access this Item.");
         }
-        // if(resultsss == 'empty'){
+        // elseif(resultsss == 'empty'){
         //   alert("This Item code not entered in the Software.");
         // }
       },

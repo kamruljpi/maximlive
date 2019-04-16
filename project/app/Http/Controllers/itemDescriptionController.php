@@ -22,14 +22,15 @@ class itemDescriptionController extends Controller
     public function addDescription(Request $request){
 
         $validMessages = [
-            'description_name.required' => 'Description Name field is required.'
+            'description_name.required' => 'Description Name field is required.',
+            'description_name.unique' => 'Description Name already inserts.',
         ];
 
         $datas = $request->all();
 
         $validator = Validator::make($datas,
             [
-                'description_name' => 'required'
+                'description_name' => 'required|unique:mxp_item_description,name'
             ],
             $validMessages
         );

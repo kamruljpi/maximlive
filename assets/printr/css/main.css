@@ -2,32 +2,32 @@ ul li {
   list-style-type: none;
 }
 .header-bottom{
-	padding-top: 10px;
+  padding-top: 10px;
 }
 .header-bottom .header-bottom-b{
-	padding:5px 0px 5px 0px;
-	text-align: center;
-	background-color: black;
+  padding:5px 0px 5px 0px;
+  text-align: center;
+  background-color: black !important;
 }
 .header-bottom-b span{
-	font-size: 25px;
-	font-weight: bold;
-	color:#FFF;
+  font-size: 25px;
+  font-weight: bold;
+  color:#FFF !important;
 }
 .body-top{
-	padding-top: 5px;
-	padding-left: 0px;
+  padding-top: 5px;
+  padding-left: 0px;
 }
 .body-top .body-list{
-	padding-left: 0px;
+  padding-left: 0px;
 }
 .body-top .body-list ul{
-	list-style-type: none;
-	font-size: 16px;
-	margin-left: -27px;
+  list-style-type: none;
+  font-size: 16px;
+  margin-left: -27px;
 }
 .idid{
-	padding-left: 300px;
+  padding-left: 300px;
 }
 
 .colspan-td table {
@@ -98,3 +98,56 @@ ul li {
   .mainBody .grandTotal span{
     font-weight: bold;
   }
+  .report-footer{
+    margin-top: 30px;
+  }
+  .report-header{
+    margin-top: -25px;
+    margin-bottom: -20px;
+    background-color: white !important;
+   }
+   .report-header h3{
+      color: black !important;
+   }
+@media print {
+    .report-header {
+        background-color: white !important;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .report-header h3 {
+        color: black !important;
+    }
+
+    /*table th#poCatNo {
+      min-width: 180px !important;
+    }*/
+
+    /*table th#erp_code {
+      min-width: 190px !important;
+    }*/
+    
+    /*.fixed_footer {page-break-before: always;}*/
+
+    input[type="checkbox"]
+      {
+        visibility: hidden;
+      }
+
+
+      input[type="checkbox"][checked]
+      {
+        visibility: visible;
+      }
+}
+
+#pfooter {
+  border: 1px solid #6d6d6d;
+  margin-bottom: 5px;
+}
+#pfooter .left{
+  border-right: 1px solid #6d6d6d;
+}
+#pfooter .header{
+  border-bottom: 1px solid #6d6d6d;
+}

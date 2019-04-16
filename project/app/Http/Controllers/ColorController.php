@@ -22,7 +22,7 @@ class ColorController extends Controller
     public function listView(){
     	$roleManage = new RoleManagement();
         // $gmtsColor = MxpGmtsColor::where('user_id',Auth::user()->user_id)->where('item_code', NULL)->paginate(10);
-    	$gmtsColor = MxpGmtsColor::where('item_code', NULL)->paginate(10);
+    	$gmtsColor = MxpGmtsColor::where('item_code', NULL)->orderBy('id','DESC')->paginate(10);
         return view('color_management.color_list',compact('gmtsColor'));
     }
 
@@ -45,11 +45,12 @@ class ColorController extends Controller
         $validMessages = [
             //            'p_code.required' => 'Product code field is required.',
             'gmts_color.required' => 'Color field is required.',
+            'gmts_color.unique' => 'This color already inserts.',
             ];
     	$validator = Validator::make($datas, 
             [
     			//               'p_code' => 'required',
-    			'gmts_color' => 'required',
+    			'gmts_color' => 'required|unique:mxp_gmts_color,color_name',
 		    ],
             $validMessages
         );

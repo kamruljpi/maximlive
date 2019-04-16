@@ -136,7 +136,7 @@ class PurchaseOrderController extends Controller
 
 
 
-        return view('print_file.purchase_order.purchase_order_report', ['purchaseOrders' => $getPurchaseOrders, 'headerValue' => $headerValue, 'footerData' => $footerData, 'supplier'=> $suplier]);
+        return view('maxim.purchase_order.purchase_order_report', ['purchaseOrders' => $getPurchaseOrders, 'headerValue' => $headerValue, 'footerData' => $footerData, 'supplier'=> $suplier]);
     }
 
     private function getDateTImeInFormate($dateTIme){

@@ -6,6 +6,7 @@ use App\Http\Controllers\dataget\ListGetController;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RoleManagement;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Http\Request;
 use App\Model\MxpBookingChallan;
 use App\Model\MxpMrf;
@@ -13,6 +14,10 @@ use Carbon\Carbon;
 use Validator;
 use Auth;
 use DB;
+use App\Notification;
+use App\Model\MxpBookingBuyerDetails;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Http\Controllers\taskController\Flugs\Mrf\MrfFlugs;
 
 class MrfController extends Controller
 {
@@ -20,18 +25,23 @@ class MrfController extends Controller
   const UPDATE_MRF = "update";
   const OPEN_MRF = "Open";
 
-	function array_combine_($keys, $values)
-	{
-	    $result = array();
-	    foreach ($keys as $i => $k) {
-	        $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
-	    }
-	    array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
-	    return  $result;
-	}
+  function array_combine_($keys, $values)
+  {
+      $result = array();
+      foreach ($keys as $i => $k) {
+          $result[$k][] = isset($values[$i]) ? $values[$i] : 0;
+      }
+      array_walk($result, create_function('&$v', '$v = (count($v) == 1)? array_pop($v): $v;'));
+      return  $result;
+  }
     public function addMrf(Request $request){
 
       $datas = $request->all();
+      // $this->print_me($datas);
+      $errors = $this->checkQuantity($datas);
+      if(!empty($errors)){
+        return redirect()->back()->withInput($request->input())->withErrors($errors);
+      }
       $booking_order_id = $request->booking_order_id;
       $allId = $datas['allId'];
       $product_qty = $datas['product_qty'];
@@ -232,7 +242,8 @@ class MrfController extends Controller
         $challanMinusValueInsert->update();
       }
 
-      $cc = MxpMrf::count();
+      $cc = MxpMrf::select('mrf_id')->groupBy('mrf_id')->get();
+      $cc = count($cc);
       $count = str_pad($cc + 1, 4, 0, STR_PAD_LEFT);
       $id = "MRF"."-";
       $date = date('dmY') ;
@@ -242,6 +253,7 @@ class MrfController extends Controller
         $getBookingChallanValue = DB::table("mxp_booking_challan")->where('id',$key)->get();
         foreach ($getBookingChallanValue as $bookingChallanValue) {
             $insertMrfValue = new MxpMrf();
+            $insertMrfValue->job_id = $bookingChallanValue->job_id;
             $insertMrfValue->user_id = Auth::user()->user_id;
             $insertMrfValue->mrf_id = $mrf_id;
             $insertMrfValue->supplier_id= $request->supplier_id;
@@ -255,21 +267,57 @@ class MrfController extends Controller
             $insertMrfValue->item_price = $bookingChallanValue->item_price;
             $insertMrfValue->matarial = $bookingChallanValue->matarial;
             $insertMrfValue->gmts_color = $bookingChallanValue->gmts_color;
-            $insertMrfValue->orderDate = $bookingChallanValue->orderDate;
+            $insertMrfValue->orderDate = Carbon::now()->format('d-m-Y');
             $insertMrfValue->orderNo = $bookingChallanValue->orderNo;
             $insertMrfValue->shipmentDate = $request->mrf_shipment_date;
             $insertMrfValue->poCatNo = $bookingChallanValue->poCatNo;
+            $insertMrfValue->item_description = $bookingChallanValue->item_description;
             // $insertMrfValue->status = $bookingChallanValue->status;
             $insertMrfValue->action = self::CREATE_MRF;
-            $insertMrfValue->mrf_status = self::OPEN_MRF;
+            $insertMrfValue->mrf_status = MrfFlugs::OPEN_MRF;
+            $insertMrfValue->job_id_current_status = MrfFlugs::JOBID_CURRENT_STATUS_OPEN;
             $insertMrfValue->save();
         }
       }
-      $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
-      $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$booking_order_id)->get();
-      $footerData =[];
-      $mrfDeatils = DB::table('mxp_mrf_table')->where('mrf_id',$mrf_id)->get();
+      
+      NotificationController::postNotification(Notification::CREATE_MRF, $mrf_id);  
 
-      return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','headerValue','buyerDetails','footerData'));
+      return \Redirect::route('refresh_mrf_view', ['mrf_id' => $mrf_id,'booking' => $booking_order_id]);
+      
+    }
+
+    public function redirectMrfReport(Request $request){
+      $footerData =[];
+      $companyInfo = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
+      $buyerDetails = MxpBookingBuyerDetails::where('booking_order_id',$request->booking)->first();
+      $mrfDeatils = MxpMrf::join('mxp_booking as mp','mp.id','job_id')
+                      ->select('mxp_mrf_table.*','mp.season_code','mp.oos_number','mp.style','mp.item_description','mp.sku','mp.item_size_width_height')
+                      ->where('mrf_id',$request->mrf_id)
+                      ->get();
+      return view('maxim.mrf.mrfReportFile',compact('mrfDeatils','companyInfo','buyerDetails','footerData'));
+    }
+
+    protected function checkQuantity($data){
+      $errors = 'You try to invalid and grater than quantity.';
+      $datas['ipo_id'] = $data['allId'];
+      $datas['product_qty'] = $data['product_qty'];
+      $oneArray = [];
+      foreach ($datas['ipo_id'] as $key => $value) {
+        $oneArray[$key]['ipo_id'] = $value;
+        $oneArray[$key]['product_qty'] = $datas['product_qty'][$key];
+      }
+      $dbValue = [];
+      foreach ($oneArray as $key => $oneArrayValue) {
+        $idstrcount = (8 - strlen($oneArrayValue['ipo_id']));
+        $job_id_id = str_repeat('0',$idstrcount).$oneArrayValue['ipo_id'];
+        $dbValue = MxpBookingChallan::where('job_id',$oneArrayValue['ipo_id'])->select('left_mrf_ipo_quantity')->first();
+
+        if($oneArrayValue['product_qty'] > $dbValue->left_mrf_ipo_quantity)
+          $errors .= ' Job id '.$job_id_id.' available quantity '.$dbValue->left_mrf_ipo_quantity.' and entered quantity '.$oneArrayValue['product_qty'].'.';
+      }
+      if(isset($errors) && $errors === 'You try to invalid and grater than quantity.'){
+        $errors = '';
+      }
+      return $errors;
     }
 }

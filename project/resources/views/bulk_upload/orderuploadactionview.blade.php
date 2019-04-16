@@ -1,0 +1,80 @@
+@extends('layouts.dashboard')
+@section('page_heading','Bulk Upload')
+@section('section')
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>
+            Order Upload List
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <?php
+                        $title_key = ['po_cat_no','oos_no','item_code','erp_code','item_description','gmts_item_color','item_size','style','sku','item_qty','item_price'];
+                        if(session('err_item_list')){
+                            foreach(session('err_item_list') as $xkey => $xval){
+                                foreach($xval as $xxkey => $xxval){
+                                    if(in_array($xxkey, $title_key)){
+                                        print '<th class="tablehead_'.$xxkey.'">'.ucwords(str_replace("_"," ", $xxkey)).'</th>';
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        ?>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $title_key = ['po_cat_no','oos_no','item_code','erp_code','item_description','gmts_item_color','item_size','style','sku','item_qty','item_price'];
+                    if(session('err_item_list')){
+                    foreach(session('err_item_list') as $xkey => $xval){
+                    ?>
+                    <tr>
+                        <?php
+                        foreach($xval as $xxkey => $xxval){
+                            if(in_array($xxkey, $title_key)){
+                                print '<td class="table_data_'.$xxkey.'">'.$xxval.'</td>';
+                            }
+                        }
+                        ?>
+                    </tr>
+                    <?php
+                    }
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12" style="  padding: 0px;  padding-left: 20px; margin-right: 20px;">
+                <div class="pull-right" style="margin-left: 20px;">
+                    <form action="{{ route('orderuploadactionfinal')}}" method="POST" role="form" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="id_buyer" value="{{ $id_buyer }}">
+                        <input type="hidden" name="id_vendor" value="{{ $id_vendor }}">
+                        <input type="hidden" name="sort_name" value="{{ $sort_name }}">
+                        <textarea style="display: none;" name="upload_item_members">{{ $members_item_list }}</textarea>
+                        <button type="submit" class="btn btn-primary ">Save</button>
+                    </form>
+                </div>
+                <div class="pull-right">
+                    <a href="{{ route('dashboard_view') }}" class="btn btn-primary btn-danger">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .alert-danger,.alert-success {
+        color: #fff !important;
+    }
+</style>
+@endsection

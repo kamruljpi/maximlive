@@ -6,6 +6,9 @@ use DB;
 use Auth;
 use App\MxpTaskRole;
 use App\userbuyer;
+use App\Http\Controllers\Source\User\RoleDefine;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\IpCheckCOntroller;
 
 class HomeController extends Controller {
 	/**
@@ -14,9 +17,9 @@ class HomeController extends Controller {
 	 * @return void
 	 */
 	public function __construct() {
-		// $this->middleware('auth');
+		// $this->middleware('checkLocation');
 	}
-
+	
 	/**
 	 * Show the application dashboard.
 	 *
@@ -28,6 +31,8 @@ class HomeController extends Controller {
 	}
 
 	public function dashboard() {
+
+		// IpCheckCOntroller::checkPermission();
 
 		// $taskRoleData = array();
 		// $user_role_id = session()->get('user_role_id');
@@ -110,6 +115,12 @@ class HomeController extends Controller {
 		// 	$selectBuyer = [];
 		// }
 		$user = Auth::user();
-		return view('dashboard',compact('user'));
+
+		$notification = NotificationController::getAllNotification($status=1, $limit= 3);
+		// var_dump("<pre>");var_dump($notification);die();
+		session()->put('notification', $notification);
+
+		return view('dashboard',compact('user','notification'));
 	}
+
 }

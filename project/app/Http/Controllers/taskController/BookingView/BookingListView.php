@@ -6,6 +6,7 @@ use App\Http\Controllers\taskController\BookingView\Mrf\MrfController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
+use App\Supplier;
 
 class BookingListView extends Controller
 {
@@ -18,7 +19,7 @@ class BookingListView extends Controller
 		$this->mrfController = $MrfController;
 	}
 
-	public function IpoOrMrfDefine(Request $request){
+	public function __invoke(Request $request){
 		if(!isset($request->job_id)){
 			return redirect()->back()->with('empty_message', self::JOB_EMPTY_MESSAGE);
 		}
@@ -28,12 +29,14 @@ class BookingListView extends Controller
 
 		if($request->ipo_or_mrf === 'mrf'){
 			$bookingDetails = $this->mrfController->getBookingValue($request->job_id);
+			$suppliers = Supplier::where('status', 1)->where('is_delete', 0)->get();				
 
-			return view('maxim.mrf.mrf',compact('bookingDetails'));
+			return view('maxim.mrf.mrf',compact('bookingDetails','suppliers'));
 		}elseif ($request->ipo_or_mrf === 'ipo') {
 			
-			$bookingDetails = $this->mrfController->getBookingValue($request->job_id);
-			return view('maxim.ipo.ipo_price_manage');
+			$sentBillId = $this->mrfController->getBookingValue($request->job_id);
+			$ipoIncrease = $request->increase_value;
+			return view('maxim.ipo.ipo_price_manage',compact('sentBillId','ipoIncrease'));
 		}		
 	}
 }

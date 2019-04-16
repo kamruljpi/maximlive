@@ -1,5 +1,24 @@
 @extends('layouts.plane')
 @section('body')
+<?php 
+    use App\Http\Controllers\taskController\Flugs\JobIdFlugs;
+    use App\Http\Controllers\Source\User\RoleDefine;
+    use App\Notification;
+    $object = new RoleDefine();
+    $csRoleCheck = $object->getRole('Customer');
+    $os_team = $object->getRole('OS');
+
+    // foreach (session()->get('notification') as $values) {
+        // foreach ($values as $key => $value) {
+            // if($value->type == Notification::CREATE_SPO){
+                // print_r("<pre>");
+                // print_r($value);
+            // }
+       //  }
+    // }
+     
+     // print_r("<pre>");die();
+?>
  <div id="wrapper">
         <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -18,7 +37,8 @@
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
+                <div class="">
+                {{-- <li class="dropdown ">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
@@ -150,68 +170,77 @@
                         </li>
                     </ul>
                     <!-- /.dropdown-tasks -->
-                </li>
+                </li> --}}
                 <!-- /.dropdown -->
+                 <style type="text/css">
+                    .badge-notify{
+                       background:red;
+                       position:relative;
+                       top: -14px;
+                       left: -43px;
+                      }
+                </style>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
+                    <span class="badge badge-notify" id="badge"></span>
+                    
                     <ul class="dropdown-menu dropdown-alerts">
+               
+                        <?php
+                            $i=0;
+                            $k= 0;
+                            ?>
+                        @foreach(session()->get('notification') as $key => $nots)
+                            @foreach($nots as $noti)
+                                <li class="{{ ($noti->seen == 1)? 'seen' : 'unseen' }}">
+                                    @if($noti)
+                                        <a href="
+                                            @if( $noti->type == Notification::CREATE_BOOKING )
+                                                {{ Route('booking_list_details_view',['booking_id' => $noti->type_id]) }}
+                                            @elseif($noti->type == Notification::CREATE_MRF )
+                                                {{ Route('os_mrf_details_view',['mid' => $noti->type_id]) }}
+                                            @elseif($noti->type == Notification::CREATE_SPO )
+                                                {{ Route('os_po_report_view',['poid' => $noti->type_id]) }}
+                                            @else 
+                                                # 
+                                            @endif
+                                        ">
+                                            <div style="font-size: 12px">
+                                                @if($noti->type == Notification::GOODS_RECEIVE )
+                                                <?php $jobId = (JobIdFlugs::JOBID_LENGTH - strlen($noti->type_id)); ?>
+                                                    {{ str_repeat(JobIdFlugs::STR_REPEAT,$jobId) }}{{ $noti->type_id }} Job id goods receive.
+                                                @else
+                                                    {{ $noti->type_id }} Created 
+                                                @endif
+
+                                                <span class="pull-right text-muted small">{{ $noti->created_at->diffForHumans() }}</span>
+                                            </div>
+                                        </a>
+                                        @if($noti->seen == '0')
+                                            <?php $k++;?>
+                                        @endif
+                                    
+                                    @endif
+                                </li>                                
+                                
+                                <?php
+                                    $i++;
+                                ?>
+                            @endforeach
+                        @endforeach
+                        <li class="divider"></li>   
                         <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-comment fa-fw"></i> New Comment
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                    <span class="pull-right text-muted small">12 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-tasks fa-fw"></i> New Task
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                    <span class="pull-right text-muted small">4 minutes ago</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
+                            <a class="text-center" href="{{ Route('getNotification') }}">
                                 <strong>See All Alerts</strong>
                                 <i class="fa fa-angle-right"></i>
+                                <input type="text" name="badge" value="{{ $k++ }}" hidden>
                             </a>
                         </li>
                     </ul>
                     <!-- /.dropdown-alerts -->
                 </li>
-                <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
@@ -247,21 +276,28 @@
                     </ul>
                     <!-- /.dropdown-user -->
                 </li>
+            </div>
+                <!-- /.dropdown -->
+                
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
 
-
              <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                         <li {{ (Request::is('*dashboard') ? 'class="active"' : '') }}>
-                            <a href="{{ Route ('task_dashboard_view') }}">
-                                <i class="fa fa-dashboard fa-fw"></i>
-                                {{ trans('others.task_label') }}
-                            </a>
-                        </li>
+                        @if($csRoleCheck == 'customer' 
+                            || session::get('user_type') == "super_admin"
+                            || $os_team == 'os')
 
+                            <li {{ (Request::is('*dashboard') ? 'class="active"' : '') }}>
+                                <a href="{{ Route ('task_dashboard_view') }}">
+                                    <i class="fa fa-dashboard fa-fw"></i>
+                                    {{ trans('others.task_label') }}
+                                </a>
+                            </li>
+
+                        @endif
 
                         @if(!is_array(session()->get('UserMenus')) || is_object(session()->get('UserMenus')) )
                                 <script type="text/javascript">
@@ -340,8 +376,11 @@
 
         <div id="page-wrapper">
 			 <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">@yield('page_heading')</h1>
+                <div class="col-sm-6">
+                    <h3 class="page-header">@yield('page_heading')</h3>
+                </div>
+                <div class="col-sm-6">
+                    <h3 class="page-header pull-right">@yield('page_heading_right')</h3>
                 </div>
                 <!-- /.col-lg-12 -->
            </div>
@@ -352,7 +391,27 @@
             <!-- /#page-wrapper -->
         </div>
     </div>
+    <!-- Footer -->
+    <footer style="padding: 10px 0;background:#e0e0e0;color:#333; margin-left: 250px;">
+
+          <!-- Copyright -->
+        <div class="text-center" style="font-family:roboto-serif;font-size: 15px;">Copyright© 2018,All Right Reserved – by <a href="#" target="_blank">MAXIM</a> 
+            Powered by <a href="http://maxproit.solutions/" target="_blank"> maxproIT.solutions</a>
+        </div>
+          <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
 @stop
 
-
+@section('LoadScript')
+    <script>
+    $(document).ready(function() {
+        var b = $('input[name=badge]').val();
+        if (b > 0) {
+            $('#badge').text(b);
+        }
+    });
+    </script>
+@stop
 

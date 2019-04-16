@@ -28,4 +28,13 @@ class MxpProduct extends Model {
 //    public function getColor(){
 //	    return MxpGmtsColor::get()->where('id', '=', $this->colorsIds());
 //    }
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'updated_at', 'created_at','description_1','description_2','description_3','description_4'
+    ];
 }

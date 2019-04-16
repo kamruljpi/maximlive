@@ -33,6 +33,7 @@ class CreateMxpPiTable extends Migration
             $table->datetime('shipmentDate')->nullable();
             $table->string('poCatNo')->nullable();
             $table->string('sku')->nullable();
+            $table->string('payment_days')->nullable();
             $table->timestamps();
         });
     }

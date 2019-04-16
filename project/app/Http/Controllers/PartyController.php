@@ -56,23 +56,41 @@ class PartyController extends Controller
 
     public function store(Request $request)
     {   
-        $roleManage = new RoleManagement();
+        /** make sort_name instead name**/
+        $name = isset($request->name) ? $request->name : '' ;
+        $names = explode(' ', $name);
 
-        $validMassage = [
-            // 'party_id.required' => 'Vendor id is required',
-            // 'party_id.unique' => 'Vendor id is already entered.',            
+        $sort_name_as = '';
+
+        if(!empty($names)) {
+            foreach ($names as $name_) {
+                if ($name_[0] != '&') {
+                    if($name_[0] != '(') {
+                        $str = str_replace('/', '', $name_[0]);
+                        $str_n = trim($str, '/');
+
+                        $sort_name_as .= $str_n;                    
+                    }
+                }
+            }
+        }else{
+            $sort_name_as = $name ;
+        }
+        
+        /** End **/
+        // $this->print_me(strtoupper($sort_name_as));
+
+        $validMassage = [            
             'name.required' => 'Company Name is required',
-            'sort_name.required' => 'Company sort name is required',
+            // 'sort_name.required' => 'Company sort name is required',
             'name_buyer.required' => 'Brand name is required',
-            'name.unique' => 'Vendor name already entered',
+            'name.unique' => 'This vendor ( '.$request->name.' ) name already inserts',
             
         ];
 
         $validator = Validator::make($request->all(), [
-                // 'party_id'               => 'required|unique:mxp_party,party_id',
-                // 'name'                   => 'required||unique:mxp_party,name',
-                'name'                   => 'required',
-                'sort_name'              =>'required',
+                'name'                   => 'required||unique:mxp_party,name',
+                // 'sort_name'              =>'required',
                 'name_buyer'             => 'required',
             ],
             $validMassage
@@ -86,7 +104,7 @@ class PartyController extends Controller
         $party->party_id               = $request->party_id;
         $party->user_id                = Auth::user()->user_id;
         $party->name                   = $request->name;
-        $party->sort_name              = $request->sort_name;
+        $party->sort_name              = (isset($request->sort_name) ? $request->sort_name : strtoupper($sort_name_as));
         $party->name_buyer             = $request->name_buyer;
         $party->address_part1_invoice  = $request->address_part_1_invoice;
         $party->address_part2_invoice  = $request->address_part_2_invoice;
@@ -104,43 +122,65 @@ class PartyController extends Controller
         $party->description_2          = $request->description_2;
         $party->description_3          = $request->description_3;
         $party->status                 = $request->status;
-        $party->id_buyer                 = $request->id_buyer;
+        $party->id_buyer               = $request->id_buyer;
         $party->save();
+
         StatusMessage::create('party_added', $request->name.' Party Added Successfully');
+
         return Redirect()->Route('party_list_view');
     }
 
     public function update(Request $request)
-    {   
-        $roleManage = new RoleManagement();
+    {
+        /** make sort_name instead name **/
+        $name = isset($request->name) ? $request->name : '' ;
+        $names = explode(' ', $name);
 
+        $sort_name_as = '';
+
+        if(!empty($names)) {
+            foreach ($names as $name_) {
+                if ($name_[0] != '&') {
+                    if($name_[0] != '(') {
+                        $str = str_replace('/', '', $name_[0]);
+                        $str_n = trim($str, '/');
+
+                        $sort_name_as .= $str_n;                    
+                    }
+                }
+            }
+        }else{
+            $sort_name_as = $name ;
+        }
+        
+        /** End **/
+        
         $validMassage = [
-            // 'party_id.required' => 'Vendor id is required',
             'name.required' => 'Company Name is required',
             'sort_name.required' => 'Company sort name is required',
-            'name_buyer.required' => 'Buyer name is required',
+            'id_buyer.required' => 'Buyer name is required',
         ];
 
         $validator = Validator::make($request->all(), [
-            // 'party_id'               => 'required',
-            'name'                   => 'required',
-            'sort_name'              => 'required',
-            'name_buyer'             => 'required',
-        ],
-        $validMassage
-    );
+                'name'                   => 'required',
+                'sort_name'              => 'required',
+                'id_buyer'             => 'required',
+            ],
+            $validMassage
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
         }
 
+        $name_buyer = (buyer::where('id_mxp_buyer',$request->id_buyer)->select('buyer_name')->first())->buyer_name;
 
         $update_party = MaxParty::find($request->id);
         $update_party->party_id               = $request->party_id;
         $update_party->user_id                = Auth::user()->user_id;
         $update_party->name                   = $request->name;
-        $update_party->sort_name              = $request->sort_name;
-        $update_party->name_buyer             = $request->name_buyer;
+        $update_party->sort_name              = strtoupper($sort_name_as);
+        $update_party->name_buyer             = $name_buyer;
         $update_party->address_part1_invoice  = $request->address_part_1_invoice;
         $update_party->address_part2_invoice  = $request->address_part_2_invoice;
         $update_party->attention_invoice      = $request->attention_invoice;
@@ -156,17 +196,18 @@ class PartyController extends Controller
         $update_party->description_1          = $request->description_1;
         $update_party->description_2          = $request->description_2;
         $update_party->description_3          = $request->description_3;
-        $update_party->status          = $request->status;
+        $update_party->id_buyer               = $request->id_buyer;
+        $update_party->status                 = $request->status;
         $update_party->save();
 
         StatusMessage::create('party_updated', $request->name .' '. $request->name_buyer .'(buyer) updated Successfully');
         return Redirect()->Route('party_list_view');
     }
 
-     public function deleteParty(Request $request) {
+    public function deleteParty(Request $request) {
       $party = MaxParty::find($request->id);
       $party->delete();
       StatusMessage::create('party_delete',$party->name .' is deleted Successfully');
       return redirect()->Route('party_list_view');
-     }
+    }
 }

@@ -9201,4 +9201,20 @@ span.challan_list_rmv:hover {
 }
 #welcome .body h3{
   margin-top: 150px;
+}
+@media only screen and ( max-width: 1024px) {
+  #report-header .header-title h2{
+    
+      font-size: 27px !important;
+    
+  }
+}
+ table th#item_size {
+    min-width: 140px !important;
+}
+.unseen{
+  background-color: #e0e0e0 !important;
+}
+.seen{
+  background-color: #ffffff !important;
 } 

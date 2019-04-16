@@ -14,7 +14,7 @@
 			@if($value->logo_allignment == "left")
 				@if(!empty($value->logo))
 					<div class="pull-left">
-						<img src="/upload/{{$value->logo}}"  height="40px" width="150px" style="margin-top:  15px;"/>
+						<img src="{{ asset('upload')}}/{{$value->logo}}"  height="40px" width="150px" style="margin-top:  15px;"/>
 					</div>
 				@endif
 			@endif
@@ -37,9 +37,9 @@
 	</div>
 	@endfor
 	@endforeach
-	<div class="row header-bottom">
-		<div class="col-md-12 header-bottom-b">
-			<span>Challan / Packing List</span>
+	<div class="row">
+		<div class="report-header">
+			<h3 align="center" style=" padding:8px; font-weight: bold;">Challan / Packing List</h3>
 		</div>
 	</div>
 
@@ -108,7 +108,7 @@
 <table class="table table-bordered">
     <thead>
         <tr>
-        	<th width="5%">SI No</th>
+        	<th width="5%">Job Id</th>
         	<th width="15%">Checking Id</th>
         	<th width="15%">Description</th>
         	<th width="15%">Item code</th>
@@ -143,9 +143,11 @@
     					$itemlength = sizeof($itemlengths);
     				}
     				$itemQtyValue = array_combine($itemsize, $qty);
+
+    				$jobId = (8 - strlen($item->id));
     			?>
 	    			<tr>
-	    				<td>{{$j++}}</td>
+	    				<td>{{ str_repeat('0',$jobId) }}{{$item->id}}</td>
 	    				<td rowspan="{{$itemlength}}">{{$item->checking_id}}</td>
 	    				<td rowspan="{{$itemlength}}">{{$item->erp_code}}</td>
 	    				<td rowspan="{{$itemlength}}">{{$item->item_code}}</td>
@@ -311,7 +313,8 @@ inform us in 3days. After this period, you concern about this goods shall not be
 	@endforeach
 
 <script type="text/javascript">
-		function myFunction() {
+	function myFunction() {
+		$(".print").addClass("hidden");
 	    window.print();
 	}
 </script>

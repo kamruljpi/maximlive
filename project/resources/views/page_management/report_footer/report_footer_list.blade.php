@@ -49,26 +49,26 @@ trans('others.report_footer_list'))
                         	<td>{{$roport->siginingPerson_1}}</td>                 
                         	<td>
                                 @if(!empty($roport->siginingSignature_1))
-                                <img src="/upload/{{$roport->siginingSignature_1}}" height="50px" width="90px" />
+                                <img src="{{ asset('upload')}}/{{$roport->siginingSignature_1}}" height="50px" width="90px" />
                                 @endif
                             </td>
                             <!-- <td>{{$roport->siginingPersonSeal_1}}</td> -->
                             <td>
                                 @if(!empty($roport->siginingPersonSeal_1))
-                                <img src="/upload/{{$roport->siginingPersonSeal_1}}" height="50px" width="90px" />
+                                <img src="{{ asset('upload')}}/{{$roport->siginingPersonSeal_1}}" height="50px" width="90px" />
                                 @endif
                             </td>
                         	<td>{{$roport->siginingPerson_2}}</td>
                         	<!-- <td>{{$roport->siginingSignature_2}}</td> -->
                             <td>
                                 @if(!empty($roport->siginingSignature_2))
-                                <img src="/upload/{{$roport->siginingSignature_2}}" height="50px" width="90px" />
+                                <img src="{{ asset('upload')}}/{{$roport->siginingSignature_2}}" height="50px" width="90px" />
                                 @endif
                             </td>
                         	<!-- <td>{{$roport->siginingPersonSeal_2}}</td> -->
                             <td>
                                 @if(!empty($roport->siginingPersonSeal_2))
-                                <img src="/upload/{{$roport->siginingPersonSeal_2}}" height="50px" width="90px" />
+                                <img src="{{ asset('upload')}}/{{$roport->siginingPersonSeal_2}}" height="50px" width="90px" />
                                 @endif
                             </td>
                             <td>

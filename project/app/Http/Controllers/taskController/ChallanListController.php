@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Validator;
 use Auth;
 use DB;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
 
 class ChallanListController extends Controller
 {
@@ -23,19 +24,19 @@ class ChallanListController extends Controller
 
 
     public function showChallanReport(Request $request){
-//        $this->print_me($request->cid);
-        $headerValue = DB::table("mxp_header")->where('header_type',11)->get();
-        $multipleChallan = DB::select(" select * from mxp_multiplechallan where challan_id ='".$request->cid."'");
+       // $this->print_me($request->bid);
+        $headerValue = DB::table("mxp_header")->where('header_type',HeaderType::COMPANY)->get();
+
+        $multipleChallan = DB::table('mxp_multiplechallan as mmc')
+                            ->join('mxp_booking as mb','mb.id','mmc.job_id')
+                            ->where('mmc.challan_id',$request->cid)
+                            ->get();
+
         $buyerDetails = DB::table("mxp_bookingbuyer_details")->where('booking_order_id',$request->bid)->get();
+        
         $footerData = DB::select("select * from mxp_reportfooter");
 
-        return view('maxim.challan.challanBoxingPage',
-            [
-                'footerData' => $footerData,
-                'headerValue' => $headerValue,
-                'buyerDetails' => $buyerDetails,
-                'multipleChallan' => $multipleChallan
-            ]);
+        return view('maxim.challan.challanBoxingPage', compact('footerData','headerValue','buyerDetails','multipleChallan'));
     }
 
     public function getChallanListByChallanId(Request $request){

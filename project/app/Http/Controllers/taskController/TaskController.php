@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Message\StatusMessage;
 use App\Http\Controllers\RoleManagement;
 use App\Model\MxpBookingBuyerDetails;
+use App\Model\MxpBooking;
 use App\MxpIpo;
 use App\Supplier;
 use App\MxpProduct;
@@ -14,8 +15,16 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Validator;
+use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
+use App\Http\Controllers\taskController\Flugs\HeaderType;
+use App\Model\MxpMrf;
+use App\Http\Controllers\taskController\Os\Mrf\MrfListController;
+use App\Http\Controllers\Source\User\UserAccessBuyerList;
 
-class TaskController extends Controller {
+class TaskController extends Controller 
+{
+	use UserAccessBuyerList;
+
 	CONST CREATE_IPO = "create";
 	CONST UPDATE_IPO = "update";
 
@@ -25,11 +34,25 @@ class TaskController extends Controller {
 
 	public function getItemCode() {
 		$results = array();
-		// $productDetails = DB::select("SELECT mp.product_code FROM mxp_product mp
-  //       LEFT JOIN mxp_productsize mps ON (mps.product_code = mp.product_code)
-  //       LEFT JOIN mxp_gmts_color mgs ON (mgs.item_code = mps.product_code) GROUP BY mps.product_code, mgs.item_code");
 
-		$productDetails = MxpProduct::select('product_code')->get();
+		/** buyer wiase booking value filter **/
+
+		$buyerList = $this->getUserByerList(); // use trait class
+
+		if(isset($buyerList) && !empty($buyerList)){
+
+			$productDetails = MxpProduct::whereIn('id_buyer',$buyerList)->select('product_code')->get();
+
+		}else if(Auth::user()->type == 'super_admin'){
+
+			$productDetails = MxpProduct::select(DB::Raw('DISTINCT product_code'))->get();	
+
+		}else{
+			$productDetails = MxpProduct::select(DB::Raw('DISTINCT product_code'))->get();			
+		}
+
+		/** End **/
+
 		if (isset($productDetails) && !empty($productDetails)) {
 			foreach ($productDetails as $itemKey => $itemValue) {
 
@@ -38,7 +61,8 @@ class TaskController extends Controller {
 		}
 		return json_encode($results);
 	}
-	public function gettaskActionOrsubmited() {
+	public function gettaskActionOrsubmited(Request $request) {
+
 		return \Redirect()->Route('dashboard_view');
 	}
 	public function taskActionOrsubmited(Request $request) {
@@ -63,35 +87,44 @@ class TaskController extends Controller {
 
 		} elseif ($taskType === 'PI' || $taskType === 'FSC PI') {
 
-			// $formatTypes = '1002';
-			// // $formatTypes = $request->piFormat;
-			// $companyInfo = DB::table('mxp_header')->where('header_type', 11)->get();
-			// $bookingDetails = DB::select('call getBookinAndBuyerDeatils("' . $request->bookingId . '")');
-			// if (empty($bookingDetails)) {
-			// 	StatusMessage::create('empty_booking_data', 'This booking Id doesnot show any result . Please check booking Id !');
+			// there are was a multiple PI id
+			$booking_id_1 = isset($request->bookingIdList) ? $request->bookingIdList : '' ;
+			// there was a single PI id
+			$booking_id_2 = isset($request->bookingId) ? $request->bookingId : '' ;
 
-			// 	return \Redirect()->Route('dashboard_view');
-			// }
+			// if $booking_id_1 this field is empty.
+			$bookind_idss = !empty($booking_id_1) ? $booking_id_1 : $booking_id_2 ;
 
-			// $footerData = DB::select("select * from mxp_reportfooter");
+			$booking_id = rtrim($bookind_idss, ",");
+			$booking_id = explode(' , ', $booking_id);
+			$buyerName = '';
+			$companyName = '';
+			$iteration = 0;
 
-			// return view('maxim.pi_format.piReportPage', compact('companyInfo', 'bookingDetails', 'footerData', 'formatTypes'));
+			foreach ($booking_id as $bookingid) {
+				$vendorDetails = MxpBookingBuyerDetails::where([['booking_order_id',$bookingid],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
+				if (! $vendorDetails->Company_name) {
+					return redirect()->back()->withErrors($bookingid." Booking No. not found.");
+				}
+				if ($iteration > 0) {
+					if ($buyerName != $vendorDetails->buyer_name || 
+						$companyName != $vendorDetails->Company_name ) {
+						return redirect()->back()->withErrors("Booking order ids are not in same Vendors");
+					}
+				}
 
-
-
-			// $bookingDetails = DB::select('call getBookinAndBuyerDeatils("' . $request->bookingId . '")');
+				$buyerName = $vendorDetails->buyer_name;
+				$companyName = $vendorDetails->Company_name;
+				$iteration++;
+			}
 
 			if($taskType == 'PI'){
 				$is_type = 'non_fsc';
-				$bookingDetails = $this->getNonfscBookingValue($request->bookingId);
+				$bookingDetails = $this->getNonfscBookingValue($booking_id);
 			}else if($taskType == 'FSC PI'){
 				$is_type = 'fsc';
-				$bookingDetails = $this->getFscBookingValue($request->bookingId);
+				$bookingDetails = $this->getFscBookingValue($booking_id);
 			}
-
-
-			// $this->print_me($is_Type);
-
 			return view('maxim.pi_format.pi_generate_page',compact('bookingDetails','is_type'));
 
 		} elseif ($taskType === 'IPO') {
@@ -108,10 +141,13 @@ class TaskController extends Controller {
 				if ($validator->fails()) {
 					return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
 				}
-				$validationError = $validator->messages();	
+				$validationError = $validator->messages();
 
+				$vendorDetails = MxpBookingBuyerDetails::where([['booking_order_id',$request->bookingId],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
+				if (! $vendorDetails->Company_name) {
+					return redirect()->back()->withErrors($request->bookingId." Booking No not found.");
+				}
 				$ipoValue = DB::table("mxp_booking_challan")->where('booking_order_id', $request->bookingId)->get();
-
 				if (empty($ipoValue)) {
 					return \Redirect()->Route('dashboard_view');
 				}
@@ -138,46 +174,41 @@ class TaskController extends Controller {
 				]);
 
 		} elseif ($taskType === 'MRF') {
-			$data = $request->all();
 
-			$suppliers = Supplier::where('status', 1)
-				->where('is_delete', 0)
-				->get();
+			// there was a multiple mrf Id
+			$mrf_id_1 = isset($request->mrfIdList) ? $request->mrfIdList : '' ;
+			//there was a single mrf Id
+			$mrf_id_2 = isset($request->mrfId) ? $request->mrfId : '' ;
 
-			$booking_order_id = $request->bookingId;
-			$validMessages = [
-				'bookingId.required' => 'Booking Id field is required.',
-			];
-			$validator = Validator::make($datas,
-				[
-					'bookingId' => 'required',
-				],
-				$validMessages
-			);
+			// if $mrf_id_1 one field is empty
+			$mrf_idsss = !empty($mrf_id_1) ? $mrf_id_1 : $mrf_id_2 ;
 
-			if ($validator->fails()) {
-				return redirect()->back()->withInput($request->input())->withErrors($validator->messages());
+			$mrf_ids = rtrim($mrf_idsss, ",");
+			$mrf_ids = explode(' , ', $mrf_ids);
+
+			foreach ($mrf_ids as $mrf_id) {
+
+				$mrfDetails = MxpMrf::where([['mrf_id',$mrf_id],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->first();
+				if (! $mrfDetails->mrf_id) {
+					return redirect()->back()->withErrors($mrf_id." Mrf No. not found.");
+				}
 			}
 
-			$validationError = $validator->messages();
+			if(is_array($mrf_ids) && !empty($mrf_ids)) {
 
-			$bookingDetails = DB::select("SELECT * FROM mxp_booking_challan WHERE booking_order_id = '" . $request->bookingId . "' GROUP BY item_code");
-			// self::print_me($bookingDetails);
+				$mrflist_controller = new MrfListController();
+				return $mrflist_controller->detailsViewForm($request);
 
-			$buyerDetails = DB::select("SELECT * FROM mxp_bookingbuyer_details WHERE booking_order_id = '" . $request->bookingId . "'");
+			} else {
 
-			if (empty($bookingDetails)) {
-				StatusMessage::create('empty_booking_data', 'This booking Id does not show any result . Please check booking Id !');
+				return redirect()->back()->withErrors($mrf_id." MRF No. not found.");
+			} 
 
-				return \Redirect()->Route('dashboard_view');
-			}
 
-			$MrfDetails = DB::select("select * from mxp_mrf_table where booking_order_id = '" . $request->bookingId . "' GROUP BY mrf_id");
-//            return $bookingDetails;
-			return view('maxim.mrf.mrf', compact('bookingDetails', 'MrfDetails', 'booking_order_id', 'suppliers'));
-
-		} elseif ($taskType === 'challan') {
-
+		} elseif ($taskType === 'challan') { // it's not working now. 
+		
+			return "Coming soon ";
+		
 			$validMessages = [
 				'bookingIdList.required' => 'Booking Id field is required.',
 			];
@@ -272,7 +303,7 @@ class TaskController extends Controller {
 		} else if($taskType === 'bill'){
 
 			$conversion_rate = $request->conversion_rate;
-			$companyInfo = DB::table('mxp_header')->where('header_type', 11)->get();
+			$companyInfo = DB::table('mxp_header')->where('header_type', HeaderType::COMPANY)->get();
 			$bookingDetails = DB::select('call getBookinAndBuyerDeatils("' . $request->bookingId . '")');
 			if (empty($bookingDetails)) {
 				StatusMessage::create('empty_booking_data', 'This booking Id doesnot show any result . Please check booking Id !');
@@ -325,15 +356,16 @@ class TaskController extends Controller {
 
 
 	public function getNonfscBookingValue($booking_order_id){
-		$bookingDetails = DB::select('SELECT mb.oos_number,mb.season_code,mb.style,mb.is_type,GROUP_CONCAT(mb.id) as abc,mb.sku,mb.erp_code,mb.item_code,mb.item_price,mb.item_description, mb.orderDate,mb.orderNo,mb.shipmentDate,mb.poCatNo,mb.others_color ,GROUP_CONCAT(mb.item_size) as itemSize,GROUP_CONCAT(mb.gmts_color) as gmtsColor,GROUP_CONCAT(mb.item_quantity) as quantity,mbd.buyer_name,mbd.Company_name,mbd.C_sort_name,mbd.address_part1_invoice,mbd.address_part2_invoice,mbd.attention_invoice,mbd.mobile_invoice,mbd.telephone_invoice,mbd.fax_invoice,mbd.address_part1_delivery,mbd.address_part2_delivery,mbd.attention_delivery,mbd.mobile_delivery,mbd.telephone_delivery,mbd.fax_delivery,mbd.is_complete,mbd.booking_status,mbd.shipmentDate,mbd.booking_order_id from mxp_booking mb INNER JOIN mxp_bookingbuyer_details mbd on(mbd.booking_order_id = mb.booking_order_id) WHERE  mb.is_pi_type = "unstage" and mb.booking_order_id = "' . $booking_order_id . '"  GROUP BY mb.item_code ORDER BY mb.id ASC');
-
+		if(isset($booking_order_id) && !empty($booking_order_id)){
+			$bookingDetails = MxpBooking::where([['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->whereIn('booking_order_id',$booking_order_id)->orderBy('id','ASC')->get();
+		}
 		return $bookingDetails;
 	}
+
 	public function getFscBookingValue($booking_order_id){
-		$bookingDetails = DB::select('SELECT mb.oos_number,mb.season_code,mb.style,mb.is_type,GROUP_CONCAT(mb.id) as abc,mb.sku,mb.erp_code,mb.item_code,mb.item_price,mb.item_description, mb.orderDate,mb.orderNo,mb.shipmentDate,mb.poCatNo,mb.others_color ,GROUP_CONCAT(mb.item_size) as itemSize,GROUP_CONCAT(mb.gmts_color) as gmtsColor,GROUP_CONCAT(mb.item_quantity) as quantity,mbd.buyer_name,mbd.Company_name,mbd.C_sort_name,mbd.address_part1_invoice,mbd.address_part2_invoice,mbd.attention_invoice,mbd.mobile_invoice,mbd.telephone_invoice,mbd.fax_invoice,mbd.address_part1_delivery,mbd.address_part2_delivery,mbd.attention_delivery,mbd.mobile_delivery,mbd.telephone_delivery,mbd.fax_delivery,mbd.is_complete,mbd.booking_status,mbd.shipmentDate,mbd.booking_order_id from mxp_booking mb INNER JOIN mxp_bookingbuyer_details mbd on(mbd.booking_order_id = mb.booking_order_id) WHERE  mb.is_pi_type = "unstage" and mb.booking_order_id = "' . $booking_order_id . '" GROUP BY mb.item_code ORDER BY mb.id ASC');
-
+		if(isset($booking_order_id) && !empty($booking_order_id)){
+			$bookingDetails = MxpBooking::where([['is_pi_type',BookingFulgs::IS_PI_UNSTAGE_TYPE],['is_deleted',BookingFulgs::IS_NOT_DELETED]])->whereIn('booking_order_id',$booking_order_id)->orderBy('id','ASC')->get();
+		}
 		return $bookingDetails;
 	}
-
-
 }

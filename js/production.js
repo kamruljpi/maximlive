@@ -1,11 +1,19 @@
 $('#booking_advanc_search').on('click',function (ev)
 {
-    displaySetup("#booking_simple_search_form", "#advance_search_form");
+    // displaySetup("#booking_simple_search_form", "#advance_search_form");
+    $('.advance_form').removeClass('hidden');
+    $('#booking_simple_search_btn').removeClass('hidden');
+    $('#booking_advanc_search').hide();
+    $('#booking_simple_search_form').hide();
 });
 
 $('#booking_simple_search_btn').on('click',function (ev)
 {
-    displaySetup("#advance_search_form", "#booking_simple_search_form");
+    // displaySetup("#advance_search_form", "#booking_simple_search_form");
+    $('.advance_form').addClass('hidden');
+    $('#booking_simple_search_btn').addClass('hidden');
+    $('#booking_advanc_search').show();
+    $('#booking_simple_search_form').show();
 });
 
 $("#booking_simple_search").click(function ()
@@ -20,7 +28,7 @@ $("#booking_simple_search").click(function ()
     {
         var results = ajaxFunc("/booking_list_by_booking_id", "GET", "booking_id="+booking_id);
         if((results.responseJSON != '') && (results.responseJSON != null))
-            addRow(results.responseJSON, 0);
+            addBookingListRow(results.responseJSON, 0);
         else {
             EmptyValueView('.pagination', '#booking_list_tbody', "#booking_list_pagination", 9);
         }
@@ -77,7 +85,7 @@ function EmptyValueView(pagination, table, jspatioantion, colspanVal){
     $(table).empty();
     $(jspatioantion).css('display','none');
     $(table).append('<tr><td colspan=" '+ 6 + colspanVal+'" style="text-align: center">Empty Value</center></td></tr>');
-    console.log(colspanVal);
+    // console.log(colspanVal);
 }
 
 $('#booking_reset_btn').on('click',function () {
@@ -207,7 +215,7 @@ function addRow(results, start)
 }
 
 function addbookingRow(results, start)
-{
+{   
     $('.pagination').empty();
     $('#booking_list_tbody').empty();
     $("#booking_list_pagination").css('display','none');
@@ -242,81 +250,37 @@ function addbookingRow(results, start)
             var jobnumber = zeroc.repeat(idstrcount)+''+itemLists[ij].job_number;
             var ilc = 1;
             var TotalAmount = 0;
-            if(itemListse == 1){
-                book_html += '<tr class="booking_list_table">';
-                book_html += '<td>'+jobnumber+'</td>';
-                book_html += '<td>'+rows[i].buyer_name+'</td>';
-                book_html += '<td>'+rows[i].Company_name+'</td>';
-                book_html += '<td>'+rows[i].attention_invoice+'</td>';
-                book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                book_html += '<td>'+rows[i].created_at+'</td>';
-                book_html += '<td></td>';
-            }else if(itemListse > 1){
-                if(ij == 0){
-                    book_html += '<tr class="booking_list_table">';
-                    book_html += '<td>'+jobnumber+'</td>';
-                    book_html += '<td>'+rows[i].buyer_name+'</td>';
-                    book_html += '<td>'+rows[i].Company_name+'</td>';
-                    book_html += '<td>'+rows[i].attention_invoice+'</td>';
-                    book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                    book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                    book_html += '<td>'+rows[i].created_at+'</td>';
-                    book_html += '<td></td>';
-                }else{
-                    book_html += '</tr>';
-                    book_html += '<tr id="booking_list_table">';
-                }
-            }
-            if(itemListse == 1){
-            }else if(itemListse > 1){
-                if(ij == 0){
-                }else{
-                    book_html += '<td>'+jobnumber+'</td>';
-                     // book_html += '<td colspan="7"></td>';
-                    book_html += '<td>'+rows[i].buyer_name+'</td>';
-                    book_html += '<td>'+rows[i].Company_name+'</td>';
-                    book_html += '<td>'+rows[i].attention_invoice+'</td>';
-                    book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                    book_html += '<td>'+rows[i].booking_order_id+'</td>';
-                    book_html += '<td>'+rows[i].created_at+'</td>';
-                    book_html += '<td></td>';
-                }
-            }
-            book_html += '<td>'+itemLists[ij].item_code+'</td>';
-            book_html += '<td>'+itemLists[ij].erp_code+'</td>';
-            book_html += '<td>'+itemLists[ij].item_size+'</td>';
-            book_html += '<td>'+itemLists[ij].item_description+'</td>';
-            book_html += '<td>'+itemLists[ij].item_quantity+'</td>';
-            book_html += '<td>$'+itemLists[ij].item_price+'</td>';
-            book_html += '<td>$'+Number((itemLists[ij].item_quantity*itemLists[ij].item_price).toFixed(2))+'</td>';
-
+            book_html += '<tr class="booking_list_table">';
+            book_html += '<td><input type="hidden" name="job_id[]" value="'+jobnumber+'">'+jobnumber+'</td>';
+            book_html += '<td><input type="hidden" name="buyer_name[]" value="'+rows[i].buyer_name+'">'+rows[i].buyer_name+'</td>';
+            book_html += '<td><input type="hidden" name="vendor_name[]" value="'+rows[i].Company_name+'">'+rows[i].Company_name+'</td>';
+            book_html += '<td><input type="hidden" name="attention_invoice[]" value="'+rows[i].attention_invoice+'">'+rows[i].attention_invoice+'</td>';
+            book_html += '<td><input type="hidden" name="booking_order_id[]" value="'+rows[i].booking_order_id+'">'+rows[i].booking_order_id+'</td>';
+            book_html += '<td><input type="hidden" name="po_cat_no[]" value="'+itemLists[ij].poCatNo+'">'+itemLists[ij].poCatNo+'</td>';
+            book_html += '<td><input type="hidden" name="p_ids[]" value="'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'">'+((itemLists[ij].pi.length != 0)? itemLists[ij].pi[0].p_ids : '')+'</td>';
+            book_html += '<td><input type="hidden" name="challan_ids[]" value="'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'">'+((itemLists[ij].challan.length != 0)? itemLists[ij].challan[0].challan_ids : '')+'</td>';
+            book_html += '<td><input type="hidden" name="ipo_ids[]" value="'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'">'+((itemLists[ij].ipo.length != 0)? itemLists[ij].ipo[0].ipo_ids : '')+'</td>';
+            book_html += '<td><input type="hidden" name="mrf_ids[]" value="'+((itemLists[ij].mrf.length != 0)? itemLists[ij].mrf[0].mrf_ids : '')+'">'+((itemLists[ij].mrf.length != 0)? itemLists[ij].mrf[0].mrf_ids : '')+'</td>';
+            book_html += '<td><input type="hidden" name="order_date[]" value="'+rows[i].created_at+'">'+rows[i].created_at+'</td>';
+            book_html += '<td><input type="hidden" name="requested_date[]" value="'+rows[i].shipmentDate+'">'+rows[i].shipmentDate+'</td>';
+            book_html += '<td><input type="hidden" name="item_code[]" value="'+itemLists[ij].item_code+'">'+itemLists[ij].item_code+'</td>';
+            book_html += '<td><input type="hidden" name="erp_code[]" value="'+itemLists[ij].erp_code+'">'+itemLists[ij].erp_code+'</td>';
+            book_html += '<td><input type="hidden" name="item_size[]" value="'+itemLists[ij].item_size+'">'+itemLists[ij].item_size+'</td>';
+            book_html += '<td><input type="hidden" name="item_description[]" value="'+itemLists[ij].item_description+'">'+itemLists[ij].item_description+'</td>';
+            book_html += '<td><input type="hidden" name="sku[]" value="'+itemLists[ij].sku+'">'+itemLists[ij].sku+'</td>';
+            book_html += '<td><input type="hidden" name="item_quantity[]" value="'+itemLists[ij].item_quantity+'">'+itemLists[ij].item_quantity+'</td>';
+            book_html += '<td> <input type="hidden" name="item_price[]" value="$'+itemLists[ij].item_price+'">$'+itemLists[ij].item_price+'</td>';
+            book_html += '<td> <input type="hidden" name="item_total_price[]" value="$'+Number((itemLists[ij].item_quantity*itemLists[ij].item_price).toFixed(2))+'">$'+Number((itemLists[ij].item_quantity*itemLists[ij].item_price).toFixed(2))+'</td>';
             fullTotalAmount += itemLists[ij].item_quantity*itemLists[ij].item_price;
             TotalAmount += itemLists[ij].item_quantity*itemLists[ij].item_price;
             book_html += '</tr>';
-            if(itemListse == 1){
-                book_html += '<tr>';
-                book_html += '<td colspan="13"></td>';
-                book_html += '<td><strong>Total : </strong></td>';
-
-                book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
-                book_html += '</tr>';
-            }else if(itemListse > 1){
-                if(ij == itemListse){
-                    book_html += '<tr>';
-                    book_html += '<td colspan="13"></td>';
-                    book_html += '<td><strong>Total :</strong></td>';
-                    book_html += '<td><strong>$'+Number((TotalAmount).toFixed(2))+'</strong></td>';
-                    book_html += '</tr>';
-                }
-            }
         }
         sl++;
     }
     book_html += '<tr>';
-    book_html += '<td colspan="13"></td>';
-    book_html += '<td><strong>All Total :</strong></td>';
-    book_html += '<td><strong>$'+Number((fullTotalAmount).toFixed(2))+'</strong></td>';
+    book_html += '<td colspan="17"></td>';
+    book_html += '<td colspan="2"><strong>Total Price:</strong></td>';
+    book_html += '<td> <input type="hidden" name="total_price" value="'+Number((fullTotalAmount).toFixed(2))+'"><strong>$'+Number((fullTotalAmount).toFixed(2))+'</strong></td>';
     book_html += '</tr>';
     $('#booking_list_tbody').append(book_html);
     setPagination(results, position);
@@ -733,3 +697,99 @@ $('.save_purcahe_order').on('click', function (ev) {
     var setUrl = getUrl.replace("/list","/report?data="+data);
     window.location.assign(setUrl);
 });
+
+
+function addBookingListRow(results, start){
+    $('.pagination').empty();
+    $('#booking_list_tbody').empty();
+    $("#booking_list_pagination").css('display','none');
+
+    var sl = 1;
+    var book_html = '';
+    var position = start+1;
+    start = start*15;
+
+    if(results.length <start+15)
+        end = results.length;
+    else
+        end = start+15;
+
+    var rows = $.map(results, function(value, index) {
+        return [value];
+    });
+
+    for (var i = start; i < end; i++)
+    {
+        book_html += '<tr class="booking_list_table">';
+        book_html += '<td>'+sl+'</td>';            
+        book_html += '<td>'+rows[i].buyer_name+'</td>';        
+        book_html += '<td>'+rows[i].Company_name+'</td>';        
+        book_html += '<td>'+rows[i].attention_invoice+'</td>';       
+        book_html += '<td>'+rows[i].booking_order_id+'</td>';    
+        book_html += '<td>'+((rows[i].po != null)? ((rows[i].po.ipo_id !=null)? rows[i].po.ipo_id :'') : '')+'</td>';  
+        book_html += '<td>'+rows[i].bookingDetails.po_cat+'</td>';  
+        book_html += '<td>'+rows[i].created_at+'</td>';
+        book_html += '<td>'+rows[i].shipmentDate+'</td>';
+        book_html += '<td><a id="popoverOption" class="btn popoverOption" href="#"  rel="popover" data-placement="top" data-original-title="" style="color:black;">'+rows[i].booking_status+'</a>';
+        book_html += '<div class="popper-content hide">';
+        book_html += '<label>Booking Prepared by: ';
+        book_html += ((rows[i].booking != null)?((rows[i].booking.first_name ==null)?'':rows[i].booking.first_name)+' '+((rows[i].booking.last_name==null)?'':rows[i].booking.last_name)+' '+((rows[i].created_at ==null)?'':'( '+rows[i].created_at)+' )': '');
+        book_html += '</label><br>';
+        book_html += '<label>Booking Accepted by: ';
+        book_html += ((rows[i].accepted != null)?((rows[i].accepted.first_name ==null)?'':rows[i].accepted.first_name)+' '+((rows[i].accepted.last_name==null)?'':rows[i].accepted.last_name)+' '+((rows[i].accepted_date_at ==null)?'':'( '+rows[i].accepted_date_at)+' )': '');
+        book_html += '</label><br>';
+        book_html += '<label>MRF Issue by: ';
+        book_html += ((rows[i].mrf != null)?((rows[i].mrf.first_name ==null)?'':rows[i].mrf.first_name)+' '+((rows[i].mrf.last_name==null)?'':rows[i].mrf.last_name)+' '+((rows[i].mrf.created_at ==null)?'':'( '+rows[i].mrf.created_at)+' )': '');
+        book_html += '</label><br>';
+        book_html += '<label>PO Issue by: ';
+        book_html += ((rows[i].ipo != null)?((rows[i].ipo.first_name ==null)?'':rows[i].ipo.first_name)+' '+((rows[i].ipo.last_name==null)?'':rows[i].ipo.last_name)+' '+((rows[i].ipo.created_at ==null)?'':'( '+rows[i].ipo.created_at)+' )': '');
+        book_html += '</label><br>';        
+        book_html += '</div>';
+        book_html += '</td>';
+        book_html += '<td width="12%">';
+        book_html += '<div class="btn-group">';
+        book_html += '<form action="'+baseURL+'/view"  target="_blank">';
+        book_html += '<input type="hidden" name="bid" value="'+ rows[i].booking_order_id+'">';
+        book_html += '<button class="btn btn-success b1">Report</button>';
+        book_html += '</form>';
+        book_html += '<button type="button" class="btn btn-success dropdown-toggle b2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+        book_html += '<span class="caret"></span>';
+        book_html += '<span class="sr-only">Toggle Dropdown</span>';
+        book_html += '</button>';
+        book_html += '<ul class="dropdown-menu" style="left:-45px !important;">';
+        book_html += '<li><a href="detailsView/'+ rows[i].booking_order_id +'">Views</a></li>';
+        // book_html += ;
+        book_html += ((typeof(rows[i].booking_status) != "undefined" && rows[i].booking_status !=null && rows[i].booking_status != "Process") ? '<li><a href="'+baseURL+'/booking/details/cancel/'+rows[i].booking_order_id+'" class="deleteButton">Cancel</a></li>' :'');
+        book_html += '<li><a href="download/file/'+rows[i].booking_order_id+'" class="btn btn-info">Download Files</a></li>';
+        book_html += '</ul>';        
+        book_html += '</div>';
+        book_html += '</td>';
+        book_html += '</tr>';
+        sl++;
+    }
+    $('#booking_list_tbody').append(book_html);
+    setPagination(results, position);
+
+    $('.pagination li').on('click',(function () {
+
+        var begin = $(this).attr("data-page");
+        addBookingListRow(results, begin-1);
+    }));
+    $('.popoverOption').popover({
+        trigger: "hover",
+        container: 'body',
+        html: true,
+        content: function () {
+            return $(this).next('.popper-content').html();
+        }
+    });
+
+    $('.deleteButton').on('click',function(){
+                var confirmValue = confirm("Are you sure!");
+                if (confirmValue == true) {
+                    return true;
+                }else{
+                    return false;
+                }
+            });
+}

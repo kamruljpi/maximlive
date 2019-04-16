@@ -170,7 +170,7 @@
 										<td colspan=""><div style="text-align: center; font-size: 17px;">Grand Total</div></td>
 										<td width="30%">
 											<div class="form-group">
-												<input type="text" name="grand_total" class="form-control grand_total" readonly="true" value="{{$details->grand_total}}">
+												<input type="text" name="grand_total" class="form-control grand_total" readonly="true" value="{{$details->in_all_total_price}}">
 											</div>
 										</td>
 									</tr>

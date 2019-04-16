@@ -231,16 +231,30 @@ class PurchaseOrder extends Controller
     public function destroy($id)
     {
         $destroy = MxpPurchaseOrderWh::find($id);
-        $destroy->is_deleted = BookingFulgs::IS_DELETED;
-        $destroy->deleted_user_id = Auth::user()->user_id;
-        $destroy->last_action_at = LastActionFlugs::DELETE_ACTION;
-        $destroy->save();
 
-        $destroy_a = MxpPurchaseOrderItemWh::find($id);
-        $destroy_a->is_deleted = BookingFulgs::IS_DELETED;
-        $destroy_a->deleted_user_id = Auth::user()->user_id;
-        $destroy_a->last_action_at = LastActionFlugs::DELETE_ACTION;
-        $destroy_a->save();
+        if($destroy->status == PurchaseFlugs::PURCHASE_FROM_PURCHASE_ORDER) {
+            Session::flash('delete','This '.$destroy->purchase_order_no.' Purchase Order is Accpeted. Delete Failed');
+
+            return \Redirect()->Route('purchase_order_view');
+        }else{
+            $destroy_b = MxpPurchaseOrderWh::find($id);
+            $destroy_b->is_deleted = BookingFulgs::IS_DELETED;
+            $destroy_b->deleted_user_id = Auth::user()->user_id;
+            $destroy_b->last_action_at = LastActionFlugs::DELETE_ACTION;
+            $destroy_b->save();   
+        }        
+
+        $destroy_a = MxpPurchaseOrderItemWh::where([['purchase_order_wh_id',$id],['status',PurchaseFlugs::PURCHASE_ORDER]])->get();
+
+        if(! empty($destroy_a)) {
+            foreach ($destroy_a as $a_value) {
+                $destroy_c = MxpPurchaseOrderItemWh::find($a_value->id_purchase_order_item_wh);
+                $destroy_c->is_deleted = BookingFulgs::IS_DELETED;
+                $destroy_c->deleted_user_id = Auth::user()->user_id;
+                $destroy_c->last_action_at = LastActionFlugs::DELETE_ACTION;
+                $destroy_c->save();
+            }
+        }        
 
         Session::flash('delete','This '.$destroy->purchase_order_no.' Purchase Order successfully deleted');
 
@@ -255,19 +269,39 @@ class PurchaseOrder extends Controller
      */
     public function reject($id)
     {
-        $reject = MxpPurchaseOrderWh::find($id);
-        $reject->is_rejected = BookingFulgs::IS_REJECTED;
-        $reject->rejected_user_id = Auth::user()->user_id;
-        $reject->rejected_at = Carbon::now();
-        $reject->last_action_at = LastActionFlugs::REJECTED_ACTION;
-        $reject->save();
+        $reject = MxpPurchaseOrderWh::where('id_purchase_order_wh',$id)->first();
 
-        $reject_a = MxpPurchaseOrderItemWh::find($id);
-        $reject_a->is_rejected = BookingFulgs::IS_REJECTED;
-        $reject_a->rejected_user_id = Auth::user()->user_id;
-        $reject_a->rejected_at = Carbon::now();
-        $reject_a->last_action_at = LastActionFlugs::REJECTED_ACTION;
-        $reject_a->save();
+        if($reject->is_rejected == 1) {
+
+            Session::flash('delete','This '.$destroy->purchase_order_no.' Purchase Order is already Rejected.');
+            return \Redirect()->Route('purchase_order_view');
+
+        }elseif($reject->status == PurchaseFlugs::PURCHASE_FROM_PURCHASE_ORDER) {
+
+            Session::flash('delete','This '.$destroy->purchase_order_no.' Purchase Order is Accpeted. Rejected Failed');
+            return \Redirect()->Route('purchase_order_view');
+            
+        }else{
+            $reject_b = MxpPurchaseOrderWh::where('id_purchase_order_wh',$id)->first();
+            $reject_b->is_rejected = BookingFulgs::IS_REJECTED;
+            $reject_b->rejected_user_id = Auth::user()->user_id;
+            $reject_b->rejected_at = Carbon::now();
+            $reject_b->last_action_at = LastActionFlugs::REJECTED_ACTION;
+            $reject_b->save();
+        }
+
+        $reject_c = MxpPurchaseOrderItemWh::where('purchase_order_wh_id',$id)->get();
+
+        if(! empty($reject_c)) {
+            foreach ($reject_c as $c_value) {
+                $reject_a = MxpPurchaseOrderItemWh::find($c_value->id_purchase_order_item_wh);
+                $reject_a->is_rejected = BookingFulgs::IS_REJECTED;
+                $reject_a->rejected_user_id = Auth::user()->user_id;
+                $reject_a->rejected_at = Carbon::now();
+                $reject_a->last_action_at = LastActionFlugs::REJECTED_ACTION;
+                $reject_a->save();
+            }
+        }
 
         Session::flash('delete','This '.$destroy->purchase_order_no.' Purchase Order successfully Rejected');
 

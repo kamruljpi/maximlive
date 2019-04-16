@@ -2,9 +2,16 @@
 @section('page_heading','Purchase Order')
 @section('section')
     <?php 
+        use App\Http\Controllers\Source\User\RoleDefine;
         use App\Http\Controllers\taskController\Flugs\booking\BookingFulgs;
         use App\Http\Controllers\Purchase\PurchaseFlugs;
+
+        $object = new RoleDefine();
+        $role_check_planning = $object->getRole('Planning');
+        $role_check_purchase = $object->getRole('Purchase');
+
     ?>
+
     <style type="text/css">
     	.top-btn-pro{
     		padding-bottom: 15px;
@@ -78,30 +85,56 @@
                                         @endif
                                     </td>                     
                                 	<td width="23%">
-                                        <div style="padding: 1px; float: left;">
-                                            <a href="{{Route('purchase_order_delete_action')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-danger deleteButton" title="Delete">
-                                                <i class="fa fa-trash" aria-hidden="true"></i>
-                                            </a>
-                                        </div>
 
-                                        <div style="padding: 1px; float: left;">
-                                            <a href="{{Route('purchase_order_report_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-success" title="Show Report">
-                                                <i class="fa fa-eye"></i>
-                                            </a>
-                                        </div>
+                                        @if($role_check_planning == 'planning')
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_delete_action')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-danger deleteButton" title="Delete">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
 
-                                        <div style="padding: 1px; float: left;">
-                                            <a href="{{Route('purchase_order_edit_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-info" title="Accept">
-                                                <i class="fa fa-check"></i>
-                                            </a>
-                                        </div>
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_report_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-success" title="Show Report">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </div>
+                                        @elseif($role_check_purchase == 'purchase')
 
-                                        <div style="padding: 1px; float: left;">
-                                            <a href="{{Route('purchase_order_reject_action',['id' => $detail->id_purchase_order_wh])}}" class="btn btn-primary" title="Reject">
-                                                <i class="fa fa-ban"></i>
-                                            </a>
-                                        </div>
-                                        
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_edit_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-info" title="Accept">
+                                                    <i class="fa fa-check"></i>
+                                                </a>
+                                            </div>
+
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_reject_action',['id' => $detail->id_purchase_order_wh])}}" class="btn btn-primary" title="Reject">
+                                                    <i class="fa fa-ban"></i>
+                                                </a>
+                                            </div>
+                                        @elseif(Auth::user()->type = 'super_admin')
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_delete_action')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-danger deleteButton" title="Delete">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_report_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-success" title="Show Report">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            </div>
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_edit_view')}}/{{$detail->id_purchase_order_wh}}" class="btn btn-info" title="Accept">
+                                                    <i class="fa fa-check"></i>
+                                                </a>
+                                            </div>
+
+                                            <div style="padding: 1px; float: left;">
+                                                <a href="{{Route('purchase_order_reject_action',['id' => $detail->id_purchase_order_wh])}}" class="btn btn-primary" title="Reject">
+                                                    <i class="fa fa-ban"></i>
+                                                </a>
+                                            </div>
+                                        @endif                                        
                                 	</td>
                                 </tr>                    
                             @endforeach

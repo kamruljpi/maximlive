@@ -1,6 +1,7 @@
 <?php
 
 Route::group(['middleware' => 'auth','namespace' => 'Purchase'], function () {
+	Route::group(['middleware' => 'routeAccess'], function () {
 
 	/*************************************************************
 	 * Purchase Order Route
@@ -33,8 +34,11 @@ Route::group(['middleware' => 'auth','namespace' => 'Purchase'], function () {
 	Route::get('show_purchase/{id?}', 'Purchase@show')->name('purchase_show_view');
 	Route::post('store/purchase/purchase_order/{id?}', 'Purchase@storePurchaseOrder')->name('purchase_from_purchase_order_action');
 
+});
 
-	// ajax request
+	/*******************************************************************
+	 * Purchase List Route Ajax request
+	 *******************************************************************/
 	
 	Route::any('store/show_purchase', 'Purchase@showStore')->name('purchase_show_store_action');
 
